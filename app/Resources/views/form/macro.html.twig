@@ -1,0 +1,16 @@
+{% macro rehabCollectionItem(formData) %}
+    <div class="form-group">
+    {{ form_label(formData.terminationdate) }}
+    <div class="col-sm-3">
+   {{ form_widget(formData.terminationdate) }}
+   
+    </div>
+   
+       <div class="col-sm-7">
+          
+           <button class="btn btn-danger" type="button" onclick="removeParent(this)"><span class="glyphicon glyphicon-remove"></span> Rehaschein löschen</button>
+           
+       </div>
+   
+    </div>
+{% endmacro %}

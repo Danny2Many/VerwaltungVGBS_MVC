@@ -1,0 +1,67 @@
+<?php
+
+
+
+namespace AppBundle\Entity;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="MemMonthlyDues")
+ */
+class MemMonthlyDues {
+    /**
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="monthlydues")
+     * @ORM\JoinColumn(name="memid", referencedColumnName="memid")
+     */
+    private $member;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="MemFinYear", inversedBy="monthlydues")
+     * @ORM\JoinColumn(name="year", referencedColumnName="year")
+     */
+    private $finyear;
+    
+    
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer") 
+     * 
+     */
+    protected $memid;
+    
+     /**
+     * @ORM\Id
+     * @ORM\Column(type="date") 
+     * 
+     */
+    protected $year;
+    
+     /**
+     * @ORM\Id
+     * @ORM\Column(type="string") 
+     * 
+     */
+    protected $month;
+    
+    
+    /**
+     * 
+     * @ORM\Column(type="string") 
+     * 
+     */
+    protected $dues;
+    
+    /**
+     * 
+     * @ORM\Column(type="string") 
+     * 
+     */
+    protected $duespayed;
+
+    
+}

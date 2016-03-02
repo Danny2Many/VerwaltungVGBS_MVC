@@ -1,0 +1,79 @@
+<?php
+
+namespace AppBundle\Entity;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="Mitglieder_Finanzen")
+ */
+class Mitglieder_Finanzen {
+ 
+    
+ public $MtglFinanzNr;
+ public $Jahr;
+ public $Aufnahmegebuehr;
+ public $Aufnahmegebuehr_offen;
+ public $Aufnahmegebuehr_gezahlt;
+ 
+ public $ZahlungseingangQ1;
+ public $MitgliedsbeitrMonat_Q1;
+ public $Mtgl_beitrQuart1_bezahlt;
+ public $Mtgl_beitrQuart1_offen;
+ public $Beitr_Januar_offen;
+ public $Beitr_Januar_gez;
+ public $Beitr_Februar_offen;
+ public $Beitr_Februar_gez;
+ public $Beitr_März_offen;
+ public $Beitr_März_gez; 
+ public $UmlageQ1;
+ public $SpendeQ1;
+ public $zusaetzlInfoQ1;
+ 
+ public $ZahlungseingangQ2;
+ public $MitgliedsbeitrMonat_Q2;
+ public $Mtgl_beitrQuart2_bezahlt;
+ public $Mtgl_beitrQuart2_offen;
+ public $Beitr_April_offen;
+ public $Beitr_April_gez;
+ public $Beitr_Mai_offen;
+ public $Beitr_Mai_gez;
+ public $Beitr_Juni_offen;
+ public $Beitr_Juni_gez; 
+ public $UmlageQ2;
+ public $SpendeQ2;
+ public $zusaetzlInfoQ2;
+ 
+ public $ZahlungseingangQ3;
+ public $MitgliedsbeitrMonat_Q3;
+ public $Mtgl_beitrQuart3_bezahlt;
+ public $Mtgl_beitrQuart3_offen;
+ public $Beitr_Juli_offen;
+ public $Beitr_Juli_gez;
+ public $Beitr_August_offen;
+ public $Beitr_August_gez;
+ public $Beitr_September_offen;
+ public $Beitr_September_gez; 
+ public $UmlageQ3;
+ public $SpendeQ3;
+ public $zusaetzlInfoQ3;
+    
+public $ZahlungseingangQ4;
+ public $MitgliedsbeitrMonat_Q4;
+ public $Mtgl_beitrQuart4_bezahlt;
+ public $Mtgl_beitrQuart4_offen;
+ public $Beitr_Oktober_offen;
+ public $Beitr_Oktober_gez;
+ public $Beitr_November_offen;
+ public $Beitr_November_gez;
+ public $Beitr_Dezember_offen;
+ public $Beitr_Dezember_gez; 
+ public $UmlageQ4;
+ public $SpendeQ4;
+ public $zusaetzlInfoQ4;    
+    
+    
+}

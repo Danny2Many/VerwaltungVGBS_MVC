@@ -1,0 +1,42 @@
+<?php
+
+
+
+namespace AppBundle\Entity;
+use Doctrine\ORM\Mapping as ORM;
+
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="MemFinYear")
+ */
+class MemFinYear {
+    
+    /**
+     * @ORM\OneToMany(targetEntity="MmemMonthlyDues", mappedBy="finyear")
+     */
+    private $monthlydues;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="MemYearInfo", mappedBy="finyear")
+     */
+    private $yearinfo;
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="date") 
+     * 
+     */
+    protected $year;
+    
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->monthlydues = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->yearinfo = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    
+}

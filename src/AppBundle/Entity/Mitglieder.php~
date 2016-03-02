@@ -1,0 +1,1053 @@
+<?php
+
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use AppBundle\Entity\PersonalData;
+use AppBundle\Entity\MitgliederFinanzen;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="Mitglieder")
+ */
+class Mitglieder extends PersonalData
+{
+    
+   /**
+     * @ORM\OneToMany(targetEntity="MitgliederFinanzen", mappedBy="member")
+     */ 
+  protected $finances; 
+  
+ 
+      /**
+     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Sportgruppen", cascade={"all"})
+     * @ORM\JoinTable(name="Mitglieder_Sportgruppen",
+ *      joinColumns={@ORM\JoinColumn(name="teilnehmernr", referencedColumnName="mitgliedsnr")},
+ *      inverseJoinColumns={@ORM\JoinColumn(name="sportgruppennr", referencedColumnName="sportgruppennr")})
+     */
+
+    protected $sportsgroup; 
+    
+  public function __construct() {
+        $this->finances = new ArrayCollection();
+        $this->sportsgroup = new ArrayCollection();
+    }
+    
+    
+   
+
+    
+    
+    /**
+     * Add sportsgroup
+     *
+     * @param \AppBundle\Entity\Sportgruppen $sportsgroup
+     *
+     * @return Mitglieder
+     */
+    public function addSportsgroup(\AppBundle\Entity\Sportgruppen $sportsgroup)
+    {
+        $this->sportsgroup[] = $sportsgroup;
+
+        return $this;
+    }
+
+    /**
+     * Remove sportsgroup
+     *
+     * @param \AppBundle\Entity\Sportgruppen $sportsgroup
+     */
+    public function removeSportsgroup(\AppBundle\Entity\Sportgruppen $sportsgroup)
+    {
+        $this->sportsgroup->removeElement($sportsgroup);
+    }
+
+    /**
+     * Get sportsgroups
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSportsgroup()
+    {
+        return $this->sportsgroup;
+    }
+     
+/**
+ * Set categories
+ * @param \Doctrine\Common\Collections\Collection $categories
+ *
+ * @return Post
+ */
+public function setSportsgroup($sportsgroup)
+{
+
+    if(!is_array($sportsgroup))
+    {
+        $sportsgroup = array($sportsgroup);
+    }
+    $this->sportsgroup = $sportsgroup;
+
+    return $this;
+}
+
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer") 
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $Mitgliedsnr;
+
+   
+    
+      /**
+     * @ORM\Column(type="date")
+       * @Assert\NotBlank()
+     * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+     */
+    protected $eintrittsdatum;
+    
+        
+
+       /**
+     * @ORM\Column(type="string")
+        * @Assert\NotBlank()
+     * @Assert\Choice(choices = {"RS", "Tanz", "GS"}, message = "Bitte wählen Sie eine gültige Abteilung.")
+     */
+    protected $abteilung;
+    
+      /**
+     * @ORM\Column(type="string")
+       * @Assert\NotBlank()
+     * @Assert\Choice(choices = {"aktiv", "inaktiv"}, message = "Bitte wählen Sie einen gültigen Status.")
+     */
+    protected $status;
+    
+       /**
+     * @ORM\Column(type="string", options={"default":"-"})
+     */
+    protected $ehrung_10_jaehrl;
+    
+       /**
+     * @ORM\Column(type="date", options={"default":"0000-00-00"})
+        * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+     */
+    protected $aufnahmebest;
+    
+    
+       /**
+     * @ORM\Column(type="date", options={"default":"0000-00-00"})
+        * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+     */
+    protected $rehaschein1_gueltig_bis;
+    
+       /**
+     * @ORM\Column(type="date", options={"default":"0000-00-00"})
+        * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+     */
+    protected $rehaschein2_gueltig_bis;
+    
+       /**
+     * @ORM\Column(type="string")
+        * @Assert\NotBlank()
+     * @Assert\Choice(choices = {"kein", "(verminderter Beitrag)"}, message = "Bitte wählen Sie eine gültigen option.")
+     */
+    protected $verminderter_beitrag;
+    
+       /**
+     * @ORM\Column(type="string", options={"default":"-"})
+     */
+    protected $krankenkasse;
+    
+    
+      /**
+     * @ORM\Column(type="string", options={"default":"-"})
+     */
+    protected $zusatzinfo;
+
+      /**
+     * @ORM\Column(type="string", options={"default":"-"})
+     */
+    protected $ehrung;
+    
+       /**
+     * @ORM\Column(type="text", options={"default":"-"})
+     */
+    protected $arbeitsplatzhaltung;
+    
+    
+       /**
+     * @ORM\Column(type="string", options={"default":"-"})
+     */
+    protected $chron_berufserkrankungen;
+    
+    
+       /**
+     * @ORM\Column(type="string", options={"default":"-"})
+     */
+       protected $schmerzen_in_hws;
+    
+        /**
+     * @ORM\Column(type="string", options={"default":"-"})
+     */
+        protected $schmerzen_in_bws;
+    
+       /**
+     * @ORM\Column(type="string", options={"default":"-"})
+     */
+       protected $schmerzen_in_lws;
+    
+       /**
+     * @ORM\Column(type="string", options={"default":"-"})
+     */
+       protected $obere_extremitaeten;
+    
+       /**
+     * @ORM\Column(type="string", options={"default":"-"})
+     */
+       protected $untere_extremitaeten;
+    
+       /**
+     * @ORM\Column(type="text", options={"default":"-"})
+     */
+       protected $sonst_beeintraechtigung;
+    
+      /**
+     * @ORM\Column(type="string", options={"default":"-"})
+     */
+      protected $medikamente;
+    
+       /**
+     * @ORM\Column(type="string", options={"default"="-"})
+     */
+       protected $weitere_bewl_aktivit;
+    
+       /**
+     * @ORM\Column(type="integer")
+        * @Assert\Type(
+     * type="numeric",
+     * message="{{ value }} ist kein gültiger {{ type }}.")
+     */
+       protected $hf_ruhe_min;
+    
+     /**
+     * @ORM\Column(type="text", options={"default":"-"})
+     */
+    protected $zeitl_bel_test;
+    
+   
+      /**
+     * @ORM\Column(type="text", options={"default":"-"})
+     */
+      protected $info_beitrag_rehasp;
+    
+ 
+
+    /**
+     * Get ID
+     *
+     * @return integer
+     */
+    public function getMitgliedsnr()
+    {
+        return $this->Mitgliedsnr;
+    }
+
+    /**
+     * Set vorname
+     *
+     * @param string $vorname
+     *
+     * @return Mitglieder
+     */
+    public function setVorname($vorname)
+    {
+        $this->vorname = $vorname;
+
+        return $this;
+    }
+
+    /**
+     * Get vorname
+     *
+     * @return string
+     */
+    public function getVorname()
+    {
+        return $this->vorname;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Mitglieder
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set anrede
+     *
+     * @param string $anrede
+     *
+     * @return Mitglieder
+     */
+    public function setAnrede($anrede)
+    {
+        $this->anrede = $anrede;
+
+        return $this;
+    }
+
+    /**
+     * Get anrede
+     *
+     * @return string
+     */
+    public function getAnrede()
+    {
+        return $this->anrede;
+    }
+
+    /**
+     * Set eintrittsdatum
+     *
+     * @param \DateTime $eintrittsdatum
+     *
+     * @return Mitglieder
+     */
+    public function setEintrittsdatum($eintrittsdatum)
+    {
+        $this->eintrittsdatum = $eintrittsdatum;
+
+        return $this;
+    }
+
+    /**
+     * Get eintrittsdatum
+     *
+     * @return \DateTime
+     */
+    public function getEintrittsdatum()
+    {
+        return $this->eintrittsdatum;
+    }
+
+    /**
+     * Set geburtstag
+     *
+     * @param \DateTime $geburtstag
+     *
+     * @return Mitglieder
+     */
+    public function setGeburtstag($geburtstag)
+    {
+        $this->geburtstag = $geburtstag;
+
+        return $this;
+    }
+
+    /**
+     * Get geburtstag
+     *
+     * @return \DateTime
+     */
+    public function getGeburtstag()
+    {
+        return $this->geburtstag;
+    }
+
+    /**
+     * Set strasseHnr
+     *
+     * @param string $strasseHnr
+     *
+     * @return Mitglieder
+     */
+    public function setStrasseHausnr($strasseHnr)
+    {
+        $this->strasse_hausnr = $strasseHnr;
+
+        return $this;
+    }
+
+    /**
+     * Get strasseHnr
+     *
+     * @return string
+     */
+    public function getStrasseHausnr()
+    {
+        return $this->strasse_hausnr;
+    }
+
+    /**
+     * Set pLZ
+     *
+     * @param integer $pLZ
+     *
+     * @return Mitglieder
+     */
+    public function setPLZ($pLZ)
+    {
+        $this->PLZ = $pLZ;
+
+        return $this;
+    }
+
+    /**
+     * Get pLZ
+     *
+     * @return integer
+     */
+    public function getPLZ()
+    {
+        return $this->PLZ;
+    }
+
+    /**
+     * Set ort
+     *
+     * @param string $ort
+     *
+     * @return Mitglieder
+     */
+    public function setOrt($ort)
+    {
+        $this->ort = $ort;
+
+        return $this;
+    }
+
+    /**
+     * Get ort
+     *
+     * @return string
+     */
+    public function getOrt()
+    {
+        return $this->ort;
+    }
+
+    /**
+     * Set telefon
+     *
+     * @param string $telefon
+     *
+     * @return Mitglieder
+     */
+    public function setTelefon($telefon)
+    {
+        $this->telefon = $telefon;
+
+        return $this;
+    }
+
+    /**
+     * Get telefon
+     *
+     * @return string
+     */
+    public function getTelefon()
+    {
+        return $this->telefon;
+    }
+
+    /**
+     * Set mail
+     *
+     * @param string $mail
+     *
+     * @return Mitglieder
+     */
+    public function setMail($mail)
+    {
+        $this->mail = $mail;
+
+        return $this;
+    }
+
+    /**
+     * Get mail
+     *
+     * @return string
+     */
+    public function getMail()
+    {
+        return $this->mail;
+    }
+
+    /**
+     * Set abt
+     *
+     * @param string $abt
+     *
+     * @return Mitglieder
+     */
+    public function setAbteilung($abt)
+    {
+        $this->abteilung = $abt;
+
+        return $this;
+    }
+
+    /**
+     * Get abt
+     *
+     * @return string
+     */
+    public function getAbteilung()
+    {
+        return $this->abteilung;
+    }
+
+    /**
+     * Set status
+     *
+     * @param string $status
+     *
+     * @return Mitglieder
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set ehrung10Jaehrl
+     *
+     * @param string $ehrung10Jaehrl
+     *
+     * @return Mitglieder
+     */
+    public function setEhrung10Jaehrl($ehrung10Jaehrl)
+    {
+        $this->ehrung_10_jaehrl = $ehrung10Jaehrl;
+
+        return $this;
+    }
+
+    /**
+     * Get ehrung10Jaehrl
+     *
+     * @return string
+     */
+    public function getEhrung10Jaehrl()
+    {
+        return $this->ehrung_10_jaehrl;
+    }
+
+    /**
+     * Set aufnahmebest
+     *
+     * @param \DateTime $aufnahmebest
+     *
+     * @return Mitglieder
+     */
+    public function setAufnahmebest($aufnahmebest)
+    {
+        $this->aufnahmebest = $aufnahmebest;
+
+        return $this;
+    }
+
+    /**
+     * Get aufnahmebest
+     *
+     * @return \DateTime
+     */
+    public function getAufnahmebest()
+    {
+        return $this->aufnahmebest;
+    }
+
+    /**
+     * Set rehascheinGueltigBis
+     *
+     * @param \DateTime $rehascheinGueltigBis
+     *
+     * @return Mitglieder
+     */
+    public function setRehaschein1GueltigBis($rehascheinGueltigBis)
+    {
+        $this->rehaschein1_gueltig_bis = $rehascheinGueltigBis;
+
+        return $this;
+    }
+
+    /**
+     * Get rehascheinGueltigBis
+     *
+     * @return \DateTime
+     */
+    public function getRehaschein1GueltigBis()
+    {
+        return $this->rehaschein1_gueltig_bis;
+    }
+
+    /**
+     * Set rehaschein2GueltigBis
+     *
+     * @param \DateTime $rehaschein2GueltigBis
+     *
+     * @return Mitglieder
+     */
+    public function setRehaschein2GueltigBis($rehaschein2GueltigBis)
+    {
+        $this->rehaschein2_gueltig_bis = $rehaschein2GueltigBis;
+
+        return $this;
+    }
+
+    /**
+     * Get rehaschein2GueltigBis
+     *
+     * @return \DateTime
+     */
+    public function getRehaschein2GueltigBis()
+    {
+        return $this->rehaschein2_gueltig_bis;
+    }
+
+    /**
+     * Set verminderterBeitrag
+     *
+     * @param string $verminderterBeitrag
+     *
+     * @return Mitglieder
+     */
+    public function setVerminderterBeitrag($verminderterBeitrag)
+    {
+        $this->verminderter_beitrag = $verminderterBeitrag;
+
+        return $this;
+    }
+
+    /**
+     * Get verminderterBeitrag
+     *
+     * @return string
+     */
+    public function getVerminderterBeitrag()
+    {
+        return $this->verminderter_beitrag;
+    }
+
+    /**
+     * Set krankenkasse
+     *
+     * @param string $krankenkasse
+     *
+     * @return Mitglieder
+     */
+    public function setKrankenkasse($krankenkasse)
+    {
+        $this->krankenkasse = $krankenkasse;
+
+        return $this;
+    }
+
+    /**
+     * Get krankenkasse
+     *
+     * @return string
+     */
+    public function getKrankenkasse()
+    {
+        return $this->krankenkasse;
+    }
+
+    /**
+     * Set zusatzinfo
+     *
+     * @param string $zusatzinfo
+     *
+     * @return Mitglieder
+     */
+    public function setZusatzinfo($zusatzinfo)
+    {
+        $this->zusatzinfo = $zusatzinfo;
+
+        return $this;
+    }
+
+    /**
+     * Get zusatzinfo
+     *
+     * @return string
+     */
+    public function getZusatzinfo()
+    {
+        return $this->zusatzinfo;
+    }
+
+    /**
+     * Set ehrung
+     *
+     * @param string $ehrung
+     *
+     * @return Mitglieder
+     */
+    public function setEhrung($ehrung)
+    {
+        $this->ehrung = $ehrung;
+
+        return $this;
+    }
+
+    /**
+     * Get ehrung
+     *
+     * @return string
+     */
+    public function getEhrung()
+    {
+        return $this->ehrung;
+    }
+
+    /**
+     * Set arbeitsplatzHaltung
+     *
+     * @param string $arbeitsplatzHaltung
+     *
+     * @return Mitglieder
+     */
+    public function setArbeitsplatzhaltung($arbeitsplatzHaltung)
+    {
+        $this->arbeitsplatzhaltung = $arbeitsplatzHaltung;
+
+        return $this;
+    }
+
+    /**
+     * Get arbeitsplatzHaltung
+     *
+     * @return string
+     */
+    public function getArbeitsplatzhaltung()
+    {
+        return $this->arbeitsplatzhaltung;
+    }
+
+    /**
+     * Set chronBerufserkrankungen
+     *
+     * @param string $chronBerufserkrankungen
+     *
+     * @return Mitglieder
+     */
+    public function setChronBerufserkrankungen($chronBerufserkrankungen)
+    {
+        $this->chron_berufserkrankungen = $chronBerufserkrankungen;
+
+        return $this;
+    }
+
+    /**
+     * Get chronBerufserkrankungen
+     *
+     * @return string
+     */
+    public function getChronBerufserkrankungen()
+    {
+        return $this->chron_berufserkrankungen;
+    }
+
+    /**
+     * Set schmerzenInHWS
+     *
+     * @param string $schmerzenInHWS
+     *
+     * @return Mitglieder
+     */
+    public function setSchmerzenInHWS($schmerzenInHWS)
+    {
+        $this->schmerzen_in_hws = $schmerzenInHWS;
+
+        return $this;
+    }
+
+    /**
+     * Get schmerzenInHWS
+     *
+     * @return string
+     */
+    public function getSchmerzenInHWS()
+    {
+        return $this->schmerzen_in_hws;
+    }
+
+    /**
+     * Set schmerzenInBWS
+     *
+     * @param string $schmerzenInBWS
+     *
+     * @return Mitglieder
+     */
+    public function setSchmerzenInBWS($schmerzenInBWS)
+    {
+        $this->schmerzen_in_bws = $schmerzenInBWS;
+
+        return $this;
+    }
+
+    /**
+     * Get schmerzenInBWS
+     *
+     * @return string
+     */
+    public function getSchmerzenInBWS()
+    {
+        return $this->schmerzen_in_bws;
+    }
+
+    /**
+     * Set schmerzenInLWS
+     *
+     * @param string $schmerzenInLWS
+     *
+     * @return Mitglieder
+     */
+    public function setSchmerzenInLWS($schmerzenInLWS)
+    {
+        $this->schmerzen_in_lws = $schmerzenInLWS;
+
+        return $this;
+    }
+
+    /**
+     * Get schmerzenInLWS
+     *
+     * @return string
+     */
+    public function getSchmerzenInLWS()
+    {
+        return $this->schmerzen_in_lws;
+    }
+
+    /**
+     * Set obereExtremitaeten
+     *
+     * @param string $obereExtremitaeten
+     *
+     * @return Mitglieder
+     */
+    public function setObereExtremitaeten($obereExtremitaeten)
+    {
+        $this->obere_extremitaeten = $obereExtremitaeten;
+
+        return $this;
+    }
+
+    /**
+     * Get obereExtremitaeten
+     *
+     * @return string
+     */
+    public function getObereExtremitaeten()
+    {
+        return $this->obere_extremitaeten;
+    }
+
+    /**
+     * Set untereExtremitaeten
+     *
+     * @param string $untereExtremitaeten
+     *
+     * @return Mitglieder
+     */
+    public function setUntereExtremitaeten($untereExtremitaeten)
+    {
+        $this->untere_extremitaeten = $untereExtremitaeten;
+
+        return $this;
+    }
+
+    /**
+     * Get untereExtremitaeten
+     *
+     * @return string
+     */
+    public function getUntereExtremitaeten()
+    {
+        return $this->untere_extremitaeten;
+    }
+
+    /**
+     * Set sonstBeeintraechtigung
+     *
+     * @param string $sonstBeeintraechtigung
+     *
+     * @return Mitglieder
+     */
+    public function setSonstBeeintraechtigung($sonstBeeintraechtigung)
+    {
+        $this->sonst_beeintraechtigung = $sonstBeeintraechtigung;
+
+        return $this;
+    }
+
+    /**
+     * Get sonstBeeintraechtigung
+     *
+     * @return string
+     */
+    public function getSonstBeeintraechtigung()
+    {
+        return $this->sonst_beeintraechtigung;
+    }
+
+    /**
+     * Set medikamente
+     *
+     * @param string $medikamente
+     *
+     * @return Mitglieder
+     */
+    public function setMedikamente($medikamente)
+    {
+        $this->medikamente = $medikamente;
+
+        return $this;
+    }
+
+    /**
+     * Get medikamente
+     *
+     * @return string
+     */
+    public function getMedikamente()
+    {
+        return $this->medikamente;
+    }
+
+    /**
+     * Set weitereBewlAktivit
+     *
+     * @param string $weitereBewlAktivit
+     *
+     * @return Mitglieder
+     */
+    public function setWeitereBewlAktivit($weitereBewlAktivit)
+    {
+        $this->weitere_bewl_aktivit = $weitereBewlAktivit;
+
+        return $this;
+    }
+
+    /**
+     * Get weitereBewlAktivit
+     *
+     * @return string
+     */
+    public function getWeitereBewlAktivit()
+    {
+        return $this->weitere_bewl_aktivit;
+    }
+
+    /**
+     * Set hfRuheMin
+     *
+     * @param integer $hfRuheMin
+     *
+     * @return Mitglieder
+     */
+    public function setHfRuheMin($hfRuheMin)
+    {
+        $this->hf_ruhe_min = $hfRuheMin;
+
+        return $this;
+    }
+
+    /**
+     * Get hfRuheMin
+     *
+     * @return integer
+     */
+    public function getHfRuheMin()
+    {
+        return $this->hf_ruhe_min;
+    }
+
+    /**
+     * Set zeitlBelTest
+     *
+     * @param string $zeitlBelTest
+     *
+     * @return Mitglieder
+     */
+    public function setZeitlBelTest($zeitlBelTest)
+    {
+        $this->zeitl_bel_test = $zeitlBelTest;
+
+        return $this;
+    }
+
+    /**
+     * Get zeitlBelTest
+     *
+     * @return string
+     */
+    public function getZeitlBelTest()
+    {
+        return $this->zeitl_bel_test;
+    }
+
+    /**
+     * Set infoBeitragRehasp
+     *
+     * @param string $infoBeitragRehasp
+     *
+     * @return Mitglieder
+     */
+    public function setInfoBeitragRehasp($infoBeitragRehasp)
+    {
+        $this->info_beitrag_rehasp = $infoBeitragRehasp;
+
+        return $this;
+    }
+
+    /**
+     * Get infoBeitragRehasp
+     *
+     * @return string
+     */
+    public function getInfoBeitragRehasp()
+    {
+        return $this->info_beitrag_rehasp;
+    }
+
+    
+
+}

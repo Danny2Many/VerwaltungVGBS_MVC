@@ -1,0 +1,42 @@
+<?php
+
+
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="MemRehabilitationCertificate")
+ */
+class MemRehabilitationCertificate {
+    /**
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="rehabilitationcertificate")
+     * @ORM\JoinColumn(name="memid", referencedColumnName="memid")
+     */
+    private $member;
+    
+    
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer") 
+     * 
+     */
+    protected $memid;
+    
+    
+     /**
+      *  @ORM\Id
+     * @ORM\Column(type="date")
+       * @Assert\NotBlank()
+     * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+     */
+    protected $terminationdate;
+
+    
+}

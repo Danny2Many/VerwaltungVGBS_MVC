@@ -1,0 +1,60 @@
+<?php
+
+
+
+namespace AppBundle\Entity;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="MemYearInfo")
+ */
+class MemYearInfo {
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="yearinfo")
+     * @ORM\JoinColumn(name="memid", referencedColumnName="memid")
+     */
+    private $member;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="MemFinYear", inversedBy="yearinfo")
+     * @ORM\JoinColumn(name="year", referencedColumnName="year")
+     */
+    private $finyear;
+    
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="date") 
+     * 
+     */
+    protected $year;
+    
+    
+     /**
+     * @ORM\Id
+     * @ORM\Column(type="integer") 
+     * 
+     */
+    protected $memid;
+    
+    
+    /**
+     * 
+     * @ORM\Column(type="string") 
+     * 
+     */
+    protected $additionalduesinfo;
+    
+    
+    /**
+     * 
+     * @ORM\Column(type="float") 
+     * 
+     */
+    protected $levy;
+
+    
+}

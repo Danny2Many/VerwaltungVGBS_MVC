@@ -1,0 +1,975 @@
+<?php
+
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use AppBundle\Entity\PersonalData;
+
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="Member")
+ */
+class Member extends PersonalData
+{
+    
+
+      /**
+     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Sportsgroup")
+     * @ORM\JoinTable(name="Member_Sportsgroup",
+ *      joinColumns={@ORM\JoinColumn(name="memid", referencedColumnName="memid")},
+ *      inverseJoinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")})
+     */
+
+    protected $sportsgroup; 
+    
+        /**
+     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
+     * @ORM\JoinTable(name="Member_Section",
+ *      joinColumns={@ORM\JoinColumn(name="memid", referencedColumnName="memid")},
+ *      inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
+     */
+
+    protected $section;
+    
+    
+    /**
+     * @ORM\OneToMany(targetEntity="MemRehabilitationCertificate", mappedBy="member", cascade={"all"})
+     */
+    protected $rehabilitationcertificate;
+
+
+    
+    /**
+     * @ORM\OneToMany(targetEntity="MemMonthlyDues", mappedBy="member", cascade={"all"})
+     */
+    protected $monthlydues;
+    
+    
+    /**
+     * @ORM\OneToMany(targetEntity="MemYearInfo", mappedBy="member", cascade={"all"})
+     */
+    protected $yearinfo;
+    
+    
+    
+    public function __construct() {
+        
+        $this->sportsgroup = new ArrayCollection();
+        $this->rehabilitationcertificate = new ArrayCollection();
+        $this->phonenumber = new ArrayCollection();
+        $this->monthlydues = new ArrayCollection();
+        $this->section = new ArrayCollection();
+    }
+    
+    
+   
+
+    
+    
+    /**
+     * Add sportsgroup
+     *
+     * @param \AppBundle\Entity\Sportsgroup $sportsgroup
+     *
+     * @return Member
+     */
+    public function addSportsgroup(\AppBundle\Entity\Sportsgroup $sportsgroup)
+    {
+        $this->sportsgroup[] = $sportsgroup;
+
+        return $this;
+    }
+
+    /**
+     * Remove sportsgroup
+     *
+     * @param \AppBundle\Entity\Sportsgroup $sportsgroup
+     */
+    public function removeSportsgroup(\AppBundle\Entity\Sportsgroup $sportsgroup)
+    {
+        $this->sportsgroup->removeElement($sportsgroup);
+    }
+
+    /**
+     * Get sportsgroups
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSportsgroup()
+    {
+        return $this->sportsgroup;
+    }
+     
+/**
+ * Set categories
+ * @param \Doctrine\Common\Collections\Collection $categories
+ *
+ * @return Post
+ */
+public function setSportsgroup($sportsgroup)
+{
+
+    if(!is_array($sportsgroup))
+    {
+        $sportsgroup = array($sportsgroup);
+    }
+    $this->sportsgroup = $sportsgroup;
+
+    return $this;
+}
+
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer") 
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $memid;
+
+   
+    
+      /**
+     * @ORM\Column(type="date")
+       * @Assert\NotBlank()
+     * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+     */
+    protected $admissiondate;
+    
+  
+      /**
+     * @ORM\Column(type="string")
+       * @Assert\NotBlank()
+     * @Assert\Choice(choices = {"aktiv", "inaktiv"}, message = "Bitte wählen Sie einen gültigen Status.")
+     */
+    protected $state;
+    
+      
+    
+       /**
+     * @ORM\Column(type="date")
+        * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+     */
+    protected $admissionconfirmation;
+    
+    
+      
+    
+       /**
+     * @ORM\Column(type="string")
+        * @Assert\NotBlank()
+     * @Assert\Choice(choices = {"kein", "(verminderter Beitrag)"}, message = "Bitte wählen Sie eine gültigen option.")
+     */
+    protected $decreaseddues;
+    
+       /**
+     * @ORM\Column(type="string")
+     */
+    protected $healthinsurance;
+    
+    
+      /**
+     * @ORM\Column(type="string")
+     */
+    protected $additionalinfo;
+
+      /**
+     * @ORM\Column(type="string")
+     */
+    protected $tribute;
+    
+       /**
+     * @ORM\Column(type="text")
+     */
+    protected $workplaceposture;
+    
+    
+       /**
+     * @ORM\Column(type="string")
+     */
+    protected $chronoccupationaldis;
+    
+    
+       /**
+     * @ORM\Column(type="string")
+     */
+       protected $paincervicalspine;
+    
+        /**
+     * @ORM\Column(type="string")
+     */
+        protected $painthoracicspine;
+    
+       /**
+     * @ORM\Column(type="string")
+     */
+       protected $painlumbarspine;
+    
+       /**
+     * @ORM\Column(type="string")
+     */
+       protected $upperlimbs;
+    
+       /**
+     * @ORM\Column(type="string")
+     */
+       protected $lowerlimbs;
+    
+       /**
+     * @ORM\Column(type="text")
+     */
+       protected $otherimpairments;
+    
+      /**
+     * @ORM\Column(type="string")
+     */
+      protected $medication;
+    
+       /**
+     * @ORM\Column(type="string")
+     */
+       protected $additionalagilactivities;
+    
+       /**
+     * @ORM\Column(type="integer")
+        * @Assert\Type(
+     * type="numeric",
+     * message="{{ value }} ist kein gültiger {{ type }}.")
+     */
+       protected $pulseatrest;
+    
+     /**
+     * @ORM\Column(type="text")
+     */
+    protected $stresstest;
+    
+   
+      /**
+     * @ORM\Column(type="text")
+     */
+      protected $inforehabdues;
+    
+       /**
+     * @ORM\Column(type="float")
+     */
+      protected $admissioncharge;
+      
+      
+       /**
+     * @ORM\Column(type="float")
+     */
+      protected $admissionchargepayed;
+
+    
+
+   
+
+    
+
+    /**
+     * Get memid
+     *
+     * @return integer
+     */
+    public function getMemid()
+    {
+        return $this->memid;
+    }
+
+    /**
+     * Set admissiondate
+     *
+     * @param \DateTime $admissiondate
+     *
+     * @return Member
+     */
+    public function setAdmissiondate($admissiondate)
+    {
+        $this->admissiondate = $admissiondate;
+
+        return $this;
+    }
+
+    /**
+     * Get admissiondate
+     *
+     * @return \DateTime
+     */
+    public function getAdmissiondate()
+    {
+        return $this->admissiondate;
+    }
+
+    /**
+     * Set state
+     *
+     * @param string $state
+     *
+     * @return Member
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * Get state
+     *
+     * @return string
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * Set admissionconfirmation
+     *
+     * @param \DateTime $admissionconfirmation
+     *
+     * @return Member
+     */
+    public function setAdmissionconfirmation($admissionconfirmation)
+    {
+        $this->admissionconfirmation = $admissionconfirmation;
+
+        return $this;
+    }
+
+    /**
+     * Get admissionconfirmation
+     *
+     * @return \DateTime
+     */
+    public function getAdmissionconfirmation()
+    {
+        return $this->admissionconfirmation;
+    }
+
+    /**
+     * Set decreaseddues
+     *
+     * @param string $decreaseddues
+     *
+     * @return Member
+     */
+    public function setDecreaseddues($decreaseddues)
+    {
+        $this->decreaseddues = $decreaseddues;
+
+        return $this;
+    }
+
+    /**
+     * Get decreaseddues
+     *
+     * @return string
+     */
+    public function getDecreaseddues()
+    {
+        return $this->decreaseddues;
+    }
+
+    /**
+     * Set healthinsurance
+     *
+     * @param string $healthinsurance
+     *
+     * @return Member
+     */
+    public function setHealthinsurance($healthinsurance)
+    {
+        $this->healthinsurance = $healthinsurance;
+
+        return $this;
+    }
+
+    /**
+     * Get healthinsurance
+     *
+     * @return string
+     */
+    public function getHealthinsurance()
+    {
+        return $this->healthinsurance;
+    }
+
+    /**
+     * Set additionalinfo
+     *
+     * @param string $additionalinfo
+     *
+     * @return Member
+     */
+    public function setAdditionalinfo($additionalinfo)
+    {
+        $this->additionalinfo = $additionalinfo;
+
+        return $this;
+    }
+
+    /**
+     * Get additionalinfo
+     *
+     * @return string
+     */
+    public function getAdditionalinfo()
+    {
+        return $this->additionalinfo;
+    }
+
+    /**
+     * Set tribute
+     *
+     * @param string $tribute
+     *
+     * @return Member
+     */
+    public function setTribute($tribute)
+    {
+        $this->tribute = $tribute;
+
+        return $this;
+    }
+
+    /**
+     * Get tribute
+     *
+     * @return string
+     */
+    public function getTribute()
+    {
+        return $this->tribute;
+    }
+
+    /**
+     * Set workplaceposture
+     *
+     * @param string $workplaceposture
+     *
+     * @return Member
+     */
+    public function setWorkplaceposture($workplaceposture)
+    {
+        $this->workplaceposture = $workplaceposture;
+
+        return $this;
+    }
+
+    /**
+     * Get workplaceposture
+     *
+     * @return string
+     */
+    public function getWorkplaceposture()
+    {
+        return $this->workplaceposture;
+    }
+
+    /**
+     * Set chronoccupationaldis
+     *
+     * @param string $chronoccupationaldis
+     *
+     * @return Member
+     */
+    public function setChronoccupationaldis($chronoccupationaldis)
+    {
+        $this->chronoccupationaldis = $chronoccupationaldis;
+
+        return $this;
+    }
+
+    /**
+     * Get chronoccupationaldis
+     *
+     * @return string
+     */
+    public function getChronoccupationaldis()
+    {
+        return $this->chronoccupationaldis;
+    }
+
+    /**
+     * Set paincervicalspine
+     *
+     * @param string $paincervicalspine
+     *
+     * @return Member
+     */
+    public function setPaincervicalspine($paincervicalspine)
+    {
+        $this->paincervicalspine = $paincervicalspine;
+
+        return $this;
+    }
+
+    /**
+     * Get paincervicalspine
+     *
+     * @return string
+     */
+    public function getPaincervicalspine()
+    {
+        return $this->paincervicalspine;
+    }
+
+    /**
+     * Set painthoracicspine
+     *
+     * @param string $painthoracicspine
+     *
+     * @return Member
+     */
+    public function setPainthoracicspine($painthoracicspine)
+    {
+        $this->painthoracicspine = $painthoracicspine;
+
+        return $this;
+    }
+
+    /**
+     * Get painthoracicspine
+     *
+     * @return string
+     */
+    public function getPainthoracicspine()
+    {
+        return $this->painthoracicspine;
+    }
+
+    /**
+     * Set painlumbarspine
+     *
+     * @param string $painlumbarspine
+     *
+     * @return Member
+     */
+    public function setPainlumbarspine($painlumbarspine)
+    {
+        $this->painlumbarspine = $painlumbarspine;
+
+        return $this;
+    }
+
+    /**
+     * Get painlumbarspine
+     *
+     * @return string
+     */
+    public function getPainlumbarspine()
+    {
+        return $this->painlumbarspine;
+    }
+
+    /**
+     * Set upperlimbs
+     *
+     * @param string $upperlimbs
+     *
+     * @return Member
+     */
+    public function setUpperlimbs($upperlimbs)
+    {
+        $this->upperlimbs = $upperlimbs;
+
+        return $this;
+    }
+
+    /**
+     * Get upperlimbs
+     *
+     * @return string
+     */
+    public function getUpperlimbs()
+    {
+        return $this->upperlimbs;
+    }
+
+    /**
+     * Set lowerlimbs
+     *
+     * @param string $lowerlimbs
+     *
+     * @return Member
+     */
+    public function setLowerlimbs($lowerlimbs)
+    {
+        $this->lowerlimbs = $lowerlimbs;
+
+        return $this;
+    }
+
+    /**
+     * Get lowerlimbs
+     *
+     * @return string
+     */
+    public function getLowerlimbs()
+    {
+        return $this->lowerlimbs;
+    }
+
+    /**
+     * Set otherimpairments
+     *
+     * @param string $otherimpairments
+     *
+     * @return Member
+     */
+    public function setOtherimpairments($otherimpairments)
+    {
+        $this->otherimpairments = $otherimpairments;
+
+        return $this;
+    }
+
+    /**
+     * Get otherimpairments
+     *
+     * @return string
+     */
+    public function getOtherimpairments()
+    {
+        return $this->otherimpairments;
+    }
+
+    /**
+     * Set medication
+     *
+     * @param string $medication
+     *
+     * @return Member
+     */
+    public function setMedication($medication)
+    {
+        $this->medication = $medication;
+
+        return $this;
+    }
+
+    /**
+     * Get medication
+     *
+     * @return string
+     */
+    public function getMedication()
+    {
+        return $this->medication;
+    }
+
+    /**
+     * Set additionalagilactivities
+     *
+     * @param string $additionalagilactivities
+     *
+     * @return Member
+     */
+    public function setAdditionalagilactivities($additionalagilactivities)
+    {
+        $this->additionalagilactivities = $additionalagilactivities;
+
+        return $this;
+    }
+
+    /**
+     * Get additionalagilactivities
+     *
+     * @return string
+     */
+    public function getAdditionalagilactivities()
+    {
+        return $this->additionalagilactivities;
+    }
+
+    /**
+     * Set pulseatrest
+     *
+     * @param integer $pulseatrest
+     *
+     * @return Member
+     */
+    public function setPulseatrest($pulseatrest)
+    {
+        $this->pulseatrest = $pulseatrest;
+
+        return $this;
+    }
+
+    /**
+     * Get pulseatrest
+     *
+     * @return integer
+     */
+    public function getPulseatrest()
+    {
+        return $this->pulseatrest;
+    }
+
+    /**
+     * Set stresstest
+     *
+     * @param string $stresstest
+     *
+     * @return Member
+     */
+    public function setStresstest($stresstest)
+    {
+        $this->stresstest = $stresstest;
+
+        return $this;
+    }
+
+    /**
+     * Get stresstest
+     *
+     * @return string
+     */
+    public function getStresstest()
+    {
+        return $this->stresstest;
+    }
+
+    /**
+     * Set inforehabdues
+     *
+     * @param string $inforehabdues
+     *
+     * @return Member
+     */
+    public function setInforehabdues($inforehabdues)
+    {
+        $this->inforehabdues = $inforehabdues;
+
+        return $this;
+    }
+
+    /**
+     * Get inforehabdues
+     *
+     * @return string
+     */
+    public function getInforehabdues()
+    {
+        return $this->inforehabdues;
+    }
+
+    /**
+     * Set admissioncharge
+     *
+     * @param float $admissioncharge
+     *
+     * @return Member
+     */
+    public function setAdmissioncharge($admissioncharge)
+    {
+        $this->admissioncharge = $admissioncharge;
+
+        return $this;
+    }
+
+    /**
+     * Get admissioncharge
+     *
+     * @return float
+     */
+    public function getAdmissioncharge()
+    {
+        return $this->admissioncharge;
+    }
+
+    /**
+     * Set admissionchargepayed
+     *
+     * @param float $admissionchargepayed
+     *
+     * @return Member
+     */
+    public function setAdmissionchargepayed($admissionchargepayed)
+    {
+        $this->admissionchargepayed = $admissionchargepayed;
+
+        return $this;
+    }
+
+    /**
+     * Get admissionchargepayed
+     *
+     * @return float
+     */
+    public function getAdmissionchargepayed()
+    {
+        return $this->admissionchargepayed;
+    }
+
+    /**
+     * Add section
+     *
+     * @param \AppBundle\Entity\Section $section
+     *
+     * @return Member
+     */
+    public function addSection(\AppBundle\Entity\Section $section)
+    {
+        $this->section[] = $section;
+
+        return $this;
+    }
+
+    /**
+     * Remove section
+     *
+     * @param \AppBundle\Entity\Section $section
+     */
+    public function removeSection(\AppBundle\Entity\Section $section)
+    {
+        $this->section->removeElement($section);
+    }
+
+    /**
+     * Get section
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSection()
+    {
+        return $this->section;
+    }
+
+    
+   /**
+ * Set categories
+ * 
+ *
+ * @return Post
+ */
+public function setSection($section)
+{
+
+    if(!is_array($section))
+    {
+        $section = array($section);
+    }
+    $this->section = $section;
+
+    return $this;
+} 
+    
+    
+    
+    
+    
+    /**
+     * Add rehabilitationcertificate
+     *
+     * @param \AppBundle\Entity\MemRehabilitationCertificate $rehabilitationcertificate
+     *
+     * @return Member
+     */
+    public function addRehabilitationcertificate(\AppBundle\Entity\MemRehabilitationCertificate $rehabilitationcertificate)
+    {
+        if($rehabilitationcertificate->getTerminationdate() != null){
+        $rehabilitationcertificate->setMember($this);
+        $this->rehabilitationcertificate[] = $rehabilitationcertificate;
+
+        return $this;
+        }
+    }
+
+    /**
+     * Remove rehabilitationcertificate
+     *
+     * @param \AppBundle\Entity\MemRehabilitationCertificate $rehabilitationcertificate
+     */
+    public function removeRehabilitationcertificate(\AppBundle\Entity\MemRehabilitationCertificate $rehabilitationcertificate)
+    {
+        $this->rehabilitationcertificate->removeElement($rehabilitationcertificate);
+    }
+
+    /**
+     * Get rehabilitationcertificate
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRehabilitationcertificate()
+    {
+        return $this->rehabilitationcertificate;
+    }
+
+   
+
+    /**
+     * Add monthlydue
+     *
+     * @param \AppBundle\Entity\MemMonthlyDues $monthlydue
+     *
+     * @return Member
+     */
+    public function addMonthlydue(\AppBundle\Entity\MemMonthlyDues $monthlydue)
+    {
+        $monthlydue->setMember($this);
+        $this->monthlydues[] = $monthlydue;
+
+        return $this;
+    }
+
+    /**
+     * Remove monthlydue
+     *
+     * @param \AppBundle\Entity\MemMonthlyDues $monthlydue
+     */
+    public function removeMonthlydue(\AppBundle\Entity\MemMonthlyDues $monthlydue)
+    {
+        $this->monthlydues->removeElement($monthlydue);
+    }
+
+    /**
+     * Get monthlydues
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMonthlydues()
+    {
+        return $this->monthlydues;
+    }
+
+    /**
+     * Add yearinfo
+     *
+     * @param \AppBundle\Entity\MemYearInfo $yearinfo
+     *
+     * @return Member
+     */
+    public function addYearinfo(\AppBundle\Entity\MemYearInfo $yearinfo)
+    {
+        $yearinfo->setMember($this);
+        $this->yearinfo[] = $yearinfo;
+
+        return $this;
+    }
+
+    /**
+     * Remove yearinfo
+     *
+     * @param \AppBundle\Entity\MemYearInfo $yearinfo
+     */
+    public function removeYearinfo(\AppBundle\Entity\MemYearInfo $yearinfo)
+    {
+        $this->yearinfo->removeElement($yearinfo);
+    }
+
+    /**
+     * Get yearinfo
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getYearinfo()
+    {
+        return $this->yearinfo;
+    }
+}

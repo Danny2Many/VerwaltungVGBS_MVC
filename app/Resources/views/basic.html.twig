@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block meta %}
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <meta charset="utf-8">
+        {% endblock %}
+        
+        {% block stylesheets %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}"/> 
+        {% endblock %}
+        
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+       
+        {% block javascriptsrc %}
+        <script type="text/javascript" src="{{ asset('js/jquery-2.1.4.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/jquery.dataTables.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/dataTables.fixedColumns.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/dataTables.fixedColumns.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
+        {% endblock %}
+        
+        <script type="text/javascript">
+        {% block javascript %}
+        
+ 
+        $(document).ready( function () {
+    var oTable = $('#myTable').dataTable( {
+        
+        "sScrollY": screen.availHeight*0.51,
+        "sScrollX": "100%",
+
+        "bScrollCollapse": true,
+        "bPaginate": false,
+        "bFilter": false,
+        "bInfo": false,
+        fixedColumns: {
+        leftColumns: {% block fixedcolnum %}{% endblock %}
+    }
+
+    } );
+    
+    new $.fn.dataTable( oTable );
+   
+} );
+
+   
+        {% endblock %}
+
+       </script>
+        
+    </head>
+    
+    <body>
+       
+        {% block body %}
+            {% block navbar %}
+        <div class="container-fluid">
+         <div class="row">
+        <header>
+
+            <nav class="navbar navbar-default  col-md-12">
+  
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{% block viewlink %}#{% endblock %}">{% block viewname %}{% endblock %}</a>
+                </div>
+            <div>
+                            <ul class="nav navbar-nav">
+                                <li class="{% block HomeAktiv %}{% endblock %}"><a href="#">Home</a></li>
+                                <li class="dropdown {% block MitglAktiv %}{% endblock %}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Mitglieder <span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                        <li class="{% block StammAktiv %}#{% endblock %}"><a href="{{ path('member_home') }}">Stammdaten</a></li>
+                                        <li class="{% block FinanzAktiv %}#{% endblock %}"><a href="{{ path('member_fin') }}">Finanzdaten</a></li>
+                                    </ul>
+                                </li>
+                                <li class="{% block NMitglAktiv %}#{% endblock %}"><a href="#">Nichtmitglieder</a></li>
+                                <li class="{% block AustrittAktiv %}#{% endblock %}"><a href="#">Austrittsliste</a></li>
+                                <li class="{% block SportgrAktiv %}#{% endblock %}"><a href="#">Sportgruppen</a></li>
+                            </ul>
+                        </div>
+ 
+                    </nav>
+   
+                </header>
+            </div>  	
+                {% endblock %}
+                
+{% if info != null %}
+   <div class="alert alert-success">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>{{ info }}</strong>
+  </div>
+{% endif %}   
+         
+                                
+         {% block topmenu %}                       
+            <div class="inputT row">
+           
+                <div class="col-lg-12 form-inline">
+    
+                    <div class="form-group">
+                
+                        {% block search %}{% endblock %}
+                        
+     
+                    </div>
+                     <div class="form-group">
+                
+                        
+                        {% block add %}{% endblock %}
+     
+                    </div>
+                </div>
+            </div>
+     {% endblock %}
+             {% block table %}
+                 {% if tabledata is empty %}
+ 
+                    <div class="alert alert-info">
+                         Es konnten keine, mit ihrer Suchanfrage übereinstimmenden, Personen gefunden werden.
+                    </div>
+ 
+                 {% else %}
+            <table id="myTable" class="{% block color %} {{ colorclass }} {% endblock %}">
+    
+                <thead>
+                    {% block thead %}{% endblock %}
+                </thead>
+        
+                <tbody>
+                    {% block tbody %}{% endblock %}     
+                </tbody>
+    
+            </table>
+                {% endif %}
+       {% endblock %}
+       {% block pagination %}
+        <div class="row">
+            <div class="col-md-12">
+           <ul class="pagination">
+  {% for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'] %}
+  {% if letter == cletter %}
+     
+      <li class="active"><a href="{{ path('member_home', {'letter': letter}) }}">{{ letter }}</a></li>
+      
+      {% else %}
+      <li><a href="{{ path('member_home', {'letter': letter}) }}">{{ letter }}</a></li>
+  {% endif %}
+  {% endfor %}
+  <li class="active"><a href="{{ path('member_home', {'letter': cletter}) }}">{{ tabledata|length }} Personen wurden gefunden</a></li>
+</ul> 
+        
+            </div>
+
+           
+        </div>
+        </div>
+       {% endblock %}
+           </div> 
+        {% endblock %}
+        
+    </body>
+    
+</html>

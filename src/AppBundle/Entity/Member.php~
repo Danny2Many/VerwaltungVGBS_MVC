@@ -1,0 +1,274 @@
+<?php
+
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use AppBundle\Entity\PersonalData;
+
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="Member")
+ */
+class Member extends PersonalData
+{
+    
+
+      /**
+     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Sportsgroup")
+     * @ORM\JoinTable(name="Member_Sportsgroup",
+ *      joinColumns={@ORM\JoinColumn(name="memid", referencedColumnName="memid")},
+ *      inverseJoinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")})
+     */
+
+    protected $sportsgroup; 
+    
+        /**
+     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
+     * @ORM\JoinTable(name="Member_Section",
+ *      joinColumns={@ORM\JoinColumn(name="memid", referencedColumnName="memid")},
+ *      inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
+     */
+
+    protected $section;
+    
+    
+    /**
+     * @ORM\OneToMany(targetEntity="MemRehabilitationCertificate", mappedBy="member")
+     */
+    private $rehabilitationcertificate;
+
+/**
+     * @ORM\OneToMany(targetEntity="MemPhoneNumber", mappedBy="Member")
+     */
+    private $phonenumber;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="MemMonthlyDues", mappedBy="Member")
+     */
+    private $monthlydues;
+    
+    
+    /**
+     * @ORM\OneToMany(targetEntity="MemYearInfo", mappedBy="Member")
+     */
+    private $yearinfo;
+    
+    
+    
+    public function __construct() {
+        
+        $this->sportsgroup = new ArrayCollection();
+        $this->rehabilitationcertificate = new ArrayCollection();
+        $this->phonenumber = new ArrayCollection();
+        $this->monthlydues = new ArrayCollection();
+        $this->section = new ArrayCollection();
+    }
+    
+    
+   
+
+    
+    
+    /**
+     * Add sportsgroup
+     *
+     * @param \AppBundle\Entity\Sportsgroup $sportsgroup
+     *
+     * @return Member
+     */
+    public function addSportsgroup(\AppBundle\Entity\Sportsgroup $sportsgroup)
+    {
+        $this->sportsgroup[] = $sportsgroup;
+
+        return $this;
+    }
+
+    /**
+     * Remove sportsgroup
+     *
+     * @param \AppBundle\Entity\Sportsgroup $sportsgroup
+     */
+    public function removeSportsgroup(\AppBundle\Entity\Sportsgroup $sportsgroup)
+    {
+        $this->sportsgroup->removeElement($sportsgroup);
+    }
+
+    /**
+     * Get sportsgroups
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSportsgroup()
+    {
+        return $this->sportsgroup;
+    }
+     
+/**
+ * Set categories
+ * @param \Doctrine\Common\Collections\Collection $categories
+ *
+ * @return Post
+ */
+public function setSportsgroup($sportsgroup)
+{
+
+    if(!is_array($sportsgroup))
+    {
+        $sportsgroup = array($sportsgroup);
+    }
+    $this->sportsgroup = $sportsgroup;
+
+    return $this;
+}
+
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer") 
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $memid;
+
+   
+    
+      /**
+     * @ORM\Column(type="date")
+       * @Assert\NotBlank()
+     * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+     */
+    protected $admissiondate;
+    
+  
+      /**
+     * @ORM\Column(type="string")
+       * @Assert\NotBlank()
+     * @Assert\Choice(choices = {"aktiv", "inaktiv"}, message = "Bitte wählen Sie einen gültigen Status.")
+     */
+    protected $state;
+    
+      
+    
+       /**
+     * @ORM\Column(type="date")
+        * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+     */
+    protected $admissionconfirmation;
+    
+    
+      
+    
+       /**
+     * @ORM\Column(type="string")
+        * @Assert\NotBlank()
+     * @Assert\Choice(choices = {"kein", "(verminderter Beitrag)"}, message = "Bitte wählen Sie eine gültigen option.")
+     */
+    protected $decreaseddues;
+    
+       /**
+     * @ORM\Column(type="string")
+     */
+    protected $healthinsurance;
+    
+    
+      /**
+     * @ORM\Column(type="string")
+     */
+    protected $additionalinfo;
+
+      /**
+     * @ORM\Column(type="string")
+     */
+    protected $tribute;
+    
+       /**
+     * @ORM\Column(type="text")
+     */
+    protected $workplaceposture;
+    
+    
+       /**
+     * @ORM\Column(type="string")
+     */
+    protected $chronoccupationaldis;
+    
+    
+       /**
+     * @ORM\Column(type="string")
+     */
+       protected $paincervicalspine;
+    
+        /**
+     * @ORM\Column(type="string")
+     */
+        protected $painthoracicspine;
+    
+       /**
+     * @ORM\Column(type="string")
+     */
+       protected $painlumbarspine;
+    
+       /**
+     * @ORM\Column(type="string")
+     */
+       protected $upperlimbs;
+    
+       /**
+     * @ORM\Column(type="string")
+     */
+       protected $lowerlimbs;
+    
+       /**
+     * @ORM\Column(type="text")
+     */
+       protected $otherimpairments;
+    
+      /**
+     * @ORM\Column(type="string")
+     */
+      protected $medication;
+    
+       /**
+     * @ORM\Column(type="string")
+     */
+       protected $additionalagilactivities;
+    
+       /**
+     * @ORM\Column(type="integer")
+        * @Assert\Type(
+     * type="numeric",
+     * message="{{ value }} ist kein gültiger {{ type }}.")
+     */
+       protected $pulseatrest;
+    
+     /**
+     * @ORM\Column(type="text")
+     */
+    protected $stresstest;
+    
+   
+      /**
+     * @ORM\Column(type="text")
+     */
+      protected $inforehabdues;
+    
+       /**
+     * @ORM\Column(type="float")
+     */
+      protected $admissioncharge;
+      
+      
+       /**
+     * @ORM\Column(type="float")
+     */
+      protected $admissionchargepayed;
+
+    
+
+   
+
+    
+}

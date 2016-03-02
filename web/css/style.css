@@ -1,0 +1,120 @@
+
+
+
+ table {background-color: white;
+ border-collapse: collapse;
+ line-height: 1;
+ background-color: white;
+
+}
+
+
+
+ 
+
+td {padding-right: 5px; padding-left: 3px; height:30px;   }
+
+ table, th, td {
+   border: 1px solid #C0C0C0;
+   font-size:9pt;
+
+    
+} 
+
+ th, td {
+   
+   -webkit-box-sizing: content-box;
+     -moz-box-sizing: content-box;
+          box-sizing: content-box;
+          
+    
+} 
+
+
+
+
+ 
+
+
+
+ tr:nth-child(even) {
+    background-color: #F0F0F0;
+}
+
+.bluetheader th {background-color: #A9D0F5; 
+ text-align:left; padding-right: 10px;  }
+
+.redtheader th {background-color: #FF6666; 
+ text-align:left; padding-right: 10px; }
+
+
+.bluetheader.col-lg-12  table.dataTable thead .sorting,table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc{cursor:pointer;*cursor:hand}
+table.dataTable thead .sorting,table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc,table.dataTable thead .sorting_asc_disabled,table.dataTable thead .sorting_desc_disabled{background-repeat:no-repeat;background-position:center right}
+table.dataTable thead .sorting{background-image:url("../img/bg.png")}
+
+.bluetheader.col-lg-12 table.dataTable thead .sorting_asc{background-image:url("../img/asc.png");
+background-color: #3399FF;}
+
+.bluetheader.col-lg-12 table.dataTable thead .sorting_desc{background-image:url("../img/desc.png");
+background-color: #3399FF;}
+
+
+
+.redtheader.col-lg-12  table.dataTable thead .sorting,table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc{cursor:pointer;*cursor:hand}
+table.dataTable thead .sorting,table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc,table.dataTable thead .sorting_asc_disabled,table.dataTable thead .sorting_desc_disabled{background-repeat:no-repeat;background-position:center right}
+table.dataTable thead .sorting{background-image:url("../img/bg.png")}
+
+.redtheader.col-lg-12 table.dataTable thead .sorting_asc{background-image:url("../img/asc.png");
+background-color: #CC0033;}
+
+.redtheader.col-lg-12 table.dataTable thead .sorting_desc{background-image:url("../img/desc.png");
+background-color: #CC0033;}
+
+
+
+
+.add{
+    margin-left: 50px;
+}
+
+
+
+/*M_anlegen2.php*/
+             
+
+
+.panel-heading.stammheading{
+    background-color: #33CCFF;
+    color:#003366; 
+}
+
+.panel-heading.gesundhheading{
+    background-color: #CCFFCC;
+   color: #336633;
+}
+
+ .panel-heading.finanzheading{
+    background-color: #FF9999;
+    color: #660033;
+}
+
+
+
+
+.inputT{
+    margin-bottom: 3px;
+}
+
+label.required:after {
+    content: "* ";
+    color: red;
+}
+
+red {
+    color: red;
+}
+
+black {
+    color: black;
+}
+

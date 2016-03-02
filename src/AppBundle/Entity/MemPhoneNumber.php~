@@ -1,0 +1,45 @@
+<?php
+
+
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="MemPhoneNumber")
+ */
+class MemPhoneNumber {
+    
+  /**
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="phonenumber")
+     * @ORM\JoinColumn(name="memid", referencedColumnName="memid")
+     */
+    private $member;
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer") 
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $phid;
+    
+    /**
+     * 
+     * @ORM\Column(type="integer") 
+     * 
+     */
+    protected $memid;   
+    
+    /**
+     * 
+     * @ORM\Column(type="string") 
+     * 
+     */
+    protected $phonenumber;
+    
+
+    
+}
