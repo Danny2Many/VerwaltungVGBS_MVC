@@ -4,7 +4,7 @@
 {% block title %}Mitglieder - Finanzen{% endblock %}
 {% block fixedcolnum %} 7 {% endblock %}
 {% block viewlink %}{{ path('member_fin') }}{% endblock %}
-{% block viewname %}Mitglieder - Stammdaten{% endblock %}
+{% block viewname %}Mitglieder - Finanzdaten{% endblock %}
 {% block MitglAktiv %} active {% endblock %}
 {% block FinanzAktiv %} active {% endblock %}
 
@@ -14,16 +14,22 @@
 {{ form_widget(searchform.Spalte) }}
 {{ form_widget(searchform.searchfield) }}
 {{ form_widget(searchform.search) }}
-<a href="{{ path('member_home') }}"><input type="button" class="form-control" value="zurücksetzen" {{ disabled }}></a>
+<a href="{{ path('member_fin') }}"><input type="button" class="form-control" value="zurücksetzen" {{ disabled }}></a>
 {{ form_end(searchform) }}
 
 {% endblock %}
 
-{% block add %}
-    <a href="{{ path('addmem', {'letter': cletter }) }}"><button    class="add btn btn-default">
-      <span class="glyphicon glyphicon-plus"></span> neues Mitglied anlegen
-        </button></a>  
-{% endblock %}
+{% block dropdown %}
+      <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
+                    <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">HTML</a></li>
+                            <li><a href="#">CSS</a></li>
+                            <li><a href="#">JavaScript</a></li>
+                        </ul>
+                    </div> 
+    {% endblock %}
 
 
 
@@ -38,7 +44,7 @@
         
             
         <th>Bearb.</th><th>M_Nr</th><th>Abt</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Aufnahmegeb.</th><th>Aufnahmegeb. offen</th><th>Aufnahmegeb. gez.</th><th>zusätzl. Beitr.Info</th><th>Umlage</th><th>Beitr. Jan.</th><th>Beitr. Jan. offen</th><th>Beitr. Jan. gez.</th><th>Beitr. Feb.</th><th>Beitr. Feb. offen</th><th>Beitr. Feb. gez.</th><th>Beitr. März</th><th>Beitr. März offen</th><th>Beitr. März gez.</th><th>Beitr. Apr.</th><th>Beitr. Apr. offen</th> 
-        <th>Beitr. Apr. gez</th><th>Beitr. Mai</th><th>Beitr. Mai offen</th><th>Beitr. Mai gez.</th><th>Beitr. Juni</th><th>Beitr. Juni offen</th><th>Beitr. Juni gez.</th><th>Beitr. Juli</th><th>Beitr. Juli offen</th><th>Beitr. Juli gez.</th><th>Beitr. Aug.</th><th>Beitr. Aug. offen</th><th>Beitr. Aug. gez.</th><th>Beitr. Sep.</th><th>Beitr. Sep. offen</th><th>Beitr. Sep. gez.</th><th>Beitr. Okt.</th><th>Beitr. Okt. offen</th><th>Beitr. Okt. gez.</th><th>Beitr. Nov.</th><th>Beitr. Nov. offen</th><th>Beitr. Nov. gez.</th><th>Beitr. Dez.</th><th>Beitr. Dez. offen</th><th>Beitr. Dez. gez.</th>
+        <th>Beitr. Apr. gez</th><th>Beitr. Mai</th><th>Beitr. Mai offen</th><th>Beitr. Mai gez.</th><th>Beitr. Juni</th><th>Beitr. Juni offen</th><th>Beitr. Juni gez.</th><th>Beitr. Juli</th><th>Beitr. Juli offen</th><th>Beitr. Juli gez.</th><th>Beitr. Aug.</th><th>Beitr. Aug. offen</th><th>Beitr. Aug. gez.</th><th>Beitr. Sep.</th><th>Beitr. Sep. offen</th><th>Beitr. Sep. gez.</th><th>Beitr. Nov.</th><th>Beitr. Nov. offen</th><th>Beitr. Nov. gez.</th><th>Beitr. Dez.</th><th>Beitr. Dez. offen</th><th>Beitr. Dez. gez.</th>
         
     {% endblock %}
         
