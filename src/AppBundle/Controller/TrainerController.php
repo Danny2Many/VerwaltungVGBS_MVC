@@ -15,6 +15,7 @@ class TrainerController extends Controller
         return $this->render('Trainer/trainer.html.twig',
                 array('info'=>$info,
                     'tabledata'=>null,
-                    'cletter'=>null));
+                    'cletter'=>null,
+                    'path'=>'trainer_home'));
     }
 }
