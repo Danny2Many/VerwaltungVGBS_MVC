@@ -18,7 +18,7 @@ class Member extends PersonalData
     
 
       /**
-     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Sportsgroup")
+     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\MemSportsgroup")
      * @ORM\JoinTable(name="Member_Sportsgroup",
  *      joinColumns={@ORM\JoinColumn(name="memid", referencedColumnName="memid")},
  *      inverseJoinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")})
