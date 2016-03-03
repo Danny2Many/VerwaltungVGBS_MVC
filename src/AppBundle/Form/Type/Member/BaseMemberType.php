@@ -92,7 +92,7 @@ public function buildForm(FormBuilderInterface $builder, array $options)
                         
                 ->add('pulseatrest', NumberType::class, array( 'label' => 'Hf-Ruhe/Min:', 'scale' => 0, 'required' => false))
                 ->add('sportsgroup', EntityType::class,  array(
-            'class' => 'AppBundle:Sportsgroup',
+            'class' => 'AppBundle:MemSportsgroup',
             'choice_label' => 'token',
             'multiple' => true,
             'required' => false,
