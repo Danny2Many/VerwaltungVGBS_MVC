@@ -9,9 +9,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="Sportsgroup")
+ * @ORM\Table(name="MemSportsgroup")
  */
-class Sportsgroup {
+class MemSportsgroup {
     
 
     /**
