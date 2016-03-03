@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
+    <head>        
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block meta %}
             <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -79,6 +78,7 @@
                                 <li class="{% block NMitglAktiv %}#{% endblock %}"><a href="#">Nichtmitglieder</a></li>
                                 <li class="{% block AustrittAktiv %}#{% endblock %}"><a href="#">Austrittsliste</a></li>
                                 <li class="{% block SportgrAktiv %}#{% endblock %}"><a href="#">Sportgruppen</a></li>
+                                <li class="{% block TrainerAktiv %}#{% endblock %}"><a href="{{path('trainer_home')}}">Übungsleiter</a></li>
                             </ul>
                         </div>
  
