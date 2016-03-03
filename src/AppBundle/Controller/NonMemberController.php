@@ -9,10 +9,10 @@ use Symfony\Component\HttpFoundation\Request;
 class NonMemberController extends Controller
 {
     /**
-     * @Route("/nichtmitglieder", name="nonmember")
+     * @Route("/nichtmitglieder", name="nonmember_home")
      */
-    public function indexAction(Request $request)
-    {
-        return $this->render('Nicht_Mitglieder/nonmember.html.twig', array('cletter'=>NULL, 'info'=>NULL, 'tabledata' => NULL));
+    public function indexAction () {
+    
+        return $this->render('Nicht_Mitglieder/nonmember.html.twig', array('cletter'=>NULL, 'info'=>NULL, 'tabledata' => NULL, 'path'=> 'nonmember_home'));
     }
 }
