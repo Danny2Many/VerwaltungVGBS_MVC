@@ -75,7 +75,7 @@
                                         <li class="{% block FinanzAktiv %}#{% endblock %}"><a href="{{ path('member_fin') }}">Finanzdaten</a></li>
                                     </ul>
                                 </li>
-                                <li class="{% block NMitglAktiv %}#{% endblock %}"><a href="#">Nichtmitglieder</a></li>
+                                <li class="{% block NMitglAktiv %}#{% endblock %}"><a href="{{path('nonmember_home')}}">Nichtmitglieder</a></li>
                                 <li class="{% block AustrittAktiv %}#{% endblock %}"><a href="#">Austrittsliste</a></li>
                                 <li class="{% block SportgrAktiv %}#{% endblock %}"><a href="#">Sportgruppen</a></li>
                                 <li class="{% block TrainerAktiv %}#{% endblock %}"><a href="{{path('trainer_home')}}">Übungsleiter</a></li>
