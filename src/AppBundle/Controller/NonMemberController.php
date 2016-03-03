@@ -13,6 +13,7 @@ class NonMemberController extends Controller
      */
     public function indexAction () {
     
-        return $this->render('Nicht_Mitglieder/nonmember.html.twig', array('cletter'=>NULL, 'info'=>NULL, 'tabledata' => NULL, 'path'=> 'nonmember_home'));
+        return $this->render('Nicht_Mitglieder/nonmember.html.twig', 
+        array('cletter'=>NULL, 'info'=>NULL, 'tabledata' => NULL, 'path'=> 'nonmember_home'));
     }
 }
