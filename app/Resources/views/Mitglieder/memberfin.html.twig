@@ -4,7 +4,7 @@
 {% block title %}Mitglieder - Finanzen{% endblock %}
 {% block fixedcolnum %} 7 {% endblock %}
 {% block viewlink %}{{ path('member_fin') }}{% endblock %}
-{% block viewname %}Mitglieder - Finanzdaten{% endblock %}
+{% block viewname %}Mitglieder - Finanzdaten - {{ year }}{% endblock %}
 {% block MitglAktiv %} active {% endblock %}
 {% block FinanzAktiv %} active {% endblock %}
 
@@ -21,19 +21,28 @@
 
 {% block dropdown %}
       <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Finanzjahr
                     <span class="caret"></span></button>
                         <ul class="dropdown-menu">
-                            <li><a href="#">HTML</a></li>
-                            <li><a href="#">CSS</a></li>
-                            <li><a href="#">JavaScript</a></li>
+                            {% for finyear in finyears %}
+                           
+                            {% if finyear.year == year %}
+                            <li class="active"><a href="#">{{ finyear.year }}</a></li>
+                            {% else %}
+                             <li><a href="#">{{ finyear.year }}</a></li>
+                            {% endif %}
+                            {% endfor %}
                         </ul>
                     </div> 
     {% endblock %}
 
-
-
-
+{% block tabs %}
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#">1. Halbjahr</a></li>
+  <li><a href="#">2. Halbjahr</a></li>
+</ul>
+    {% endblock %}
+    
 {% block color %} {{ colorclass }} {% endblock %}
 
 
