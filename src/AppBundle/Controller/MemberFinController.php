@@ -37,8 +37,23 @@ class MemberFinController extends Controller{
         $qb->Join('m.yearinfo', 'i')
            ->where('i.year = 2016');
            
-        
-         
+//        $monthsfirsthalfyear=['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni'];
+//        $monthssecondhalfyear=['Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+//        
+//        
+//        
+//        switch($halfyear){
+//            case 1:
+//                $monthshalfyear=$monthsfirsthalfyear;
+//                break;
+//            case 2:
+//                $monthshalfyear=$monthssecondhalfyear;
+//        }
+//
+//        foreach ($monthshalfyear as $month){
+//            $qb->andWhere()
+//            
+//        }
         $choices=array('Mitgliedsnr.' => 'memid',
         'Name' => 'lastname',
         'Vorname' => 'firstname',

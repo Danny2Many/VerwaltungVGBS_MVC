@@ -64,9 +64,6 @@
 
             <nav class="navbar navbar-default  col-md-12">
   
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="{% block viewlink %}#{% endblock %}">{% block viewname %}{% endblock %}</a>
-                </div>
             <div>
                             <ul class="nav navbar-nav">
                                 <li class="{% block HomeAktiv %}{% endblock %}"><a href="#">Home</a></li>
@@ -80,10 +77,14 @@
                                 <li class="{% block AustrittAktiv %}#{% endblock %}"><a href="#">Austrittsliste</a></li>
                                 <li class="{% block SportgrAktiv %}#{% endblock %}"><a href="#">Sportgruppen</a></li>
                             </ul>
+                            
                         </div>
- 
+              
+                <div class="blue navbar-header">
+                    <a class="navbar-brand" href="{% block viewlink %}#{% endblock %}">{% block viewname %}{% endblock %}</a>
+                </div>
                     </nav>
-   
+
                 </header>
             </div>  	
                 {% endblock %}
