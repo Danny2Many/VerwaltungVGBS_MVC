@@ -117,7 +117,8 @@ class MemberController extends Controller
             'searchform' => $searchform->createView(),
             'disabled' => $disabled,
             'info' => $info,
-            'cletter' => $letter
+            'cletter' => $letter,
+            'path' => 'member_home'
          
             ));
     }
@@ -179,7 +180,7 @@ class MemberController extends Controller
           
           $member->addYearinfo($yearinfo);
           
-          $months=['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'November', 'Dezember'];
+          $months=['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
           
           foreach ($months as $month){
           

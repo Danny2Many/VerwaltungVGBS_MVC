@@ -113,6 +113,16 @@
                         {% block add %}{% endblock %}
      
                     </div>
+                        <div class="form-group">
+                        {% block dropdown %}
+                      
+                        {% endblock %}
+                        </div>
+                        <div class="form-group">
+                        {% block tabs %}
+                      
+                        {% endblock %}
+                        </div>
                 </div>
             </div>
      {% endblock %}
@@ -137,6 +147,7 @@
             </table>
                 {% endif %}
        {% endblock %}
+       
        {% block pagination %}
         <div class="row">
             <div class="col-md-12">
@@ -144,13 +155,13 @@
   {% for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'] %}
   {% if letter == cletter %}
      
-      <li class="active"><a href="{{ path('member_home', {'letter': letter}) }}">{{ letter }}</a></li>
+      <li class="active"><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>
       
       {% else %}
-      <li><a href="{{ path('member_home', {'letter': letter}) }}">{{ letter }}</a></li>
+      <li><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>
   {% endif %}
   {% endfor %}
-  <li class="active"><a href="{{ path('member_home', {'letter': cletter}) }}">{{ tabledata|length }} Personen wurden gefunden</a></li>
+  <li class="active"><a href="{{ path(path, {'letter': cletter}) }}">{{ tabledata|length }} Personen wurden gefunden</a></li>
 </ul> 
         
             </div>
