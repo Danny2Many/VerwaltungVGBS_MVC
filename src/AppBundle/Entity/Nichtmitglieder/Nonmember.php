@@ -29,6 +29,8 @@ protected $Settlement1;
 */  
 protected $Settlement2;
  
+
+
 public function setTrainingStartDate($trainingstartsate)
 {
     $this->trainingadmissiondate = $admissiondate;
