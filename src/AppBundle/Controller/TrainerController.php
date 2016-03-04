@@ -12,6 +12,11 @@ class TrainerController extends Controller
      */
     public function indexAction ($info)
     {
+        
+        $repository = $this->getDoctrine()
+        ->getRepository('AppBundle:Trainer\Trainer');
+        
+        
         return $this->render('Trainer/trainer.html.twig',
                 array('info'=>$info,
                     'tabledata'=>null,

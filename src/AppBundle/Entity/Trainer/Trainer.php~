@@ -1,0 +1,34 @@
+<?php
+
+namespace AppBundle\Entity\Trainer;
+
+use AppBundle\Entity\PersonalData;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="Trainer")
+ */
+
+class Trainer extends PersonalData{
+    
+   
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer") 
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $trainerid;          
+    
+    /**
+     * @ORM\OneToMany(targetEntity="TrainerPhoneNumber", mappedBy="trainer", cascade={"persist"})
+     */
+    protected $phonenumber;
+    
+    
+    
+    
+   
+    
+}
