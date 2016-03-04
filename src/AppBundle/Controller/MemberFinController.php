@@ -12,9 +12,9 @@ class MemberFinController extends Controller{
     
     
     /**
-     * @Route("/mitglieder/finanzen/{letter}/{info}", defaults={"info"=null, "letter"="A"}, name="member_fin", requirements={"info": "null|gespeichert|entfernt", "letter": "[A-Z]"})
+     * @Route("/mitglieder/finanzen/{year}/{halfyear}/{letter}/{info}", defaults={"year"=2016,"halfyear"=1,"info"=null, "letter"="A"}, name="member_fin", requirements={"info": "null|gespeichert|entfernt", "letter": "[A-Z]"})
      */
-    public function indexAction(Request $request,$letter, $info){
+    public function indexAction(Request $request,$letter, $info, $year, $halfyear){
         
         switch($info){
         case 'gespeichert':
@@ -25,10 +25,14 @@ class MemberFinController extends Controller{
         $info='Diese Person wurde erfolgreich aus ihrer Datenbank entfernt.';
         break;
     }
-    
-        $repository = $this->getDoctrine()->getRepository('AppBundle:Member');
+        $finyearrepository = $this->getDoctrine()->getRepository('AppBundle:MemFinYear');
+        $memrepository = $this->getDoctrine()->getRepository('AppBundle:Member');
         
-        $qb = $repository->createQueryBuilder('m');
+        $finyears=$finyearrepository->findAll();
+        
+        
+        
+        $qb = $memrepository->createQueryBuilder('m');
         
         $qb->Join('m.yearinfo', 'i')
            ->where('i.year = 2016');
@@ -103,7 +107,9 @@ class MemberFinController extends Controller{
             'disabled' => $disabled,
             'info' => $info,
             'cletter' => $letter,
-            'path' => 'member_fin'
+            'path' => 'member_fin',
+            'finyears' => $finyears,
+            'year' => $year
          
             ));
     }
