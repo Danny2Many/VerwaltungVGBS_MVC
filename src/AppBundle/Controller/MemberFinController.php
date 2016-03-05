@@ -12,19 +12,11 @@ class MemberFinController extends Controller{
     
     
     /**
-     * @Route("/mitglieder/finanzen/{year}/{halfyear}/{letter}/{info}", defaults={"year"=2016,"halfyear"=1,"info"=null, "letter"="A"}, name="member_fin", requirements={"info": "null|gespeichert|entfernt", "letter": "[A-Z]"})
+     * @Route("/mitglieder/finanzen/{year}/{halfyear}/{letter}", defaults={"year"=2016,"halfyear"=1, "letter"="A"}, name="member_fin", requirements={ "letter": "[A-Z]", "year": "[1-9][0-9]{3}", "halfyear": "1|2"})
      */
-    public function indexAction(Request $request,$letter, $info, $year, $halfyear){
+    public function indexAction(Request $request,$letter, $year, $halfyear){
         
-        switch($info){
-        case 'gespeichert':
-        $info='Die Daten wurden erfolgreich gespeichert.';
-        break;
-        
-        case 'entfernt':
-        $info='Diese Person wurde erfolgreich aus ihrer Datenbank entfernt.';
-        break;
-    }
+    
         $finyearrepository = $this->getDoctrine()->getRepository('AppBundle:MemFinYear');
         $memrepository = $this->getDoctrine()->getRepository('AppBundle:Member');
         
@@ -35,25 +27,27 @@ class MemberFinController extends Controller{
         $qb = $memrepository->createQueryBuilder('m');
         
         $qb->Join('m.yearinfo', 'i')
+           
            ->where('i.year = 2016');
            
-//        $monthsfirsthalfyear=['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni'];
-//        $monthssecondhalfyear=['Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
-//        
-//        
-//        
-//        switch($halfyear){
-//            case 1:
-//                $monthshalfyear=$monthsfirsthalfyear;
-//                break;
-//            case 2:
-//                $monthshalfyear=$monthssecondhalfyear;
-//        }
-//
-//        foreach ($monthshalfyear as $month){
-//            $qb->andWhere()
-//            
-//        }
+        $monthsfirsthalfyear=['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni'];
+        $monthssecondhalfyear=['Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+        
+        
+        
+        switch($halfyear){
+            case 1:
+                $monthshalfyear=$monthsfirsthalfyear;
+                break;
+            case 2:
+                $monthshalfyear=$monthssecondhalfyear;
+        }
+
+        foreach ($monthshalfyear as $month){
+            $qb->orWhere('md.month='.$month);
+            
+        }
+        
         $choices=array('Mitgliedsnr.' => 'memid',
         'Name' => 'lastname',
         'Vorname' => 'firstname',
@@ -117,14 +111,16 @@ class MemberFinController extends Controller{
         'Mitglieder/memberfin.html.twig',
         array(
             'tabledata' => $memberfinlist,
-            'colorclass' => "redtheader",
+            'colorclass' => "bluetheader",
             'searchform' => $searchform->createView(),
             'disabled' => $disabled,
-            'info' => $info,
+            
             'cletter' => $letter,
             'path' => 'member_fin',
             'finyears' => $finyears,
-            'year' => $year
+            'year' => $year,
+            'halfyear' => $halfyear,
+            
          
             ));
     }
