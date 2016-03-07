@@ -6,12 +6,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class NonMemberController extends Controller
-{
+class NonMemberController extends Controller {
     /**
-     * @Route("/nichtmitglieder/{letter}", defaults={"letter"="S"}, name="nonmember_home", requirements={"letter": "[A-Z]"})
+     * @Route("/nichtmitglieder/{letter}", defaults={"letter"="A"}, name="nonmember_home", requirements={"letter": "[A-Z]"})
     */    
-    public function indexAction(Request $letter) {   
+    public function indexAction($letter) {   
   
         
     $repository = $this->getDoctrine()
