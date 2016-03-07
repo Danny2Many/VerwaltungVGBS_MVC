@@ -16,10 +16,17 @@ class TrainerController extends Controller
         $repository = $this->getDoctrine()
         ->getRepository('AppBundle:Trainer\Trainer');
         
+        $qb=$repository->createQueryBuilder('t');
+        
+        $query=$qb->where($qb->expr()->like('t.lastname', ':letter'))
+                   ->setParameter('letter','P%');
+        
+        $trainerlist=$query->getQuery()->getResult();
         
         return $this->render('Trainer/trainer.html.twig',
                 array('info'=>$info,
-                    'tabledata'=>null,
+                    'tabledata'=>$trainerlist,
+                    'colorclass'=>"bluetheader",
                     'cletter'=>null,
                     'path'=>'trainer_home'));
     }

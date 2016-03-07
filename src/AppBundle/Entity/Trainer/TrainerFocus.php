@@ -27,6 +27,10 @@ class TrainerFocus{
      */   
     protected $focus;
 
+    
+    
+    
+    
     /**
      * Set trainerid
      *

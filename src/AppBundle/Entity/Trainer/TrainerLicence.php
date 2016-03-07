@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Trainer;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -25,7 +26,31 @@ class TrainerLicence{
      * @ORM\Id
      * @ORM\Column(type="string")
      */   
-    protected $licence;
+    protected $licencenumber;
+
+     /**
+     * @ORM\Column(type="date")
+     * @Assert\NotBlank()
+     * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+     */
+    protected $issuedate;
+    
+     /**
+     * @ORM\Column(type="date")
+     * @Assert\NotBlank()
+     * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+     */
+    protected $expirationdate;
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="string")
+     */   
+    protected $licencetype;
+    
+    
+    
+    
 
     /**
      * Set trainerid
@@ -52,27 +77,99 @@ class TrainerLicence{
     }
 
     /**
-     * Set licence
+     * Set licencenumber
      *
-     * @param string $licence
+     * @param string $licencenumber
      *
      * @return TrainerLicence
      */
-    public function setLicence($licence)
+    public function setLicencenumber($licencenumber)
     {
-        $this->licence = $licence;
+        $this->licencenumber = $licencenumber;
 
         return $this;
     }
 
     /**
-     * Get licence
+     * Get licencenumber
      *
      * @return string
      */
-    public function getLicence()
+    public function getLicencenumber()
     {
-        return $this->licence;
+        return $this->licencenumber;
+    }
+
+    /**
+     * Set issuedate
+     *
+     * @param \DateTime $issuedate
+     *
+     * @return TrainerLicence
+     */
+    public function setIssuedate($issuedate)
+    {
+        $this->issuedate = $issuedate;
+
+        return $this;
+    }
+
+    /**
+     * Get issuedate
+     *
+     * @return \DateTime
+     */
+    public function getIssuedate()
+    {
+        return $this->issuedate;
+    }
+
+    /**
+     * Set expirationdate
+     *
+     * @param \DateTime $expirationdate
+     *
+     * @return TrainerLicence
+     */
+    public function setExpirationdate($expirationdate)
+    {
+        $this->expirationdate = $expirationdate;
+
+        return $this;
+    }
+
+    /**
+     * Get expirationdate
+     *
+     * @return \DateTime
+     */
+    public function getExpirationdate()
+    {
+        return $this->expirationdate;
+    }
+
+    /**
+     * Set licencetype
+     *
+     * @param string $licencetype
+     *
+     * @return TrainerLicence
+     */
+    public function setLicencetype($licencetype)
+    {
+        $this->licencetype = $licencetype;
+
+        return $this;
+    }
+
+    /**
+     * Get licencetype
+     *
+     * @return string
+     */
+    public function getLicencetype()
+    {
+        return $this->licencetype;
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\Trainer;
 
-//use AppBundle\Entity\PersonalData;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
