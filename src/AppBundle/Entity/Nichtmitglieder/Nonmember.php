@@ -1,83 +1,194 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Nichtmitglieder;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\HealthData;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
-class Nonmember extends HealthData {
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="NonMember")
+ */
+class NonMember extends HealthData {
 
+/**
+* @ORM\Id
+* @ORM\Column(type="integer") 
+* @ORM\GeneratedValue(strategy="AUTO")
+*/
 protected $NMenID;    
     
 /**
-* @ORM\OneToMany(targetEntity="TrainingStartDate", mappedBy="nonmember", cascade={"all"})
-*/  
+* @ORM\Column(type="date")
+* @Assert\NotBlank()
+* @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+*/
 protected $TrainingDate;
 
 /**
-* @ORM\OneToMany(targetEntity="TrainingConfirmation", mappedBy="nonmember", cascade={"all"})
-*/  
+* @ORM\Column(type="date")
+* @Assert\NotBlank()
+* @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+*/
 protected $TrainingConfirmation;
 
 /**
-* @ORM\OneToMany(targetEntity="Settlement1", mappedBy="nonmember", cascade={"all"})
+* @ORM\Column(type="date")
+* @Assert\NotBlank()
+* @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
 */  
 protected $Settlement1;
 
 /**
-* @ORM\OneToMany(targetEntity="Settlement2", mappedBy="nonmember", cascade={"all"})
-*/  
+* @ORM\Column(type="date")
+* @Assert\NotBlank()
+* @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+*/
 protected $Settlement2;
  
 
 
-public function setTrainingStartDate($trainingstartsate)
-{
-    $this->trainingadmissiondate = $admissiondate;
-    return $this;
-}
-
-public function getTrainingStartDate()
+ /**
+ ** @ORM\OneToMany(targetEntity="NonMemPhoneNumber", mappedBy="member", cascade={"persist"})
+ */
+    protected $phonenumber;
+    /**
+     * Constructor
+     */
+    public function __construct()
     {
-        return $this->trainingstartdate;
+        $this->phonenumber = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    
-public function setTrainingConfirmation($trainingconfirmation)
-{
-    $this->trainingconfirmation = $trainingconfirmation;
-    return $this;
-}
-    
-    
-public function getTrainingConfirmation()
+    /**
+     * Get nMenID
+     *
+     * @return integer
+     */
+    public function getNMenID()
     {
-        return $this->trainingconfirmation;
-    }
-    
-public function setSettlement1 ($settlement1)
-{
-    $this->settlement1 = $settlement1;
-    return $this;
-}
-
-public function getSettlment1()
-    {
-        return $this->settlement1;
-    }
-    
-public function setSettlement2 ($settlement2)
-{
-    $this->settlement2 = $settlement2;
-    return $this;
-}
-    
-    
-public function getSettlment2()
-    {
-        return $this->settlement2;
+        return $this->NMenID;
     }
 
-    
-    
+    /**
+     * Set trainingDate
+     *
+     * @param \DateTime $trainingDate
+     *
+     * @return NonMember
+     */
+    public function setTrainingDate($trainingDate)
+    {
+        $this->TrainingDate = $trainingDate;
+
+        return $this;
+    }
+
+    /**
+     * Get trainingDate
+     *
+     * @return \DateTime
+     */
+    public function getTrainingDate()
+    {
+        return $this->TrainingDate;
+    }
+
+    /**
+     * Set trainingConfirmation
+     *
+     * @param \DateTime $trainingConfirmation
+     *
+     * @return NonMember
+     */
+    public function setTrainingConfirmation($trainingConfirmation)
+    {
+        $this->TrainingConfirmation = $trainingConfirmation;
+
+        return $this;
+    }
+
+    /**
+     * Get trainingConfirmation
+     *
+     * @return \DateTime
+     */
+    public function getTrainingConfirmation()
+    {
+        return $this->TrainingConfirmation;
+    }
+
+    /**
+     * Set settlement1
+     *
+     * @param \DateTime $settlement1
+     *
+     * @return NonMember
+     */
+    public function setSettlement1($settlement1)
+    {
+        $this->Settlement1 = $settlement1;
+
+        return $this;
+    }
+
+    /**
+     * Get settlement1
+     *
+     * @return \DateTime
+     */
+    public function getSettlement1()
+    {
+        return $this->Settlement1;
+    }
+
+    /**
+     * Set settlement2
+     *
+     * @param \DateTime $settlement2
+     *
+     * @return NonMember
+     */
+    public function setSettlement2($settlement2)
+    {
+        $this->Settlement2 = $settlement2;
+
+        return $this;
+    }
+
+    /**
+     * Get settlement2
+     *
+     * @return \DateTime
+     */
+    public function getSettlement2()
+    {
+        return $this->Settlement2;
+    }
+
+    /**
+     * Set stresstest
+     *
+     * @param string $stresstest
+     *
+     * @return NonMember
+     */
+    public function setStresstest($stresstest)
+    {
+        $this->stresstest = $stresstest;
+
+        return $this;
+    }
+
+    /**
+     * Get stresstest
+     *
+     * @return string
+     */
+    public function getStresstest()
+    {
+        return $this->stresstest;
+    }
 }
