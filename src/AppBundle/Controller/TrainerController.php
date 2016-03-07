@@ -8,9 +8,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 class TrainerController extends Controller
 {
     /**
-     * @Route("/trainer/{info}", defaults={"info"=null},name="trainer_home")
+     * @Route("/trainer/{letter}", defaults={"letter"="A"},name="trainer_home", requirements={"letter": "[A-Z]"})
      */
-    public function indexAction ($info)
+    public function indexAction ($letter)
     {
         
         $repository = $this->getDoctrine()
@@ -19,15 +19,28 @@ class TrainerController extends Controller
         $qb=$repository->createQueryBuilder('t');
         
         $query=$qb->where($qb->expr()->like('t.lastname', ':letter'))
-                   ->setParameter('letter','P%');
+                   ->setParameter('letter',$letter.'%');
+        
+        switch($letter){
+            case 'A': $qb->orWhere($qb->expr()->like('t.lastname', ':umlautletter'))
+                         ->setParameter('umlautletter','Ä%'); 
+            break;
+        
+            case 'O': $qb->orWhere($qb->expr()->like('t.lastname', ':umlautletter'))
+                         ->setParameter('umlautletter','Ö%'); 
+            break;
+        
+            case 'U': $qb->orWhere($qb->expr()->like('t.lastname', ':umlautletter'))
+                         ->setParameter('umlautletter','Ü%'); 
+            break;
+        }
         
         $trainerlist=$query->getQuery()->getResult();
         
         return $this->render('Trainer/trainer.html.twig',
-                array('info'=>$info,
-                    'tabledata'=>$trainerlist,
+                array('tabledata'=>$trainerlist,
                     'colorclass'=>"bluetheader",
-                    'cletter'=>null,
+                    'cletter'=>$letter,
                     'path'=>'trainer_home'));
     }
 }
