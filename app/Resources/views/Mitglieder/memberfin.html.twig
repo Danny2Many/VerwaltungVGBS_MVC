@@ -21,7 +21,7 @@
 
 {% block dropdown %}
       <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Finanzjahr
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Finanzjahr: {{ year }}
                     <span class="caret"></span></button>
                         <ul class="dropdown-menu">
                             {% for finyear in finyears %}
@@ -38,8 +38,8 @@
 
 {% block tabs %}
 <ul class="nav nav-tabs">
-  <li class="active"><a href="#">1. Halbjahr</a></li>
-  <li><a href="#">2. Halbjahr</a></li>
+    <li {% if halfyear == 1 %} class="active" {% endif %}><a href="{{ path('member_fin', {'halfyear': 1, 'letter': cletter, 'req':app.request.query.get('page')}) }}">1. Halbjahr</a></li>
+  <li{% if halfyear == 2 %} class="active" {% endif %}><a href="{{ path('member_fin', {'halfyear': 2, 'letter': cletter}) }}">2. Halbjahr</a></li>
 </ul>
     {% endblock %}
     
@@ -51,10 +51,14 @@
 
     {% block thead %}
         
-            
-        <th>Bearb.</th><th>M_Nr</th><th>Abt</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Aufnahmegeb.</th><th>Aufnahmegeb. offen</th><th>Aufnahmegeb. gez.</th><th>zusätzl. Beitr.Info</th><th>Umlage</th><th>Beitr. Jan.</th><th>Beitr. Jan. offen</th><th>Beitr. Jan. gez.</th><th>Beitr. Feb.</th><th>Beitr. Feb. offen</th><th>Beitr. Feb. gez.</th><th>Beitr. März</th><th>Beitr. März offen</th><th>Beitr. März gez.</th><th>Beitr. Apr.</th><th>Beitr. Apr. offen</th> 
-        <th>Beitr. Apr. gez</th><th>Beitr. Mai</th><th>Beitr. Mai offen</th><th>Beitr. Mai gez.</th><th>Beitr. Juni</th><th>Beitr. Juni offen</th><th>Beitr. Juni gez.</th><th>Beitr. Juli</th><th>Beitr. Juli offen</th><th>Beitr. Juli gez.</th><th>Beitr. Aug.</th><th>Beitr. Aug. offen</th><th>Beitr. Aug. gez.</th><th>Beitr. Sep.</th><th>Beitr. Sep. offen</th><th>Beitr. Sep. gez.</th><th>Beitr. Nov.</th><th>Beitr. Nov. offen</th><th>Beitr. Nov. gez.</th><th>Beitr. Dez.</th><th>Beitr. Dez. offen</th><th>Beitr. Dez. gez.</th>
+        <th>Bearb.</th><th>M_Nr</th><th>Abt</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Sportgruppen/n</th><th>Aufnahmegeb.</th><th>Aufnahmegeb. offen</th><th>Aufnahmegeb. gez.</th><th>zusätzl. Beitr.Info</th><th>Umlage</th>
+        {% if halfyear == 1 %}
+         <th>Beitr. Jan.</th><th>Beitr. Jan. offen</th><th>Beitr. Jan. gez.</th><th>Beitr. Feb.</th><th>Beitr. Feb. offen</th><th>Beitr. Feb. gez.</th><th>Beitr. März</th><th>Beitr. März offen</th><th>Beitr. März gez.</th><th>Beitr. Apr.</th><th>Beitr. Apr. offen</th> 
+        <th>Beitr. Apr. gez</th><th>Beitr. Mai</th><th>Beitr. Mai offen</th><th>Beitr. Mai gez.</th><th>Beitr. Juni</th><th>Beitr. Juni offen</th><th>Beitr. Juni gez.</th>
         
+        {% else %}
+      <th>Beitr. Juli</th><th>Beitr. Juli offen</th><th>Beitr. Juli gez.</th><th>Beitr. Aug.</th><th>Beitr. Aug. offen</th><th>Beitr. Aug. gez.</th><th>Beitr. Sep.</th><th>Beitr. Sep. offen</th><th>Beitr. Sep. gez.</th><th>Beitr. Okt.</th><th>Beitr. Okt. offen</th><th>Beitr. Okt. gez.</th><th>Beitr. Nov.</th><th>Beitr. Nov. offen</th><th>Beitr. Nov. gez.</th><th>Beitr. Dez.</th><th>Beitr. Dez. offen</th><th>Beitr. Dez. gez.</th>
+        {% endif %}
     {% endblock %}
         
     
@@ -80,21 +84,37 @@
                
                 <td>{{ data.title|striptags }}</td>
                 <td>{{ data.lastname|striptags }}</td>
-                <td>{{ data.firstname|striptags }}</td>                
+                <td>{{ data.firstname|striptags }}</td>
+                <td>{% if data.sportsgroup is empty %}
+                   {{ "-" }}
+                    {% else  %}
+                         {% for sportsgroup in data.sportsgroup %}
+                        {{ sportsgroup.Token }}<br>
+                    {% endfor %}
+                    
+                    {% endif %}</td>                
                 <td>{{ data.admissioncharge }}</td>
                 <td>{{ data.admissioncharge - data.admissionchargepayed }}</td>
-                <td>{{ data.admissionchargepayed }}</td>
+                <td>{{ data.admissionchargepayed is empty ? 0 : data.admissionchargepayed  }}</td>
                 
                 {% for yearinfo in data.yearinfo %}
-                <td>{{ yearinfo.additionalduesinfo }}</td>
-                <td>{{ yearinfo.levy }}</td>
+                <td>{{ yearinfo.additionalduesinfo is empty ? "-" : yearinfo.additionalduesinfo }}</td>
+                <td>{{ yearinfo.levy is empty ? 0 : yearinfo.levy }}</td>
                {% endfor %}
                
+               {% if halfyear == 1 %}
+                   {% set months = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni'] %}
+                   
+                   {% else %}
+                    {% set months = ['Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'] %}
+               {% endif %}
                
                     {% for monthlydue in data.monthlydues %}
+                        {% if monthlydue.month in months %}
                         <td>{{ monthlydue.dues }}</td>
                         <td>{{ monthlydue.dues - monthlydue.duespayed }}</td>
-                        <td>{{ monthlydue.duespayed }}</td>
+                        <td>{{ monthlydue.duespayed is empty ? 0 : monthlydue.duespayed }}</td>
+                        {% endif %}
                     {% endfor %}
                     
                     
@@ -102,3 +122,26 @@
            {% endautoescape %} 
         {% endfor %}
             {% endblock %}
+{% block pagination %}
+    
+    <div class="row">
+            <div class="col-md-12">
+           <ul class="pagination">
+  {% for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'] %}
+  {% if letter == cletter %}
+     
+      <li class="active"><a href="{{ path(path, {'letter': letter, 'year': year, 'halfyear': halfyear}) }}">{{ letter }}</a></li>
+      
+      {% else %}
+      <li><a href="{{ path(path, {'letter': letter, 'year': year, 'halfyear': halfyear}) }}">{{ letter }}</a></li>
+  {% endif %}
+  {% endfor %}
+  <li class="active"><a href="{{ path(path, {'letter': cletter, 'year': year, 'halfyear': halfyear}) }}">{{ tabledata|length }} Personen wurden gefunden</a></li>
+</ul> 
+        
+            </div>
+
+           
+        </div>
+        </div>
+    {% endblock %}

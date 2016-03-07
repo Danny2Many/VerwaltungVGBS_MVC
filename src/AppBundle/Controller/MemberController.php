@@ -23,24 +23,11 @@ use Symfony\Component\Form\FormError;
 class MemberController extends Controller
 {
 /**
-     * @Route("/mitglieder/{letter}/{info}", defaults={"info"=null, "letter"="A"}, name="member_home", requirements={"info": "null|gespeichert|entfernt", "letter": "[A-Z]"})
+     * @Route("/mitglieder/{letter}", defaults={"letter"="A"}, name="member_home", requirements={"letter": "[A-Z]"})
      */
-    public function indexAction(Request $request, $info, $letter)
+    public function indexAction(Request $request, $letter)
     {
-       
-    switch($info){
-        case 'gespeichert':
-        $info='Die Daten wurden erfolgreich gespeichert.';
-        break;
-        
-        case 'entfernt':
-        $info='Diese Person wurde erfolgreich aus ihrer Datenbank entfernt.';
-        break;
-    }
-        
-        
-    
-        
+   
     $repository = $this->getDoctrine()
     ->getRepository('AppBundle:Member');
     
@@ -115,8 +102,7 @@ class MemberController extends Controller
             'tabledata' => $memberlist,
             'colorclass' => "bluetheader",
             'searchform' => $searchform->createView(),
-            'disabled' => $disabled,
-            'info' => $info,
+            'disabled' => $disabled,           
             'cletter' => $letter,
             'path' => 'member_home'
          
@@ -153,13 +139,7 @@ class MemberController extends Controller
         //if the form is valid -> persist it to the database
         if($addmemform->isSubmitted() && $addmemform->isValid()){
             
-        
-            
-//            foreach ($member->getRehabilitationcertificate() as $rehab){
-//            if($rehab->getTerminationdate() == null){
-//            $member->removeRehabilitationcertificate($rehab);
-//            }
-//            }
+
             
             
             $admcharge = $addmemform->get('admissioncharge')->getData();
@@ -192,14 +172,14 @@ class MemberController extends Controller
           }
      
             $manager= $this->getDoctrine()->getManager();
-           
+            
             $manager->persist($member);
             
           
             $manager->flush();
             
-            
-          return $this->redirectToRoute('member_home', array('letter' => $letter, 'info' => 'gespeichert'));
+           $this->addFlash('notice', 'Diese Person wurde erfolgreich angelegt!'); 
+          return $this->redirectToRoute('member_home', array('letter' => $letter));
           }
           $addmemform->get('admissiondate')->addError(new FormError('Dieses Finanzjahr wurde noch nicht angelegt.'));
         }
@@ -252,9 +232,11 @@ class MemberController extends Controller
         
         if($editmemform->get('delete')->isClicked()){
             $manager=$this->getDoctrine()->getManager();
+           
             $manager->remove($member);
             $manager->flush();
-            return $this->redirectToRoute('member_home', array('letter' => $letter, 'info' => 'entfernt'));
+            $this->addFlash('notice', 'Diese Person wurde erfolgreich gelöscht!'); 
+            return $this->redirectToRoute('member_home', array('letter' => $letter));
         }
 
         
@@ -275,11 +257,11 @@ class MemberController extends Controller
             
            
             $manager->persist($member);
-          
+            
             $manager->flush();
             
-            
-          return $this->redirectToRoute('member_home', array('letter' => $letter, 'info' => 'gespeichert'));  
+          $this->addFlash('notice', 'Die Daten wurden erfolgreich gespeichert!'); 
+          return $this->redirectToRoute('member_home', array('letter' => $letter));  
         }
         
         

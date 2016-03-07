@@ -63,12 +63,9 @@
 
             <nav class="navbar navbar-default  col-md-12">
   
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="{% block viewlink %}#{% endblock %}">{% block viewname %}{% endblock %}</a>
-                </div>
             <div>
                             <ul class="nav navbar-nav">
-                                <li class="{% block HomeAktiv %}{% endblock %}"><a href="#">Home</a></li>
+                                <li class="{% block HomeAktiv %}{% endblock %}"><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
                                 <li class="dropdown {% block MitglAktiv %}{% endblock %}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Mitglieder <span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <li class="{% block StammAktiv %}#{% endblock %}"><a href="{{ path('member_home') }}">Stammdaten</a></li>
@@ -80,21 +77,21 @@
                                 <li class="{% block SportgrAktiv %}#{% endblock %}"><a href="#">Sportgruppen</a></li>
                                 <li class="{% block TrainerAktiv %}#{% endblock %}"><a href="{{path('trainer_home')}}">Übungsleiter</a></li>
                             </ul>
+                            
                         </div>
- 
+              
                     </nav>
-   
+
                 </header>
             </div>  	
                 {% endblock %}
                 
-{% if info != null %}
+{% for flashMessage in app.session.flashbag.get('notice') %}
    <div class="alert alert-success">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>{{ info }}</strong>
+    <strong>{{ flashMessage }}</strong>
   </div>
-{% endif %}   
-         
+{% endfor %} 
                                 
          {% block topmenu %}                       
             <div class="inputT row">
