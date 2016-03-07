@@ -27,18 +27,6 @@ class MemberController extends Controller
      */
     public function indexAction(Request $request, $info, $letter)
     {
-       
-    switch($info){
-        case 'gespeichert':
-        $info='Die Daten wurden erfolgreich gespeichert.';
-        break;
-        
-        case 'entfernt':
-        $info='Diese Person wurde erfolgreich aus ihrer Datenbank entfernt.';
-        break;
-    }
-        
-        
     
         
     $repository = $this->getDoctrine()

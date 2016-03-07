@@ -9,11 +9,22 @@ use Symfony\Component\HttpFoundation\Request;
 class NonMemberController extends Controller
 {
     /**
-     * @Route("/nichtmitglieder", name="nonmember_home")
-     */
-    public function indexAction () {
-    
-        return $this->render('Nicht_Mitglieder/nonmember.html.twig', 
-        array('cletter'=>NULL, 'info'=>NULL, 'tabledata' => NULL, 'path'=> 'nonmember_home'));
-    }
+     * @Route("/nichtmitglieder/{letter}", defaults={"letter"="S"}, name="nonmember_home", requirements={"letter": "[A-Z]"})
+    */    
+    public function indexAction(Request $letter) {   
+  
+        
+    $repository = $this->getDoctrine()
+    ->getRepository('AppBundle:Nichtmitglieder\Nonmember');
+         
+        return $this->render(
+        'Nicht_Mitglieder/nonmember.html.twig',
+        array(
+            'info' => NULL,
+            'cletter' => $letter,
+            'tabledata' => NULL, 
+            'path' => 'nonmember_home'
+            ));
+    }     
 }
+

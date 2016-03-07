@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="NonMember")
  */
-class NonMember extends HealthData {
+class Nonmember extends HealthData {
 
 /**
 * @ORM\Id
