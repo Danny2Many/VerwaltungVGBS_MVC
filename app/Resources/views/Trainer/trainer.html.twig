@@ -46,29 +46,32 @@
                 {% endif %}
                 <td><center><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></td>
             <td>{{ data.trainerid }}</td>
-            <td>{{ data.title }}</td>
+            <td>{{ data.title|striptags }}</td>
             <td>{{ data.lastname|striptags }}</td>
             <td>{{ data.firstname|striptags }}</td>
             <td>{{ data.birthday|date("d.m.Y") }}</td>
             <td>{{ data.location|striptags }}</td>
             <td>{{ data.streetaddress|striptags }}</td>
             <td>{{ data.postcode|striptags }}</td>
+            
             <td>{% if data.phonenumber is empty %}
                    {{ "-" }}
                     {% else  %}
                          {% for PN in data.phonenumber %}
-                        {{ PN.phonenumber }}<br>
+                            {{ PN.phonenumber|striptags }}<br>
                     {% endfor %}
                     
                     {% endif %}</td>
+                    
             <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>                    
             <td>{{ data.mailbox is empty ? "-" : data.mailbox|striptags }}</td>
-            <td>{{ data.type }}</td>
+            <td>{{ data.type|striptags }}</td>
+            
             <td>{% if data.section is empty %}
                    {{ "-" }}
                     {% else  %}
                          {% for Sec in data.section %}
-                        {{ Sec.sectionname }}<br>
+                            {{ Sec.sectionname|striptags }}<br>
                     {% endfor %}
                     
                     {% endif %}</td>
@@ -77,7 +80,7 @@
                    {{ "-" }}
                     {% else  %}
                          {% for focus in data.focus %}
-                        {{ focus.focus }}<br>
+                            {{ focus.focus|striptags }}<br>
                     {% endfor %}
                     
                     {% endif %}</td>
@@ -86,7 +89,7 @@
                    {{ "-" }}
                     {% else  %}
                          {% for licence in data.licence %}
-                        {{ licence.licencetype }}<br>
+                            {{ licence.licencetype|striptags }}<br>
                     {% endfor %}
                     
                     {% endif %}</td>
@@ -95,7 +98,7 @@
                    {{ "-" }}
                     {% else  %}
                          {% for licence in data.licence %}
-                        {{ licence.licencenumber }}<br>
+                            {{ licence.licencenumber|striptags }}<br>
                     {% endfor %}
                     
                     {% endif %}</td>
