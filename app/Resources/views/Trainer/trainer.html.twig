@@ -1,0 +1,127 @@
+{% extends 'basic.html.twig' %}
+
+{% block viewlink %}{{ path('trainer_home') }}{% endblock %}
+{% block title %} Übungsleiter {% endblock %}
+{% block viewname %}Übungsleiter{% endblock %}
+{% block TrainerAktiv %} active {% endblock %}
+
+{% block color %} {{colorclass}} {% endblock %}
+
+{% block thead %}
+    
+    <th>Bearb.</th>
+    <th>T_Nr.</th>
+    <th>Anr.</th>
+    <th>Name</th>
+    <th>Vorname</th>
+    <th>Geb.Datum</th>
+    <th>Ort</th>
+    <th>Straße, Hausnr.</th>
+    <th>PLZ</th>
+    <th>Telefon</th>
+    <th>E-Mail</th>
+    <th>Postfach</th>
+    <th>Art</th>
+    <th>Abteilung</th>
+    <th>Schwerpunkt</th>
+    <th>Lizenz</th>
+    <th>Lizenz-Nr.</th>
+    <th>ausgestellt</th>
+    <th>gültig bis</th>    
+    
+{% endblock %}
+
+{% block tbody %}
+        {% for data in tabledata %}
+            {% autoescape  %}
+            <tr>
+                 {% if data.lastname|first == 'Ä' %}
+                    {% set first = 'A' %}
+                    {% elseif data.lastname|first == 'Ö' %}
+                    {% set first = 'O' %}
+                    {% elseif data.lastname|first == 'Ü' %}
+                    {% set first = 'U' %}
+                    {% else %}
+                    {% set first = data.lastname|first %}   
+                {% endif %}
+                <td><center><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></td>
+            <td>{{ data.trainerid }}</td>
+            <td>{{ data.title|striptags }}</td>
+            <td>{{ data.lastname|striptags }}</td>
+            <td>{{ data.firstname|striptags }}</td>
+            <td>{{ data.birthday|date("d.m.Y") }}</td>
+            <td>{{ data.location|striptags }}</td>
+            <td>{{ data.streetaddress|striptags }}</td>
+            <td>{{ data.postcode|striptags }}</td>
+            
+            <td>{% if data.phonenumber is empty %}
+                   {{ "-" }}
+                    {% else  %}
+                         {% for PN in data.phonenumber %}
+                            {{ PN.phonenumber|striptags }}<br>
+                    {% endfor %}
+                    
+                    {% endif %}</td>
+                    
+            <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>                    
+            <td>{{ data.mailbox is empty ? "-" : data.mailbox|striptags }}</td>
+            <td>{{ data.type|striptags }}</td>
+            
+            <td>{% if data.section is empty %}
+                   {{ "-" }}
+                    {% else  %}
+                         {% for Sec in data.section %}
+                            {{ Sec.sectionname|striptags }}<br>
+                    {% endfor %}
+                    
+                    {% endif %}</td>
+                    
+            <td>{% if data.focus is empty %}
+                   {{ "-" }}
+                    {% else  %}
+                         {% for focus in data.focus %}
+                            {{ focus.focus|striptags }}<br>
+                    {% endfor %}
+                    
+                    {% endif %}</td>
+                    
+            <td>{% if data.licence is empty %}
+                   {{ "-" }}
+                    {% else  %}
+                         {% for licence in data.licence %}
+                            {{ licence.licencetype|striptags }}<br>
+                    {% endfor %}
+                    
+                    {% endif %}</td>
+                    
+            <td>{% if data.licence is empty %}
+                   {{ "-" }}
+                    {% else  %}
+                         {% for licence in data.licence %}
+                            {{ licence.licencenumber|striptags }}<br>
+                    {% endfor %}
+                    
+                    {% endif %}</td>
+                    
+            <td>{% if data.licence is empty %}
+                   {{ "-" }}
+                    {% else  %}
+                         {% for licence in data.licence %}
+                        {{ licence.issuedate|date("d.m.Y") }}<br>
+                    {% endfor %}
+                    
+                    {% endif %}</td>
+                    
+            <td>{% if data.licence is empty %}
+                   {{ "-" }}
+                    {% else  %}
+                         {% for licence in data.licence %}
+                        {{ licence.expirationdate|date("d.m.Y") }}<br>
+                    {% endfor %}
+                    
+                    {% endif %}</td>
+                    
+            </tr>
+            {% endautoescape %} 
+        {% endfor %}
+{% endblock %}

@@ -1,0 +1,33 @@
+<?php
+
+namespace AppBundle\Entity\Trainer;
+
+use AppBundle\Entity\PersonalData;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="TrainerPhoneNumber")
+ */
+
+class TrainerPhoneNumber {
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="phonenumber")
+     * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
+     */
+    protected $trainer;
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")     
+     */    
+    protected $trainerid;
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="string")
+     */   
+    protected $phonenumber;
+    
+}
