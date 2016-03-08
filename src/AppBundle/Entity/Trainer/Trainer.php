@@ -200,4 +200,5 @@ class Trainer extends PersonalData{
     {
         return $this->section;
     }
+    
 }

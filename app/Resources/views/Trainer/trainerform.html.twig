@@ -1,0 +1,64 @@
+{% extends "basic.html.twig" %}
+{% import 'form/macro.html.twig' as forms %}
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% block javascriptsrc %} 
+    <script type="text/javascript" src="{{ asset('js/jquery-2.1.4.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/myfunctions.js') }}"></script>
+{% endblock %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="well"><h3>Bitte füllen Sie alle, mit einem <red>*</red> markierten, Felder aus.</h3></div>
+        </div>
+        {{ form_start(form) }}
+            <div class="row panel panel-default" >
+                <div class="stammheading panel-heading"><h2>Übungsleiterdaten</h2></div>
+                <div class="col-lg-12 panel-body">
+                    
+                    {% if (attribute(form, 'trainerid') is defined) %}
+                        {{ form_row(form.trainerid) }}
+                    {% endif %}     
+                    
+                    {{ form_row(form.title) }}        
+                    {{ form_row(form.firstname) }}        
+                    {{ form_row(form.lastname) }}
+                    {{ form_row(form.birthday) }}
+                    {{ form_row(form.streetaddress) }}
+                    {{ form_row(form.postcode) }}
+                    {{ form_row(form.mailbox) }}
+                    {{ form_row(form.location) }}
+                    
+                    {% for pn in form.phonenumber %}
+                        {{ form_row(pn.phonenumber) }}
+                    {% endfor %}
+                    
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.type) }}
+
+                    
+                </div>
+            </div>        
+    
+    
+        <div class="form-group">
+            <div class="col-sm-10 col-sm-push-2">
+                {{ form_widget(form.save) }}
+                {{ form_widget(form.reset, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie dieses Formular zurücksetzen möchten?.")'}}) }}
+
+                {% if (attribute(form, 'delete') is defined) %}
+                    {{ form_widget(form.delete, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie diesen Übungsleiter aus ihrer Datenbank entfernen möchten?")'}}) }}
+                {% endif %}
+
+                <a href="{{ path('trainer_home', {'letter': cletter}) }}">{{ form_widget(form.cancel,
+                    {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie diese Seite verlassen möchten? Ungespeicherte Daten werden dabei verloren gehen.")'}}) }}</a> 
+
+                {{ form_row(form._token) }}
+            </div>
+        </div
+    </div>
+        {{ form_end(form, {'render_rest': false}) }}
+{% endblock %}
