@@ -4,23 +4,7 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-<<<<<<< HEAD
-use Symfony\Component\HttpFoundation\Request;
 
-class NonMemberController extends Controller
-{
-    /**
-     * @Route("/nichtmitglieder", name="nonmember_home")
-     */
-    public function indexAction () {
-    
-        return $this->render('Nicht_Mitglieder/nonmember.html.twig', 
-        array('cletter'=>NULL, 'info'=>NULL, 'tabledata' => NULL, 'path'=> 'nonmember_home'));
-    }
-}
-=======
-
-use AppBundle\Entity\Nichtmitglieder\Nonmember;
 
 class NonMemberController extends Controller {
     /**
@@ -45,4 +29,4 @@ class NonMemberController extends Controller {
     }     
 }
 
->>>>>>> refs/remotes/origin/Eddy_Branch
+

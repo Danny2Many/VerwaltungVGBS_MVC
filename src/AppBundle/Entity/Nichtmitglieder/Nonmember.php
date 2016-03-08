@@ -1,15 +1,5 @@
 <?php
 
-<<<<<<< HEAD
-namespace AppBundle\Entity;
-use Doctrine\ORM\Mapping as ORM;
-
-class Nonmember extends PersonalData {
-    
- protected 
-    
-}
-=======
 namespace AppBundle\Entity\Nichtmitglieder;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\HealthData;
@@ -201,4 +191,3 @@ protected $Settlement2;
         return $this->stresstest;
     }
 }
->>>>>>> refs/remotes/origin/Eddy_Branch
