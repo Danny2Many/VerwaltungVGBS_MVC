@@ -17,42 +17,54 @@ class Nonmember extends HealthData {
 * @ORM\Column(type="integer") 
 * @ORM\GeneratedValue(strategy="AUTO")
 */
-protected $NMenID;    
+protected $nmemid;    
     
 /**
 * @ORM\Column(type="date")
 * @Assert\NotBlank()
 * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
 */
-protected $TrainingDate;
+protected $trainingstartdate;
 
 /**
 * @ORM\Column(type="date")
 * @Assert\NotBlank()
 * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
 */
-protected $TrainingConfirmation;
+protected $trainingconfirmation;
 
 /**
 * @ORM\Column(type="date")
 * @Assert\NotBlank()
 * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
 */  
-protected $Settlement1;
+protected $settlementdate1;
 
 /**
 * @ORM\Column(type="date")
 * @Assert\NotBlank()
 * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
 */
-protected $Settlement2;
+protected $settlementdate2;
  
 
+/**
+* @ORM\Column(type="string")
+*/
+protected $additionalinfo;
+
+/**
+* @ORM\OneToMany(targetEntity="NonMemRehabilitationCertificate", mappedBy="nonmember", cascade={"all"})
+*/
+protected $rehabilitationcertificate;
 
  /**
- ** @ORM\OneToMany(targetEntity="NonMemPhoneNumber", mappedBy="member", cascade={"persist"})
+ ** @ORM\OneToMany(targetEntity="NonMemPhoneNumber", mappedBy="nonmember", cascade={"persist"})
  */
-    protected $phonenumber;
+protected $phonenumber;
+
+
+
     /**
      * Constructor
      */
@@ -62,25 +74,25 @@ protected $Settlement2;
     }
 
     /**
-     * Get nMenID
+     * Get nmemID
      *
      * @return integer
      */
-    public function getNMenID()
+    public function getNMemID()
     {
-        return $this->NMenID;
+        return $this->nmemid;
     }
 
     /**
      * Set trainingDate
      *
-     * @param \DateTime $trainingDate
+     * @param \DateTime $trainingstartdate
      *
      * @return NonMember
      */
-    public function setTrainingDate($trainingDate)
+    public function SetTrainingStartDate($trainingstartdate)
     {
-        $this->TrainingDate = $trainingDate;
+        $this->trainingstartdate = $trainingstartdate;
 
         return $this;
     }
@@ -90,21 +102,21 @@ protected $Settlement2;
      *
      * @return \DateTime
      */
-    public function getTrainingDate()
+    public function getTrainingStartDate()
     {
-        return $this->TrainingDate;
+        return $this->trainingstartdate;
     }
 
     /**
      * Set trainingConfirmation
      *
-     * @param \DateTime $trainingConfirmation
+     * @param \DateTime $trainingconfirmation
      *
      * @return NonMember
      */
-    public function setTrainingConfirmation($trainingConfirmation)
+    public function setTrainingConfirmation($trainingconfirmation)
     {
-        $this->TrainingConfirmation = $trainingConfirmation;
+        $this->trainingconfirmation = $trainingconfirmation;
 
         return $this;
     }
@@ -116,19 +128,19 @@ protected $Settlement2;
      */
     public function getTrainingConfirmation()
     {
-        return $this->TrainingConfirmation;
+        return $this->trainingconfirmation;
     }
 
     /**
      * Set settlement1
      *
-     * @param \DateTime $settlement1
+     * @param \DateTime $settlementdate1
      *
      * @return NonMember
      */
-    public function setSettlement1($settlement1)
+    public function setSettlementdate1($settlementdate1)
     {
-        $this->Settlement1 = $settlement1;
+        $this->settlementdate1 = $settlementdate1;
 
         return $this;
     }
@@ -138,21 +150,21 @@ protected $Settlement2;
      *
      * @return \DateTime
      */
-    public function getSettlement1()
+    public function getSettlementdate1()
     {
-        return $this->Settlement1;
+        return $this->settlementdate1;
     }
 
     /**
      * Set settlement2
      *
-     * @param \DateTime $settlement2
+     * @param \DateTime $settlementdate2
      *
      * @return NonMember
      */
-    public function setSettlement2($settlement2)
+    public function setSettlementdate2($settlementdate2)
     {
-        $this->Settlement2 = $settlement2;
+        $this->settlementdate2 = $settlementdate2;
 
         return $this;
     }
@@ -162,9 +174,9 @@ protected $Settlement2;
      *
      * @return \DateTime
      */
-    public function getSettlement2()
+    public function getSettlementdate2()
     {
-        return $this->Settlement2;
+        return $this->settlementdate2;
     }
 
     /**
@@ -189,5 +201,77 @@ protected $Settlement2;
     public function getStresstest()
     {
         return $this->stresstest;
+    }
+
+    /**
+     * Set additionalinfo
+     *
+     * @param string $additionalinfo
+     *
+     * @return Nonmember
+     */
+    public function setAdditionalinfo($additionalinfo)
+    {
+        $this->additionalinfo = $additionalinfo;
+
+        return $this;
+    }
+
+    /**
+     * Get additionalinfo
+     *
+     * @return string
+     */
+    public function getAdditionalinfo()
+    {
+        return $this->additionalinfo;
+    }
+
+    /**
+     * Set rehabilitationcertificate
+     *
+     * @param \DateTime $rehabilitationcertificate
+     *
+     * @return Nonmember
+     */
+    public function setRehabilitationcertificate($rehabilitationcertificate)
+    {
+        $this->rehabilitationcertificate = $rehabilitationcertificate;
+
+        return $this;
+    }
+
+    /**
+     * Get rehabilitationcertificate
+     *
+     * @return \DateTime
+     */
+    public function getRehabilitationcertificate()
+    {
+        return $this->rehabilitationcertificate;
+    }
+
+    /**
+     * Add rehabilitationcertificate
+     *
+     * @param \AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate $rehabilitationcertificate
+     *
+     * @return Nonmember
+     */
+    public function addRehabilitationcertificate(\AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate $rehabilitationcertificate)
+    {
+        $this->rehabilitationcertificate[] = $rehabilitationcertificate;
+
+        return $this;
+    }
+
+    /**
+     * Remove rehabilitationcertificate
+     *
+     * @param \AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate $rehabilitationcertificate
+     */
+    public function removeRehabilitationcertificate(\AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate $rehabilitationcertificate)
+    {
+        $this->rehabilitationcertificate->removeElement($rehabilitationcertificate);
     }
 }
