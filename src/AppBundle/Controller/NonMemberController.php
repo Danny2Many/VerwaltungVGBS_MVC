@@ -35,14 +35,13 @@ class NonMemberController extends Controller {
     $searchcol=$request->query->get('search')['Spalte'];
     
      
-    $query=$qb->where($qb->expr()->like('m.'.$searchcol, ':nonmember'))
+    $query=$qb->where($qb->expr()->like('n.'.$searchcol, ':nonmember'))
                    ->setParameter('nonmember','%'.$searchval.'%')
                    ->getQuery();
     
     $nonmemberlist=$query->getResult();
     
      $disabled='';
-    
     
     }    
     else
