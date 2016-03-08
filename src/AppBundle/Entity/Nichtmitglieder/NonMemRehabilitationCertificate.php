@@ -32,7 +32,7 @@ class NonMemRehabilitationCertificate {
      * @ORM\Column(type="integer") 
      * 
      */
-    protected $memid;
+    protected $nmemid;
     
      /**
       *  
@@ -61,7 +61,7 @@ class NonMemRehabilitationCertificate {
      *
      * @return NonMemRehabilitationCertificate
      */
-    public function setMemid($memid)
+    public function setNMemid($nmemid)
     {
         $this->memid = $memid;
 

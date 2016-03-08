@@ -1,4 +1,5 @@
 {% extends "basic.html.twig" %}
+{% form_theme searchform 'bootstrap_3_layout.html.twig' %}
 
 {% block viewlink %}{{ path('nonmember_home') }}{% endblock %}
 {% block title %} Nichtmitglieder {% endblock %}
@@ -6,31 +7,41 @@
 {% block NMitglAktiv %} active {% endblock %}
 
 
+<<<<<<< HEAD
+=======
+{% block search %}
+    
+{{ form_start(searchform) }}
+{{ form_widget(searchform.Spalte) }}
+{{ form_widget(searchform.searchfield) }}
+{{ form_widget(searchform.search) }}
+<a href="{{ path('nonmember_home') }}"><input type="button" class="form-control" value="zurücksetzen" {{disabled}}></a>
+{{ form_end(searchform) }}
+
+{% endblock %}
+
+>>>>>>> refs/remotes/origin/Eddy_Branch
 {% block color %} {{ colorclass }} {% endblock %}
 
 {% block thead %}       
             
 <th>Bearb.</th>
 <th>NichtM_Nr</th>
-<th>Abt</th>
-<th>Status</th>
 <th>Anr.</th>
 <th>Name</th>
 <th>Vorname</th>
 <th>Geb.Datum</th>
 <th>Ort</th>
 <th>Strasse, Hausnr</th>
-<th>PLZ</th><th>Postfach</th>
+<th>PLZ</th>
+<th>Postfach</th>
 <th>Telefon</th>
 <th>E-Mail</th>
-<th>Sportgruppe/n</th>
-<th>Eintr.Datum</th>
 <th>Trainingsbeginn</th>
 <th>RS gültig bis</th>
 <th>Teilnahmebeginnbest.</th>
 <th>Verrechngs. dat&/einheit. I</th>
 <th>Verrechngs. dat&/einheit. II</th>
-<th>Krankenkasse</th>
 <th>Krankenkasse</th>
 <th>Zusatzinfo</th> 
 <th>Arbeitsplatzhaltung</th>
@@ -45,6 +56,114 @@
 <th>weit. bewegl. Aktivitäten</th>
 <th>Hf-Ruhe/Min</th>
 <th>Hf-Max/Min</th>
-<th>Hf bei 50%</th><th>Hf bei 55%</th><th>Hf bei 60%</th><th>Hf bei 65%</th><th>Hf bei 70%</th><th>Hf bei 75%</th><th>Hf bei 80%</th><th>Hf bei 85%</th>
+<th>Hf bei 50%</th>
+<th>Hf bei 55%</th>
+<th>Hf bei 60%</th>
+<th>Hf bei 65%</th>
+<th>Hf bei 70%</th>
+<th>Hf bei 75%</th>
+<th>Hf bei 80%</th>
+<th>Hf bei 85%</th>
         
 {% endblock %}
+<<<<<<< HEAD
+=======
+
+{% block tbody %}
+        {% for data in tabledata %}
+            {% autoescape  %}
+            <tr>
+                 {% if data.lastname|first == 'Ä' %}
+                    {% set first = 'A' %}
+                    {% elseif data.lastname|first == 'Ö' %}
+                    {% set first = 'O' %}
+                    {% elseif data.lastname|first == 'Ü' %}
+                    {% set first = 'U' %}
+                    {% else %}
+                    {% set first = data.lastname|first %}   
+                {% endif %}
+                <td><center><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></td>
+            <td>{{ data.nmemid }}</td>
+            <td>{{ data.title|striptags }}</td>
+            <td>{{ data.lastname|striptags }}</td>
+            <td>{{ data.firstname|striptags }}</td>
+            <td>{{ data.birthday|date("d.m.Y") }}</td>
+            <td>{{ data.location|striptags }}</td>
+            <td>{{ data.streetaddress|striptags }}</td>
+            <td>{{ data.postcode|striptags }}</td>
+            <td>{{ data.mailbox|striptags }}</td>
+            <td>{% if data.phonenumber is empty %}
+                   {{ "-" }}
+                    {% else  %}
+                         {% for PN in data.phonenumber %}
+                            {{ PN.phonenumber|striptags }}<br>
+                    {% endfor %}
+                    
+                    {% endif %}</td>      
+            <td>{{ data.email|striptags }}</td>                    
+            <td>{{ data.trainingstartdate|date("d.m.Y") }}</td>
+            <td>{% if data.rehabilitationcertificate is empty %}
+                   {{ "-" }}
+                    {% else  %}
+                         {% set i =1 %}
+                         {% for RC in data.rehabilitationcertificate %}
+                             
+                         {{i}}:{{RC.terminationdate|date("d.m.Y") }}<br>
+                        {% set i =i+1 %}
+                    {% endfor %}
+                    
+                    {% endif %}</td>
+            <td>{{ data.trainingconfirmation|date("d.m.Y")}}</td>
+            <td>{{ data.settlementdate1|date("d.m.Y") }}</td>
+            <td>{{ data.settlementdate2|date("d.m.Y") }}</td>
+            <td>{{ data.healthinsurance is empty ? "-" : data.healthinsurance|striptags}}</td>
+            <td>{{ data.additionalinfo is empty ? "-" : data.additionalinfo|striptags }}</td>
+            <td>{{ data.workplaceposture is empty ? "-" : data.workplaceposture|striptags }}</td>
+            <td>{{ data.chronoccupationaldis is empty ? "-" : data.chronoccupationaldis|striptags }}</td>
+            <td>{{ data.paincervicalspine is empty ? "-" : data.paincervicalspine|striptags }}</td>
+            <td>{{ data.painthoracicspine is empty ? "-" : data.painthoracicspine|striptags }}</td>
+            <td>{{ data.painlumbarspine is empty ? "-" : data.painlumbarspine|striptags }}</td>
+            <td>{{ data.upperlimbs is empty ? "-" : data.upperlimbs|striptags }}</td>
+            <td>{{ data.lowerlimbs is empty ? "-" : data.lowerlimbs|striptags }}</td>
+            <td>{{ data.otherimpairments is empty ? "-" : data.otherimpairments|striptags }}</td>
+            <td>{{ data.medication is empty ? "-" : data.medication|striptags }}</td>
+            <td>{{ data.additionalagilactivities is empty ? "-" : data.additionalagilactivities|striptags }}</td>
+               
+            <td>{{ data.pulseatrest is empty ? "-" : data.pulseatrest|striptags }}</td>
+           
+            {% if data.pulseatrest is not empty %}
+                {% set hfmax = 220 - data.birthday|age  %}
+                {% set hfres = hfmax - data.pulseatrest  %}
+                {% set hfbei50 = data.pulseatrest+(0.5*hfres)|round  %}
+                {% set hfbei55 = data.pulseatrest+(0.55*hfres)|round  %}
+                {% set hfbei60 = data.pulseatrest+(0.6*hfres)|round  %}
+                {% set hfbei65 = data.pulseatrest+(0.65*hfres)|round  %}
+                {% set hfbei70 = data.pulseatrest+(0.7*hfres)|round  %}
+                {% set hfbei75 = data.pulseatrest+(0.75*hfres)|round  %}
+                {% set hfbei80 = data.pulseatrest+(0.8*hfres)|round  %}
+                {% set hfbei85 = data.pulseatrest+(0.85*hfres)|round  %}
+                {% else %}
+                {% set hfmax = "-"  %}
+                {% set hfbei50 = "-"  %}
+                {% set hfbei55 = "-"  %}
+                {% set hfbei60 = "-"  %}
+                {% set hfbei65 = "-"  %}
+                {% set hfbei70 = "-"  %}
+                {% set hfbei75 = "-"  %}
+                {% set hfbei80 = "-"  %}
+                {% set hfbei85 = "-"  %}
+                {% endif %}
+                 <td>{{ hfmax }}</td>
+                 <td>{{ hfbei50 }}</td>
+                 <td>{{ hfbei55 }}</td>
+                 <td>{{ hfbei60 }}</td>
+                 <td>{{ hfbei65 }}</td>
+                 <td>{{ hfbei70 }}</td>
+                 <td>{{ hfbei75 }}</td>
+                 <td>{{ hfbei80 }}</td>
+                 <td>{{ hfbei85 }}</td>
+            
+            {% endautoescape %} 
+        {% endfor %}
+{% endblock %}
+>>>>>>> refs/remotes/origin/Eddy_Branch
