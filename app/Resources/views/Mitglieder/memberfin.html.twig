@@ -38,8 +38,8 @@
 
 {% block tabs %}
 <ul class="nav nav-tabs">
-    <li {% if halfyear == 1 %} class="active" {% endif %}><a href="{{ url(pathhalfyear1) }}">1. Halbjahr</a></li>
-  <li{% if halfyear == 2 %} class="active" {% endif %}><a href="{{ path('member_fin', {'halfyear': 2, 'letter': cletter}) }}">2. Halbjahr</a></li>
+    <li {% if halfyear == 1 %} class="active" {% endif %}><a href="{{ path('member_fin', {'halfyear': 1, 'letter': cletter}|merge(app.request.query.all)) }}">1. Halbjahr</a></li>
+  <li{% if halfyear == 2 %} class="active" {% endif %}><a href="{{ path('member_fin', {'halfyear': 2, 'letter': cletter}|merge(app.request.query.all)) }}">2. Halbjahr</a></li>
 </ul>
     {% endblock %}
     
