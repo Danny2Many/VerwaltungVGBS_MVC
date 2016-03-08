@@ -13,20 +13,20 @@ class NonMemberController extends Controller {
     */    
     public function indexAction($letter, $info) {   
   
-        
+      
     $repository = $this->getDoctrine()
     ->getRepository('AppBundle:Nichtmitglieder\Nonmember');
     
-    $qb=$repository->createQueryBuilder('n');
+   // $qb=$repository->createQueryBuilder('n');
     
         return $this->render(
         'Nicht_Mitglieder/nonmember.html.twig',
-        ['info' => $info,
+        array('info' => $info,
             'colorclass' => "bluetheader",
             'cletter' => $letter,
             'tabledata' => NULL, 
             'path' => 'nonmember_home'
-            ]);
+            ));
     }     
 }
 
