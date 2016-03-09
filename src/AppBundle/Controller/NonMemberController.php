@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Form\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Nichtmitglieder\Nonmember;
+use AppBundle\Form\Type\Nichtmitglieder\AddNonMemberType;
 use AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber;
 use AppBundle\Entity\Section;
 
@@ -42,8 +43,7 @@ class NonMemberController extends Controller {
                    ->getQuery();
     
     $nonmemberlist=$query->getResult();
-    
-     $disabled='';
+    $disabled='';
     
     
     }    
@@ -99,14 +99,16 @@ class NonMemberController extends Controller {
         
         if($addnonmemform->isSubmitted() && $addnonmemform->isValid()){
             
-            
+            $manager= $this->getDoctrine()->getManager();
+            $manager->persist($nonmember);     
+            $manager->flush();
             
             return $this->redirectToRoute('nonmember_home', array ('letter'=>$letter));
             }
         
             
         return $this->render(
-        'Mitglieder/nonmemberform.html.twig',
+        'Nicht_Mitglieder/nonmemberform.html.twig',
         array(            
             'form' => $addnonmemform->createView(),
             'cletter' => $letter,

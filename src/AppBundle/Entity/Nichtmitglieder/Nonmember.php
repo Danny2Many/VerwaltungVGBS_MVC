@@ -1,9 +1,10 @@
 <?php
 
 namespace AppBundle\Entity\Nichtmitglieder;
+
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\HealthData;
-
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -13,12 +14,37 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Nonmember extends HealthData {
 
 /**
+* @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
+* @ORM\JoinTable(name="NonMember_Section",
+* joinColumns={@ORM\JoinColumn(name="memid", referencedColumnName="memid")},
+* inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
+*/
+protected $section;    
+    
+    
+/**
+* @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup")
+* @ORM\JoinTable(name="NonMember_Sportsgroup",
+* joinColumns={@ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")},
+* inverseJoinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")})
+*/ 
+protected $sportsgroup; 
+
+/**
 * @ORM\Id
 * @ORM\Column(type="integer") 
 * @ORM\GeneratedValue(strategy="AUTO")
 */
 protected $nmemid;    
     
+/**
+* @ORM\Column(type="string")
+  * @Assert\NotBlank()
+* @Assert\Choice(choices = {"aktiv", "inaktiv"}, message = "Bitte wählen Sie einen gültigen Status.")
+*/
+protected $state;
+
+
 /**
 * @ORM\Column(type="date")
 * @Assert\NotBlank()
@@ -63,14 +89,19 @@ protected $rehabilitationcertificate;
  */
 protected $phonenumber;
 
+/**
+* @ORM\Column(type="text")
+*/
+ protected $inforehabdues;
 
-
+ 
     /**
      * Constructor
      */
     public function __construct()
     {
         $this->phonenumber = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->rehabilitationcertificate = new ArrayCollection();
     }
 
     /**
@@ -260,9 +291,12 @@ protected $phonenumber;
      */
     public function addRehabilitationcertificate(\AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate $rehabilitationcertificate)
     {
+        if($rehabilitationcertificate->getTerminationdate() != null){
+        $rehabilitationcertificate->setNonmember($this);
         $this->rehabilitationcertificate[] = $rehabilitationcertificate;
 
         return $this;
+        }
     }
 
     /**
@@ -273,5 +307,121 @@ protected $phonenumber;
     public function removeRehabilitationcertificate(\AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate $rehabilitationcertificate)
     {
         $this->rehabilitationcertificate->removeElement($rehabilitationcertificate);
+    }
+
+    /**
+     * Set state
+     *
+     * @param string $state
+     *
+     * @return Nonmember
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * Get state
+     *
+     * @return string
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * Add sportsgroup
+     *
+     * @param \AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup
+     *
+     * @return Nonmember
+     */
+    public function addSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup)
+    {
+        $this->sportsgroup[] = $sportsgroup;
+
+        return $this;
+    }
+
+    /**
+     * Remove sportsgroup
+     *
+     * @param \AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup
+     */
+    public function removeSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup)
+    {
+        $this->sportsgroup->removeElement($sportsgroup);
+    }
+
+    /**
+     * Get sportsgroup
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSportsgroup()
+    {
+        return $this->sportsgroup;
+    }
+
+    /**
+     * Add section
+     *
+     * @param \AppBundle\Entity\Section $section
+     *
+     * @return Nonmember
+     */
+    public function addSection(\AppBundle\Entity\Section $section)
+    {
+        $this->section[] = $section;
+
+        return $this;
+    }
+
+    /**
+     * Remove section
+     *
+     * @param \AppBundle\Entity\Section $section
+     */
+    public function removeSection(\AppBundle\Entity\Section $section)
+    {
+        $this->section->removeElement($section);
+    }
+
+    /**
+     * Get section
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSection()
+    {
+        return $this->section;
+    }
+
+    /**
+     * Set inforehabdues
+     *
+     * @param string $inforehabdues
+     *
+     * @return Nonmember
+     */
+    public function setInforehabdues($inforehabdues)
+    {
+        $this->inforehabdues = $inforehabdues;
+
+        return $this;
+    }
+
+    /**
+     * Get inforehabdues
+     *
+     * @return string
+     */
+    public function getInforehabdues()
+    {
+        return $this->inforehabdues;
     }
 }

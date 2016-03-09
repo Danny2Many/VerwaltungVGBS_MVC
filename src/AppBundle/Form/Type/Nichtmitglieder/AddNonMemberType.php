@@ -1,8 +1,17 @@
 <?php
+namespace AppBundle\Form\Type\Nichtmitglieder;
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+use AppBundle\Form\Type\Nichtmitglieder\BaseNonMemberType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
+class AddNonMemberType extends BaseNonMemberType {
+    
+    public function configureOptions(OptionsResolver $resolver)
+        {
+        $resolver->setDefaults(array(
+            'data_class' => 'AppBundle\Entity\Nichtmitglieder\Nonmember',
+
+));
+
+}
+}

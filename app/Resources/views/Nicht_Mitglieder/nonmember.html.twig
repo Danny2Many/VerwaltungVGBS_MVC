@@ -5,7 +5,7 @@
 {% block title %} Nichtmitglieder {% endblock %}
 {% block viewname %}Nichtmitglieder{% endblock %}
 {% block NMitglAktiv %} active {% endblock %}
-{% block fixedcolnum %} 5 {% endblock %}
+{% block fixedcolnum %} 6 {% endblock %}
 
 
 {% block search %}
@@ -32,6 +32,7 @@
             
 <th>Bearb.</th>
 <th>NichtM_Nr</th>
+<th>Status</th>
 <th>Anr.</th>
 <th>Name</th>
 <th>Vorname</th>
@@ -87,6 +88,7 @@
                 {% endif %}
                 <td><center><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></td>
             <td>{{ data.nmemid }}</td>
+            <td>{{ data.state|striptags }}</td>
             <td>{{ data.title|striptags }}</td>
             <td>{{ data.lastname|striptags }}</td>
             <td>{{ data.firstname|striptags }}</td>
@@ -113,8 +115,7 @@
                              
                          {{i}}:{{RC.terminationdate|date("d.m.Y") }}<br>
                         {% set i =i+1 %}
-                    {% endfor %}
-                    
+                    {% endfor %}                    
                     {% endif %}</td>
             <td>{{ data.trainingconfirmation|date("d.m.Y")}}</td>
             <td>{{ data.settlementdate1|date("d.m.Y") }}</td>
