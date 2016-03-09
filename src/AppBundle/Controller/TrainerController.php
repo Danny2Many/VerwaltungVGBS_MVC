@@ -96,7 +96,7 @@ class TrainerController extends Controller
         $trainer = new Trainer();
         $phonenumber = new TrainerPhoneNumber();
         
-        $trainer->addPhonenumber($phonenumber);
+        //$trainer->addPhonenumber($phonenumber);
         $addtrainerform = $this->createForm(AddTrainerType::class, $trainer);
 
         

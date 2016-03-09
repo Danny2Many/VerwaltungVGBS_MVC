@@ -4,13 +4,10 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-<<<<<<< HEAD
 use AppBundle\Entity\Nichtmitglieder\Nonmember;
-=======
 use AppBundle\Form\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
 
->>>>>>> refs/remotes/origin/Eddy_Branch
 
 class NonMemberController extends Controller {
     /**
