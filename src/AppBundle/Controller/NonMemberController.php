@@ -6,7 +6,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Form\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
-
+use AppBundle\Entity\Nichtmitglieder\Nonmember;
+use AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber;
+use AppBundle\Entity\Section;
 
 class NonMemberController extends Controller {
     /**
@@ -43,6 +45,7 @@ class NonMemberController extends Controller {
     
      $disabled='';
     
+    
     }    
     else
     {
@@ -72,12 +75,45 @@ class NonMemberController extends Controller {
         array('info' => NULL,
             'colorclass' => "bluetheader",
             'searchform' => $searchform->createView(),
-             'disabled' => $disabled,
+            'disabled' => $disabled,
             'cletter' => $letter,
             'tabledata' => $nonmemberlist, 
             'path' => 'nonmember_home'
             ));
     }     
+      /**
+     * @Route("/nichtmitglieder/anlegen/{letter}", defaults={"letter": "A"}, name="addnonmem", requirements={"letter": "[A-Z]"})
+     * 
+     */
+    public function addnonmeberAction (Request $request, $letter){
+        
+        $nonmember = new Nonmember ();
+//        $phonenumber = new NonMemPhoneNumber();
+//        $section = new Section ();
+//        
+//        $nonmember->addSection($section);
+//        $nonmember->addPhonenumber($phonenumber);
+        
+        $addnonmemform = $this->createForm(AddNonMemberType::class, $nonmember);
+        $addnonmemform->handleRequest($request);
+        
+        if($addnonmemform->isSubmitted() && $addnonmemform->isValid()){
+            
+            
+            
+            return $this->redirectToRoute('nonmember_home', array ('letter'=>$letter));
+            }
+        
+            
+        return $this->render(
+        'Mitglieder/nonmemberform.html.twig',
+        array(            
+            'form' => $addnonmemform->createView(),
+            'cletter' => $letter,
+            'title' => 'Nichtmitglied anlegen'
+            ));
+        
+    }
 }
 
         

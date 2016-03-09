@@ -5,6 +5,7 @@
 {% block title %} Nichtmitglieder {% endblock %}
 {% block viewname %}Nichtmitglieder{% endblock %}
 {% block NMitglAktiv %} active {% endblock %}
+{% block fixedcolnum %} 5 {% endblock %}
 
 
 {% block search %}
@@ -17,6 +18,13 @@
 {{ form_end(searchform) }}
 
 {% endblock %}
+
+{% block add %}
+    <a href="{{ path('addnonmem', {'letter': cletter }) }}"><button    class="add btn btn-default">
+      <span class="glyphicon glyphicon-plus"></span> neues Nichtmitglied anlegen
+        </button></a>  
+{% endblock %}
+
 
 {% block color %} {{ colorclass }} {% endblock %}
 
