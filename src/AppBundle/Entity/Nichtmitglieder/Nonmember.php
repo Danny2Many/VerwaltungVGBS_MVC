@@ -89,12 +89,7 @@ protected $rehabilitationcertificate;
  */
 protected $phonenumber;
 
-/**
-* @ORM\Column(type="text")
-*/
- protected $inforehabdues;
 
- 
     /**
      * Constructor
      */
@@ -401,27 +396,7 @@ protected $phonenumber;
         return $this->section;
     }
 
-    /**
-     * Set inforehabdues
-     *
-     * @param string $inforehabdues
-     *
-     * @return Nonmember
-     */
-    public function setInforehabdues($inforehabdues)
-    {
-        $this->inforehabdues = $inforehabdues;
+  
 
-        return $this;
-    }
-
-    /**
-     * Get inforehabdues
-     *
-     * @return string
-     */
-    public function getInforehabdues()
-    {
-        return $this->inforehabdues;
-    }
+    
 }

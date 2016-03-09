@@ -43,6 +43,7 @@
 <th>Postfach</th>
 <th>Telefon</th>
 <th>E-Mail</th>
+<th>Sportgruppe</th>
 <th>Trainingsbeginn</th>
 <th>RS gültig bis</th>
 <th>Teilnahmebeginnbest.</th>
@@ -96,7 +97,7 @@
             <td>{{ data.location|striptags }}</td>
             <td>{{ data.streetaddress|striptags }}</td>
             <td>{{ data.postcode|striptags }}</td>
-            <td>{{ data.mailbox|striptags }}</td>
+            <td>{{ data.mailbox is empty ? "-" : data.mailbox|striptags }}</td>
             <td>{% if data.phonenumber is empty %}
                    {{ "-" }}
                     {% else  %}
@@ -105,7 +106,14 @@
                     {% endfor %}
                     
                     {% endif %}</td>      
-            <td>{{ data.email|striptags }}</td>                    
+            <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>   
+            <td>{% if data.sportsgroup is empty %}
+                    {{ "-" }}
+                    {% else  %}
+                        {% for sportsgroup in data.sportsgroup %}
+                       {{ sportsgroup.Token }}<br>
+                    {% endfor %}
+                    {% endif %}</td> 
             <td>{{ data.trainingstartdate|date("d.m.Y") }}</td>
             <td>{% if data.rehabilitationcertificate is empty %}
                    {{ "-" }}
@@ -117,9 +125,9 @@
                         {% set i =i+1 %}
                     {% endfor %}                    
                     {% endif %}</td>
-            <td>{{ data.trainingconfirmation|date("d.m.Y")}}</td>
-            <td>{{ data.settlementdate1|date("d.m.Y") }}</td>
-            <td>{{ data.settlementdate2|date("d.m.Y") }}</td>
+            <td>{{ data.trainingconfirmation is empty ? "-" : data.trainingconfirmation|date("d.m.Y")}}</td>
+            <td>{{ data.settlementdate1 is empty ? "-" :data.settlementdate1|date("d.m.Y") }}</td>
+            <td>{{ data.settlementdate2 is empty ? "-" :data.settlementdate2|date("d.m.Y") }}</td>
             <td>{{ data.healthinsurance is empty ? "-" : data.healthinsurance|striptags}}</td>
             <td>{{ data.additionalinfo is empty ? "-" : data.additionalinfo|striptags }}</td>
             <td>{{ data.workplaceposture is empty ? "-" : data.workplaceposture|striptags }}</td>
@@ -132,7 +140,6 @@
             <td>{{ data.otherimpairments is empty ? "-" : data.otherimpairments|striptags }}</td>
             <td>{{ data.medication is empty ? "-" : data.medication|striptags }}</td>
             <td>{{ data.additionalagilactivities is empty ? "-" : data.additionalagilactivities|striptags }}</td>
-               
             <td>{{ data.pulseatrest is empty ? "-" : data.pulseatrest|striptags }}</td>
            
             {% if data.pulseatrest is not empty %}

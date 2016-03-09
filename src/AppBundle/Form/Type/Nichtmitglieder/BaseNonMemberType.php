@@ -14,6 +14,7 @@ use AppBundle\Form\SanitizedTextType;
 use AppBundle\Form\SanitizedTextareaType;
 use AppBundle\Form\Type\RehabCertType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+
 class BaseNonMemberType extends PersonalDataType {
     
 public function buildForm(FormBuilderInterface $builder, array $options){
@@ -24,7 +25,7 @@ public function buildForm(FormBuilderInterface $builder, array $options){
         $builder
             
         ->add('trainingstartdate', DateType::class, array( 'label' => 'Trainingsbeginn:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag'),'required' => false))
-        ->add('trainingconfirmation', DateType::class, array( 'label' => 'Teilnahmebeginnbest:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag'), 'required' => false))       
+        ->add('trainingconfirmation', DateType::class, array( 'label' => 'Teilnahmebeginnbest.:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag'), 'required' => false))       
         ->add('state', ChoiceType::class, array(
                 'choices'  => array(
                     'aktiv' => 'aktiv',
