@@ -201,4 +201,43 @@ class Trainer extends PersonalData{
         return $this->section;
     }
     
+    
+//    
+//    /**
+//     * Add phonenumber
+//     *
+//     * @param \AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber
+//     *
+//     * @return Trainer
+//     */
+//    public function addPhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
+//    {               
+//        $phonenumber->setTrainer($this);
+//        $this->phonenumber[] = $phonenumber;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Remove phonenumber
+//     *
+//     * @param \AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber
+//     */
+//    public function removePhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
+//    {
+//        $this->phonenumber->removeElement($phonenumber);
+//    }
+//
+//    /**
+//     * Get phonenumber
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getPhonenumber()
+//    {
+//        return $this->phonenumber;
+//    }
+    
+    
+    
 }

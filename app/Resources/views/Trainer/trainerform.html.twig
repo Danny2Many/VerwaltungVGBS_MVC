@@ -31,14 +31,20 @@
                     {{ form_row(form.postcode) }}
                     {{ form_row(form.mailbox) }}
                     {{ form_row(form.location) }}
-                    
+
                     {% for pn in form.phonenumber %}
                         {{ form_row(pn.phonenumber) }}
                     {% endfor %}
                     
                     {{ form_row(form.email) }}
                     {{ form_row(form.type) }}
+                    {{ form_row(form.section) }}
 
+                    <div class="rehab" data-prototype="{{ forms.tfocusCollectionItem(form.focus.vars.prototype)|e }}">
+                        {% for fc in form.focus %}
+                            {{ forms.tfocusCollectionItem(fc) }}
+                        {% endfor %}
+                    </div>
                     
                 </div>
             </div>        

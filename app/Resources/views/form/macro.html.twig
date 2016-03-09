@@ -14,3 +14,20 @@
    
     </div>
 {% endmacro %}
+
+{% macro tfocusCollectionItem(formData) %}
+    <div class="form-group">
+    {{ form_label(formData.focus) }}
+    <div class="col-sm-3">
+   {{ form_widget(formData.focus) }}
+   
+    </div>
+   
+       <div class="col-sm-7">
+          
+           <button class="btn btn-danger" type="button" onclick="removeParent(this)"><span class="glyphicon glyphicon-remove"></span> Schwerpunkt löschen</button>
+           
+       </div>
+   
+    </div>
+{% endmacro %}

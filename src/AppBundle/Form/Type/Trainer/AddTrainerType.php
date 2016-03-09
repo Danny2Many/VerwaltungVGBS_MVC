@@ -3,11 +3,15 @@
 namespace AppBundle\Form\Type\Trainer;
 
 use AppBundle\Form\Type\PersonalDataType;
+use AppBundle\Form\Type\Trainer\TrainerFocusType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 
@@ -31,10 +35,17 @@ class AddTrainerType extends PersonalDataType{
         ->add('reset', ResetType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'zurücksetzen'))
         ->add('section', EntityType::class,  array(
             'class' => 'AppBundle:Section',
-            //'choice_label' => 'token',
+            'choice_label' => 'sectionname',
             'multiple' => true,
-            'required' => false,
-            'label' => 'Abteilung/en:'));
+            'expanded' => true,
+            'label' => 'Abteilung/en:'))
+        ->add('focus', CollectionType::class, array('entry_type' => TrainerFocusType::class, 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true,))
+    
+        ;        
+    }
+    
+    public function configureOptions(OptionsResolver $resolver) {
+        $resolver->setDefaults(array('data_class' => 'AppBundle\Entity\Trainer\Trainer',));
     }
 }
 
