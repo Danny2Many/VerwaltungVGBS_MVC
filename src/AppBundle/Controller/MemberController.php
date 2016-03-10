@@ -27,8 +27,7 @@ class MemberController extends Controller
      */
     public function indexAction(Request $request, $info, $letter)
     {
-    
-        
+
     $repository = $this->getDoctrine()
     ->getRepository('AppBundle:Member');
     

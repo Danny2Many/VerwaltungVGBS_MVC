@@ -3,6 +3,8 @@
 namespace AppBundle\Entity\Trainer;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity
@@ -12,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class TrainerPhoneNumber {
     
     /**
-     * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="phonenumber")
+     * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="phonenumber", cascade={"persist"})
      * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
      */
     protected $trainer;
@@ -26,6 +28,11 @@ class TrainerPhoneNumber {
     /**
      * @ORM\Id
      * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/\d\/\d/",
+     *     message="Ihre Telefonnummer entspricht entweder nicht dem gegebenen Format oder enthält einen Buchstaben."
+     * )
      */   
     protected $phonenumber;
     

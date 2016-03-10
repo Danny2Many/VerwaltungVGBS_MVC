@@ -4,9 +4,9 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\Nichtmitglieder\Nonmember;
 use AppBundle\Form\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\Nichtmitglieder\Nonmember;
 use AppBundle\Form\Type\Nichtmitglieder\AddNonMemberType;
 use AppBundle\Form\Type\Nichtmitglieder\EditNonMemberType;
 use Doctrine\Common\Collections\ArrayCollection;

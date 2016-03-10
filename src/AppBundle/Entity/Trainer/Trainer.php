@@ -142,8 +142,10 @@ class Trainer extends PersonalData{
      */
     public function addFocus(\AppBundle\Entity\Trainer\TrainerFocus $focus)
     {
+        
+       
+        $focus->setTrainer($this);
         $this->focus[] = $focus;
-
         return $this;
     }
 
@@ -167,6 +169,23 @@ class Trainer extends PersonalData{
         return $this->focus;
     }
 
+   /**
+    * Set focus
+    * @param \Doctrine\Common\Collections\Collection $focus
+    *
+    * @return Post
+    */
+    public function setFocus($focus)
+    {      
+    if(!is_array($focus))
+    {
+        $sportsgroup = array($focus);
+    }
+    $this->focus = $focus;
+
+    return $this;
+    }
+    
     /**
      * Add section
      *
@@ -200,4 +219,44 @@ class Trainer extends PersonalData{
     {
         return $this->section;
     }
+    
+    
+//    
+//    /**
+//     * Add phonenumber
+//     *
+//     * @param \AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber
+//     *
+//     * @return Trainer
+//     */
+//    public function addPhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
+//    {               
+//        $phonenumber->setTrainer($this);
+//        $this->phonenumber[] = $phonenumber;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Remove phonenumber
+//     *
+//     * @param \AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber
+//     */
+//    public function removePhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
+//    {
+//        $this->phonenumber->removeElement($phonenumber);
+//    }
+//
+//    /**
+//     * Get phonenumber
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getPhonenumber()
+//    {
+//        return $this->phonenumber;
+//    }
+    
+    
+    
 }

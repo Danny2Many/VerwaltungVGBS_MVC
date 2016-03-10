@@ -1,9 +1,27 @@
+
 {% extends 'basic.html.twig' %}
+{% form_theme searchform 'bootstrap_3_layout.html.twig' %}
 
 {% block viewlink %}{{ path('trainer_home') }}{% endblock %}
 {% block title %} Übungsleiter {% endblock %}
 {% block viewname %}Übungsleiter{% endblock %}
 {% block TrainerAktiv %} active {% endblock %}
+
+{% block search %}
+    
+{{ form_start(searchform) }}
+{{ form_widget(searchform.Spalte) }}
+{{ form_widget(searchform.searchfield) }}
+{{ form_widget(searchform.search) }}
+<a href="{{ path('trainer_home') }}"><input type="button" class="form-control" value="zurücksetzen" {{ disabled }}></a>
+{{ form_end(searchform) }}
+
+{% endblock %}
+
+{% block add %}
+    <a href="{{ path('addtrainer', {'letter': cletter }) }}"><button    class="add btn btn-default">
+      <span class="glyphicon glyphicon-plus"></span> neuen Übungsleiter anlegen </button></a>  
+{% endblock %}
 
 {% block color %} {{colorclass}} {% endblock %}
 
