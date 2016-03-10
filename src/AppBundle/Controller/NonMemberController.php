@@ -8,6 +8,8 @@ use AppBundle\Form\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Nichtmitglieder\Nonmember;
 use AppBundle\Form\Type\Nichtmitglieder\AddNonMemberType;
+use AppBundle\Form\Type\Nichtmitglieder\EditNonMemberType;
+use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber;
 use AppBundle\Entity\Section;
 
@@ -88,10 +90,10 @@ class NonMemberController extends Controller {
     public function addnonmeberAction (Request $request, $letter){
         
         $nonmember = new Nonmember ();
-//        $phonenumber = new NonMemPhoneNumber();
-//        $section = new Section ();
-//        
-//        $nonmember->addSection($section);
+       // $phonenumber = new NonMemPhoneNumber();
+                $section = new Section ();
+        
+          $nonmember->addSection($section);
 //        $nonmember->addPhonenumber($phonenumber);
         
         $addnonmemform = $this->createForm(AddNonMemberType::class, $nonmember);
@@ -116,10 +118,61 @@ class NonMemberController extends Controller {
             ));
         
     }
+     /**
+     * @Route("/nichtmitglieder/bearbeiten/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"ID": "\d+", "letter": "[A-Z]"}, name="editnonmem")
+     * 
+     */
     public function editnonmeberAction (Request $request, $ID, $letter){
         $manager=$this->getDoctrine()->getManager();
-        $repository = $this ->getDoctrine()->getRepository('AppBundle\Nichtmitglieder:Nonmember');
+        $repository = $this ->getDoctrine()->getRepository('AppBundle:Nichtmitglieder\Nonmember');
         $nonmember=$repository->findOneBy(array('nmemid' => $ID));
+        
+        if (!$nonmember){
+            throw $this->createNotFoundForm('Es konnte kein Mitglied mit der Nichtmitgliedsnr.: '.$ID.' gefunden werden');
+        }
+        $editnonmemform = $this->createForm(EditNonMemberType::class, $nonmember);
+        
+        $originalrehabs = new ArrayCollection();
+        
+        // Create an ArrayCollection of the current Rehab objects in the database
+        foreach ($nonmember->getRehabilitationcertificate() as $rehab) {
+            $originalrehabs->add($rehab);
+        }
+        
+        $editnonmemform->handleRequest($request);
+         
+        if($editnonmemform->get('delete')->isClicked()){
+            $manager=$this->getDoctrine()->getManager();
+            $manager->remove($nonmember);
+            $manager->flush();
+            return $this->redirectToRoute('nonmember_home', array('letter' => $letter, 'info' => 'entfernt'));
+        } 
+        
+         //if the form is valid -> persist it to the database
+        if($editnonmemform->isSubmitted() && $editnonmemform->isValid()){ 
+           
+            foreach ($originalrehabs as $rehab) {
+        
+                if (false === $nonmember->getRehabilitationcertificate()->contains($rehab)) {
+                    $manager->remove($rehab);
+                }
+            }     
+            $manager->persist($nonmember);          
+            $manager->flush();                
+            
+            return $this->redirectToRoute('nonmember_home', array('letter' => $letter, 'info' => 'gespeichert'));    
+        } 
+        
+        
+        
+        return $this->render(
+                'Nicht_Mitglieder/nonmemberform.html.twig',
+                 array(
+            
+            'form' => $editnonmemform->createView(),
+            'cletter' => $letter,
+            'title' => 'Nichtmitglied bearbeiten'
+            ));
     }
 }
 

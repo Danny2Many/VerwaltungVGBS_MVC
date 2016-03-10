@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Entity\Nichtmitglieder;
+
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\HealthData;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,7 +16,7 @@ class Nonmember extends HealthData {
 /**
 * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
 * @ORM\JoinTable(name="NonMember_Section",
-* joinColumns={@ORM\JoinColumn(name="memid", referencedColumnName="memid")},
+* joinColumns={@ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")},
 * inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
 */
 protected $section;    
@@ -46,31 +47,26 @@ protected $state;
 
 /**
 * @ORM\Column(type="date")
-* @Assert\NotBlank()
-* @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+ *@Assert\NotBlank
+ *@Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+ * 
 */
 protected $trainingstartdate;
 
 /**
 * @ORM\Column(type="date")
-* @Assert\NotBlank()
-* @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
 */
 protected $trainingconfirmation;
 
 /**
-* @ORM\Column(type="date")
-* @Assert\NotBlank()
-* @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+* @ORM\Column(type="integer") 
 */  
-protected $settlementdate1;
+protected $rehabunity1;
 
 /**
-* @ORM\Column(type="date")
-* @Assert\NotBlank()
-* @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+* @ORM\Column(type="integer") 
 */
-protected $settlementdate2;
+protected $rehabunity2;
  
 
 /**
@@ -88,12 +84,7 @@ protected $rehabilitationcertificate;
  */
 protected $phonenumber;
 
-/**
-* @ORM\Column(type="text")
-*/
- protected $inforehabdues;
 
- 
     /**
      * Constructor
      */
@@ -101,6 +92,7 @@ protected $phonenumber;
     {
         $this->phonenumber = new \Doctrine\Common\Collections\ArrayCollection();
         $this->rehabilitationcertificate = new ArrayCollection();
+        $this->section = new ArrayCollection();
     }
 
     /**
@@ -291,7 +283,7 @@ protected $phonenumber;
     public function addRehabilitationcertificate(\AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate $rehabilitationcertificate)
     {
         if($rehabilitationcertificate->getTerminationdate() != null){
-        $rehabilitationcertificate->setMember($this);
+        $rehabilitationcertificate->setNonmember($this);
         $this->rehabilitationcertificate[] = $rehabilitationcertificate;
 
         return $this;
@@ -399,4 +391,24 @@ protected $phonenumber;
     {
         return $this->section;
     }
+
+     /**
+ * Set categories
+ * 
+ *
+ * @return Post
+ */
+public function setSection($section)
+{
+
+    if(!is_array($section))
+    {
+        $section = array($section);
+    }
+    $this->section = $section;
+
+    return $this;
+} 
+
+    
 }

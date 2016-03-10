@@ -3,21 +3,23 @@
     
         
         {% set name = formData.vars.full_name %}
-    
+   
     
     <div class="form-group" data-content="{{ name }}">
+         
         {{ form_label(attribute(formData, method)) }}
-    <div class="col-sm-3">
-   {{ form_widget(attribute(formData, method)) }}
+        {% if formData.vars.name == 'rehabilitationcertificate' %}
+    <div class="col-sm-6">
+   {{ form_widget(formData) }}
    
     </div>
    
-       <div class="col-sm-7">
+       <div class="col-sm-4">
           
            <a class="btn-remove" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> {{ removetext }}</button></a>
            
        </div>
-   
+   {% endif %}
     </div>
 {% endmacro %}
 

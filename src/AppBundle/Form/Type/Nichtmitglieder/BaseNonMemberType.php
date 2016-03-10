@@ -24,7 +24,7 @@ public function buildForm(FormBuilderInterface $builder, array $options){
 
         $builder
             
-        ->add('trainingstartdate', DateType::class, array( 'label' => 'Trainingsbeginn:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag'),'required' => false))
+        ->add('trainingstartdate', DateType::class, array( 'label' => 'Trainingsbeginn:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag')))
         ->add('trainingconfirmation', DateType::class, array( 'label' => 'Teilnahmebeginnbest.:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag'), 'required' => false))       
         ->add('state', ChoiceType::class, array(
                 'choices'  => array(
@@ -34,11 +34,11 @@ public function buildForm(FormBuilderInterface $builder, array $options){
                 'choices_as_values' => true,
                 'label' => 'Status:'
         ))    
-        ->add('settlementdate1', DateType::class, array( 'label' => 'Verrechnungsdat.1:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag'), 'required' => false))        
+        ->add('rehabunity1', SanitizedTextType::class, array('label' => 'Reha.Einheit 1:', 'required' => false))        
         
-        ->add('settlementdate2', DateType::class, array( 'label' => 'Verrechnungsdat.2:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag'), 'required' => false))        
+        ->add('rehabunity2', SanitizedTextType::class, array('label' => 'Reha.Einheit 2:', 'required' => false))        
                 
-        ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true,))
+        ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true, ))
                 
         ->add('healthinsurance', SanitizedTextType::class, array('label' => 'Krankenkasse:', 'required' => false))
                 
@@ -76,9 +76,10 @@ public function buildForm(FormBuilderInterface $builder, array $options){
         ->add('section', EntityType::class,  array(
             'class' => 'AppBundle:Section',
             'choice_label' => 'sectionname',            
-            'label' => 'Abteilung:'
-            
-        )) 
+            'label' => 'Abteilung:',     
+            'multiple' => true,
+            'expanded' => true
+            )) 
           ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
           ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))
           ->add('reset', ResetType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'zurücksetzen'));

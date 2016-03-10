@@ -16,7 +16,7 @@ class Nonmember extends HealthData {
 /**
 * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
 * @ORM\JoinTable(name="NonMember_Section",
-* joinColumns={@ORM\JoinColumn(name="memid", referencedColumnName="memid")},
+* joinColumns={@ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")},
 * inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
 */
 protected $section;    
@@ -59,14 +59,14 @@ protected $trainingstartdate;
 protected $trainingconfirmation;
 
 /**
-* @ORM\Column(type="date")
+* @ORM\Column(type="integer") 
 */  
-protected $settlementdate1;
+protected $rehabunity1;
 
 /**
-* @ORM\Column(type="date")
+* @ORM\Column(type="integer") 
 */
-protected $settlementdate2;
+protected $rehabunity2;
  
 
 /**
@@ -92,6 +92,7 @@ protected $phonenumber;
     {
         $this->phonenumber = new \Doctrine\Common\Collections\ArrayCollection();
         $this->rehabilitationcertificate = new ArrayCollection();
+        $this->section = new ArrayCollection();
     }
 
     /**
@@ -152,53 +153,7 @@ protected $phonenumber;
         return $this->trainingconfirmation;
     }
 
-    /**
-     * Set settlement1
-     *
-     * @param \DateTime $settlementdate1
-     *
-     * @return NonMember
-     */
-    public function setSettlementdate1($settlementdate1)
-    {
-        $this->settlementdate1 = $settlementdate1;
-
-        return $this;
-    }
-
-    /**
-     * Get settlement1
-     *
-     * @return \DateTime
-     */
-    public function getSettlementdate1()
-    {
-        return $this->settlementdate1;
-    }
-
-    /**
-     * Set settlement2
-     *
-     * @param \DateTime $settlementdate2
-     *
-     * @return NonMember
-     */
-    public function setSettlementdate2($settlementdate2)
-    {
-        $this->settlementdate2 = $settlementdate2;
-
-        return $this;
-    }
-
-    /**
-     * Get settlement2
-     *
-     * @return \DateTime
-     */
-    public function getSettlementdate2()
-    {
-        return $this->settlementdate2;
-    }
+   
 
     /**
      * Set stresstest
@@ -391,7 +346,71 @@ protected $phonenumber;
         return $this->section;
     }
 
-  
+     /**
+ * Set categories
+ * 
+ *
+ * @return Post
+ */
+public function setSection($section)
+{
+
+    if(!is_array($section))
+    {
+        $section = array($section);
+    }
+    $this->section = $section;
+
+    return $this;
+} 
 
     
+
+    /**
+     * Set rehabunity1
+     *
+     * @param integer $rehabunity1
+     *
+     * @return Nonmember
+     */
+    public function setRehabunity1($rehabunity1)
+    {
+        $this->rehabunity1 = $rehabunity1;
+
+        return $this;
+    }
+
+    /**
+     * Get rehabunity1
+     *
+     * @return integer
+     */
+    public function getRehabunity1()
+    {
+        return $this->rehabunity1;
+    }
+
+    /**
+     * Set rehabunity2
+     *
+     * @param integer $rehabunity2
+     *
+     * @return Nonmember
+     */
+    public function setRehabunity2($rehabunity2)
+    {
+        $this->rehabunity2 = $rehabunity2;
+
+        return $this;
+    }
+
+    /**
+     * Get rehabunity2
+     *
+     * @return integer
+     */
+    public function getRehabunity2()
+    {
+        return $this->rehabunity2;
+    }
 }
