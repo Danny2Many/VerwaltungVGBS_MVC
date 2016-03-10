@@ -142,8 +142,10 @@ class Trainer extends PersonalData{
      */
     public function addFocus(\AppBundle\Entity\Trainer\TrainerFocus $focus)
     {
+        
+       
+        $focus->setTrainer($this);
         $this->focus[] = $focus;
-
         return $this;
     }
 
@@ -167,6 +169,23 @@ class Trainer extends PersonalData{
         return $this->focus;
     }
 
+   /**
+    * Set focus
+    * @param \Doctrine\Common\Collections\Collection $focus
+    *
+    * @return Post
+    */
+    public function setFocus($focus)
+    {      
+    if(!is_array($focus))
+    {
+        $sportsgroup = array($focus);
+    }
+    $this->focus = $focus;
+
+    return $this;
+    }
+    
     /**
      * Add section
      *

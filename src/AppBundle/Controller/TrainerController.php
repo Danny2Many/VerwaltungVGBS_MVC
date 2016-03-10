@@ -98,6 +98,8 @@ class TrainerController extends Controller
         
         $trainer = new Trainer();
         
+        
+        
 
         
         $addtrainerform = $this->createForm(AddTrainerType::class, $trainer);
