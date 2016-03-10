@@ -15,6 +15,7 @@ use AppBundle\Entity\Section;
 
 
 
+
 class TrainerController extends Controller
 {
     /**
@@ -96,8 +97,7 @@ class TrainerController extends Controller
         
         
         $trainer = new Trainer();
-        $focus = new TrainerFocus();
-        $trainer->addFocus($focus);
+        
 
         
         $addtrainerform = $this->createForm(AddTrainerType::class, $trainer);
