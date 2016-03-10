@@ -523,12 +523,12 @@ public function setSection($section)
      */
     public function addRehabilitationcertificate(\AppBundle\Entity\MemRehabilitationCertificate $rehabilitationcertificate)
     {
-        if($rehabilitationcertificate->getTerminationdate() != null){
+  
         $rehabilitationcertificate->setMember($this);
         $this->rehabilitationcertificate[] = $rehabilitationcertificate;
 
         return $this;
-        }
+        
     }
 
     /**

@@ -38,7 +38,7 @@
     {% block thead %}
         
             
-        <th>Bearb.</th><th>M_Nr</th><th>Abt</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Geb.Datum</th><th>Ort</th><th>Strasse, Hausnr</th><th>PLZ</th><th>Postfach</th><th>Telefon</th><th>E-Mail</th><th>Sportgruppe/n</th><th>Eintr.Datum</th><th>Aufnahmebest.</th><th>RS gültig bis</th><th>Verm. Beitr.</th><th>Krankenkasse</th><th>Zusatzinfo</th> 
+        <th>Bearb.</th><th>M_Nr</th><th>Abt</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Geb.Datum</th><th>Ort</th><th>Strasse, Hausnr</th><th>PLZ</th><th>Postfach</th><th>Telefon</th><th>E-Mail</th><th>Sportgruppe/n</th><th>Eintr.Datum</th><th>Aufnahmebest.</th><th>Rehaschein/e</th><th>abgelaufene Rehaschein/e</th><th>Verm. Beitr.</th><th>Krankenkasse</th><th>Zusatzinfo</th> 
         <th>Ehrung</th><th>Arbeitsplatzhaltung</th><th>chron. Berufserkr.</th><th>Schmerzen in HWS</th><th>Schmerzen in BWS</th><th>Schmerzen in LWS</th><th>obere Extremitäten</th><th>untere Extremitäten</th><th>sonst. Beeinträchtigungen</th><th>Medikamente</th><th>weit. bewegl. Aktivitäten</th><th>Hf-Ruhe/Min</th><th>Hf-Max/Min</th><th>Hf bei 50%</th><th>Hf bei 55%</th><th>Hf bei 60%</th><th>Hf bei 65%</th><th>Hf bei 70%</th><th>Hf bei 75%</th><th>Hf bei 80%</th><th>Hf bei 85%</th>
         
     {% endblock %}
@@ -49,7 +49,7 @@
     
     {% block tbody %}
         {% for data in tabledata %}
-            {% autoescape  %}
+            
             <tr> 
                 {% if data.lastname|first == 'Ä' %}
                     {% set first = 'A' %}
@@ -60,16 +60,13 @@
                     {% else %}
                     {% set first = data.lastname|first %}   
                 {% endif %}
-                <td><center><a href="{{ path('editmem', {'letter': first, 'ID': data.memid }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
+                <td><center><a href="{{ path('editmem', {'letter': first|capitalize, 'ID': data.memid }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
                 <td>{{ data.memid }}</td>
-                <td>{% if data.section is empty %}
-                   {{ "-" }}
-                    {% else  %}
-                         {% for Sec in data.section %}
+                <td>{% for Sec in data.section %}
                         {{ Sec.sectionname }}<br>
-                    {% endfor %}
-                    
-                    {% endif %}</td>
+                        {% else  %}
+                        {{ "-" }}
+                    {% endfor %}</td>
                 <td>{{ data.state|striptags }}</td>
                
                 <td>{{ data.title|striptags }}</td>
@@ -80,36 +77,47 @@
                 <td>{{ data.streetaddress|striptags }}</td>
                 <td>{{ data.postcode|striptags }}</td>
                 <td>{{ data.mailbox is empty ? "-" : data.mailbox|striptags }}</td>  
-                <td>{% if data.phonenumber is empty %}
-                   {{ "-" }}
-                    {% else  %}
-                         {% for PN in data.phonenumber %}
+                <td>{% for PN in data.phonenumber %}
                         {{ PN.phonenumber }}<br>
-                    {% endfor %}
+                        {% else  %}
+                        {{ "-" }}    
+                    {% endfor %}</td>
                     
-                    {% endif %}</td>
                 <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>
-                <td>{% if data.sportsgroup is empty %}
-                   {{ "-" }}
-                    {% else  %}
-                         {% for sportsgroup in data.sportsgroup %}
+                <td>{% for sportsgroup in data.sportsgroup %}
                         {{ sportsgroup.Token }}<br>
+                        {% else  %}
+                            {{ "-" }}
                     {% endfor %}
-                    
-                    {% endif %}</td>
+                   </td>
                  <td>{{ data.admissiondate|date("d.m.Y") }}</td>
                 <td>{{ data.admissionconfirmation is empty ? "-" : data.admissionconfirmation|date("d.m.Y") }}</td>
-                <td>{% if data.rehabilitationcertificate is empty %}
-                   {{ "-" }}
-                    {% else  %}
-                         {% set i =1 %}
-                         {% for RC in data.rehabilitationcertificate %}
-                             
-                         {{i}}:{{RC.terminationdate|date("d.m.Y") }}<br>
-                         {% set i =i+1 %}
+                
+             
+                <td>{% for RC in data.rehabilitationcertificate if date(RC.terminationdate) > date() %}
+                          
+                        
+                         {{loop.index}}:{{RC.terminationdate|date("d.m.Y") }}|{{RC.rehabunits }}<br>
+                        
+                         {% else %}
+                         {{ "-" }}
                     {% endfor %}
+                   </td>
                     
-                    {% endif %}</td>
+                    
+                    
+                    
+                    
+                    <td>{% for RC in data.rehabilitationcertificate if date(RC.terminationdate) < date() %}
+          
+                         {{loop.index}}:{{RC.terminationdate|date("d.m.Y") }}|{{RC.rehabunits }}<br>
+                        
+                         {% else %}
+                         {{ "-" }}
+                    {% endfor %}</td>
+                    
+                    
+                    
                 <td>{{ data.decreaseddues|striptags }}</td>
                 <td>{{ data.healthinsurance is empty ? "-" : data.healthinsurance|striptags}}</td>
                 <td>{{ data.additionalinfo is empty ? "-" : data.additionalinfo|striptags }}</td>
@@ -160,7 +168,7 @@
                  <td>{{ hfbei85 }}</td>
                                
             </tr>
-           {% endautoescape %} 
+            
         {% endfor %}
             {% endblock %}
             
