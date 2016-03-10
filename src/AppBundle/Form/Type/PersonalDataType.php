@@ -46,7 +46,7 @@ class PersonalDataType extends AbstractType{
                     
             ->add('location', SanitizedTextType::class, array('label' => 'Ort:'))
                     
-            ->add('phonenumber', CollectionType::class, array('entry_type' => PhoneNumberType::class, 'allow_add' => true))
+            ->add('phonenumber', CollectionType::class, array('entry_type' => PhoneNumberType::class, 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
                      
             ->add('email', SanitizedEmailType::class, array('label' => 'E-Mail:', 'required' => false))
                    ;
