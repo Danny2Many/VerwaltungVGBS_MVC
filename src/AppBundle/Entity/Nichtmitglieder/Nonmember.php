@@ -39,7 +39,7 @@ protected $nmemid;
     
 /**
 * @ORM\Column(type="string")
-  * @Assert\NotBlank()
+* @Assert\NotBlank()
 * @Assert\Choice(choices = {"aktiv", "inaktiv"}, message = "Bitte wählen Sie einen gültigen Status.")
 */
 protected $state;
