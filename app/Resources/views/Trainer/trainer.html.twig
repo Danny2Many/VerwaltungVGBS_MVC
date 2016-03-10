@@ -6,6 +6,8 @@
 {% block title %} Übungsleiter {% endblock %}
 {% block viewname %}Übungsleiter{% endblock %}
 {% block TrainerAktiv %} active {% endblock %}
+{% block fixedcolnum %} 5 {% endblock %}
+
 
 {% block search %}
     
@@ -143,3 +145,26 @@
             {% endautoescape %} 
         {% endfor %}
 {% endblock %}
+    
+    {% block pagination %}
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="pagination">
+                    
+                <li {% if cletter == null %}class="active"{% endif %}><a href="{{ path(path, {'all': 'alle'}) }}">ALLE</a></li>   
+                
+                {% for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'] %}
+                    
+                    {% if letter == cletter %}     
+                    <li class="active"><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>      
+                    {% else %}
+                    <li><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>                    
+                    {% endif %}
+                    
+                {% endfor %}
+                
+                <li class="active"><a href="{{ path(path, {'letter': cletter}) }}">{{ tabledata|length }} Personen wurden gefunden</a></li>
+                </ul>         
+            </div>           
+        </div>        
+    {% endblock %}

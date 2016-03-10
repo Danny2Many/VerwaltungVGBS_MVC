@@ -33,7 +33,7 @@ class Trainer extends PersonalData{
     protected $licence;
     
     /**
-     * @ORM\OneToMany(targetEntity="TrainerFocus", mappedBy="trainer", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="TrainerFocus", mappedBy="trainer", cascade={"all"})
      */
     protected $focus;
     

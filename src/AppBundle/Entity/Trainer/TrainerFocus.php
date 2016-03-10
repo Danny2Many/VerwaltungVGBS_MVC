@@ -16,21 +16,31 @@ class TrainerFocus{
     protected $trainer;
     
     /**
-     * @ORM\Id
      * @ORM\Column(type="integer")     
      */    
     protected $trainerid;
     
     /**
-     * @ORM\Id
      * @ORM\Column(type="string")
      */   
     protected $focus;
+    
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer") 
+     * @ORM\GeneratedValue(strategy="AUTO") 
+     */ 
+    protected $tfid;
 
-    
-    
-    
-    
+
+
+
+
+
+
+
+
     /**
      * Set trainerid
      *
@@ -101,5 +111,19 @@ class TrainerFocus{
     public function getTrainer()
     {
         return $this->trainer;
+    }
+
+ 
+
+   
+
+    /**
+     * Get tfid
+     *
+     * @return integer
+     */
+    public function getTfid()
+    {
+        return $this->tfid;
     }
 }
