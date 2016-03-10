@@ -228,12 +228,18 @@ class MemberController extends Controller
         
         
          $originalrehabs = new ArrayCollection();
+         $originalphonenr = new ArrayCollection();
 
     // Create an ArrayCollection of the current Rehab objects in the database
     foreach ($member->getRehabilitationcertificate() as $rehab) {
         $originalrehabs->add($rehab);
     }
      
+    // Create an ArrayCollection of the current Rehab objects in the database
+    foreach ($member->getPhonenumber() as $phonenr) {
+        $originalphonenr->add($phonenr);
+    }
+    
         $editmemform->handleRequest($request);
         
         
@@ -259,7 +265,14 @@ class MemberController extends Controller
             }
         }
             
-            
+            foreach ($originalphonenr as $phonenr) {
+            if (false === $member->getPhonenumber()->contains($phonenr)) {
+                
+
+                $manager->remove($phonenr);
+
+            }
+        }
            
             $manager->persist($member);
           
