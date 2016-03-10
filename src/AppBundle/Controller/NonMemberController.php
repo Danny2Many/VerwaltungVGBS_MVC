@@ -116,6 +116,11 @@ class NonMemberController extends Controller {
             ));
         
     }
+    public function editnonmeberAction (Request $request, $ID, $letter){
+        $manager=$this->getDoctrine()->getManager();
+        $repository = $this ->getDoctrine()->getRepository('AppBundle\Nichtmitglieder:Nonmember');
+        $nonmember=$repository->findOneBy(array('nmemid' => $ID));
+    }
 }
 
         

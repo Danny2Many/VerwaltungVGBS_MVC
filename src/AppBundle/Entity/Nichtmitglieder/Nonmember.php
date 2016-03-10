@@ -47,29 +47,24 @@ protected $state;
 
 /**
 * @ORM\Column(type="date")
-* @Assert\NotBlank()
-* @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+ *@Assert\NotBlank
+ *@Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+ * 
 */
 protected $trainingstartdate;
 
 /**
 * @ORM\Column(type="date")
-* @Assert\NotBlank()
-* @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
 */
 protected $trainingconfirmation;
 
 /**
 * @ORM\Column(type="date")
-* @Assert\NotBlank()
-* @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
 */  
 protected $settlementdate1;
 
 /**
 * @ORM\Column(type="date")
-* @Assert\NotBlank()
-* @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
 */
 protected $settlementdate2;
  
