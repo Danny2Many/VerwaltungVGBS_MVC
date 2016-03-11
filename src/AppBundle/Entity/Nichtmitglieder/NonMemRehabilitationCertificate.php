@@ -43,6 +43,17 @@ class NonMemRehabilitationCertificate {
      */
     protected $terminationdate;
 
+    /**
+    *  
+    *  @ORM\Column(type="integer")
+    * 
+    * @Assert\NotNull()
+    * @Assert\Type(
+    *     type="integer",
+    *     message="The value {{ value }} is not a valid {{ type }}."
+    * )
+    */
+    protected $rehabunits;
 
     /**
      * Get rcid
@@ -124,5 +135,29 @@ class NonMemRehabilitationCertificate {
     public function getNonmember()
     {
         return $this->nonmember;
+        
+    }
+    /**
+     * Set rehabunits
+     *
+     * @param integer $rehabunits
+     *
+     * @return MemRehabilitationCertificate
+     */
+    public function setRehabunits($rehabunits)
+    {
+        $this->rehabunits = $rehabunits;
+
+        return $this;
+    }
+
+    /**
+     * Get rehabunits
+     *
+     * @return integer
+     */
+    public function getRehabunits()
+    {
+        return $this->rehabunits;
     }
 }

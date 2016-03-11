@@ -57,17 +57,17 @@ protected $trainingstartdate;
 * @ORM\Column(type="date")
 */
 protected $trainingconfirmation;
-
-/**
-* @ORM\Column(type="integer") 
-*/  
-protected $rehabunity1;
-
-/**
-* @ORM\Column(type="integer") 
-*/
-protected $rehabunity2;
- 
+//
+///**
+//* @ORM\Column(type="integer") 
+//*/  
+//protected $rehabunity1;
+//
+///**
+//* @ORM\Column(type="integer") 
+//*/
+//protected $rehabunity2;
+// 
 
 /**
 * @ORM\Column(type="string")

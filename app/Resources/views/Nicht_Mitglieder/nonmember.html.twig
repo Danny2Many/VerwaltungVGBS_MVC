@@ -45,9 +45,7 @@
 <th>Sportgruppe</th>
 <th>Trainingsbeginn</th>
 <th>Teilnahmebeginnbest.</th>
-<th>RS gültig bis</th>
-<th>Reha.Einheit 1</th>
-<th>Reha.Einheit 2</th>
+<th>Rehaschein/e</th>
 <th>Krankenkasse</th>
 <th>Zusatzinfo</th> 
 <th>Arbeitsplatzhaltung</th>
@@ -104,14 +102,11 @@
             <td>{{ data.streetaddress|striptags }}</td>
             <td>{{ data.postcode|striptags }}</td>
             <td>{{ data.mailbox is empty ? "-" : data.mailbox|striptags }}</td>
-            <td>{% if data.phonenumber is empty %}
-                   {{ "-" }}
-                    {% else  %}
-                         {% for PN in data.phonenumber %}
-                            {{ PN.phonenumber|striptags }}<br>
-                    {% endfor %}
-                    
-                    {% endif %}</td>      
+            <td>{% for PN in data.phonenumber %}
+                        {{ PN.phonenumber }}<br>
+                        {% else  %}
+                        {{ "-" }}    
+                    {% endfor %}</td>     
             <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>   
             <td>{% if data.sportsgroup is empty %}
                     {{ "-" }}
@@ -122,18 +117,16 @@
                     {% endif %}</td> 
             <td>{{ data.trainingstartdate|date("d.m.Y") }}</td>
              <td>{{ data.trainingconfirmation is empty ? "-" : data.trainingconfirmation|date("d.m.Y")}}</td>
-            <td>{% if data.rehabilitationcertificate is empty %}
+             <td>{% if data.rehabilitationcertificate is empty %}
                    {{ "-" }}
                     {% else  %}
                          {% set i =1 %}
                          {% for RC in data.rehabilitationcertificate %}
                              
-                         {{i}}:{{RC.terminationdate|date("d.m.Y") }}<br>
+                         {{i}}:{{RC.terminationdate|date("d.m.Y") }}|{{ RC.rehabunits}}<br>
                         {% set i =i+1 %}
-                    {% endfor %}                    
-                    {% endif %}</td>
-            <td>{{ data.rehabunity1 is empty ? "-" :data.rehabunity1|striptags }}</td>
-            <td>{{ data.rehabunity2 is empty ? "-" :data.rehabunity2|striptags }}</td>
+                  {% endfor %}{% endif %}</td>
+   
             <td>{{ data.healthinsurance is empty ? "-" : data.healthinsurance|striptags }}</td>
             <td>{{ data.additionalinfo is empty ? "-" : data.additionalinfo|striptags }}</td>
             <td>{{ data.workplaceposture is empty ? "-" : data.workplaceposture|striptags }}</td>
