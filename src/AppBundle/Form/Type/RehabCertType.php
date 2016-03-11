@@ -12,8 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 class RehabCertType extends AbstractType{
      public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('terminationdate',DateType::class, array('label' => 'RS gültig bis:', 'required' => false, 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag')))
-                ->add('rehabunity',IntegerType::class, array( 'required' => false));
+        $builder->add('terminationdate',DateType::class, array('label' => 'RS gültig bis:', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag')))
+                ->add('rehabunits',IntegerType::class, array('label' => 'Einheiten:'));
     }
     public function configureOptions(OptionsResolver $resolver)
     {
