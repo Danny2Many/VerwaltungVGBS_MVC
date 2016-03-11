@@ -63,7 +63,7 @@ public function buildForm(FormBuilderInterface $builder, array $options)
     'label' => 'verminderter Beitrag:'
     
 ))
-                ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
+                ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\MemRehabilitationCertificate'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
                 ->add('healthinsurance', SanitizedTextType::class, array('label' => 'Krankenkasse:', 'required' => false))
                         
                 

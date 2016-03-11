@@ -34,7 +34,7 @@ class Trainer extends PersonalData{
     protected $licence;
     
     /**
-     * @ORM\OneToMany(targetEntity="TrainerFocus", mappedBy="trainer", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="TrainerFocus", mappedBy="trainer", cascade={"all"})
      */
     protected $focus;
     
@@ -54,10 +54,7 @@ class Trainer extends PersonalData{
     
     
    
-    
-    /**
-     * Constructor
-     */
+  
     public function __construct()
     {
 //        $this->phonenumber = new ArrayCollection();
@@ -178,10 +175,10 @@ class Trainer extends PersonalData{
     */
     public function setFocus($focus)
     {      
-//        if(!is_array($focus))
-//        {
-//            $focus = array($focus);
-//        }
+        if(!is_array($focus))
+        {
+           $focus = array($focus);   
+        }
         $this->focus = $focus;
 
         return $this;

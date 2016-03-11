@@ -96,7 +96,17 @@
                  
                 <td>{{ data.admissionconfirmation is empty ? "-" : data.admissionconfirmation|date("d.m.Y") }}</td>
 
-                
+
+                <td>{% if data.rehabilitationcertificate is empty %}
+                   {{ "-" }}
+                    {% else  %}
+                         {% set i =1 %}
+                         {% for RC in data.rehabilitationcertificate %}
+                             
+                         {{i}}:{{RC.terminationdate|date("d.m.Y") }}|{{ RC.rehabunits  }}<br>
+                        {% set i =i+1 %}
+                  {% endfor %}{% endif %}</td>
+                 
              
                 <td>{% for RC in data.rehabilitationcertificate if date(RC.terminationdate) > date() %}
                           
@@ -105,20 +115,10 @@
                         
                          {% else %}
                          {{ "-" }}
+
                     {% endfor %}
-                   </td>
-                    
-                    
-                    
-                    
-                    
-                    <td>{% for RC in data.rehabilitationcertificate if date(RC.terminationdate) < date() %}
-          
-                         {{loop.index}}:{{RC.terminationdate|date("d.m.Y") }}|{{RC.rehabunits }}<br>
-                        
-                         {% else %}
-                         {{ "-" }}
-                    {% endfor %}</td>
+                   </td> 
+                  
                     
                     
                     
@@ -174,7 +174,8 @@
             </tr>
             
         {% endfor %}
-            {% endblock %}
+  
+{% endblock %}
             
                 
             

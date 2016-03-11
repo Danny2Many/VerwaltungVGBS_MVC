@@ -40,9 +40,9 @@
                     {{ form_row(form.type) }}
                     {{ form_row(form.section) }}
 
-                    <div id="pn" data-prototype="{{ forms.CollectionItem(form.focus.vars.prototype, 'focus', 'Schwerpunkt löschen')|e }}">
+                    <div id="pn" data-prototype="{{ forms.textCollectionItem(form.focus.vars.prototype, 'focus', 'Schwerpunkt löschen')|e }}">
                         {% for pn in form.phonenumber %}
-                            {{ forms.CollectionItem(pn, 'focus', 'Schwerpunkt löschen') }}
+                            {{ forms.textCollectionItem(pn, 'focus', 'Schwerpunkt löschen') }}
                         {% endfor %}
         
                     </div>

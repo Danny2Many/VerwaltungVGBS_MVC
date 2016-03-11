@@ -43,6 +43,17 @@ class NonMemRehabilitationCertificate {
      */
     protected $terminationdate;
 
+    /**
+    *  
+    *  @ORM\Column(type="integer")
+    * 
+    * @Assert\NotNull()
+    * @Assert\Type(
+    *     type="integer",
+    *     message="The value {{ value }} is not a valid {{ type }}."
+    * )
+    */
+    protected $rehabunits;
 
     /**
      * Get rcid
@@ -55,27 +66,27 @@ class NonMemRehabilitationCertificate {
     }
 
     /**
-     * Set memid
+     * Set nmemid
      *
-     * @param integer $memid
+     * @param integer $nmemid
      *
      * @return NonMemRehabilitationCertificate
      */
     public function setNMemid($nmemid)
     {
-        $this->memid = $memid;
+        $this->nmemid = $nmemid;
 
         return $this;
     }
 
     /**
-     * Get memid
+     * Get nmemid
      *
      * @return integer
      */
-    public function getMemid()
+    public function getNMemid()
     {
-        return $this->memid;
+        return $this->nmemid;
     }
 
     /**
@@ -105,11 +116,11 @@ class NonMemRehabilitationCertificate {
     /**
      * Set nonmember
      *
-     * @param \AppBundle\Entity\Nichtmitglieder\NonMember $nonmember
+     * @param \AppBundle\Entity\Nichtmitglieder\Nonmember $nonmember
      *
      * @return NonMemRehabilitationCertificate
      */
-    public function setNonmember(\AppBundle\Entity\Nichtmitglieder\NonMember $nonmember = null)
+    public function setNonmember(\AppBundle\Entity\Nichtmitglieder\Nonmember $nonmember = null)
     {
         $this->nonmember = $nonmember;
 
@@ -119,10 +130,34 @@ class NonMemRehabilitationCertificate {
     /**
      * Get nonmember
      *
-     * @return \AppBundle\Entity\Nichtmitglieder\NonMember
+     * @return \AppBundle\Entity\Nichtmitglieder\Nonmember
      */
     public function getNonmember()
     {
         return $this->nonmember;
+        
+    }
+    /**
+     * Set rehabunits
+     *
+     * @param integer $rehabunits
+     *
+     * @return MemRehabilitationCertificate
+     */
+    public function setRehabunits($rehabunits)
+    {
+        $this->rehabunits = $rehabunits;
+
+        return $this;
+    }
+
+    /**
+     * Get rehabunits
+     *
+     * @return integer
+     */
+    public function getRehabunits()
+    {
+        return $this->rehabunits;
     }
 }
