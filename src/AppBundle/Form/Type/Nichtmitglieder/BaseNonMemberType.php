@@ -39,7 +39,7 @@ public function buildForm(FormBuilderInterface $builder, array $options){
         ->add('rehabunity2', SanitizedTextType::class, array('label' => 'Reha.Einheit 2:', 'required' => false))        
                 
         ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true, ))
-                
+                       
         ->add('healthinsurance', SanitizedTextType::class, array('label' => 'Krankenkasse:', 'required' => false))
                 
         ->add('additionalinfo', SanitizedTextareaType::class, array('label' => 'Zusatzinfo:', 'required' => false)) 

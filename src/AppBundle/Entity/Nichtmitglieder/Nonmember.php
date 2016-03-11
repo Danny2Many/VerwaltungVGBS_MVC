@@ -90,7 +90,7 @@ protected $phonenumber;
      */
     public function __construct()
     {
-        $this->phonenumber = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->phonenumber = new ArrayCollection();
         $this->rehabilitationcertificate = new ArrayCollection();
         $this->section = new ArrayCollection();
     }
@@ -413,4 +413,43 @@ public function setSection($section)
     {
         return $this->rehabunity2;
     }
+    
+    
+// 
+///** 
+//* Add phonenumber
+//*
+//* @param \AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber
+//*
+//* @return Nonmember
+//*/
+// public function addPhonenumber(\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber)
+//    {               
+//        $phonenumber->setNonmember($this);
+//        $this->phonenumber[] = $phonenumber;
+//
+//        return $this;
+//    }
+
+//    /**
+//     * Remove phonenumber
+//     *
+//     * @param \AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber
+//    */
+//    public function removePhonenumber(\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber)
+//    {
+//        $this->phonenumber->removeElement($phonenumber);
+//    }
+
+//    /**
+//    * Get phonenumber
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getPhonenumber()
+//    {
+//        return $this->phonenumber;
+//    }
+     
+    
 }
