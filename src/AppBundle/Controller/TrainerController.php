@@ -8,8 +8,9 @@ use AppBundle\Form\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\Type\Trainer\AddTrainerType;
 use AppBundle\Entity\Trainer\Trainer;
+use AppBundle\Entity\Trainer\TrainerPhoneNumber;
 use AppBundle\Entity\Trainer\TrainerFocus;
-use AppBundle\Entity\Section;
+
 
 
 
@@ -95,6 +96,11 @@ class TrainerController extends Controller
         
         
         $trainer = new Trainer();
+        $focus = new TrainerFocus();
+        
+        $trainer->addFocus($focus);
+        $trainer->addFocus($focus);
+
         
         
         
@@ -105,6 +111,7 @@ class TrainerController extends Controller
         $addtrainerform->handleRequest($request);
         if ($addtrainerform->isSubmitted() && $addtrainerform->isValid()){
             
+                        
             
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($trainer);

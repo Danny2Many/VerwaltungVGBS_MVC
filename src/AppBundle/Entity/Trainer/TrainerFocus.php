@@ -16,6 +16,7 @@ class TrainerFocus{
     protected $trainer;
     
     /**
+     *      
      * @ORM\Column(type="integer")     
      */    
     protected $trainerid;

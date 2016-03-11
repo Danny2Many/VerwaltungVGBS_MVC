@@ -6,6 +6,7 @@ use AppBundle\Entity\PersonalData;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="Trainer")
@@ -33,7 +34,7 @@ class Trainer extends PersonalData{
     protected $licence;
     
     /**
-     * @ORM\OneToMany(targetEntity="TrainerFocus", mappedBy="trainer", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="TrainerFocus", mappedBy="trainer", cascade={"persist"})
      */
     protected $focus;
     
@@ -59,10 +60,10 @@ class Trainer extends PersonalData{
      */
     public function __construct()
     {
-        $this->phonenumber = new ArrayCollection();
-        $this->licence = new ArrayCollection();
+//        $this->phonenumber = new ArrayCollection();
+//        $this->licence = new ArrayCollection();
         $this->focus = new ArrayCollection();
-        $this->section = new ArrayCollection();
+//        $this->section = new ArrayCollection();
     }
 
     /**
@@ -143,10 +144,10 @@ class Trainer extends PersonalData{
     public function addFocus(\AppBundle\Entity\Trainer\TrainerFocus $focus)
     {
         
-       
+      
         $focus->setTrainer($this);
         $this->focus[] = $focus;
-        return $this;
+       return $this;
     }
 
     /**
@@ -177,13 +178,13 @@ class Trainer extends PersonalData{
     */
     public function setFocus($focus)
     {      
-    if(!is_array($focus))
-    {
-        $sportsgroup = array($focus);
-    }
-    $this->focus = $focus;
+//        if(!is_array($focus))
+//        {
+//            $focus = array($focus);
+//        }
+        $this->focus = $focus;
 
-    return $this;
+        return $this;
     }
     
     /**
@@ -219,44 +220,5 @@ class Trainer extends PersonalData{
     {
         return $this->section;
     }
-    
-    
-//    
-//    /**
-//     * Add phonenumber
-//     *
-//     * @param \AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber
-//     *
-//     * @return Trainer
-//     */
-//    public function addPhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
-//    {               
-//        $phonenumber->setTrainer($this);
-//        $this->phonenumber[] = $phonenumber;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Remove phonenumber
-//     *
-//     * @param \AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber
-//     */
-//    public function removePhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
-//    {
-//        $this->phonenumber->removeElement($phonenumber);
-//    }
-//
-//    /**
-//     * Get phonenumber
-//     *
-//     * @return \Doctrine\Common\Collections\Collection
-//     */
-//    public function getPhonenumber()
-//    {
-//        return $this->phonenumber;
-//    }
-    
-    
-    
+   
 }

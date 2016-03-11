@@ -33,7 +33,7 @@
                     {{ form_row(form.location) }}
 
                     {% for pn in form.phonenumber %}
-                        {{ form_row(pn.phonenumber) }}
+                        {{ forms.CollectionItem(pn, 'phonenumber', 'Telefonnr. löschen') }}
                     {% endfor %}
                     
                     {{ form_row(form.email) }}

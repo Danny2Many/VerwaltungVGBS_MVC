@@ -116,4 +116,14 @@ class TrainerFocus{
  
 
    
+
+    /**
+     * Get tfid
+     *
+     * @return integer
+     */
+    public function getTfid()
+    {
+        return $this->tfid;
+    }
 }
