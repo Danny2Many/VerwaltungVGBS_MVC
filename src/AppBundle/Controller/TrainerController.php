@@ -99,7 +99,6 @@ class TrainerController extends Controller
         $focus = new TrainerFocus();
         
         $trainer->addFocus($focus);
-        $trainer->addFocus($focus);
 
         
         

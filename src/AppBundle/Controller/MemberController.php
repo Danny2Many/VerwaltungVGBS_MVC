@@ -28,6 +28,7 @@ class MemberController extends Controller
     public function indexAction(Request $request, $info, $letter)
     {
 
+
     $repository = $this->getDoctrine()
     ->getRepository('AppBundle:Member');
     
@@ -55,18 +56,17 @@ class MemberController extends Controller
     
     
     
-    $query=$qb->where($qb->expr()->like('m.'.$searchcol, ':member'))
+    $qb->where($qb->expr()->like('m.'.$searchcol, ':member'))
                    ->setParameter('member','%'.$searchval.'%')
                    ->getQuery();
     
-    $memberlist=$query->getResult();
     
      $disabled='';
      
     }else{
         
         
-        $query=$qb->where($qb->expr()->like('m.lastname', ':letter'))
+        $qb->where($qb->expr()->like('m.lastname', ':letter'))
                    ->setParameter('letter',$letter.'%');
                    
         
@@ -85,16 +85,16 @@ class MemberController extends Controller
             break;
         }
         
-        $query=$query->getQuery()->getResult();
+       
         
-        $memberlist=$query;
+        
         $disabled='disabled';
     }
     
     
     
     
-    
+     $memberlist=$qb->getQuery()->getResult();
 
     return $this->render(
         'Mitglieder/member.html.twig',
@@ -106,6 +106,7 @@ class MemberController extends Controller
             'info' => $info,
             'cletter' => $letter,
             'path' => 'member_home'
+           
          
             ));
     }
