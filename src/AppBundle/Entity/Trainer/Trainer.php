@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="Trainer")
@@ -141,10 +142,10 @@ class Trainer extends PersonalData{
     public function addFocus(\AppBundle\Entity\Trainer\TrainerFocus $focus)
     {
         
-      
         $focus->setTrainer($this);
         $this->focus[] = $focus;
-       return $this;
+        return $this;
+              
     }
 
     /**

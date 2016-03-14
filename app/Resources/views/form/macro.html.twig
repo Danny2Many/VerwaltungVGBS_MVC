@@ -8,7 +8,7 @@
     <div class="form-group" data-content="{{ name }}">
          
         {{ form_label(attribute(formData, method)) }}
-        {% if formData.vars.name == 'rehabilitationcertificate' %}
+        {% if formData.vars.name != 'rehabilitationcertificate' %}
     <div class="col-sm-6">
    {{ form_widget(formData) }}
    

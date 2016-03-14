@@ -10,7 +10,7 @@ use AppBundle\Form\Type\Trainer\AddTrainerType;
 
 use AppBundle\Entity\Trainer\Trainer;
 use AppBundle\Entity\Trainer\TrainerPhoneNumber;
-//use AppBundle\Entity\Trainer\TrainerFocus;
+use AppBundle\Entity\Trainer\TrainerFocus;
 
 
 
@@ -97,9 +97,9 @@ class TrainerController extends Controller
         
         
         $trainer = new Trainer();
-//        $focus = new TrainerFocus();
-//        
-//        $trainer->addFocus($focus);
+        $focus = new TrainerFocus();
+        
+        $trainer->addFocus($focus);
 
         
         
@@ -121,7 +121,8 @@ class TrainerController extends Controller
 
         
         return $this->render('Trainer/trainerform.html.twig',
-                array('form'=>$addtrainerform->createView(),                    
+                array(
+                    'form'=>$addtrainerform->createView(),                    
                     'cletter'=>$letter,
                     'title'=>'Übungsleiter anlegen'));        
     }
