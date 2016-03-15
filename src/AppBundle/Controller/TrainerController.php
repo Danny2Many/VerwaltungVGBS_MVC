@@ -98,17 +98,18 @@ class TrainerController extends Controller
         
         $trainer = new Trainer();
         
-            
-            
-        
-        
+        for ($i=1;$i<=10;$i++){
         $focus = new TrainerFocus();
+        $trainer->addFocus($focus);
+        }  
+        
+        
 
         
         
         
    //     $focus->setTrainerid($trainer->getTrainerid());        
-        $trainer->addFocus($focus);
+       
         
         
         
@@ -123,7 +124,7 @@ class TrainerController extends Controller
         $addtrainerform->handleRequest($request);
         if ($addtrainerform->isSubmitted() && $addtrainerform->isValid()){
             
-                        
+                      
             
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($trainer);

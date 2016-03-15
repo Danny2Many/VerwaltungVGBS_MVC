@@ -38,12 +38,12 @@ class Trainer extends PersonalData {
     protected $focus;
     
     /**
-     * @ORM\OneToMany(targetEntity="TrainerLicence", mappedBy="trainer", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="TrainerLicence", mappedBy="trainer", cascade={"all"})
      */  
     protected $licence;
     
     /**
-     * @ORM\OneToMany(targetEntity="TrainerPhoneNumber", mappedBy="trainer", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="TrainerPhoneNumber", mappedBy="trainer", cascade={"all"})
      */ 
     protected $phonenumber;
     
@@ -141,7 +141,6 @@ class Trainer extends PersonalData {
     {
 
         $focus->setTrainer($this);
-
              
         $this->focus[] = $focus;
 
@@ -160,7 +159,7 @@ class Trainer extends PersonalData {
     }
     
     /**
-     * Set rehabilitationcertificate
+     * Set focus
      *
      * @param string $focus
      *
