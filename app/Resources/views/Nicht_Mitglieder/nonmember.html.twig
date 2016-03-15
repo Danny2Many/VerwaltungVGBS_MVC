@@ -86,13 +86,11 @@
                 {% endif %}
             <td><center><a href="{{ path('editnonmem', {'letter': first|capitalize, 'ID': data.nmemid }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></td>
             <td>{{ data.nmemid }}</td>
-            <td>{% if data.section is empty %}
-                   {{ "-" }}
-                    {% else  %}
-                         {% for Sec in data.section %}
+            <td>{% for Sec in data.section %}
                         {{ Sec.sectionname }}<br>
-                    {% endfor %}                    
-                    {% endif %}</td>
+                        {% else  %}
+                        {{ "-" }}
+                    {% endfor %}</td>
             <td>{{ data.state|striptags }}</td>
             <td>{{ data.title|striptags }}</td>
             <td>{{ data.lastname|striptags }}</td>

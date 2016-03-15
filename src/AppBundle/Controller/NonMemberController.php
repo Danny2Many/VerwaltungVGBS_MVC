@@ -13,6 +13,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber;
 use AppBundle\Entity\Section;
 
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use AppBundle\Form\SanitizedTextType;
+
 class NonMemberController extends Controller {
     /**
      * @Route("/nichtmitglieder/{letter}", defaults={"letter"="A"}, name="nonmember_home", requirements={"letter": "[A-Z]"})
@@ -90,15 +94,16 @@ class NonMemberController extends Controller {
     public function addnonmeberAction (Request $request, $letter){
         
         $nonmember = new Nonmember ();
-       // $phonenumber = new NonMemPhoneNumber();
-               $section = new Section ();
-        
-          //$nonmember->addSection($section);
-//        $nonmember->addPhonenumber($phonenumber);
+     $phonenumber = new NonMemPhoneNumber();
+////        $section = new Section ();
+////        
+////        $nonmember->addSection($section);
+     $nonmember->addPhonenumber($phonenumber);
         
         $addnonmemform = $this->createForm(AddNonMemberType::class, $nonmember);
         $addnonmemform->handleRequest($request);
         
+        //if the form is valid -> persist it to the database
         if($addnonmemform->isSubmitted() && $addnonmemform->isValid()){
             
             $manager= $this->getDoctrine()->getManager();
@@ -108,6 +113,7 @@ class NonMemberController extends Controller {
             return $this->redirectToRoute('nonmember_home', array ('letter'=>$letter));
             }
         
+            
             
         return $this->render(
         'Nicht_Mitglieder/nonmemberform.html.twig',

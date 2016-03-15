@@ -11,30 +11,45 @@ use Symfony\Component\Validator\Constraints as Assert;
 class NonMemPhoneNumber {
     
   /**
-     * @ORM\ManyToOne(targetEntity="NonMember", inversedBy="phonenumber", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Nonmember", inversedBy="phonenumber", cascade={"persist"})
      * @ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")
      */
     private $nonmember;
-    
+     
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer") 
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $phid;
    
     /**
-     * @ORM\Id 
+     * 
      * @ORM\Column(type="integer") 
      * 
      */
     protected $nmemid;   
     
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     * @Assert\Regex(
-     *     pattern="/\b\/\b/",
-     *     message="Ihre Telefonnummer entspricht entweder nicht dem gegebenen Format oder enthält einen Buchstaben."
-     * )
+   /**
+     * @ManyToMany(targetEntity="Phonenumber")
+     * @JoinTable(name="users_phonenumbers",
+     *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@JoinColumn(name="phonenumber_id", referencedColumnName="id", unique=true)}
+     *      )
      */
     protected $phonenumber;
     
+
+
+    /**
+     * Get phid
+     *
+     * @return integer
+     */
+    public function getPhid()
+    {
+        return $this->phid;
+    }
 
     /**
      * Set nmemid
@@ -87,11 +102,11 @@ class NonMemPhoneNumber {
     /**
      * Set nonmember
      *
-     * @param \AppBundle\Entity\Nichtmitglieder\NonMember $nonmember
+     * @param \AppBundle\Entity\Nichtmitglieder\Nonmember $nonmember
      *
      * @return NonMemPhoneNumber
      */
-    public function setNonmember(\AppBundle\Entity\Nichtmitglieder\NonMember $nonmember = null)
+    public function setNonmember(\AppBundle\Entity\Nichtmitglieder\Nonmember $nonmember = null)
     {
         $this->nonmember = $nonmember;
 
@@ -101,7 +116,7 @@ class NonMemPhoneNumber {
     /**
      * Get nonmember
      *
-     * @return \AppBundle\Entity\Nichtmitglieder\NonMember
+     * @return \AppBundle\Entity\Nichtmitglieder\Nonmember
      */
     public function getNonmember()
     {
