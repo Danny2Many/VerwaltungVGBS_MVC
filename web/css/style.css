@@ -73,8 +73,9 @@ background-color: #CC0033;}
 
 
 
-.add{
-    margin-left: 50px;
+.topmenu-right .inline{
+    float: left;
+    padding-right: 5px;
 }
 
 
@@ -99,26 +100,30 @@ background-color: #CC0033;}
 }
 
 
-
-
-.inputT{
-    margin-bottom: 3px;
+.topmenu{
+    padding-bottom: 3px;
 }
+
+
 
 label.required:after {
     content: "* ";
     color: red;
 }
-
 red {
     color: red;
 }
 
-black {
-    color: black;
+td.red {
+    color: white;
+    background-color: red;
 }
 
-.blue{
-    background-color: #A9F5E1;
-    color: black;
+ul.nav{
+    padding-bottom: 0;
+}
+
+.pagination-own{
+    margin:0;
+    display: inline;
 }
