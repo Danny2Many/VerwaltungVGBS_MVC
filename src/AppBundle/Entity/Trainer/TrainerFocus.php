@@ -1,46 +1,48 @@
 <?php
 
 namespace AppBundle\Entity\Trainer;
-
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="TrainerFocus")
  */
-class TrainerFocus{
+class TrainerFocus {
+    
     /**
      * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="focus")
      * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
      */
-    protected $trainer;
-    
-    /**
-     *      
-     * @ORM\Column(type="integer")     
-     */    
-    protected $trainerid;
-    
-    /**
-     * @ORM\Column(type="string")
-     */   
-    protected $focus;
-    
+    private $trainer;
     
     /**
      * @ORM\Id
      * @ORM\Column(type="integer") 
-     * @ORM\GeneratedValue(strategy="AUTO") 
-     */ 
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $tfid;
+    
+    /**
+     * @ORM\Column(type="integer") 
+     */
+    protected $trainerid;
+    
+    /**
+     * @ORM\Column(type="string") 
+     */
+    protected $tfocus;
+    
 
-
-
-
-
-
-
-
+    /**
+     * Get tfid
+     *
+     * @return integer
+     */
+    public function getTfid()
+    {
+        return $this->tfid;
+    }
 
     /**
      * Set trainerid
@@ -67,27 +69,27 @@ class TrainerFocus{
     }
 
     /**
-     * Set focus
+     * Set tfocus
      *
-     * @param string $focus
+     * @param string $tfocus
      *
      * @return TrainerFocus
      */
-    public function setFocus($focus)
+    public function setTfocus($tfocus)
     {
-        $this->focus = $focus;
+        $this->tfocus = $tfocus;
 
         return $this;
     }
 
     /**
-     * Get focus
+     * Get tfocus
      *
      * @return string
      */
-    public function getFocus()
+    public function getTfocus()
     {
-        return $this->focus;
+        return $this->tfocus;
     }
 
     /**
@@ -112,19 +114,5 @@ class TrainerFocus{
     public function getTrainer()
     {
         return $this->trainer;
-    }
-
- 
-
-   
-
-    /**
-     * Get tfid
-     *
-     * @return integer
-     */
-    public function getTfid()
-    {
-        return $this->tfid;
     }
 }

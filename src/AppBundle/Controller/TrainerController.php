@@ -97,9 +97,22 @@ class TrainerController extends Controller
         
         
         $trainer = new Trainer();
-        $focus = new TrainerFocus();
         
+            
+            
+        
+        
+        $focus = new TrainerFocus();
+
+        
+        
+        
+   //     $focus->setTrainerid($trainer->getTrainerid());        
         $trainer->addFocus($focus);
+        
+        
+        
+        
 
         
         
