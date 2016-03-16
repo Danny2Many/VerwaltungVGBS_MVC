@@ -94,8 +94,7 @@ class TrainerController extends Controller
         
         $trainer = new Trainer();
         
-        $focus = new TrainerFocus();
-        $trainer->addTfocus($focus);
+        
       
         
         
