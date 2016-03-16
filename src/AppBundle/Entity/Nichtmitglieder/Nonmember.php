@@ -79,9 +79,13 @@ protected $additionalinfo;
 */
 protected $rehabilitationcertificate;
 
- /**
- ** @ORM\OneToMany(targetEntity="NonMemPhoneNumber", mappedBy="nonmember", cascade={"persist"})
- */
+    /**
+   * @ManyToMany(targetEntity="\AppBundle\Entity\Nichtmitglieder\NonMemPhonenumber")
+   * @JoinTable(name="NonMemPhonenumber",
+   *      joinColumns={@JoinColumn(name="nmemid", referencedColumnName="nmemid")},
+   *      inverseJoinColumns={@JoinColumn(name="phid", referencedColumnName="phid")}
+   *      )
+   */
 protected $phonenumber;
 
 
@@ -90,7 +94,7 @@ protected $phonenumber;
      */
     public function __construct()
     {
-        $this->phonenumber = new ArrayCollection();
+        $this->phonenumber = new \Doctrine\Common\Collections\ArrayCollection();
         $this->rehabilitationcertificate = new ArrayCollection();
         $this->section = new ArrayCollection();
     }
@@ -415,41 +419,41 @@ public function setSection($section)
     }
     
     
-// 
-///** 
-//* Add phonenumber
-//*
-//* @param \AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber
-//*
-//* @return Nonmember
-//*/
-// public function addPhonenumber(\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber)
-//    {               
-//        $phonenumber->setNonmember($this);
-//        $this->phonenumber[] = $phonenumber;
-//
-//        return $this;
-//    }
+ 
+/** 
+* Add phonenumber
+*
+* @param \AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber
+*
+* @return Nonmember
+*/
+ public function addPhonenumber(\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber)
+    {               
+        $phonenumber->setNonmember($this);
+        $this->phonenumber[] = $phonenumber;
 
-//    /**
-//     * Remove phonenumber
-//     *
-//     * @param \AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber
-//    */
-//    public function removePhonenumber(\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber)
-//    {
-//        $this->phonenumber->removeElement($phonenumber);
-//    }
+        return $this;
+    }
 
-//    /**
-//    * Get phonenumber
-//     *
-//     * @return \Doctrine\Common\Collections\Collection
-//     */
-//    public function getPhonenumber()
-//    {
-//        return $this->phonenumber;
-//    }
+    /**
+     * Remove phonenumber
+     *
+     * @param \AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber
+    */
+    public function removePhonenumber(\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber)
+    {
+        $this->phonenumber->removeElement($phonenumber);
+    }
+
+    /**
+    * Get phonenumber
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhonenumber()
+    {
+        return $this->phonenumber;
+    }
      
     
 }

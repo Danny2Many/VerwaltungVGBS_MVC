@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\Nichtmitglieder;
 use Doctrine\ORM\Mapping as ORM;
-
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -16,17 +15,22 @@ class NonMemPhoneNumber {
      * @ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")
      */
     private $nonmember;
-    
+     
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer") 
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $phid;
    
     /**
-     * @ORM\Id 
+     * 
      * @ORM\Column(type="integer") 
      * 
      */
     protected $nmemid;   
     
     /**
-     * @ORM\Id
      * @ORM\Column(type="string")
      * @Assert\NotBlank()
      * @Assert\Regex(
@@ -36,4 +40,5 @@ class NonMemPhoneNumber {
      */
     protected $phonenumber;
     
+
 }

@@ -23,7 +23,7 @@ public function buildForm(FormBuilderInterface $builder, array $options){
     parent::buildForm($builder,$options);
 
         $builder
-            
+           
         ->add('trainingstartdate', DateType::class, array( 'label' => 'Trainingsbeginn:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag')))
         ->add('trainingconfirmation', DateType::class, array( 'label' => 'Teilnahmebeginnbest.:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag'), 'required' => false))       
         ->add('state', ChoiceType::class, array(
@@ -65,7 +65,7 @@ public function buildForm(FormBuilderInterface $builder, array $options){
         ->add('additionalagilactivities', SanitizedTextareaType::class, array('label' => 'weit. bewegl. Aktivitäten:', 'required' => false))
 
         ->add('pulseatrest', NumberType::class, array( 'label' => 'Hf-Ruhe/Min:', 'scale' => 0, 'required' => false))
-        ->add('sportsgroup', EntityType::class,  array(
+        ->add('sportsgroup', EntityType::class, array(
             'class' => 'AppBundle:Nichtmitglieder\NonMemSportsgroup',
             'choice_label' => 'token',
             'multiple' => true,
