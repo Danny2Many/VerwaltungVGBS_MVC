@@ -28,27 +28,9 @@ class MemberFinController extends Controller{
         
         $qb->Join('m.yearinfo', 'i')
            
-           ->where('i.year = 2016');
+           ->where('i.year ='.$year);
            
-        $monthsfirsthalfyear=['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni'];
-        $monthssecondhalfyear=['Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
-        
-         $searchval=null;
-         $searchcol=null;
-        
-        switch($halfyear){
-            case 1:
-                $monthshalfyear=$monthsfirsthalfyear;
-                break;
-            case 2:
-                $monthshalfyear=$monthssecondhalfyear;
-        }
-
-        foreach ($monthshalfyear as $month){
-            $qb->orWhere('md.month='.$month);
-            
-        }
-        
+    
         $choices=array('Mitgliedsnr.' => 'memid',
         'Name' => 'lastname',
         'Vorname' => 'firstname',
@@ -62,10 +44,10 @@ class MemberFinController extends Controller{
     
     
     
-    if(isset($request->query->get('search')['search'])){
+    if($searchform->isSubmitted()){
     $letter=null;   
     $searchval=$request->query->get('search')['searchfield'];
-    $searchcol=$request->query->get('search')['Spalte'];
+    $searchcol=$request->query->get('search')['column'];
     
     
     
@@ -76,7 +58,7 @@ class MemberFinController extends Controller{
     
     $memberfinlist=$query->getResult();
     
-     $disabled='';
+     
      
     }else{
         
@@ -102,7 +84,7 @@ class MemberFinController extends Controller{
         
         $memberfinlist=$query->getQuery()->getResult();
       
-        $disabled='disabled';
+        
     }
     
     
@@ -113,7 +95,7 @@ class MemberFinController extends Controller{
             'tabledata' => $memberfinlist,
             'colorclass' => "bluetheader",
             'searchform' => $searchform->createView(),
-            'disabled' => $disabled,
+            
             
             'cletter' => $letter,
             'path' => 'member_fin',

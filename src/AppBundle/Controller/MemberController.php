@@ -51,7 +51,7 @@ class MemberController extends Controller
     if($searchform->isSubmitted() && $searchform->isValid()){
      $letter=null;   
     $searchval=$request->query->get('search')['searchfield'];
-    $searchcol=$request->query->get('search')['Spalte'];
+    $searchcol=$request->query->get('search')['column'];
     
     
     
@@ -61,7 +61,7 @@ class MemberController extends Controller
                    ->getQuery();
     
     
-     $disabled='';
+     
      
     }else{
         
@@ -88,7 +88,7 @@ class MemberController extends Controller
        
         
         
-        $disabled='disabled';
+        
     }
     
     
@@ -101,9 +101,7 @@ class MemberController extends Controller
         array(
             'tabledata' => $memberlist,
             'colorclass' => "bluetheader",
-            'searchform' => $searchform->createView(),
-            'disabled' => $disabled,
-            'info' => $info,
+            'searchform' => $searchform->createView(),                      
             'cletter' => $letter,
             'path' => 'member_home'
            

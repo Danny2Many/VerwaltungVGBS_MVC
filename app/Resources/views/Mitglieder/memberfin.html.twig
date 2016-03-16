@@ -8,18 +8,26 @@
 {% block MitglAktiv %} active {% endblock %}
 {% block FinanzAktiv %} active {% endblock %}
 
-{% block search %}
-    
-{{ form_start(searchform) }}
-{{ form_widget(searchform.Spalte) }}
-{{ form_widget(searchform.searchfield) }}
-{{ form_widget(searchform.search) }}
-<a href="{{ path('member_fin') }}"><input type="button" class="form-control" value="zurücksetzen" {{ disabled }}></a>
-{{ form_end(searchform) }}
+{% block add %}
+    {#<div class="inline">
+ <a href="{{ path('addmem', {'letter': cletter }) }}"><button    class="btn btn-default">
+      <span class="glyphicon glyphicon-plus"></span> neues Finanzjahr anlegen
+        </button></a> 
+    </div> #}
+    <div class="inline">
+     <div class="dropdown">
+         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><span class="glyphicon glyphicon-cog">
+  <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+    <li><a href="#"><span class="glyphicon glyphicon-plus"></span> neues Finanzjahr anlegen</a></li>
+    <li><a href="#"><span class="glyphicon glyphicon-remove"></span> ein Finanzjahr löschen</a></li>
 
+  </ul>
+</div></div>
 {% endblock %}
 
 {% block dropdown %}
+    <div class="inline">
       <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Finanzjahr: {{ year }}
                     <span class="caret"></span></button>
@@ -34,13 +42,18 @@
                             {% endfor %}
                         </ul>
                     </div> 
+    </div>
     {% endblock %}
 
 {% block tabs %}
-<ul class="nav nav-tabs">
-    <li {% if halfyear == 1 %} class="active" {% endif %}><a href="{{ path('member_fin', {'halfyear': 1, 'letter': cletter}|merge(app.request.query.all)) }}">1. Halbjahr</a></li>
-  <li{% if halfyear == 2 %} class="active" {% endif %}><a href="{{ path('member_fin', {'halfyear': 2, 'letter': cletter}|merge(app.request.query.all)) }}">2. Halbjahr</a></li>
+  
+    <div class="inline">
+     <ul class="pagination-own pagination">
+  <li {% if halfyear == 1 %} class="active" {% endif %}><a href="{{ path('member_fin', {'halfyear': 1, 'letter': cletter}|merge(app.request.query.all)) }}">1. Halbjahr</a></li>
+  <li {% if halfyear == 2 %} class="active" {% endif %}><a href="{{ path('member_fin', {'halfyear': 2, 'letter': cletter}|merge(app.request.query.all)) }}">2. Halbjahr</a></li>
+  
 </ul>
+    </div>
     {% endblock %}
     
 {% block color %} {{ colorclass }} {% endblock %}
@@ -72,29 +85,26 @@
                
                 <td><center><a href="#"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
                 <td>{{ data.memid }}</td>
-                <td>{% if data.section is empty %}
-                   {{ "-" }}
-                    {% else  %}
-                         {% for Sec in data.section %}
+                <td>
+                    {% for Sec in data.section %}
                         {{ Sec.sectionname }}<br>
-                    {% endfor %}
-                    
-                    {% endif %}</td>
+                        {% else  %}
+                            {{ "-" }}
+                    {% endfor %}</td>
                 <td>{{ data.state|striptags }}</td>
                
                 <td>{{ data.title|striptags }}</td>
                 <td>{{ data.lastname|striptags }}</td>
                 <td>{{ data.firstname|striptags }}</td>
-                <td>{% if data.sportsgroup is empty %}
-                   {{ "-" }}
-                    {% else  %}
-                         {% for sportsgroup in data.sportsgroup %}
+                <td>
+                    {% for sportsgroup in data.sportsgroup %}
                         {{ sportsgroup.Token }}<br>
-                    {% endfor %}
-                    
-                    {% endif %}</td>                
+                        {% else  %}
+                            {{ "-" }}
+                    {% endfor %}</td>                
                 <td>{{ data.admissioncharge }}</td>
-                <td>{{ data.admissioncharge - data.admissionchargepayed }}</td>
+                {% set admissionchargeopen = data.admissioncharge - data.admissionchargepayed %}
+                <td {% if admissionchargeopen != 0 %}class="red"{% endif %}>{{ admissionchargeopen }}</td>
                 <td>{{ data.admissionchargepayed is empty ? 0 : data.admissionchargepayed  }}</td>
                 
                 {% for yearinfo in data.yearinfo %}
@@ -111,8 +121,9 @@
                
                     {% for monthlydue in data.monthlydues %}
                         {% if monthlydue.month in months %}
+                        {% set duesopen = monthlydue.dues - monthlydue.duespayed %}
                         <td>{{ monthlydue.dues }}</td>
-                        <td>{{ monthlydue.dues - monthlydue.duespayed }}</td>
+                        <td {% if duesopen != 0 %}class="red"{% endif %}>{{ duesopen }}</td>
                         <td>{{ monthlydue.duespayed is empty ? 0 : monthlydue.duespayed }}</td>
                         {% endif %}
                     {% endfor %}

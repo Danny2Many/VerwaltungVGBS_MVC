@@ -9,21 +9,14 @@
 {% block MitglAktiv %} active {% endblock %}
 {% block StammAktiv %} active {% endblock %}
 
-{% block search %}
-    
-{{ form_start(searchform) }}
-{{ form_widget(searchform.Spalte) }}
-{{ form_widget(searchform.searchfield) }}
-{{ form_widget(searchform.search) }}
-<a href="{{ path('member_home') }}"><input type="button" class="form-control" value="zurücksetzen" {{ disabled }}></a>
-{{ form_end(searchform) }}
 
-{% endblock %}
 
 {% block add %}
+    <div class="inline">
     <a href="{{ path('addmem', {'letter': cletter }) }}"><button    class="add btn btn-default">
       <span class="glyphicon glyphicon-plus"></span> neues Mitglied anlegen
-        </button></a>  
+        </button></a> 
+    </div>
 {% endblock %}
 
 
@@ -108,7 +101,10 @@
                   {% endfor %}{% endif %}</td>
                  
              
-                <td>{% for RC in data.rehabilitationcertificate if date(RC.terminationdate) > date() %}
+                {% set rehab = data.rehabilitationcertificate %}
+                
+                
+                <td>{% for RC in rehab if date(RC.terminationdate) > date() %}
                           
                         
                          {{loop.index}}:{{RC.terminationdate|date("d.m.Y") }}|{{RC.rehabunits }}<br>
@@ -117,8 +113,20 @@
                          {{ "-" }}
 
                     {% endfor %}
-                   </td> 
-                  
+
+                   </td>
+                    
+                    
+                    
+                    
+                    
+                    <td>{% for RC in rehab if date(RC.terminationdate) < date() %}
+          
+                         {{loop.index}}:{{RC.terminationdate|date("d.m.Y") }}|{{RC.rehabunits }}<br>
+                        
+                         {% else %}
+                         {{ "-" }}
+                    {% endfor %}</td>
                     
                     
                     
