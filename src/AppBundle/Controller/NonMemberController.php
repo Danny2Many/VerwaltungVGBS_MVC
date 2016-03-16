@@ -93,18 +93,22 @@ class NonMemberController extends Controller {
      */
     public function addnonmeberAction (Request $request, $letter){
         
-        $nonmember = new Nonmember ();
+     $nonmember = new Nonmember ();
      $phonenumber = new NonMemPhoneNumber();
-//////        $section = new Section ();
-//////        
-//////        $nonmember->addSection($section);
      $nonmember->addPhonenumber($phonenumber);
         
         $addnonmemform = $this->createForm(AddNonMemberType::class, $nonmember);
-        $addnonmemform->handleRequest($request);
+        $addnonmemform->handleRequest($request);     
         
         //if the form is valid -> persist it to the database
         if($addnonmemform->isSubmitted() && $addnonmemform->isValid()){
+           
+            foreach($nonmember->getSportsgroup() as $sportsgroup) {
+                foreach($sportsgroup->getSection() as $section) {              
+                $nonmember->addSection($section);
+            }                
+            }
+            
             
             $manager= $this->getDoctrine()->getManager();
             $manager->persist($nonmember);     
@@ -164,7 +168,7 @@ class NonMemberController extends Controller {
                 }
             }     
             $manager->persist($nonmember);          
-            $manager->flush();                
+            $manager->flush();              
             
             return $this->redirectToRoute('nonmember_home', array('letter' => $letter, 'info' => 'gespeichert'));    
         } 

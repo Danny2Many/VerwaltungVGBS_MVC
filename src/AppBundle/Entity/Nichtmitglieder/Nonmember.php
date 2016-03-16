@@ -80,11 +80,8 @@ protected $additionalinfo;
 protected $rehabilitationcertificate;
 
 /**
-* @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber")
-* @ORM\JoinTable(name="NonMemPhoneNumber",
-*      joinColumns={@ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")},
-*      inverseJoinColumns={@ORM\JoinColumn(name="phid", referencedColumnName="phid")})
-*/
+  * @ORM\OneToMany(targetEntity="NonMemPhoneNumber", mappedBy="nonmember", cascade={"persist"})
+  */
 protected $phonenumber;
 
 
@@ -323,12 +320,13 @@ protected $phonenumber;
      * @return Nonmember
      */
     public function addSection(\AppBundle\Entity\Section $section)
-    {
+    {   if(!in_array($section, $this->section[])){
         $this->section[] = $section;
 
         return $this;
     }
-
+    }
+    
     /**
      * Remove section
      *

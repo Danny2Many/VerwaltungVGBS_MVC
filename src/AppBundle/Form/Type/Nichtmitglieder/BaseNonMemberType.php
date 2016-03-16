@@ -24,7 +24,7 @@ public function buildForm(FormBuilderInterface $builder, array $options){
     parent::buildForm($builder,$options);
 
         $builder
-        
+        ->add('phonenumber', CollectionType::class, array('entry_type' => PhoneNumberType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber'),'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
         ->add('trainingstartdate', DateType::class, array( 'label' => 'Trainingsbeginn:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag')))
         ->add('trainingconfirmation', DateType::class, array( 'label' => 'Teilnahmebeginnbest.:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag'), 'required' => false))       
         ->add('state', ChoiceType::class, array(
@@ -71,16 +71,8 @@ public function buildForm(FormBuilderInterface $builder, array $options){
             'choice_label' => 'token',
             'multiple' => true,
             'required' => false,
-            'label' => 'Sportgruppe/n:'
-            
+            'label' => 'Sportgruppe/n:'            
         )) 
-        ->add('section', EntityType::class,  array(
-            'class' => 'AppBundle:Section',
-            'choice_label' => 'sectionname',            
-            'label' => 'Abteilung:',     
-            'multiple' => true,
-            'expanded' => true
-            )) 
           ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
           ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))
           ->add('reset', ResetType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'zurücksetzen'));

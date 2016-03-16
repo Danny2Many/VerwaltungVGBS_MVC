@@ -8,14 +8,7 @@
 {% block fixedcolnum %} 7 {% endblock %}
 
 
-{% block search %}    
-{{ form_start(searchform) }}
-{{ form_widget(searchform.Spalte) }}
-{{ form_widget(searchform.searchfield) }}
-{{ form_widget(searchform.search) }}
-<a href="{{ path('nonmember_home') }}"><input type="button" class="form-control" value="zurücksetzen" {{disabled}}></a>
-{{ form_end(searchform) }}
-{% endblock %}
+
 
 {% block add %}
     <a href="{{ path('addnonmem', {'letter': cletter }) }}"><button    class="add btn btn-default">
