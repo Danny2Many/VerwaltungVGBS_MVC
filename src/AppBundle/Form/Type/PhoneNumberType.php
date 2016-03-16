@@ -18,7 +18,7 @@ class PhoneNumberType extends AbstractType{
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\MemPhoneNumber',
+            'data_class' => NULL,
         ));
     }
 }

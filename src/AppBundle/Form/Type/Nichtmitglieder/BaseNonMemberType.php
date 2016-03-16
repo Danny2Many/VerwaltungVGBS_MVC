@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use AppBundle\Form\SanitizedTextType;
 use AppBundle\Form\SanitizedTextareaType;
 use AppBundle\Form\Type\RehabCertType;
+use AppBundle\Form\Type\PhoneNumberType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class BaseNonMemberType extends PersonalDataType {
@@ -23,7 +24,7 @@ public function buildForm(FormBuilderInterface $builder, array $options){
     parent::buildForm($builder,$options);
 
         $builder
-           
+        
         ->add('trainingstartdate', DateType::class, array( 'label' => 'Trainingsbeginn:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag')))
         ->add('trainingconfirmation', DateType::class, array( 'label' => 'Teilnahmebeginnbest.:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag'), 'required' => false))       
         ->add('state', ChoiceType::class, array(
