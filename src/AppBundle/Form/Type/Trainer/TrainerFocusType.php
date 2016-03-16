@@ -12,7 +12,7 @@ use AppBundle\Form\SanitizedTextType;
 class TrainerFocusType extends AbstractType{
      public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('tfocus', SanitizedTextType::class, array('label' => 'Schwerpunkt', 'required' => false));
+        $builder->add('theme', SanitizedTextType::class, array('label' => 'Schwerpunkt:', 'required' => false));
     }
     public function configureOptions(OptionsResolver $resolver)
     {

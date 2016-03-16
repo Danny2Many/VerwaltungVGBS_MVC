@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class TrainerFocus {
     /**
-     * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="tfocus")
+     * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="theme")
      * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
      */
     private $trainer;
@@ -42,7 +42,7 @@ class TrainerFocus {
       *  @ORM\Column(type="string")
       * 
       */
-    protected $tfocus;
+    protected $theme;
 
     
 
@@ -83,27 +83,27 @@ class TrainerFocus {
     }
 
     /**
-     * Set tfocus
+     * Set theme
      *
-     * @param string $tfocus
+     * @param string $theme
      *
      * @return TrainerFocus
      */
-    public function setTfocus($tfocus)
+    public function setTheme($theme)
     {
-        $this->tfocus = $tfocus;
+        $this->theme = $theme;
 
         return $this;
     }
 
     /**
-     * Get tfocus
+     * Get theme
      *
      * @return string
      */
-    public function getTfocus()
+    public function getTheme()
     {
-        return $this->tfocus;
+        return $this->theme;
     }
 
     /**

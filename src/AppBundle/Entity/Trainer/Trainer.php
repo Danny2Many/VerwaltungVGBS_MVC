@@ -35,7 +35,7 @@ class Trainer extends PersonalData {
     /**
      * @ORM\OneToMany(targetEntity="TrainerFocus", mappedBy="trainer", cascade={"all"})
      */
-    protected $tfocus;
+    protected $theme;
 
 
     /**
@@ -60,7 +60,7 @@ class Trainer extends PersonalData {
         $this->section = new \Doctrine\Common\Collections\ArrayCollection();
         $this->licence = new \Doctrine\Common\Collections\ArrayCollection();
         $this->phonenumber = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->tfocus = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->theme = new \Doctrine\Common\Collections\ArrayCollection();
 
         }
 
@@ -143,6 +143,8 @@ class Trainer extends PersonalData {
      */
     public function addLicence(\AppBundle\Entity\Trainer\TrainerLicence $licence)
     {
+        $licence->setTrainer($this);
+
         $this->licence[] = $licence;
 
         return $this;
@@ -168,40 +170,118 @@ class Trainer extends PersonalData {
         return $this->licence;
     }
 
-
     /**
-     * Add tfocus
+     * Set licence
      *
-     * @param \AppBundle\Entity\Trainer\TrainerFocus $tfocus
+     * @param string $licence
      *
-     * @return Trainer
+     * @return TrainerLicence
      */
-    public function addTfocus(\AppBundle\Entity\Trainer\TrainerFocus $tfocus)
+    public function setLicence($licence)
     {
-        $tfocus->setTrainer($this);
-
-        $this->tfocus[] = $tfocus;
+        $this->licence = $licence;
 
         return $this;
     }
 
     /**
-     * Remove tfocus
+     * Add theme
      *
-     * @param \AppBundle\Entity\Trainer\TrainerFocus $tfocus
+     * @param \AppBundle\Entity\Trainer\TrainerFocus $theme
+     *
+     * @return Trainer
      */
-    public function removeTfocus(\AppBundle\Entity\Trainer\TrainerFocus $tfocus)
+    public function addTheme(\AppBundle\Entity\Trainer\TrainerFocus $theme)
     {
-        $this->tfocus->removeElement($tfocus);
+        $theme->setTrainer($this);
+
+        $this->theme[] = $theme;
+
+        return $this;
     }
 
     /**
-     * Get tfocus
+     * Remove theme
+     *
+     * @param \AppBundle\Entity\Trainer\TrainerFocus $theme
+     */
+    public function removeTheme(\AppBundle\Entity\Trainer\TrainerFocus $theme)
+    {
+        $this->theme->removeElement($theme);
+    }
+
+    /**
+     * Get theme
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getTfocus()
+    public function getTheme()
     {
-        return $this->tfocus;
+        return $this->theme;
+    }
+    
+    /**
+     * Set theme
+     *
+     * @param string $theme
+     *
+     * @return TrainerFocus
+     */
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
+
+        return $this;
+    }
+    
+    
+    /**
+     * Set phonenumber
+     *
+     * @param string $phonenumber
+     *
+     * @return TrainerPhoneNumber
+     */
+    public function setPhonenumber($phonenumber)
+    {
+        $this->phonenumber = $phonenumber;
+
+        return $this;
+    }
+
+    /**
+     * Get phonenumber
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhonenumber()
+    {
+        return $this->phonenumber;
+    }
+     
+
+    /** 
+     * Add phonenumber
+     *
+     * @param \AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber
+     *
+     * @return Trainer
+     */
+    public function addPhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
+    {               
+        $phonenumber->setTrainer($this);
+        $this->phonenumber[] = $phonenumber;
+
+        return $this;
+    }
+
+    /**
+     * Remove phonenumber
+     *
+     * @param \AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber
+    */
+    public function removePhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
+    {
+        $this->phonenumber->removeElement($phonenumber);
     }
 }
