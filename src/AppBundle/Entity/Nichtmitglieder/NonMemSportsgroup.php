@@ -11,6 +11,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class NonMemSportsgroup {
     
+/**
+* @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
+* @ORM\JoinTable(name="NonMemberSportsgroup_Section",
+* joinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")},
+* inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
+*/ 
+protected $section; 
 
     /**
      * @ORM\Id
@@ -306,5 +313,46 @@ class NonMemSportsgroup {
     public function getToken()
     {
         return $this->token;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->section = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add section
+     *
+     * @param \AppBundle\Entity\Section $section
+     *
+     * @return NonMemSportsgroup
+     */
+    public function addSection(\AppBundle\Entity\Section $section)
+    {
+        $this->section[] = $section;
+
+        return $this;
+    }
+
+    /**
+     * Remove section
+     *
+     * @param \AppBundle\Entity\Section $section
+     */
+    public function removeSection(\AppBundle\Entity\Section $section)
+    {
+        $this->section->removeElement($section);
+    }
+
+    /**
+     * Get section
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSection()
+    {
+        return $this->section;
     }
 }
