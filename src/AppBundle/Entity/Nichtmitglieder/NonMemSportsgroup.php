@@ -13,7 +13,7 @@ class NonMemSportsgroup {
     
 /**
 * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
-* @ORM\JoinTable(name="NonMemberSportsgroup_Section",
+* @ORM\JoinTable(name="NonMemSportsgroup_Section",
 * joinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")},
 * inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
 */ 

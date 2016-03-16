@@ -90,7 +90,7 @@ protected $phonenumber;
      */
     public function __construct()
     {
-        //$this->phonenumber = new ArrayCollection();
+        $this->phonenumber = new ArrayCollection();
         $this->rehabilitationcertificate = new ArrayCollection();
         $this->section = new ArrayCollection();
     }
@@ -320,11 +320,11 @@ protected $phonenumber;
      * @return Nonmember
      */
     public function addSection(\AppBundle\Entity\Section $section)
-    {   if(!in_array($section, $this->section[])){
+    {  
         $this->section[] = $section;
 
         return $this;
-    }
+    
     }
     
     /**
