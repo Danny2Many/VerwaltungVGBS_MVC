@@ -95,9 +95,9 @@ class NonMemberController extends Controller {
         
         $nonmember = new Nonmember ();
      $phonenumber = new NonMemPhoneNumber();
-////        $section = new Section ();
-////        
-////        $nonmember->addSection($section);
+//////        $section = new Section ();
+//////        
+//////        $nonmember->addSection($section);
      $nonmember->addPhonenumber($phonenumber);
         
         $addnonmemform = $this->createForm(AddNonMemberType::class, $nonmember);

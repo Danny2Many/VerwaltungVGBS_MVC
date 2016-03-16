@@ -101,7 +101,7 @@ class MemberController extends Controller
         array(
             'tabledata' => $memberlist,
             'colorclass' => "bluetheader",
-            'searchform' => $searchform->createView(),                      
+            'searchform' => $searchform->createView(),
             'cletter' => $letter,
             'path' => 'member_home'
            

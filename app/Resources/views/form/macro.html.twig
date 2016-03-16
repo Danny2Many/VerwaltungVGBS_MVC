@@ -1,26 +1,19 @@
-{% macro textCollectionItem(formData, method, removetext) %}
-    
-    
-        
-        {% set name = formData.vars.full_name %}
-   
-    
+{% macro textCollectionItem(formData, method, removetext) %}    
+            
+    {% set name = formData.vars.full_name %}
     <div class="form-group" data-content="{{ name }}">
-         
-        {{ form_label(attribute(formData, method)) }}
-        {% if formData.vars.name != 'rehabilitationcertificate' %}
+
+        {{ form_label(attribute(formData, method)) }} 
+        
     <div class="col-sm-6">
-   {{ form_widget(attribute(formData, method)) }}
-   
-    </div>
-   
-       <div class="col-sm-4">
-          
+        {{ form_widget(formData) }} 
+        
+    <div>   
+       <div class="col-sm-4">          
            <a class="btn-remove" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> {{ removetext }}</button></a>
-           
-       </div>
-   {% endif %}
+       </div>   
     </div>
+           
 {% endmacro %}
 
 

@@ -31,11 +31,12 @@ class NonMemPhoneNumber {
     protected $nmemid;   
     
    /**
-     * @ManyToMany(targetEntity="Phonenumber")
-     * @JoinTable(name="users_phonenumbers",
-     *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="phonenumber_id", referencedColumnName="id", unique=true)}
-     *      )
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/\d\/\d/",
+     *     message="Ihre Telefonnummer entspricht entweder nicht dem gegebenen Format oder enthält einen Buchstaben."
+     * )
      */
     protected $phonenumber;
     

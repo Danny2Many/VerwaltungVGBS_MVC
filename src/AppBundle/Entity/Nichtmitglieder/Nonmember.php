@@ -79,13 +79,12 @@ protected $additionalinfo;
 */
 protected $rehabilitationcertificate;
 
-    /**
-   * @ManyToMany(targetEntity="\AppBundle\Entity\Nichtmitglieder\NonMemPhonenumber")
-   * @JoinTable(name="NonMemPhonenumber",
-   *      joinColumns={@JoinColumn(name="nmemid", referencedColumnName="nmemid")},
-   *      inverseJoinColumns={@JoinColumn(name="phid", referencedColumnName="phid")}
-   *      )
-   */
+/**
+* @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber")
+* @ORM\JoinTable(name="NonMemPhoneNumber",
+*      joinColumns={@ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")},
+*      inverseJoinColumns={@ORM\JoinColumn(name="phid", referencedColumnName="phid")})
+*/
 protected $phonenumber;
 
 
@@ -94,7 +93,7 @@ protected $phonenumber;
      */
     public function __construct()
     {
-        $this->phonenumber = new \Doctrine\Common\Collections\ArrayCollection();
+        //$this->phonenumber = new ArrayCollection();
         $this->rehabilitationcertificate = new ArrayCollection();
         $this->section = new ArrayCollection();
     }
@@ -369,57 +368,80 @@ public function setSection($section)
 } 
 
     
+//
+//    /**
+//     * Set rehabunity1
+//     *
+//     * @param integer $rehabunity1
+//     *
+//     * @return Nonmember
+//     */
+//    public function setRehabunity1($rehabunity1)
+//    {
+//        $this->rehabunity1 = $rehabunity1;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get rehabunity1
+//     *
+//     * @return integer
+//     */
+//    public function getRehabunity1()
+//    {
+//        return $this->rehabunity1;
+//    }
+//
+//    /**
+//     * Set rehabunity2
+//     *
+//     * @param integer $rehabunity2
+//     *
+//     * @return Nonmember
+//     */
+//    public function setRehabunity2($rehabunity2)
+//    {
+//        $this->rehabunity2 = $rehabunity2;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get rehabunity2
+//     *
+//     * @return integer
+//     */
+//    public function getRehabunity2()
+//    {
+//        return $this->rehabunity2;
+//    }
+//    
+/**
+* Set phonenumber
+*
+* @param string $phonenumber
+*
+* @return NonMemPhoneNumber
+*/
+public function setPhonenumber($phonenumber)
+{
+   $this->phonenumber = $phonenumber;
 
-    /**
-     * Set rehabunity1
+   return $this;
+}
+
+/**
+    * Get phonenumber
      *
-     * @param integer $rehabunity1
-     *
-     * @return Nonmember
+     * @return \Doctrine\Common\Collections\Collection
      */
-    public function setRehabunity1($rehabunity1)
+    public function getPhonenumber()
     {
-        $this->rehabunity1 = $rehabunity1;
-
-        return $this;
+        return $this->phonenumber;
     }
+     
 
-    /**
-     * Get rehabunity1
-     *
-     * @return integer
-     */
-    public function getRehabunity1()
-    {
-        return $this->rehabunity1;
-    }
-
-    /**
-     * Set rehabunity2
-     *
-     * @param integer $rehabunity2
-     *
-     * @return Nonmember
-     */
-    public function setRehabunity2($rehabunity2)
-    {
-        $this->rehabunity2 = $rehabunity2;
-
-        return $this;
-    }
-
-    /**
-     * Get rehabunity2
-     *
-     * @return integer
-     */
-    public function getRehabunity2()
-    {
-        return $this->rehabunity2;
-    }
-    
-    
- 
 /** 
 * Add phonenumber
 *
@@ -445,15 +467,7 @@ public function setSection($section)
         $this->phonenumber->removeElement($phonenumber);
     }
 
-    /**
-    * Get phonenumber
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPhonenumber()
-    {
-        return $this->phonenumber;
-    }
-     
     
+ 
+
 }
