@@ -39,7 +39,8 @@ class AddTrainerType extends PersonalDataType{
             'multiple' => true,
             'expanded' => true,
             'label' => 'Abteilung/en:'))
-        ->add('focus', CollectionType::class, array('entry_type' => TrainerFocusType::class, 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true,))
+        ->add('tfocus', CollectionType::class, array('entry_type' => TrainerFocusType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\Trainer\TrainerFocus'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
+
         //->get('phonenumber')->setData('AppBundle\Entity\Trainer\TrainerPhoneNumber')
                 
         ;        

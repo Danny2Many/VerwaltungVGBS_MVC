@@ -34,9 +34,10 @@ class Trainer extends PersonalData {
     
     /**
      * @ORM\OneToMany(targetEntity="TrainerFocus", mappedBy="trainer", cascade={"all"})
-     */    
-    protected $focus;
-    
+     */
+    protected $tfocus;
+
+
     /**
      * @ORM\OneToMany(targetEntity="TrainerLicence", mappedBy="trainer", cascade={"all"})
      */  
@@ -57,10 +58,11 @@ class Trainer extends PersonalData {
     public function __construct()
     {
         $this->section = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->focus = new \Doctrine\Common\Collections\ArrayCollection();
         $this->licence = new \Doctrine\Common\Collections\ArrayCollection();
         $this->phonenumber = new \Doctrine\Common\Collections\ArrayCollection();
-    }
+        $this->tfocus = new \Doctrine\Common\Collections\ArrayCollection();
+
+        }
 
     /**
      * Get trainerid
@@ -130,57 +132,7 @@ class Trainer extends PersonalData {
         return $this->section;
     }
 
-    /**
-     * Add focus
-     *
-     * @param \AppBundle\Entity\Trainer\TrainerFocus $focus
-     *
-     * @return Trainer
-     */
-    public function addFocus(\AppBundle\Entity\Trainer\TrainerFocus $focus)
-    {
-
-        $focus->setTrainer($this);
-             
-        $this->focus[] = $focus;
-
-        return $this;
-        
-    }
-
-    /**
-     * Remove focus
-     *
-     * @param \AppBundle\Entity\Trainer\TrainerFocus $focus
-     */
-    public function removeFocus(\AppBundle\Entity\Trainer\TrainerFocus $focus)
-    {
-        $this->focus->removeElement($focus);
-    }
     
-    /**
-     * Set focus
-     *
-     * @param string $focus
-     *
-     * @return Trainer
-     */
-    public function setFocus($focus)
-    {
-        $this->focus = $focus;
-
-        return $this;
-    }
-    
-    /**
-     * Get focus
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFocus()
-    {
-        return $this->focus;
-    }
 
     /**
      * Add licence
@@ -214,5 +166,42 @@ class Trainer extends PersonalData {
     public function getLicence()
     {
         return $this->licence;
+    }
+
+
+    /**
+     * Add tfocus
+     *
+     * @param \AppBundle\Entity\Trainer\TrainerFocus $tfocus
+     *
+     * @return Trainer
+     */
+    public function addTfocus(\AppBundle\Entity\Trainer\TrainerFocus $tfocus)
+    {
+        $tfocus->setTrainer($this);
+
+        $this->tfocus[] = $tfocus;
+
+        return $this;
+    }
+
+    /**
+     * Remove tfocus
+     *
+     * @param \AppBundle\Entity\Trainer\TrainerFocus $tfocus
+     */
+    public function removeTfocus(\AppBundle\Entity\Trainer\TrainerFocus $tfocus)
+    {
+        $this->tfocus->removeElement($tfocus);
+    }
+
+    /**
+     * Get tfocus
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTfocus()
+    {
+        return $this->tfocus;
     }
 }

@@ -1,20 +1,27 @@
 <?php
 
+
+
 namespace AppBundle\Entity\Trainer;
+
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+
+
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="TrainerFocus")
  */
 class TrainerFocus {
-    
     /**
-     * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="focus")
+     * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="tfocus")
      * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
      */
     private $trainer;
+    
+    
+    
     
     /**
      * @ORM\Id
@@ -23,16 +30,23 @@ class TrainerFocus {
      */
     protected $tfid;
     
-    /**
+     /**
+     * 
      * @ORM\Column(type="integer") 
+     * 
      */
     protected $trainerid;
     
-    /**
-     * @ORM\Column(type="string") 
-     */
+     /**
+      *  
+      *  @ORM\Column(type="string")
+      * 
+      */
     protected $tfocus;
+
     
+
+   
 
     /**
      * Get tfid

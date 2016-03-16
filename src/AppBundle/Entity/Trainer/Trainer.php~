@@ -34,16 +34,17 @@ class Trainer extends PersonalData {
     
     /**
      * @ORM\OneToMany(targetEntity="TrainerFocus", mappedBy="trainer", cascade={"all"})
-     */    
-    protected $focus;
-    
+     */
+    protected $tfocus;
+
+
     /**
-     * @ORM\OneToMany(targetEntity="TrainerLicence", mappedBy="trainer", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="TrainerLicence", mappedBy="trainer", cascade={"all"})
      */  
     protected $licence;
     
     /**
-     * @ORM\OneToMany(targetEntity="TrainerPhoneNumber", mappedBy="trainer", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="TrainerPhoneNumber", mappedBy="trainer", cascade={"all"})
      */ 
     protected $phonenumber;
     
@@ -51,4 +52,119 @@ class Trainer extends PersonalData {
     
 
     
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->section = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->licence = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->phonenumber = new \Doctrine\Common\Collections\ArrayCollection();
+
+        }
+
+    /**
+     * Get trainerid
+     *
+     * @return integer
+     */
+    public function getTrainerid()
+    {
+        return $this->trainerid;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return Trainer
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Add section
+     *
+     * @param \AppBundle\Entity\Section $section
+     *
+     * @return Trainer
+     */
+    public function addSection(\AppBundle\Entity\Section $section)
+    {
+        $this->section[] = $section;
+
+        return $this;
+    }
+
+    /**
+     * Remove section
+     *
+     * @param \AppBundle\Entity\Section $section
+     */
+    public function removeSection(\AppBundle\Entity\Section $section)
+    {
+        $this->section->removeElement($section);
+    }
+
+    /**
+     * Get section
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSection()
+    {
+        return $this->section;
+    }
+
+    
+
+    /**
+     * Add licence
+     *
+     * @param \AppBundle\Entity\Trainer\TrainerLicence $licence
+     *
+     * @return Trainer
+     */
+    public function addLicence(\AppBundle\Entity\Trainer\TrainerLicence $licence)
+    {
+        $this->licence[] = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Remove licence
+     *
+     * @param \AppBundle\Entity\Trainer\TrainerLicence $licence
+     */
+    public function removeLicence(\AppBundle\Entity\Trainer\TrainerLicence $licence)
+    {
+        $this->licence->removeElement($licence);
+    }
+
+    /**
+     * Get licence
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLicence()
+    {
+        return $this->licence;
+    }
+
 }

@@ -9,20 +9,13 @@
 {% block fixedcolnum %} 5 {% endblock %}
 
 
-{% block search %}
-    
-{{ form_start(searchform) }}
-{{ form_widget(searchform.Spalte) }}
-{{ form_widget(searchform.searchfield) }}
-{{ form_widget(searchform.search) }}
-<a href="{{ path('trainer_home') }}"><input type="button" class="form-control" value="zurücksetzen" {{ disabled }}></a>
-{{ form_end(searchform) }}
 
-{% endblock %}
 
 {% block add %}
+    <div class="inline">
     <a href="{{ path('addtrainer', {'letter': cletter }) }}"><button    class="add btn btn-default">
-      <span class="glyphicon glyphicon-plus"></span> neuen Übungsleiter anlegen </button></a>  
+    <span class="glyphicon glyphicon-plus"></span> neuen Übungsleiter anlegen </button></a>  
+    </div>  
 {% endblock %}
 
 {% block color %} {{colorclass}} {% endblock %}
@@ -96,11 +89,11 @@
                     
                     {% endif %}</td>
                     
-            <td>{% if data.focus is empty %}
+            <td>{% if data.tfocus is empty %}
                    {{ "-" }}
                     {% else  %}
-                         {% for focus in data.focus %}
-                            {{ focus.tfocus|striptags }}<br>
+                         {% for Sec in data.tfocus %}
+                            {{ Sec.tfocus|striptags }}<br>
                     {% endfor %}
                     
                     {% endif %}</td>

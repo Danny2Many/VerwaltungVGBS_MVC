@@ -10,7 +10,7 @@
         {{ form_label(attribute(formData, method)) }}
         {% if formData.vars.name != 'rehabilitationcertificate' %}
     <div class="col-sm-6">
-   {{ form_widget(formData) }}
+   {{ form_widget(attribute(formData, method)) }}
    
     </div>
    

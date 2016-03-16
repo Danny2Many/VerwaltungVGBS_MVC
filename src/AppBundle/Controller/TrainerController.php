@@ -21,17 +21,15 @@ use AppBundle\Entity\Trainer\TrainerFocus;
 class TrainerController extends Controller
 {
     /**
-     * @Route("/trainer/{letter}/{all}", defaults={"letter"="A","all": null},name="trainer_home", requirements={"letter": "[A-Z]"})
+     * @Route("/trainer/{letter}", defaults={"letter"="alle"},name="trainer_home", requirements={"letter": "[A-Z]|alle"})
      */
-    public function indexAction (Request $request, $letter, $all)
+    public function indexAction (Request $request, $letter)
     {
         
         $repository = $this->getDoctrine()
         ->getRepository('AppBundle:Trainer\Trainer');
         
         $qb=$repository->createQueryBuilder('t');
-        
-        $disabled='disabled';
         
         $choices=array('Trainernr.' => 'trainerid',
         'Name' => 'lastname',
@@ -46,16 +44,15 @@ class TrainerController extends Controller
     if($searchform->isSubmitted() && $searchform->isValid()){
      $letter=null;   
     $searchval=$request->query->get('search')['searchfield'];
-    $searchcol=$request->query->get('search')['Spalte'];   
+    $searchcol=$request->query->get('search')['column'];   
     
     $qb->where($qb->expr()->like('t.'.$searchcol, ':trainer'))
                    ->setParameter('trainer','%'.$searchval.'%')
                    ;
     
      
-    $disabled='';
          
-    }else{ if($all == null){
+    }else if($letter != 'alle'){
           
         $qb->where($qb->expr()->like('t.lastname', ':letter'))
                    ->setParameter('letter',$letter.'%');
@@ -80,10 +77,9 @@ class TrainerController extends Controller
                 array('tabledata'=>$trainerlist,
                     'colorclass'=>"bluetheader",
                     'searchform'=>$searchform->createView(),
-                    'disabled' => $disabled,
                     'cletter'=>$letter,
                     'path'=>'trainer_home'));
-    }}
+    }
     
     
     
@@ -98,10 +94,9 @@ class TrainerController extends Controller
         
         $trainer = new Trainer();
         
-        for ($i=1;$i<=10;$i++){
         $focus = new TrainerFocus();
-        $trainer->addFocus($focus);
-        }  
+        $trainer->addTfocus($focus);
+      
         
         
 
