@@ -1,3 +1,6 @@
+{% form_theme searchform 'bootstrap_3_layout.html.twig' %}
+
+
 <!DOCTYPE html>
 <html>
     <head>        
@@ -56,8 +59,9 @@
     <body>
        
         {% block body %}
+           <div class="container-fluid"> 
             {% block navbar %}
-        <div class="container-fluid">
+        
          <div class="row">
         <header>
 
@@ -94,43 +98,57 @@
 {% endfor %} 
                                 
          {% block topmenu %}                       
-            <div class="inputT row">
-           
-                <div class="col-lg-12 form-inline">
-    
-                    <div class="form-group">
+            <div class="topmenu row">
                 
-                        {% block search %}{% endblock %}
+                <div class="topmenu-left col-md-5">
+                 {% block topmenu_left %}
+                   {% block search %}
+                            {{ form_start(searchform, { 'attr': {'class': 'form-inline'} }) }}
+                            {{ form_widget(searchform.column) }}
+                            {{ form_widget(searchform.searchfield) }}
+                            
+                            <button type="submit" class="btn btn-default">
+                                <span class="glyphicon glyphicon-search"></span> suchen
+                            </button>
+                            <a href="{{ path(path) }}"><input type="button" class="btn btn-default" value="suche abbrechen" {% if  searchform.vars.submitted == false %}{{ 'disabled' }}{% endif %} ></a>
+                            
+                            {{ form_end(searchform) }}
+                        {% endblock %}
+                        {% endblock %}
+                     
+                </div>   
                         
-     
-                    </div>
-                     <div class="form-group">
-                
+                        
+                     <div class="topmenu-right col-md-7">
+                       {% block topmenu_right %}
+                       
+                        
+                     
+                        {% block dropdown %}{% endblock %}
+                    
+                    
+                        {% block tabs %}{% endblock %}
                         
                         {% block add %}{% endblock %}
-     
-                    </div>
-                        <div class="form-group">
-                        {% block dropdown %}
-                      
-                        {% endblock %}
-                        </div>
-                        <div class="form-group">
-                        {% block tabs %}
-                      
-                        {% endblock %}
-                        </div>
+                    {% endblock %}
+                
                 </div>
             </div>
-     {% endblock %}
+            {% endblock %}
+     
+     
+     
              {% block table %}
+                 <div class="row">
+                     <div class="col-md-12">
                  {% if tabledata is empty %}
- 
+                 
                     <div class="alert alert-info">
                          Es konnten keine, mit ihrer Suchanfrage übereinstimmenden, Personen gefunden werden.
                     </div>
- 
+                     
                  {% else %}
+              
             <table id="myTable" class="{% block color %} {{ colorclass }} {% endblock %}">
     
                 <thead>
@@ -143,7 +161,13 @@
     
             </table>
                 {% endif %}
+             </div>
+             </div>
        {% endblock %}
+       
+       
+       
+       
        
        {% block pagination %}
         <div class="row">
@@ -165,9 +189,9 @@
 
            
         </div>
-        </div>
+        
        {% endblock %}
-           </div> 
+            </div>
         {% endblock %}
         
     </body>
