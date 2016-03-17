@@ -6,7 +6,7 @@
 {% block title %} Übungsleiter {% endblock %}
 {% block viewname %}Übungsleiter{% endblock %}
 {% block TrainerAktiv %} active {% endblock %}
-{% block fixedcolnum %} 5 {% endblock %}
+{% block fixedcolnum %} 6 {% endblock %}
 
 
 
@@ -27,6 +27,7 @@
     <th>Anr.</th>
     <th>Name</th>
     <th>Vorname</th>
+    <th>Status</th>
     <th>Geb.Datum</th>
     <th>Ort</th>
     <th>Straße, Hausnr.</th>
@@ -63,6 +64,7 @@
             <td>{{ data.title|striptags }}</td>
             <td>{{ data.lastname|striptags }}</td>
             <td>{{ data.firstname|striptags }}</td>
+            <td>{{ data.state|striptags }}</td>
             <td>{{ data.birthday|date("d.m.Y") }}</td>
             <td>{{ data.location|striptags }}</td>
             <td>{{ data.streetaddress|striptags }}</td>
@@ -126,7 +128,10 @@
                     
                     {% endif %}</td>
                     
-            <td>{% if data.licence is empty %}
+                    <td {% for licence in data.licence %}
+                        {% if 'now'|date("Y") >= licence.expirationdate|date("Y") %}class="red"{% endif %}
+                        {% endfor %}>                       
+                    {% if data.licence is empty %}
                    {{ "-" }}
                     {% else  %}
                          {% for licence in data.licence %}

@@ -33,6 +33,12 @@ class AddTrainerType extends PersonalDataType{
         'choices_as_values' => true,
         'label' => 'Art:',))
                 
+        ->add('state', ChoiceType::class, array('choices'  => array(
+        'Aktiv' => 'Aktiv', 'Inaktiv' => 'Inaktiv'),
+        // *this line is important*
+        'choices_as_values' => true,
+        'label' => 'Status:',))
+                
         ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
         ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))
         ->add('reset', ResetType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'zurücksetzen'))
