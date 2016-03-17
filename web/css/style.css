@@ -119,6 +119,10 @@ td.red {
     background-color: red;
 }
 
+td.yellow {
+    background-color: yellow;
+}
+
 ul.nav{
     padding-bottom: 0;
 }

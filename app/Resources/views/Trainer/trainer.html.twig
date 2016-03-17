@@ -129,7 +129,8 @@
                     {% endif %}</td>
                     
                     <td {% for licence in data.licence %}
-                        {% if 'now'|date("Y") >= licence.expirationdate|date("Y") %}class="red"{% endif %}
+                        {% if 'now'|date("Y") == licence.expirationdate|date("Y") %}class="yellow"{% endif %}
+                        {% if 'now'|date("Y") > licence.expirationdate|date("Y") %}class="red"{% endif %}
                         {% endfor %}>                       
                     {% if data.licence is empty %}
                    {{ "-" }}

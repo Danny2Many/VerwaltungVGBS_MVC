@@ -52,7 +52,8 @@ class AddTrainerType extends PersonalDataType{
         ->add('phonenumber', CollectionType::class, array('entry_type' => PhoneNumberType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\Trainer\TrainerPhoneNumber'),'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
         ->add('licence', CollectionType::class, array('entry_type' => TrainerLicenceType::class,'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
 
-        
+               
+
                 
         ;        
     }
