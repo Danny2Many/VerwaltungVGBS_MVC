@@ -15,8 +15,9 @@ use AppBundle\Form\SanitizedTextareaType;
 use AppBundle\Form\Type\RehabCertType;
 use AppBundle\Form\Type\PhoneNumberType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\AbstractType;
 
-class BaseNonMemberType extends PersonalDataType {
+class BaseNonMemberType extends AbstractType{
     
 public function buildForm(FormBuilderInterface $builder, array $options){
     
@@ -24,7 +25,13 @@ public function buildForm(FormBuilderInterface $builder, array $options){
     parent::buildForm($builder,$options);
 
         $builder
-        ->add('phonenumber', CollectionType::class, array('entry_type' => PhoneNumberType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber'),'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
+                
+          ->add('personaldata', PersonalDataType::class, array(
+        'data_class' => 'AppBundle\Entity\Nichtmitglieder\Nonmember',
+        'pn_data_class' => 'AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber',
+              
+    ))       
+        
         ->add('trainingstartdate', DateType::class, array( 'label' => 'Trainingsbeginn:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag')))
         ->add('trainingconfirmation', DateType::class, array( 'label' => 'Teilnahmebeginnbest.:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag'), 'required' => false))       
         ->add('state', ChoiceType::class, array(

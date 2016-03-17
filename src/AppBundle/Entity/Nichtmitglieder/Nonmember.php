@@ -321,10 +321,10 @@ protected $phonenumber;
      */
     public function addSection(\AppBundle\Entity\Section $section)
     {  
+        if(!$this->section->contains($section)){
         $this->section[] = $section;
-
         return $this;
-    
+        }
     }
     
     /**

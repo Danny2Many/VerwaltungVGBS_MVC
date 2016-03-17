@@ -102,17 +102,19 @@ class NonMemberController extends Controller {
         
         //if the form is valid -> persist it to the database
         if($addnonmemform->isSubmitted() && $addnonmemform->isValid()){
-           
+           if(!empty($nonmember->getSportsgroup())){
             foreach($nonmember->getSportsgroup() as $sportsgroup) {
                 foreach($sportsgroup->getSection() as $section) {              
                 $nonmember->addSection($section);
-            }                
+                }                
             }
+        }
             
             
             $manager= $this->getDoctrine()->getManager();
             $manager->persist($nonmember);     
             $manager->flush();
+            $this->addflash('notice', 'Diese Person wurde erfolgreich angelegt!');
             
             return $this->redirectToRoute('nonmember_home', array ('letter'=>$letter));
             }
@@ -155,6 +157,7 @@ class NonMemberController extends Controller {
             $manager=$this->getDoctrine()->getManager();
             $manager->remove($nonmember);
             $manager->flush();
+            $this->addflash('notice', 'Diese Person wurde erfolgreich gelöscht!');
             return $this->redirectToRoute('nonmember_home', array('letter' => $letter, 'info' => 'entfernt'));
         } 
         
@@ -169,7 +172,7 @@ class NonMemberController extends Controller {
             }     
             $manager->persist($nonmember);          
             $manager->flush();              
-            
+            $this->addflash('notice', 'Dies Daten wurden erfolgreich gespeichert!');
             return $this->redirectToRoute('nonmember_home', array('letter' => $letter, 'info' => 'gespeichert'));    
         } 
         

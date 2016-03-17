@@ -33,10 +33,6 @@ class NonMemPhoneNumber {
    /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank()
-     * @Assert\Regex(
-     *     pattern="/\d\/\d/",
-     *     message="Ihre Telefonnummer entspricht entweder nicht dem gegebenen Format oder enthält einen Buchstaben."
-     * )
      */
     protected $phonenumber;
     
