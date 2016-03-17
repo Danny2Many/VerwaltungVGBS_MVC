@@ -6,8 +6,12 @@
 {% block viewname %}Nichtmitglieder{% endblock %}
 {% block NMitglAktiv %} active {% endblock %}
 {% block fixedcolnum %} 7 {% endblock %}
-
-
+{% block columnDefs %}
+            "columnDefs": [
+            {"width" : "10%", "targets": 17},
+            {"width" : "6%", "targets": 12}
+        ]
+            {% endblock%} 
 
 
 {% block add %}
@@ -22,7 +26,7 @@
 {% block thead %}       
             
 <th>Bearb.</th>
-<th>NichtM_Nr</th>
+<th>Nmtgl.<br>Nr</th>
 <th>Abt</th>
 <th>Status</th>
 <th>Anr.</th>
@@ -38,7 +42,7 @@
 <th>Sportgruppe</th>
 <th>Trainingsbeginn</th>
 <th>Teilnahmebeginnbest.</th>
-<th>Rehaschein/e</th>
+<th>RS-Nr.-Ablaufd.-Einheiten</th>
 <th>Krankenkasse</th>
 <th>Zusatzinfo</th> 
 <th>Arbeitsplatzhaltung</th>
@@ -94,7 +98,7 @@
             <td>{{ data.postcode|striptags }}</td>
             <td>{{ data.mailbox is empty ? "-" : data.mailbox|striptags }}</td>
             <td>{% for PN in data.phonenumber %}
-                        {{ PN.phonenumber }}<br>
+                       {{ PN.phonenumber }}<br>
                         {% else  %}
                         {{ "-" }}    
                     {% endfor %}</td>     
@@ -107,16 +111,16 @@
                     {% endfor %}
                     {% endif %}</td> 
             <td>{{ data.trainingstartdate|date("d.m.Y") }}</td>
-             <td>{{ data.trainingconfirmation is empty ? "-" : data.trainingconfirmation|date("d.m.Y")}}</td>
-             <td>{% if data.rehabilitationcertificate is empty %}
-                   {{ "-" }}
-                    {% else  %}
-                         {% set i =1 %}
-                         {% for RC in data.rehabilitationcertificate %}
-                             
-                         {{i}}:{{RC.terminationdate|date("d.m.Y") }}|{{ RC.rehabunits}}<br>
-                        {% set i =i+1 %}
-                  {% endfor %}{% endif %}</td>
+            <td>{{ data.trainingconfirmation is empty ? "-" : data.trainingconfirmation|date("d.m.Y")}}</td>
+             
+            {% set rehab = data.rehabilitationcertificate %}
+            <td>
+                {% for RC in rehab if date(RC.terminationdate) > date() or date(RC.terminationdate) < date() %}
+                    {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>
+                {% else %}
+                    {{ "-" }}
+                {% endfor %}
+            </td>
    
             <td>{{ data.healthinsurance is empty ? "-" : data.healthinsurance|striptags }}</td>
             <td>{{ data.additionalinfo is empty ? "-" : data.additionalinfo|striptags }}</td>
