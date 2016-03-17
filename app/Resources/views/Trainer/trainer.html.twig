@@ -126,7 +126,7 @@
                     
                     {% endif %}</td>
                     
-            <td>{% if data.licence is empty %}
+                    <td {% if 'now'|date("Y") < expirationdate|date("Y") %}class="red"{% endif %}>{% if data.licence is empty %}
                    {{ "-" }}
                     {% else  %}
                          {% for licence in data.licence %}
