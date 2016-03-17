@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\MemYearInfo;
 use AppBundle\Entity\MemMonthlyDues;
-use AppBundle\Entity\Section;
+
 use Symfony\Component\Form\FormError;
 
 class MemberController extends Controller
@@ -154,15 +154,15 @@ class MemberController extends Controller
             $admdate = $member->getAdmissiondate();
             $dues= $addmemform->get('dues')->getData();
           
-          $repository=$this->getDoctrine()->getRepository('AppBundle:MemFinYear');
+          $repository=$this->getDoctrine()->getRepository('AppBundle:AdministrationYear');
           
-          $memfinyear=$repository->findOneBy(array('year' => $admdate->format('Y')));
+          $year=$repository->findOneBy(array('year' => $admdate->format('Y')));
           
           
-          if($memfinyear != null){
+          if($year != null){
           
           $yearinfo = new MemYearInfo();
-          $yearinfo->setFinyear($memfinyear);
+          $yearinfo->setAdminyear($year);
           
           $member->addYearinfo($yearinfo);
           
@@ -171,7 +171,7 @@ class MemberController extends Controller
           foreach ($months as $month){
           
           $$month= new MemMonthlyDues();
-          $$month->setFinyear($memfinyear)
+          $$month->setAdminyear($year)
                   ->setMonth($month)
                   ->setDues($dues);
           $member->addMonthlydue($$month);
@@ -187,7 +187,7 @@ class MemberController extends Controller
            $this->addFlash('notice', 'Diese Person wurde erfolgreich angelegt!'); 
           return $this->redirectToRoute('member_home', array('letter' => $letter));
           }
-          $addmemform->get('admissiondate')->addError(new FormError('Dieses Finanzjahr wurde noch nicht angelegt.'));
+          $addmemform->get('admissiondate')->addError(new FormError('Dieses Verwaltungsjahr wurde noch nicht angelegt.'));
         }
         
         
