@@ -2,68 +2,67 @@
 
 namespace AppBundle\Entity\Trainer;
 
-use AppBundle\Entity\PersonalData;
 use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Entity\PersonalData;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="Trainer")
  */
-
-class Trainer extends PersonalData{
+class Trainer extends PersonalData {
     
-   
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer") 
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $trainerid;          
+    protected $trainerid;
     
     /**
-     * @ORM\OneToMany(targetEntity="TrainerPhoneNumber", mappedBy="trainer", cascade={"persist"})
+     * @ORM\Column(type="string")
      */
-    protected $phonenumber;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="TrainerLicence", mappedBy="trainer", cascade={"persist"})
-     */
-    protected $licence;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="TrainerFocus", mappedBy="trainer", cascade={"persist"})
-     */
-    protected $focus;
-    
+    protected $type;
     /**
      * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
      * @ORM\JoinTable(name="Trainer_Section",
-     *      joinColumns={@ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
+     * joinColumns={@ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")},
+     * inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
      */
     protected $section;
     
     /**
-     * @ORM\Column(type="string")
-     */   
-    protected $type;
+     * @ORM\OneToMany(targetEntity="TrainerFocus", mappedBy="trainer", cascade={"all"})
+     */
+    protected $theme;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="TrainerLicence", mappedBy="trainer", cascade={"all"})
+     */  
+    protected $licence;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="TrainerPhoneNumber", mappedBy="trainer", cascade={"all"})
+     */ 
+    protected $phonenumber;
     
     
     
-   
+
     
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->phonenumber = new ArrayCollection();
-        $this->licence = new ArrayCollection();
-        $this->focus = new ArrayCollection();
-        $this->section = new ArrayCollection();
-    }
+        $this->section = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->licence = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->phonenumber = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->theme = new \Doctrine\Common\Collections\ArrayCollection();
+
+        }
 
     /**
      * Get trainerid
@@ -100,93 +99,6 @@ class Trainer extends PersonalData{
     }
 
     /**
-     * Add licence
-     *
-     * @param \AppBundle\Entity\Trainer\TrainerLicence $licence
-     *
-     * @return Trainer
-     */
-    public function addLicence(\AppBundle\Entity\Trainer\TrainerLicence $licence)
-    {
-        $this->licence[] = $licence;
-
-        return $this;
-    }
-
-    /**
-     * Remove licence
-     *
-     * @param \AppBundle\Entity\Trainer\TrainerLicence $licence
-     */
-    public function removeLicence(\AppBundle\Entity\Trainer\TrainerLicence $licence)
-    {
-        $this->licence->removeElement($licence);
-    }
-
-    /**
-     * Get licence
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getLicence()
-    {
-        return $this->licence;
-    }
-
-    /**
-     * Add focus
-     *
-     * @param \AppBundle\Entity\Trainer\TrainerFocus $focus
-     *
-     * @return Trainer
-     */
-    public function addFocus(\AppBundle\Entity\Trainer\TrainerFocus $focus)
-    {
-        
-       
-        $focus->setTrainer($this);
-        $this->focus[] = $focus;
-        return $this;
-    }
-
-    /**
-     * Remove focus
-     *
-     * @param \AppBundle\Entity\Trainer\TrainerFocus $focus
-     */
-    public function removeFocus(\AppBundle\Entity\Trainer\TrainerFocus $focus)
-    {
-        $this->focus->removeElement($focus);
-    }
-
-    /**
-     * Get focus
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFocus()
-    {
-        return $this->focus;
-    }
-
-   /**
-    * Set focus
-    * @param \Doctrine\Common\Collections\Collection $focus
-    *
-    * @return Post
-    */
-    public function setFocus($focus)
-    {      
-    if(!is_array($focus))
-    {
-        $sportsgroup = array($focus);
-    }
-    $this->focus = $focus;
-
-    return $this;
-    }
-    
-    /**
      * Add section
      *
      * @param \AppBundle\Entity\Section $section
@@ -219,44 +131,157 @@ class Trainer extends PersonalData{
     {
         return $this->section;
     }
+
+    
+
+    /**
+     * Add licence
+     *
+     * @param \AppBundle\Entity\Trainer\TrainerLicence $licence
+     *
+     * @return Trainer
+     */
+    public function addLicence(\AppBundle\Entity\Trainer\TrainerLicence $licence)
+    {
+        $licence->setTrainer($this);
+
+        $this->licence[] = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Remove licence
+     *
+     * @param \AppBundle\Entity\Trainer\TrainerLicence $licence
+     */
+    public function removeLicence(\AppBundle\Entity\Trainer\TrainerLicence $licence)
+    {
+        $this->licence->removeElement($licence);
+    }
+
+    /**
+     * Get licence
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLicence()
+    {
+        return $this->licence;
+    }
+
+    /**
+     * Set licence
+     *
+     * @param string $licence
+     *
+     * @return TrainerLicence
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Add theme
+     *
+     * @param \AppBundle\Entity\Trainer\TrainerFocus $theme
+     *
+     * @return Trainer
+     */
+    public function addTheme(\AppBundle\Entity\Trainer\TrainerFocus $theme)
+    {
+        $theme->setTrainer($this);
+
+        $this->theme[] = $theme;
+
+        return $this;
+    }
+
+    /**
+     * Remove theme
+     *
+     * @param \AppBundle\Entity\Trainer\TrainerFocus $theme
+     */
+    public function removeTheme(\AppBundle\Entity\Trainer\TrainerFocus $theme)
+    {
+        $this->theme->removeElement($theme);
+    }
+
+    /**
+     * Get theme
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTheme()
+    {
+        return $this->theme;
+    }
+    
+    /**
+     * Set theme
+     *
+     * @param string $theme
+     *
+     * @return TrainerFocus
+     */
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
+
+        return $this;
+    }
     
     
-//    
-//    /**
-//     * Add phonenumber
-//     *
-//     * @param \AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber
-//     *
-//     * @return Trainer
-//     */
-//    public function addPhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
-//    {               
-//        $phonenumber->setTrainer($this);
-//        $this->phonenumber[] = $phonenumber;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Remove phonenumber
-//     *
-//     * @param \AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber
-//     */
-//    public function removePhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
-//    {
-//        $this->phonenumber->removeElement($phonenumber);
-//    }
-//
-//    /**
-//     * Get phonenumber
-//     *
-//     * @return \Doctrine\Common\Collections\Collection
-//     */
-//    public function getPhonenumber()
-//    {
-//        return $this->phonenumber;
-//    }
-    
-    
-    
+    /**
+     * Set phonenumber
+     *
+     * @param string $phonenumber
+     *
+     * @return TrainerPhoneNumber
+     */
+    public function setPhonenumber($phonenumber)
+    {
+        $this->phonenumber = $phonenumber;
+
+        return $this;
+    }
+
+    /**
+     * Get phonenumber
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhonenumber()
+    {
+        return $this->phonenumber;
+    }
+     
+
+    /** 
+     * Add phonenumber
+     *
+     * @param \AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber
+     *
+     * @return Trainer
+     */
+    public function addPhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
+    {               
+        $phonenumber->setTrainer($this);
+        $this->phonenumber[] = $phonenumber;
+
+        return $this;
+    }
+
+    /**
+     * Remove phonenumber
+     *
+     * @param \AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber
+    */
+    public function removePhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
+    {
+        $this->phonenumber->removeElement($phonenumber);
+    }
 }

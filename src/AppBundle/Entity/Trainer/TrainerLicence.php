@@ -1,7 +1,6 @@
 <?php
 
 namespace AppBundle\Entity\Trainer;
-
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -9,48 +8,60 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="TrainerLicence")
  */
-class TrainerLicence{
+class TrainerLicence {
+    
     /**
      * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="licence")
      * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
      */
-    protected $trainer;
+    private $trainer;
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")     
-     */    
+     * @ORM\Column(type="integer") 
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $liid;
+    
+    /**
+     * @ORM\Column(type="integer") 
+     */
     protected $trainerid;
     
     /**
-     * @ORM\Id
-     * @ORM\Column(type="string")
-     */   
+     * @ORM\Column(type="string") 
+     */
+    protected $licencetype;
+    
+    /**
+     * @ORM\Column(type="string") 
+     */
     protected $licencenumber;
-
-     /**
+    
+    /**
      * @ORM\Column(type="date")
      * @Assert\NotBlank()
      * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
      */
     protected $issuedate;
     
-     /**
+    /**
      * @ORM\Column(type="date")
      * @Assert\NotBlank()
      * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
      */
     protected $expirationdate;
     
+
     /**
-     * @ORM\Id
-     * @ORM\Column(type="string")
-     */   
-    protected $licencetype;
-    
-    
-    
-    
+     * Get liid
+     *
+     * @return integer
+     */
+    public function getLiid()
+    {
+        return $this->liid;
+    }
 
     /**
      * Set trainerid
@@ -74,6 +85,30 @@ class TrainerLicence{
     public function getTrainerid()
     {
         return $this->trainerid;
+    }
+
+    /**
+     * Set licencetype
+     *
+     * @param string $licencetype
+     *
+     * @return TrainerLicence
+     */
+    public function setLicencetype($licencetype)
+    {
+        $this->licencetype = $licencetype;
+
+        return $this;
+    }
+
+    /**
+     * Get licencetype
+     *
+     * @return string
+     */
+    public function getLicencetype()
+    {
+        return $this->licencetype;
     }
 
     /**
@@ -146,30 +181,6 @@ class TrainerLicence{
     public function getExpirationdate()
     {
         return $this->expirationdate;
-    }
-
-    /**
-     * Set licencetype
-     *
-     * @param string $licencetype
-     *
-     * @return TrainerLicence
-     */
-    public function setLicencetype($licencetype)
-    {
-        $this->licencetype = $licencetype;
-
-        return $this;
-    }
-
-    /**
-     * Get licencetype
-     *
-     * @return string
-     */
-    public function getLicencetype()
-    {
-        return $this->licencetype;
     }
 
     /**

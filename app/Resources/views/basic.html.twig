@@ -1,5 +1,5 @@
-{% form_theme searchform 'bootstrap_3_layout.html.twig' %}
-
+{#{% form_theme searchform 'bootstrap_3_layout.html.twig' %}
+#}
 
 <!DOCTYPE html>
 <html>
@@ -40,7 +40,7 @@
         "bFilter": false,
         "bInfo": false,
         fixedColumns: {
-        leftColumns: {% block fixedcolnum %}{% endblock %}
+        leftColumns: {% block fixedcolnum %}0{% endblock %}
     }
 
     } );
@@ -191,7 +191,8 @@
         </div>
         
        {% endblock %}
-            </div>
+        </div>
+            
         {% endblock %}
         
     </body>

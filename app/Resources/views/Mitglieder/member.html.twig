@@ -89,6 +89,7 @@
                  
                 <td>{{ data.admissionconfirmation is empty ? "-" : data.admissionconfirmation|date("d.m.Y") }}</td>
 
+
                 <td>{% if data.rehabilitationcertificate is empty %}
                    {{ "-" }}
                     {% else  %}
@@ -112,6 +113,7 @@
                          {{ "-" }}
 
                     {% endfor %}
+
                    </td>
                     
 

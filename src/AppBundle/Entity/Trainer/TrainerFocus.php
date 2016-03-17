@@ -1,36 +1,63 @@
 <?php
 
+
+
 namespace AppBundle\Entity\Trainer;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="TrainerFocus")
  */
-class TrainerFocus{
+class TrainerFocus {
     /**
-     * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="focus")
+     * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="theme")
      * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
      */
-    protected $trainer;
+    private $trainer;
+    
+    
+    
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")     
-     */    
+     * @ORM\Column(type="integer") 
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $tfid;
+    
+     /**
+     * 
+     * @ORM\Column(type="integer") 
+     * 
+     */
     protected $trainerid;
     
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string")
-     */   
-    protected $focus;
+     /**
+      *  
+      *  @ORM\Column(type="string")
+      * 
+      */
+    protected $theme;
 
     
-    
-    
-    
+
+   
+
+    /**
+     * Get tfid
+     *
+     * @return integer
+     */
+    public function getTfid()
+    {
+        return $this->tfid;
+    }
+
     /**
      * Set trainerid
      *
@@ -56,27 +83,27 @@ class TrainerFocus{
     }
 
     /**
-     * Set focus
+     * Set theme
      *
-     * @param string $focus
+     * @param string $theme
      *
      * @return TrainerFocus
      */
-    public function setFocus($focus)
+    public function setTheme($theme)
     {
-        $this->focus = $focus;
+        $this->theme = $theme;
 
         return $this;
     }
 
     /**
-     * Get focus
+     * Get theme
      *
      * @return string
      */
-    public function getFocus()
+    public function getTheme()
     {
-        return $this->focus;
+        return $this->theme;
     }
 
     /**

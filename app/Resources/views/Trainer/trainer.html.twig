@@ -6,21 +6,16 @@
 {% block title %} Übungsleiter {% endblock %}
 {% block viewname %}Übungsleiter{% endblock %}
 {% block TrainerAktiv %} active {% endblock %}
+{% block fixedcolnum %} 5 {% endblock %}
 
-{% block search %}
-    
-{{ form_start(searchform) }}
-{{ form_widget(searchform.Spalte) }}
-{{ form_widget(searchform.searchfield) }}
-{{ form_widget(searchform.search) }}
-<a href="{{ path('trainer_home') }}"><input type="button" class="form-control" value="zurücksetzen" {{ disabled }}></a>
-{{ form_end(searchform) }}
 
-{% endblock %}
+
 
 {% block add %}
+    <div class="inline">
     <a href="{{ path('addtrainer', {'letter': cletter }) }}"><button    class="add btn btn-default">
-      <span class="glyphicon glyphicon-plus"></span> neuen Übungsleiter anlegen </button></a>  
+    <span class="glyphicon glyphicon-plus"></span> neuen Übungsleiter anlegen </button></a>  
+    </div>  
 {% endblock %}
 
 {% block color %} {{colorclass}} {% endblock %}
@@ -62,7 +57,8 @@
                     {% else %}
                     {% set first = data.lastname|first %}   
                 {% endif %}
-                <td><center><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></td>
+                <td><center><a href="{{ path('edittrainer', {'letter': first|capitalize, 'ID': data.trainerid }) }}">
+                    <button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></a></center></td>
             <td>{{ data.trainerid }}</td>
             <td>{{ data.title|striptags }}</td>
             <td>{{ data.lastname|striptags }}</td>
@@ -94,11 +90,11 @@
                     
                     {% endif %}</td>
                     
-            <td>{% if data.focus is empty %}
+            <td>{% if data.theme is empty %}
                    {{ "-" }}
                     {% else  %}
-                         {% for focus in data.focus %}
-                            {{ focus.focus|striptags }}<br>
+                         {% for Sec in data.theme %}
+                            {{ Sec.theme|striptags }}<br>
                     {% endfor %}
                     
                     {% endif %}</td>
@@ -143,3 +139,26 @@
             {% endautoescape %} 
         {% endfor %}
 {% endblock %}
+    
+    {% block pagination %}
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="pagination">
+                    
+                <li {% if cletter == null %}class="active"{% endif %}><a href="{{ path(path, {'all': 'alle'}) }}">ALLE</a></li>   
+                
+                {% for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'] %}
+                    
+                    {% if letter == cletter %}     
+                    <li class="active"><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>      
+                    {% else %}
+                    <li><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>                    
+                    {% endif %}
+                    
+                {% endfor %}
+                
+                <li class="active"><a href="{{ path(path, {'letter': cletter}) }}">{{ tabledata|length }} Personen wurden gefunden</a></li>
+                </ul>         
+            </div>           
+        </div>        
+    {% endblock %}

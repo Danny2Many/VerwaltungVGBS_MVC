@@ -1,33 +1,43 @@
 <?php
 
 namespace AppBundle\Entity\Trainer;
-
-use AppBundle\Entity\PersonalData;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="TrainerPhoneNumber")
+ * @ORM\Table(name="TrainerPhoneMember")
  */
-
 class TrainerPhoneNumber {
     
     /**
-     * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="phonenumber")
+     * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="phonenumber", cascade={"persist"})
      * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
      */
-    protected $trainer;
+    private $member;
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")     
-     */    
-    protected $trainerid;
+     * @ORM\Column(type="integer") 
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $tpnid;
     
     /**
-     * @ORM\Id
+     * 
+     * @ORM\Column(type="integer") 
+     * 
+     */
+    protected $trainerid;   
+    
+    /**
      * @ORM\Column(type="string")
-     */   
+     * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/\d\/\d/",
+     *     message="Ihre Telefonnummer entspricht entweder nicht dem gegebenen Format oder enthält einen Buchstaben."
+     * )
+     */
     protected $phonenumber;
     
 }

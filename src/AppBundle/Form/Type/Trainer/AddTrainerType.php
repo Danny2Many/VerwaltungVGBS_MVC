@@ -3,7 +3,10 @@
 namespace AppBundle\Form\Type\Trainer;
 
 use AppBundle\Form\Type\PersonalDataType;
+use AppBundle\Form\Type\PhoneNumberType;
 use AppBundle\Form\Type\Trainer\TrainerFocusType;
+use AppBundle\Form\Type\Trainer\TrainerLicenceType;
+
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -39,8 +42,12 @@ class AddTrainerType extends PersonalDataType{
             'multiple' => true,
             'expanded' => true,
             'label' => 'Abteilung/en:'))
-        ->add('focus', CollectionType::class, array('entry_type' => TrainerFocusType::class, 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true,))
-    
+        ->add('theme', CollectionType::class, array('entry_type' => TrainerFocusType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\Trainer\TrainerFocus'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
+        ->add('phonenumber', CollectionType::class, array('entry_type' => PhoneNumberType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\Trainer\TrainerPhoneNumber'),'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
+        ->add('licence', CollectionType::class, array('entry_type' => TrainerLicenceType::class,'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
+
+        
+                
         ;        
     }
     
