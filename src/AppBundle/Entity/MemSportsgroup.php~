@@ -319,45 +319,4 @@ class MemSportsgroup {
     {
         return $this->token;
     }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->section = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Add section
-     *
-     * @param \AppBundle\Entity\Section $section
-     *
-     * @return MemSportsgroup
-     */
-    public function addSection(\AppBundle\Entity\Section $section)
-    {
-        $this->section[] = $section;
-
-        return $this;
-    }
-
-    /**
-     * Remove section
-     *
-     * @param \AppBundle\Entity\Section $section
-     */
-    public function removeSection(\AppBundle\Entity\Section $section)
-    {
-        $this->section->removeElement($section);
-    }
-
-    /**
-     * Get section
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSection()
-    {
-        return $this->section;
-    }
 }
