@@ -48,10 +48,14 @@ class Trainer extends PersonalData {
      */ 
     protected $phonenumber;
     
-    
-    
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $state;
 
-    
+
+
+
     /**
      * Constructor
      */
@@ -283,5 +287,29 @@ class Trainer extends PersonalData {
     public function removePhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
     {
         $this->phonenumber->removeElement($phonenumber);
+    }
+
+    /**
+     * Set state
+     *
+     * @param string $state
+     *
+     * @return Trainer
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * Get state
+     *
+     * @return string
+     */
+    public function getState()
+    {
+        return $this->state;
     }
 }
