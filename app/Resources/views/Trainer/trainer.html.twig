@@ -57,7 +57,8 @@
                     {% else %}
                     {% set first = data.lastname|first %}   
                 {% endif %}
-                <td><center><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></td>
+                <td><center><a href="{{ path('edittrainer', {'letter': first|capitalize, 'ID': data.trainerid }) }}">
+                    <button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></a></center></td>
             <td>{{ data.trainerid }}</td>
             <td>{{ data.title|striptags }}</td>
             <td>{{ data.lastname|striptags }}</td>

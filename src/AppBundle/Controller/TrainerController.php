@@ -7,10 +7,16 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Form\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\Type\Trainer\AddTrainerType;
+use AppBundle\Form\Type\Trainer\EditTrainerType;
 
 use AppBundle\Entity\Trainer\Trainer;
 use AppBundle\Entity\Trainer\TrainerPhoneNumber;
 use AppBundle\Entity\Trainer\TrainerFocus;
+use AppBundle\Entity\Trainer\TrainerLicence;
+
+use Doctrine\Common\Collections\ArrayCollection;
+
+
 
 
 
@@ -35,7 +41,8 @@ class TrainerController extends Controller
         'Name' => 'lastname',
         'Vorname' => 'firstname',
         'Strasse' => 'streetaddress',
-        'E-Mail' => 'email');     
+        'E-Mail' => 'email',
+        'Lizenz' => 'licencetype');     
  
     $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('trainer_home')));    
         
@@ -89,29 +96,9 @@ class TrainerController extends Controller
     /**
      * @Route("/trainer/anlegen/{letter}", defaults={"letter": "A"}, name="addtrainer", requirements={"letter": "[A-Z]"})
      */    
-    public function addtrainerAction(Request $request, $letter) {
-        
+    public function addtrainerAction(Request $request, $letter) {        
         
         $trainer = new Trainer();
-        
-        
-      
-        
-        
-
-        
-        
-        
-   //     $focus->setTrainerid($trainer->getTrainerid());        
-       
-        
-        
-        
-        
-
-        
-        
-
         
         $addtrainerform = $this->createForm(AddTrainerType::class, $trainer);
         
@@ -135,4 +122,83 @@ class TrainerController extends Controller
                     'title'=>'Übungsleiter anlegen'));        
     }
     
+    
+//-------------------------------------------------------------------------------------------------   
+    
+    /**
+     * @Route("/trainer/bearbeiten/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"ID": "\d+", "letter": "[A-Z]"}, name="edittrainer")
+     * 
+     */   
+    public function edittrainerAction(Request $request, $ID, $letter)
+    {
+        $manager= $this->getDoctrine()->getManager();
+        $repository = $this->getDoctrine()->getRepository('AppBundle:Trainer\Trainer');
+        
+        $trainer=$repository->findOneBy(array('trainerid' => $ID));
+        
+        if(!$trainer){
+            throw $this->createNotFoundException('Es konnte kein Trainer mit der Trainernr.: '.$ID.' gefunden werden');
+        }
+        
+        $edittrainerform = $this->createForm(EditTrainerType::class, $trainer);
+        
+        $originallicences = new ArrayCollection();
+        $originalphonenr = new ArrayCollection();
+        $originalthemes = new ArrayCollection();
+
+
+        foreach ($trainer->getLicence() as $licence) {
+            $originallicences->add($licence);
+        }
+
+        foreach ($trainer->getPhonenumber() as $phonenr) {
+            $originalphonenr->add($phonenr);
+        }
+        
+        foreach ($trainer->getTheme() as $theme) {
+            $originalthemes->add($theme);
+        }
+        
+        $edittrainerform->handleRequest($request);
+        
+        if($edittrainerform->get('delete')->isClicked()){
+            $manager=$this->getDoctrine()->getManager();
+            $manager->remove($trainer);
+            $manager->flush();
+            return $this->redirectToRoute('trainer_home', array('letter' => $letter));
+        }
+        
+        if($edittrainerform->isSubmitted() && $edittrainerform->isValid()){
+  
+          foreach ($originallicences as $licence) {
+            if (false === $trainer->getLicence()->contains($licence)) {   
+                $manager->remove($licence);
+            }
+        }
+            
+            foreach ($originalphonenr as $phonenr) {
+            if (false === $trainer->getPhonenumber()->contains($phonenr)) {         
+                $manager->remove($phonenr);
+            }
+        }
+        
+            foreach ($originalthemes as $theme) {
+            if (false === $trainer->getTheme()->contains($theme)) {         
+                $manager->remove($theme);
+            }
+        }
+           
+            $manager->persist($trainer);          
+            $manager->flush();            
+            
+          return $this->redirectToRoute('trainer_home', array('letter' => $letter));  
+        }
+        
+        return $this->render('Trainer/trainerform.html.twig',
+        array(            
+            'form' => $edittrainerform->createView(),
+            'cletter' => $letter,
+            'title' => 'Trainer bearbeiten'
+            ));
+    }
 }
