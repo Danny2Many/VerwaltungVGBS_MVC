@@ -107,7 +107,7 @@
                 <td>{% for RC in rehab if date(RC.terminationdate) > date() %}
                           
                         
-                         {{loop.index}}:{{RC.terminationdate|date("d.m.Y") }}|{{RC.rehabunits }}<br>
+                    {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>
                         
                          {% else %}
                          {{ "-" }}

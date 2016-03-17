@@ -1,9 +1,7 @@
-{#{% form_theme searchform 'bootstrap_3_layout.html.twig' %}
-#}
-
+       
 <!DOCTYPE html>
 <html>
-    <head>        
+    <head>
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block meta %}
             <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,9 +38,12 @@
         "bFilter": false,
         "bInfo": false,
         fixedColumns: {
-        leftColumns: {% block fixedcolnum %}0{% endblock %}
-    }
 
+        leftColumns: {% block fixedcolnum %}{% endblock %}
+    },
+            {% block columndefs %}
+       
+  {% endblock %}
     } );
     
     new $.fn.dataTable( oTable );

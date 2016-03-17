@@ -466,11 +466,15 @@ public function setSportsgroup($sportsgroup)
      */
     public function addSection(\AppBundle\Entity\Section $section)
     {
+        if(!$this->section->contains($section)){
         $this->section[] = $section;
 
         return $this;
     }
-
+    }
+    
+    
+    
     /**
      * Remove section
      *
