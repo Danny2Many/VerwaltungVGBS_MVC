@@ -4,12 +4,7 @@
 
 namespace AppBundle\Form\Type\Member;
 
-
-use AppBundle\Form\Type\PersonalDataType;
 use Symfony\Component\Form\FormBuilderInterface;
-
-
-
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -21,25 +16,18 @@ use AppBundle\Form\SanitizedTextType;
 use AppBundle\Form\SanitizedTextareaType;
 use AppBundle\Form\Type\RehabCertType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\AbstractType;
 
-class BaseMemberType extends AbstractType{
- 
+class MemberFinanceType {
     
-   
-public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
         
     {
     
     
-    
+   
 
         $builder
-          ->add('personaldata', PersonalDataType::class, array(
-        'data_class' => 'AppBundle\Entity\Member',
-        'pn_data_class' => 'AppBundle\Entity\MemPhoneNumber'
-    )) 
-                
+            
           ->add('admissiondate', DateType::class, array( 'label' => 'Eintrittsdatum:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag')))
           ->add('admissionconfirmation', DateType::class, array( 'label' => 'Aufnahmebest.:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag'), 'required' => false))       
    
@@ -67,7 +55,7 @@ public function buildForm(FormBuilderInterface $builder, array $options)
     'label' => 'verminderter Beitrag:'
     
 ))
-                ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\MemRehabilitationCertificate'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
+                ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
                 ->add('healthinsurance', SanitizedTextType::class, array('label' => 'Krankenkasse:', 'required' => false))
                         
                 
@@ -109,10 +97,4 @@ public function buildForm(FormBuilderInterface $builder, array $options)
           ->add('reset', ResetType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'zurücksetzen'));
          
     }
-    
-     
-
-
-
-    
 }

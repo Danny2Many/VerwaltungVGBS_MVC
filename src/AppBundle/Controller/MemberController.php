@@ -122,9 +122,9 @@ class MemberController extends Controller
         $member = new Member();
         $phonenumber = new MemPhoneNumber();
         
-        $section = new Section();
+        
        
-        $member->addSection($section);     
+            
         $member->addPhonenumber($phonenumber);
                
       
@@ -138,6 +138,7 @@ class MemberController extends Controller
 
         //if the form is valid -> persist it to the database
         if($addmemform->isSubmitted() && $addmemform->isValid()){
+
             
         
             
@@ -147,6 +148,16 @@ class MemberController extends Controller
 //            }
 //            }
             
+
+           if(!empty($member->getSportsgroup())){ 
+            foreach($member->getSportsgroup() as $sportsgroup){
+                foreach($sportsgroup->getSection() as $section){
+                
+                $member->addSection($section);
+            }
+            }
+           }
+
             
             $admcharge = $addmemform->get('admissioncharge')->getData();
             $member->setAdmissioncharge($admcharge);

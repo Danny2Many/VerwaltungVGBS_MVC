@@ -11,8 +11,11 @@ use AppBundle\Form\SanitizedTextType;
 use AppBundle\Form\SanitizedEmailType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use AppBundle\Form\Type\PhoneNumberType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PersonalDataType extends AbstractType{
+    
+    
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -46,9 +49,21 @@ class PersonalDataType extends AbstractType{
                     
             ->add('location', SanitizedTextType::class, array('label' => 'Ort:'))
                     
+
             
+
+            ->add('phonenumber', CollectionType::class, array('entry_type' => PhoneNumberType::class, 'entry_options' => array('data_class' => $options['pn_data_class']), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
+
                      
             ->add('email', SanitizedEmailType::class, array('label' => 'E-Mail:', 'required' => false))
                    ;
+    }
+    
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'inherit_data' => true,
+            'pn_data_class' => NULL
+        ));
     }
 }
