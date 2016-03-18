@@ -57,17 +57,6 @@ protected $trainingstartdate;
 * @ORM\Column(type="date")
 */
 protected $trainingconfirmation;
-//
-///**
-//* @ORM\Column(type="integer") 
-//*/  
-//protected $rehabunity1;
-//
-///**
-//* @ORM\Column(type="integer") 
-//*/
-//protected $rehabunity2;
-// 
 
 /**
 * @ORM\Column(type="string")
@@ -364,57 +353,7 @@ public function setSection($section)
 
     return $this;
 } 
-
-    
-//
-//    /**
-//     * Set rehabunity1
-//     *
-//     * @param integer $rehabunity1
-//     *
-//     * @return Nonmember
-//     */
-//    public function setRehabunity1($rehabunity1)
-//    {
-//        $this->rehabunity1 = $rehabunity1;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get rehabunity1
-//     *
-//     * @return integer
-//     */
-//    public function getRehabunity1()
-//    {
-//        return $this->rehabunity1;
-//    }
-//
-//    /**
-//     * Set rehabunity2
-//     *
-//     * @param integer $rehabunity2
-//     *
-//     * @return Nonmember
-//     */
-//    public function setRehabunity2($rehabunity2)
-//    {
-//        $this->rehabunity2 = $rehabunity2;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get rehabunity2
-//     *
-//     * @return integer
-//     */
-//    public function getRehabunity2()
-//    {
-//        return $this->rehabunity2;
-//    }
-//    
+   
 /**
 * Set phonenumber
 *

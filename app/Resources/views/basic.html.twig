@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block meta %}
             <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,10 +41,12 @@
         fixedColumns: {
 
         leftColumns: {% block fixedcolnum %}{% endblock %}
+
     },
             {% block columndefs %}
        
   {% endblock %}
+
     } );
     
     new $.fn.dataTable( oTable );
