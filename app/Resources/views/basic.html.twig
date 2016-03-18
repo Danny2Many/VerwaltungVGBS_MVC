@@ -38,14 +38,17 @@
         "bFilter": false,
         "bInfo": false,
         fixedColumns: {
+     
 
 
         leftColumns: {% block fixedcolnum %}{% endblock %}
 
-},
-             {% block columnDefs %}
-            {% endblock %}
-                
+    },
+            {% block columndefs %}
+       
+  {% endblock %}
+
+
     } );
     
     new $.fn.dataTable( oTable );
