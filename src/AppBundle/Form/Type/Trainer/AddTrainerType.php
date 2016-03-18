@@ -52,9 +52,9 @@ class AddTrainerType extends AbstractType{
             'choice_label' => 'sectionname',
             'multiple' => true,
             'expanded' => true,
-            'label' => 'Abteilung/en:'))
+            'label' => 'Abteilung/en:',
+            'required' => false))
         ->add('theme', CollectionType::class, array('entry_type' => TrainerFocusType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\Trainer\TrainerFocus'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
-//        ->add('phonenumber', CollectionType::class, array('entry_type' => PhoneNumberType::class, 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
         ->add('licence', CollectionType::class, array('entry_type' => TrainerLicenceType::class,'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
 
                

@@ -104,6 +104,11 @@ class TrainerController extends Controller
     public function addtrainerAction(Request $request, $letter) {        
         
         $trainer = new Trainer();
+        $phonenumber = new TrainerPhoneNumber();
+        $licence = new TrainerLicence();
+        
+        $trainer->addPhonenumber($phonenumber);
+        $trainer->addLicence($licence);
         
         $addtrainerform = $this->createForm(AddTrainerType::class, $trainer);
         
@@ -115,6 +120,7 @@ class TrainerController extends Controller
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($trainer);
             $manager->flush();            
+            $this->addFlash('notice', 'Dieser Übungsleiter wurde erfolgreich angelegt!');
             
             return $this->redirectToRoute('trainer_home', array('letter' => $letter, 'info' => 'gespeichert'));
         }
@@ -170,6 +176,7 @@ class TrainerController extends Controller
             $manager=$this->getDoctrine()->getManager();
             $manager->remove($trainer);
             $manager->flush();
+            $this->addflash('notice', 'Dieser Übungsleiter wurde erfolgreich gelöscht!');
             return $this->redirectToRoute('trainer_home', array('letter' => $letter));
         }
         
@@ -194,8 +201,9 @@ class TrainerController extends Controller
         }
            
             $manager->persist($trainer);          
-            $manager->flush();            
-            
+            $manager->flush();
+            $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');
+           
           return $this->redirectToRoute('trainer_home', array('letter' => $letter));  
         }
         

@@ -105,7 +105,11 @@
                    {{ "-" }}
                     {% else  %}
                          {% for licence in data.licence %}
-                            {{ licence.licencetype|striptags }}<br>
+                            {% if ('now'|date("Y") == licence.expirationdate|date("Y") or 'now'|date("Y") > licence.expirationdate|date("Y")) %}<strong>{% endif %}
+
+                                {{ licence.licencetype|striptags }}<br>
+                            
+                            {% if ('now'|date("Y") == licence.expirationdate|date("Y") or 'now'|date("Y") > licence.expirationdate|date("Y")) %}</strong>{% endif %}
                     {% endfor %}
                     
                     {% endif %}</td>
@@ -114,7 +118,12 @@
                    {{ "-" }}
                     {% else  %}
                          {% for licence in data.licence %}
-                            {{ licence.licencenumber|striptags }}<br>
+                            {% if ('now'|date("Y") == licence.expirationdate|date("Y") or 'now'|date("Y") > licence.expirationdate|date("Y")) %}<strong>{% endif %}
+                             
+                                {{ licence.licencenumber|striptags }}<br>
+                                
+                            {% if ('now'|date("Y") == licence.expirationdate|date("Y") or 'now'|date("Y") > licence.expirationdate|date("Y")) %}</strong>{% endif %}
+
                     {% endfor %}
                     
                     {% endif %}</td>
@@ -123,8 +132,12 @@
                    {{ "-" }}
                     {% else  %}
                          {% for licence in data.licence %}
-                        {{ licence.issuedate|date("d.m.Y") }}<br>
-                    {% endfor %}
+                            {% if ('now'|date("Y") == licence.expirationdate|date("Y") or 'now'|date("Y") > licence.expirationdate|date("Y")) %}<strong>{% endif %}
+
+                                {{ licence.issuedate|date("d.m.Y") }}<br>
+                                
+                            {% if ('now'|date("Y") == licence.expirationdate|date("Y") or 'now'|date("Y") > licence.expirationdate|date("Y")) %}</strong>{% endif %}
+                     {% endfor %}
                     
                     {% endif %}</td>
                     
@@ -136,7 +149,11 @@
                    {{ "-" }}
                     {% else  %}
                          {% for licence in data.licence %}
-                        {{ licence.expirationdate|date("d.m.Y") }}<br>
+                            {% if ('now'|date("Y") == licence.expirationdate|date("Y") or 'now'|date("Y") > licence.expirationdate|date("Y")) %}<strong>{% endif %}
+
+                                {{ licence.expirationdate|date("d.m.Y") }}<br>
+                        
+                            {% if ('now'|date("Y") == licence.expirationdate|date("Y") or 'now'|date("Y") > licence.expirationdate|date("Y")) %}</strong>{% endif %}
                     {% endfor %}
                     
                     {% endif %}</td>
