@@ -42,11 +42,10 @@
 
         leftColumns: {% block fixedcolnum %}{% endblock %}
 
-    },
-            {% block columndefs %}
-       
-  {% endblock %}
-
+},
+             {% block columnDefs %}
+            {% endblock %}
+                
     } );
     
     new $.fn.dataTable( oTable );
