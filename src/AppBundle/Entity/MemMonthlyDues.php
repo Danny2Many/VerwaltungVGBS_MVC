@@ -20,10 +20,10 @@ class MemMonthlyDues {
     private $member;
     
     /**
-     * @ORM\ManyToOne(targetEntity="MemFinYear", inversedBy="monthlydues")
+     * @ORM\ManyToOne(targetEntity="AdministrationYear", inversedBy="monthlydues")
      * @ORM\JoinColumn(name="year", referencedColumnName="year")
      */
-    private $finyear;
+    private $adminyear;
     
     /**
      * @ORM\Id
@@ -215,26 +215,26 @@ class MemMonthlyDues {
     }
 
     /**
-     * Set finyear
+     * Set adminyear
      *
-     * @param \AppBundle\Entity\MemFinYear $finyear
+     * @param \AppBundle\Entity\AdministrationYear $adminyear
      *
      * @return MemMonthlyDues
      */
-    public function setFinyear(\AppBundle\Entity\MemFinYear $finyear = null)
+    public function setAdminyear(\AppBundle\Entity\AdministrationYear $adminyear = null)
     {
-        $this->finyear = $finyear;
+        $this->adminyear = $adminyear;
 
         return $this;
     }
 
     /**
-     * Get finyear
+     * Get adminyear
      *
-     * @return \AppBundle\Entity\MemFinYear
+     * @return \AppBundle\Entity\AdministrationYear
      */
-    public function getFinyear()
+    public function getAdminyear()
     {
-        return $this->finyear;
+        return $this->adminyear;
     }
 }

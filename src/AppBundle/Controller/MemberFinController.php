@@ -17,10 +17,10 @@ class MemberFinController extends Controller{
     public function indexAction(Request $request,$letter, $year, $halfyear){
         
     
-        $finyearrepository = $this->getDoctrine()->getRepository('AppBundle:MemFinYear');
+        $adminyearrepository = $this->getDoctrine()->getRepository('AppBundle:AdministrationYear');
         $memrepository = $this->getDoctrine()->getRepository('AppBundle:Member');
         
-        $finyears=$finyearrepository->findAll();
+        $adminyears=$adminyearrepository->findAll();
         
         
         
@@ -99,7 +99,7 @@ class MemberFinController extends Controller{
             
             'cletter' => $letter,
             'path' => 'member_fin',
-            'finyears' => $finyears,
+            'finyears' => $adminyears,
             'year' => $year,
             'halfyear' => $halfyear,
 
