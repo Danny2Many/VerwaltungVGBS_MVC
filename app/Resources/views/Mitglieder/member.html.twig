@@ -70,12 +70,14 @@
                 <td>{{ data.streetaddress|striptags }}</td>
                 <td>{{ data.postcode|striptags }}</td>
                 <td>{{ data.mailbox is empty ? "-" : data.mailbox|striptags }}</td>  
-                <td>{% for PN in data.phonenumber %}
-                        {{ PN.phonenumber }}<br>
-                        {% else  %}
-                        {{ "-" }}    
-                    {% endfor %}</td>
+                <td>{% if data.phonenumber is empty %}
+                   {{ "-" }}
+                    {% else  %}
+                         {% for PN in data.phonenumber %}
+                            {{ PN.phonenumber|striptags }}<br>
+                    {% endfor %}
                     
+                    {% endif %}</td>
                 <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>
                 <td>{% for sportsgroup in data.sportsgroup %}
                         {{ sportsgroup.Token }}<br>
