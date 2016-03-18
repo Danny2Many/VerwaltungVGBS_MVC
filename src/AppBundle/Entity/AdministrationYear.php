@@ -8,17 +8,17 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="MemFinYear")
+ * @ORM\Table(name="AdministrationYear")
  */
-class MemFinYear {
+class AdministrationYear {
     
     /**
-     * @ORM\OneToMany(targetEntity="MemMonthlyDues", mappedBy="finyear")
+     * @ORM\OneToMany(targetEntity="MemMonthlyDues", mappedBy="adminyear")
      */
     private $monthlydues;
     
     /**
-     * @ORM\OneToMany(targetEntity="MemYearInfo", mappedBy="finyear")
+     * @ORM\OneToMany(targetEntity="MemYearInfo", mappedBy="adminyear")
      */
     private $yearinfo;
     

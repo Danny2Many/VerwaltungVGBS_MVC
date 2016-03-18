@@ -1,8 +1,3 @@
-{#{% form_theme searchform 'bootstrap_3_layout.html.twig' %}
-#}
-
-
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -44,11 +39,9 @@
         "bInfo": false,
         fixedColumns: {
 
-        leftColumns: {% block fixedcolnum %}0{% endblock %}
-    }
 
+        leftColumns: {% block fixedcolnum %}{% endblock %}
 
-        
     },
             {% block columndefs %}
        

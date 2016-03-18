@@ -16,16 +16,21 @@ use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
 
 
 
 
 
-class AddTrainerType extends PersonalDataType{
+class AddTrainerType extends AbstractType{
     public function buildForm(FormBuilderInterface $builder, array $options) {
         parent::buildForm($builder, $options);
         
         $builder  
+         
+        ->add('personaldata', PersonalDataType::class, array(
+        'data_class' => 'AppBundle\Entity\Trainer\Trainer',
+        'pn_data_class' => 'AppBundle\Entity\Trainer\TrainerPhoneNumber')) 
                 
         ->add('type', ChoiceType::class, array('choices'  => array(
         'Mitarbeiter' => 'Mitarbeiter', 'Übungsleiter' => 'Übungsleiter'),
@@ -47,12 +52,13 @@ class AddTrainerType extends PersonalDataType{
             'choice_label' => 'sectionname',
             'multiple' => true,
             'expanded' => true,
-            'label' => 'Abteilung/en:'))
+            'label' => 'Abteilung/en:',
+            'required' => false))
         ->add('theme', CollectionType::class, array('entry_type' => TrainerFocusType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\Trainer\TrainerFocus'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
-        ->add('phonenumber', CollectionType::class, array('entry_type' => PhoneNumberType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\Trainer\TrainerPhoneNumber'),'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
         ->add('licence', CollectionType::class, array('entry_type' => TrainerLicenceType::class,'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
 
-        
+               
+
                 
         ;        
     }
