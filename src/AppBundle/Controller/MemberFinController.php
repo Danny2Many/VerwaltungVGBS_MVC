@@ -12,7 +12,7 @@ class MemberFinController extends Controller{
     
     
     /**
-     * @Route("/mitglieder/finanzen/{year}/{halfyear}/{letter}", defaults={"year"=2016,"halfyear"=1, "letter"="A"}, name="member_fin", requirements={ "letter": "[A-Z]", "year": "[1-9][0-9]{3}", "halfyear": "1|2"})
+     * @Route("/finanzen/mitglieder/{year}/{halfyear}/{letter}", defaults={"year"=2016,"halfyear"=1, "letter"="A"}, name="member_fin", requirements={ "letter": "[A-Z]", "year": "[1-9][0-9]{3}", "halfyear": "1|2"})
      */
     public function indexAction(Request $request,$letter, $year, $halfyear){
         
@@ -105,6 +105,98 @@ class MemberFinController extends Controller{
 
             
          
+            ));
+    }
+    
+    
+    
+    
+    /**
+     * @Route("/finanzen/mitglieder/bearbeiten/{year}/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"ID": "\d+", "letter": "[A-Z]", "year": "[1-9][0-9]{3}"}, name="editmem")
+     * 
+     */
+    public function editmemberAction(Request $request, $ID, $letter)
+    {
+        $manager= $this->getDoctrine()->getManager();
+        $repository = $this->getDoctrine()
+    ->getRepository('AppBundle:Member');
+        
+        $member=$repository->findOneBy(array('memid' => $ID));
+        
+        
+     if (!$member) {
+        throw $this->createNotFoundException('Es konnte kein Mitglied mit der Mitgliedsnr.: '.$ID.' gefunden werden');
+    }
+       
+      
+        $editmemform = $this->createForm(EditMemberType::class, $member);
+        
+        
+         $originalrehabs = new ArrayCollection();
+         $originalphonenr = new ArrayCollection();
+
+    // Create an ArrayCollection of the current Rehab objects in the database
+    foreach ($member->getRehabilitationcertificate() as $rehab) {
+        $originalrehabs->add($rehab);
+    }
+     
+    // Create an ArrayCollection of the current Rehab objects in the database
+    foreach ($member->getPhonenumber() as $phonenr) {
+        $originalphonenr->add($phonenr);
+    }
+    
+        $editmemform->handleRequest($request);
+        
+        
+        if($editmemform->get('delete')->isClicked()){
+            $manager=$this->getDoctrine()->getManager();
+           
+            $manager->remove($member);
+            $manager->flush();
+            $this->addFlash('notice', 'Diese Person wurde erfolgreich gelöscht!'); 
+            return $this->redirectToRoute('member_home', array('letter' => $letter));
+        }
+
+        
+       
+    
+        //if the form is valid -> persist it to the database
+        if($editmemform->isSubmitted() && $editmemform->isValid()){
+  
+          foreach ($originalrehabs as $rehab) {
+            if (false === $member->getRehabilitationcertificate()->contains($rehab)) {
+                
+
+                $manager->remove($rehab);
+
+            }
+        }
+            
+            foreach ($originalphonenr as $phonenr) {
+            if (false === $member->getPhonenumber()->contains($phonenr)) {
+                
+
+                $manager->remove($phonenr);
+
+            }
+        }
+           
+            $manager->persist($member);
+            
+            $manager->flush();
+            
+          $this->addFlash('notice', 'Die Daten wurden erfolgreich gespeichert!'); 
+          return $this->redirectToRoute('member_home', array('letter' => $letter));  
+        }
+        
+        
+      return $this->render(
+        'Mitglieder/memberform.html.twig',
+        array(
+            
+            'form' => $editmemform->createView(),
+            'cletter' => $letter,
+            'title' => 'Mitglied bearbeiten'
             ));
     }
 }

@@ -1,18 +1,19 @@
 <?php
 
 
-namespace AppBundle\Form\Type;
 
+namespace AppBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use AppBundle\Form\SanitizedTextType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 
-class PhoneNumberType extends AbstractType{
-    
+class MonthlyDuesType extends AbstractType{
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('phonenumber',SanitizedTextType::class, array('label' => 'Vorwahl/Telefonnr.:', 'attr' => array('pattern' => '\d+\/\d+')));
+        $builder->add('dues',MoneyType::class, array('label' => 'Beitrag:'))
+                ->add('duespayed',MoneyType::class, array('label' => 'gezahlter Beitrag:'));
+        
     }
 
     public function configureOptions(OptionsResolver $resolver)
