@@ -12,20 +12,37 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-
+use AppBundle\Form\Type\PersonalDataType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use AppBundle\Form\Type\MonthlyDuesType;
+use AppBundle\Form\Type\YearInfoType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class FinanceMemberType extends AbstractType {
     
      public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+                ->add('memid', IntegerType::class, array('disabled' => true, 'label' => 'Mitgliedsnr.:'))
             ->add('personaldata', PersonalDataType::class, array(
         'data_class' => 'AppBundle\Entity\Member',
+        'pn_data_class' => 'AppBundle\Entity\MemPhoneNumber',
+        'title_disabled' => true,
+        'firstname_disabled' => true,
+        'lastname_disabled' => true,
+        'birthday_disabled' => true,
+        'streetaddress_disabled' => true,
+        'postcode_disabled' => true,
+        'mailbox_disabled' => true,
+        'location_disabled' => true,
+        'phonenumber_disabled' => true,
+        'email_disabled' => true
         
     ))
            ->add('section', EntityType::class,  array(
             'class' => 'AppBundle:Section',
-            'choice_label' => 'token',
+            'choice_label' => 'SectionName',
             'multiple' => true,
             'required' => false,
             'label' => 'Abteilungen/n:'
@@ -41,7 +58,8 @@ class FinanceMemberType extends AbstractType {
     ),
    
     'choices_as_values' => true,
-    'label' => 'Status:'
+    'label' => 'Status:',
+    'disabled' => true
     
 ))
                 
@@ -50,14 +68,15 @@ class FinanceMemberType extends AbstractType {
             'choice_label' => 'token',
             'multiple' => true,
             'required' => false,
-            'label' => 'Sportgruppe/n:'
+            'label' => 'Sportgruppe/n:',
+            'disabled' => true
             
         ))
                 ->add('admissioncharge', MoneyType::class)
                 ->add('admissionchargepayed', MoneyType::class)
             
             ->add('monthlydues', CollectionType::class, array('entry_type' => MonthlyDuesType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\MemMonthlyDues')))
-            ->add('yearinfo', CollectionType::class, array('entry_type' => YearInfoType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\MemYearInfoDues')))
+            ->add('yearinfo', CollectionType::class, array('entry_type' => YearInfoType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\MemYearInfo')))
             
     
             

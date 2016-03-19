@@ -7,6 +7,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Form\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Form\Type\Member\FinanceMemberType;
+
 
 class MemberFinController extends Controller{
     
@@ -112,14 +114,13 @@ class MemberFinController extends Controller{
     
     
     /**
-     * @Route("/finanzen/mitglieder/bearbeiten/{year}/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"ID": "\d+", "letter": "[A-Z]", "year": "[1-9][0-9]{3}"}, name="editmem")
+     * @Route("/finanzen/mitglieder/bearbeiten/{year}/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"ID": "\d+", "letter": "[A-Z]", "year": "[1-9][0-9]{3}"}, name="editmemfin")
      * 
      */
-    public function editmemberAction(Request $request, $ID, $letter)
+    public function editmemberAction(Request $request, $ID, $letter, $year)
     {
-        $manager= $this->getDoctrine()->getManager();
-        $repository = $this->getDoctrine()
-    ->getRepository('AppBundle:Member');
+        
+        $repository = $this->getDoctrine()->getRepository('AppBundle:Member');
         
         $member=$repository->findOneBy(array('memid' => $ID));
         
@@ -129,72 +130,25 @@ class MemberFinController extends Controller{
     }
        
       
-        $editmemform = $this->createForm(EditMemberType::class, $member);
+        $editmemfinform = $this->createForm(FinanceMemberType::class, $member);
+ 
+        $editmemfinform->handleRequest($request);
         
-        
-         $originalrehabs = new ArrayCollection();
-         $originalphonenr = new ArrayCollection();
-
-    // Create an ArrayCollection of the current Rehab objects in the database
-    foreach ($member->getRehabilitationcertificate() as $rehab) {
-        $originalrehabs->add($rehab);
-    }
-     
-    // Create an ArrayCollection of the current Rehab objects in the database
-    foreach ($member->getPhonenumber() as $phonenr) {
-        $originalphonenr->add($phonenr);
-    }
-    
-        $editmemform->handleRequest($request);
-        
-        
-        if($editmemform->get('delete')->isClicked()){
-            $manager=$this->getDoctrine()->getManager();
-           
-            $manager->remove($member);
-            $manager->flush();
-            $this->addFlash('notice', 'Diese Person wurde erfolgreich gelöscht!'); 
-            return $this->redirectToRoute('member_home', array('letter' => $letter));
-        }
-
         
        
     
         //if the form is valid -> persist it to the database
-        if($editmemform->isSubmitted() && $editmemform->isValid()){
+        if($editmemfinform->isSubmitted() && $editmemform->isValid()){
   
-          foreach ($originalrehabs as $rehab) {
-            if (false === $member->getRehabilitationcertificate()->contains($rehab)) {
-                
-
-                $manager->remove($rehab);
-
-            }
-        }
-            
-            foreach ($originalphonenr as $phonenr) {
-            if (false === $member->getPhonenumber()->contains($phonenr)) {
-                
-
-                $manager->remove($phonenr);
-
-            }
-        }
            
-            $manager->persist($member);
-            
-            $manager->flush();
-            
-          $this->addFlash('notice', 'Die Daten wurden erfolgreich gespeichert!'); 
-          return $this->redirectToRoute('member_home', array('letter' => $letter));  
         }
         
         
       return $this->render(
-        'Mitglieder/memberform.html.twig',
+        'Mitglieder/memberfinform.html.twig',
         array(
             
-            'form' => $editmemform->createView(),
+            'form' => $editmemfinform->createView(),
             'cletter' => $letter,
             'title' => 'Mitglied bearbeiten'
             ));

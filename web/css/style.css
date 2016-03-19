@@ -114,9 +114,9 @@ red {
     color: red;
 }
 
-td.red {
+td.red, input[type="text"].red {
     color: white;
-    background-color: red;
+    background-color: #ff4d4d;
 }
 
 ul.nav{

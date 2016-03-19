@@ -63,8 +63,16 @@
         {% for data in tabledata %}
             {% autoescape  %}
             <tr> 
-               
-                <td><center><a href="#"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
+                 {% if data.lastname|first == 'Ä' %}
+                    {% set first = 'A' %}
+                    {% elseif data.lastname|first == 'Ö' %}
+                    {% set first = 'O' %}
+                    {% elseif data.lastname|first == 'Ü' %}
+                    {% set first = 'U' %}
+                    {% else %}
+                    {% set first = data.lastname|first %}   
+                {% endif %}
+                <td><center><a href="{{ path('editmemfin', {'letter': first|capitalize, 'ID': data.memid, 'year': year  }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
                 <td>{{ data.memid }}</td>
                 <td>
                     {% for Sec in data.section %}

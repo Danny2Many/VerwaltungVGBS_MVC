@@ -12,7 +12,7 @@ class MonthlyDuesType extends AbstractType{
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('dues',MoneyType::class, array('label' => 'Beitrag:'))
-                ->add('duespayed',MoneyType::class, array('label' => 'gezahlter Beitrag:'));
+                ->add('duespayed',MoneyType::class, array('label' => 'gezahlter Beitrag:', 'required' => false));
         
     }
 

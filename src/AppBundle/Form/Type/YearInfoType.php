@@ -13,8 +13,8 @@ use AppBundle\Form\SanitizedTextType;
 class YearInfoType extends AbstractType{
      public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('levy',MoneyType::class, array('label' => 'Umlage:'))
-                ->add('additionalduesinfo',  SanitizedTextType::class, array('label' => 'zusätzl. Beitragsinfo'));
+        $builder->add('levy',MoneyType::class, array('label' => 'Umlage:', 'required' => false))
+                ->add('additionalduesinfo',  SanitizedTextType::class, array('label' => 'zusätzl. Beitragsinfo', 'required' => false));
         
     }
 
