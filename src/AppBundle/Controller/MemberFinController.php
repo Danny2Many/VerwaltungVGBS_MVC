@@ -111,7 +111,7 @@ class MemberFinController extends Controller{
     }
     
     
-    
+    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     
     /**
      * @Route("/finanzen/mitglieder/bearbeiten/{year}/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"ID": "\d+", "letter": "[A-Z]", "year": "[1-9][0-9]{3}"}, name="editmemfin")
@@ -119,8 +119,17 @@ class MemberFinController extends Controller{
      */
     public function editmemberAction(Request $request, $ID, $letter, $year)
     {
-        
+        $manager=$this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()->getRepository('AppBundle:Member');
+        $qb=$repository->createQueryBuilder('m');
+//        $qb->join('m.monthlydues', 'md')
+//           ->join('m.yearinfo', 'yi')
+//           ->where('md.year='.$year)
+//           ->andWhere('yi.year='.$year)
+//           ->andWhere('m.memid='.$ID);
+//        
+//        
+//        $query=
         
         $member=$repository->findOneBy(array('memid' => $ID));
         
@@ -138,7 +147,9 @@ class MemberFinController extends Controller{
        
     
         //if the form is valid -> persist it to the database
-        if($editmemfinform->isSubmitted() && $editmemform->isValid()){
+        if($editmemfinform->isSubmitted() && $editmemfinform->isValid()){
+            $manager->persist($member);
+            $manager->flush();
   
            
         }
@@ -150,7 +161,8 @@ class MemberFinController extends Controller{
             
             'form' => $editmemfinform->createView(),
             'cletter' => $letter,
-            'title' => 'Mitglied bearbeiten'
+            'title' => 'Mitglied bearbeiten',
+            'year' => $year
             ));
     }
 }

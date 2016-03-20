@@ -65,6 +65,10 @@ class FinanceMemberType extends AbstractType {
                 
                 ->add('sportsgroup', EntityType::class,  array(
             'class' => 'AppBundle:MemSportsgroup',
+                    'query_builder' => function (EntityRepository $er) {
+        return $er->createQueryBuilder('sg')
+            ->where('u.username', 'ASC');
+    },
             'choice_label' => 'token',
             'multiple' => true,
             'required' => false,
@@ -73,7 +77,7 @@ class FinanceMemberType extends AbstractType {
             
         ))
                 ->add('admissioncharge', MoneyType::class)
-                ->add('admissionchargepayed', MoneyType::class)
+                ->add('admissionchargepayed', MoneyType::class, array('required' => false))
             
             ->add('monthlydues', CollectionType::class, array('entry_type' => MonthlyDuesType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\MemMonthlyDues')))
             ->add('yearinfo', CollectionType::class, array('entry_type' => YearInfoType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\MemYearInfo')))
