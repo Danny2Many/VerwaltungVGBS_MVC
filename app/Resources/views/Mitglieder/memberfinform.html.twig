@@ -1,0 +1,107 @@
+{% extends "basic.html.twig" %}
+
+
+
+
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block title %}Finanzen bearbeiten{% endblock %}
+{% block javascriptsrc %} 
+    <script type="text/javascript" src="{{ asset('js/jquery-2.1.4.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/myfunctions.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row vert-offset-bottom-2">
+           <div class="col-md-12">
+         <div class="alert alert-info">
+             <strong>{% include 'form/requiredtext.html' %}</strong>
+</div>
+           </div>
+        </div>
+        {{ form_start(form) }}
+        <div class="row">
+           <div class="col-md-12"> 
+        {{ form_row(form.memid) }}
+        {{ form_row(form.personaldata.title) }}
+        {{ form_row(form.personaldata.firstname) }}
+        {{ form_row(form.personaldata.lastname) }}
+        {{ form_row(form.state) }}
+        {{ form_row(form.sportsgroup) }}
+        {{ form_row(form.admissioncharge) }}
+        {{ form_row(form.admissionchargepayed) }}
+        
+           </div>
+         </div>
+        
+        
+        <div class="row vert-offset-top-3">
+           <div class="col-md-12"> 
+        <legend><h2>Verwaltungsjahr: {{ year }}</h2></legend>
+         
+        {% for yi in form.yearinfo %}
+        {{ form_row(yi.levy) }}
+        {{ form_row(yi.additionalduesinfo) }}
+        {% endfor %}
+        
+        {% for md in form.monthlydues %}
+            
+            <div class="panel panel-default">
+                <div class="panel-heading"><h4>{{ md.vars.value.month }}</h4></div>
+                <div class="panel-body">
+            {{ form_row(md.dues) }}
+            <div class="form-group">
+                
+                <label class="col-sm-2 control-label" for="duesopen">offen:</label>
+                <div class="col-sm-10">
+                    <div class="input-group">
+                        <span class="input-group-addon">€ </span>
+                        {% set open=md.vars.value.dues - md.vars.value.duespayed %}
+                        <input id="duesopen" class="form-control {% if open != 0 %}red{%endif%}" type="text" value="{{ open }}"  name="duesopen" disabled>
+                    </div>
+            
+                </div>
+            </div>
+            
+            {{ form_row(md.duespayed) }}
+                </div>
+            </div>
+          
+        {% endfor %}
+          
+          
+          
+          
+        
+        
+        
+        
+        
+        {{ form_row(form._token) }}
+       </div>
+        </div> 
+    
+       <div class="row vert-offset-top-1">
+           <div class="col-md-12"> 
+        <div class="form-group">
+            
+        <div class="col-sm-10 col-sm-push-2">
+              
+             
+                 <button type="submit" name="save" class="btn btn-primary">speichern</button>
+                 <button type="reset" name="reset" class="btn btn-warning"  onclick="confirmaction(event, 'Sind Sie sich sicher, dass Sie dieses Formular zurücksetzen möchten?')">Formular zurücksetzen</button>
+                 <a href="{{path('member_fin')}}"><button type="button" name="cancel" class="btn btn-default">abbrechen</button></a>
+                 {{ form_row(form._token) }}
+             </div>
+                  
+              </div>
+       </div>
+             </div>
+       </div>
+        {{ form_end(form, {'render_rest':false}) }}
+       
+           
+
+    
+{% endblock %}
+

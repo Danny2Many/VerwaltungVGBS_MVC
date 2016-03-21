@@ -12,13 +12,14 @@ class PhoneNumberType extends AbstractType{
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('phonenumber',SanitizedTextType::class, array('label' => 'Vorwahl/Telefonnr.:'));
+        $builder->add('phonenumber',SanitizedTextType::class, array('label' => 'Vorwahl/Telefonnr.:', 'disabled' => $options['disabled'], 'attr' => array('pattern' => '\d+\/\d+')));
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\MemPhoneNumber',
+            'data_class' => NULL,
+            'disabled' => false
         ));
     }
 }

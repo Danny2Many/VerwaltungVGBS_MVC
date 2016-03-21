@@ -21,7 +21,7 @@ class StringSanitizerTransformer implements DataTransformerInterface{
     
     public function reverseTransform($submitted)
     {
-        $output = strip_tags($submitted);
-       return strip_tags($output);
+        
+       return strip_tags($submitted);
     }
 }

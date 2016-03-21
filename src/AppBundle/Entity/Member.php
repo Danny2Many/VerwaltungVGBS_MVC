@@ -466,11 +466,15 @@ public function setSportsgroup($sportsgroup)
      */
     public function addSection(\AppBundle\Entity\Section $section)
     {
+        if(!$this->section->contains($section)){
         $this->section[] = $section;
 
         return $this;
     }
-
+    }
+    
+    
+    
     /**
      * Remove section
      *
@@ -523,12 +527,12 @@ public function setSection($section)
      */
     public function addRehabilitationcertificate(\AppBundle\Entity\MemRehabilitationCertificate $rehabilitationcertificate)
     {
-        if($rehabilitationcertificate->getTerminationdate() != null){
+  
         $rehabilitationcertificate->setMember($this);
         $this->rehabilitationcertificate[] = $rehabilitationcertificate;
 
         return $this;
-        }
+        
     }
 
     /**

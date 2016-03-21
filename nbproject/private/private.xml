@@ -3,10 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/app/Resources/views/basic.html.twig</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Controller/MemberFinController.php</file>
+            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Trainer/Trainer.php</file>
+            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Trainer/TrainerFocus.php</file>
+            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Controller/TrainerController.php</file>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Controller/MemberController.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/app/Resources/views/Mitglieder/memberfin.html.twig</file>
+            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Nichtmitglieder/NonMemRehabilitationCertificate.php</file>
+            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Nichtmitglieder/Nonmember.php</file>
         </group>
     </open-files>
 </project-private>

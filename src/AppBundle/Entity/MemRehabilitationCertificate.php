@@ -46,7 +46,17 @@ class MemRehabilitationCertificate {
      */
     protected $terminationdate;
 
-    
+    /**
+      *  
+      *  @ORM\Column(type="integer")
+      * 
+       * @Assert\NotNull()
+     * @Assert\Type(
+     *     type="integer",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
+     */
+    protected $rehabunits;
 
     /**
      * Set memid
@@ -120,5 +130,39 @@ class MemRehabilitationCertificate {
     public function getMember()
     {
         return $this->member;
+    }
+
+    /**
+     * Get rcid
+     *
+     * @return integer
+     */
+    public function getRcid()
+    {
+        return $this->rcid;
+    }
+
+    /**
+     * Set rehabunits
+     *
+     * @param integer $rehabunits
+     *
+     * @return MemRehabilitationCertificate
+     */
+    public function setRehabunits($rehabunits)
+    {
+        $this->rehabunits = $rehabunits;
+
+        return $this;
+    }
+
+    /**
+     * Get rehabunits
+     *
+     * @return integer
+     */
+    public function getRehabunits()
+    {
+        return $this->rehabunits;
     }
 }

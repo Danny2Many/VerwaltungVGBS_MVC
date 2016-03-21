@@ -7,38 +7,32 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Form\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Form\Type\Member\FinanceMemberType;
+
 
 class MemberFinController extends Controller{
     
     
     /**
-     * @Route("/mitglieder/finanzen/{year}/{halfyear}/{letter}/{info}", defaults={"year"=2016,"halfyear"=1,"info"=null, "letter"="A"}, name="member_fin", requirements={"info": "null|gespeichert|entfernt", "letter": "[A-Z]"})
+     * @Route("/finanzen/mitglieder/{year}/{halfyear}/{letter}", defaults={"year"=2016,"halfyear"=1, "letter"="A"}, name="member_fin", requirements={ "letter": "[A-Z]", "year": "[1-9][0-9]{3}", "halfyear": "1|2"})
      */
-    public function indexAction(Request $request,$letter, $info, $year, $halfyear){
+    public function indexAction(Request $request,$letter, $year, $halfyear){
         
-        switch($info){
-        case 'gespeichert':
-        $info='Die Daten wurden erfolgreich gespeichert.';
-        break;
-        
-        case 'entfernt':
-        $info='Diese Person wurde erfolgreich aus ihrer Datenbank entfernt.';
-        break;
-    }
-        $finyearrepository = $this->getDoctrine()->getRepository('AppBundle:MemFinYear');
+    
+        $adminyearrepository = $this->getDoctrine()->getRepository('AppBundle:AdministrationYear');
         $memrepository = $this->getDoctrine()->getRepository('AppBundle:Member');
         
-        $finyears=$finyearrepository->findAll();
+        $adminyears=$adminyearrepository->findAll();
         
         
         
         $qb = $memrepository->createQueryBuilder('m');
         
         $qb->Join('m.yearinfo', 'i')
-           ->where('i.year = 2016');
            
-        
-         
+           ->where('i.year ='.$year);
+           
+    
         $choices=array('Mitgliedsnr.' => 'memid',
         'Name' => 'lastname',
         'Vorname' => 'firstname',
@@ -52,10 +46,10 @@ class MemberFinController extends Controller{
     
     
     
-    if($searchform->isSubmitted() && $searchform->isValid()){
+    if($searchform->isSubmitted()){
     $letter=null;   
     $searchval=$request->query->get('search')['searchfield'];
-    $searchcol=$request->query->get('search')['Spalte'];
+    $searchcol=$request->query->get('search')['column'];
     
     
     
@@ -66,7 +60,7 @@ class MemberFinController extends Controller{
     
     $memberfinlist=$query->getResult();
     
-     $disabled='';
+     
      
     }else{
         
@@ -90,10 +84,9 @@ class MemberFinController extends Controller{
             break;
         }
         
-        $query=$query->getQuery()->getResult();
+        $memberfinlist=$query->getQuery()->getResult();
+      
         
-        $memberfinlist=$query;
-        $disabled='disabled';
     }
     
     
@@ -102,15 +95,74 @@ class MemberFinController extends Controller{
         'Mitglieder/memberfin.html.twig',
         array(
             'tabledata' => $memberfinlist,
-            'colorclass' => "redtheader",
+            'colorclass' => "bluetheader",
             'searchform' => $searchform->createView(),
-            'disabled' => $disabled,
-            'info' => $info,
+            
+            
             'cletter' => $letter,
             'path' => 'member_fin',
-            'finyears' => $finyears,
-            'year' => $year
+            'finyears' => $adminyears,
+            'year' => $year,
+            'halfyear' => $halfyear,
+
+            
          
+            ));
+    }
+    
+    
+    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    
+    /**
+     * @Route("/finanzen/mitglieder/bearbeiten/{year}/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"ID": "\d+", "letter": "[A-Z]", "year": "[1-9][0-9]{3}"}, name="editmemfin")
+     * 
+     */
+    public function editmemberAction(Request $request, $ID, $letter, $year)
+    {
+        $manager=$this->getDoctrine()->getManager();
+        $repository = $this->getDoctrine()->getRepository('AppBundle:Member');
+        $qb=$repository->createQueryBuilder('m');
+//        $qb->join('m.monthlydues', 'md')
+//           ->join('m.yearinfo', 'yi')
+//           ->where('md.year='.$year)
+//           ->andWhere('yi.year='.$year)
+//           ->andWhere('m.memid='.$ID);
+//        
+//        
+//        $query=
+        
+        $member=$repository->findOneBy(array('memid' => $ID));
+        
+        
+     if (!$member) {
+        throw $this->createNotFoundException('Es konnte kein Mitglied mit der Mitgliedsnr.: '.$ID.' gefunden werden');
+    }
+       
+      
+        $editmemfinform = $this->createForm(FinanceMemberType::class, $member);
+ 
+        $editmemfinform->handleRequest($request);
+        
+        
+       
+    
+        //if the form is valid -> persist it to the database
+        if($editmemfinform->isSubmitted() && $editmemfinform->isValid()){
+            $manager->persist($member);
+            $manager->flush();
+  
+           
+        }
+        
+        
+      return $this->render(
+        'Mitglieder/memberfinform.html.twig',
+        array(
+            
+            'form' => $editmemfinform->createView(),
+            'cletter' => $letter,
+            'title' => 'Mitglied bearbeiten',
+            'year' => $year
             ));
     }
 }

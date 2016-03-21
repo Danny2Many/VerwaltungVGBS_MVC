@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\MemYearInfo;
 use AppBundle\Entity\MemMonthlyDues;
-use AppBundle\Entity\Section;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormError;
 
 class MemberController extends Controller
@@ -27,20 +27,8 @@ class MemberController extends Controller
      */
     public function indexAction(Request $request, $info, $letter)
     {
-       
-    switch($info){
-        case 'gespeichert':
-        $info='Die Daten wurden erfolgreich gespeichert.';
-        break;
-        
-        case 'entfernt':
-        $info='Diese Person wurde erfolgreich aus ihrer Datenbank entfernt.';
-        break;
-    }
-        
-        
-    
-        
+
+
     $repository = $this->getDoctrine()
     ->getRepository('AppBundle:Member');
     
@@ -63,23 +51,22 @@ class MemberController extends Controller
     if($searchform->isSubmitted() && $searchform->isValid()){
      $letter=null;   
     $searchval=$request->query->get('search')['searchfield'];
-    $searchcol=$request->query->get('search')['Spalte'];
+    $searchcol=$request->query->get('search')['column'];
     
     
     
     
-    $query=$qb->where($qb->expr()->like('m.'.$searchcol, ':member'))
+    $qb->where($qb->expr()->like('m.'.$searchcol, ':member'))
                    ->setParameter('member','%'.$searchval.'%')
                    ->getQuery();
     
-    $memberlist=$query->getResult();
     
-     $disabled='';
+     
      
     }else{
         
         
-        $query=$qb->where($qb->expr()->like('m.lastname', ':letter'))
+        $qb->where($qb->expr()->like('m.lastname', ':letter'))
                    ->setParameter('letter',$letter.'%');
                    
         
@@ -98,16 +85,16 @@ class MemberController extends Controller
             break;
         }
         
-        $query=$query->getQuery()->getResult();
+       
         
-        $memberlist=$query;
-        $disabled='disabled';
+        
+        
     }
     
     
     
     
-    
+     $memberlist=$qb->getQuery()->getResult();
 
     return $this->render(
         'Mitglieder/member.html.twig',
@@ -115,16 +102,15 @@ class MemberController extends Controller
             'tabledata' => $memberlist,
             'colorclass' => "bluetheader",
             'searchform' => $searchform->createView(),
-            'disabled' => $disabled,
-            'info' => $info,
             'cletter' => $letter,
             'path' => 'member_home'
+           
          
             ));
     }
+  
     
-    
-    
+    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     
     /**
      * @Route("/mitglieder/anlegen/{letter}", defaults={"letter": "A"}, name="addmem", requirements={"letter": "[A-Z]"})
@@ -136,9 +122,9 @@ class MemberController extends Controller
         $member = new Member();
         $phonenumber = new MemPhoneNumber();
         
-        $section = new Section();
+        
        
-        $member->addSection($section);     
+            
         $member->addPhonenumber($phonenumber);
                
       
@@ -152,15 +138,17 @@ class MemberController extends Controller
 
         //if the form is valid -> persist it to the database
         if($addmemform->isSubmitted() && $addmemform->isValid()){
-            
-        
-            
-//            foreach ($member->getRehabilitationcertificate() as $rehab){
-//            if($rehab->getTerminationdate() == null){
-//            $member->removeRehabilitationcertificate($rehab);
-//            }
-//            }
-            
+
+
+           if(!empty($member->getSportsgroup())){ 
+            foreach($member->getSportsgroup() as $sportsgroup){
+                foreach($sportsgroup->getSection() as $section){
+                
+                $member->addSection($section);
+            }
+            }
+           }
+
             
             $admcharge = $addmemform->get('admissioncharge')->getData();
             $member->setAdmissioncharge($admcharge);
@@ -168,15 +156,15 @@ class MemberController extends Controller
             $admdate = $member->getAdmissiondate();
             $dues= $addmemform->get('dues')->getData();
           
-          $repository=$this->getDoctrine()->getRepository('AppBundle:MemFinYear');
+          $repository=$this->getDoctrine()->getRepository('AppBundle:AdministrationYear');
           
-          $memfinyear=$repository->findOneBy(array('year' => $admdate->format('Y')));
+          $year=$repository->findOneBy(array('year' => $admdate->format('Y')));
           
           
-          if($memfinyear != null){
+          if($year != null){
           
           $yearinfo = new MemYearInfo();
-          $yearinfo->setFinyear($memfinyear);
+          $yearinfo->setAdminyear($year);
           
           $member->addYearinfo($yearinfo);
           
@@ -185,7 +173,7 @@ class MemberController extends Controller
           foreach ($months as $month){
           
           $$month= new MemMonthlyDues();
-          $$month->setFinyear($memfinyear)
+          $$month->setAdminyear($year)
                   ->setMonth($month)
                   ->setDues($dues);
           $member->addMonthlydue($$month);
@@ -201,7 +189,7 @@ class MemberController extends Controller
             
           return $this->redirectToRoute('member_home', array('letter' => $letter, 'info' => 'gespeichert'));
           }
-          $addmemform->get('admissiondate')->addError(new FormError('Dieses Finanzjahr wurde noch nicht angelegt.'));
+          $addmemform->get('admissiondate')->addError(new FormError('Dieses Verwaltungsjahr wurde noch nicht angelegt.'));
         }
         
         
@@ -217,7 +205,7 @@ class MemberController extends Controller
     }
     
     
-    
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
     
     /**
      * @Route("/mitglieder/bearbeiten/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"ID": "\d+", "letter": "[A-Z]"}, name="editmem")
@@ -241,17 +229,32 @@ class MemberController extends Controller
         
         
          $originalrehabs = new ArrayCollection();
+         $originalphonenr = new ArrayCollection();
+         $originalsections = new ArrayCollection();
 
     // Create an ArrayCollection of the current Rehab objects in the database
     foreach ($member->getRehabilitationcertificate() as $rehab) {
         $originalrehabs->add($rehab);
     }
      
+    // Create an ArrayCollection of the current Rehab objects in the database
+    foreach ($member->getPhonenumber() as $phonenr) {
+        $originalphonenr->add($phonenr);
+    }
+    
+    
+     // Create an ArrayCollection of the current Rehab objects in the database
+    foreach ($member->getSection() as $section) {
+        
+        $originalsections->add($section);
+    }
+    
+    
         $editmemform->handleRequest($request);
         
         
         if($editmemform->get('delete')->isClicked()){
-            $manager=$this->getDoctrine()->getManager();
+
             $manager->remove($member);
             $manager->flush();
             return $this->redirectToRoute('member_home', array('letter' => $letter, 'info' => 'entfernt'));
@@ -262,6 +265,45 @@ class MemberController extends Controller
     
         //if the form is valid -> persist it to the database
         if($editmemform->isSubmitted() && $editmemform->isValid()){
+       
+      if(!$member->getSportsgroup()->isEmpty()){      
+            
+            
+    foreach ($member->getSportsgroup() as $sportsgroup) {
+        
+        foreach ($originalsections as $section) {
+            
+            if (false === $sportsgroup->getSection()->contains($section)) {
+                
+
+                $member->removeSection($section);
+                
+            }
+        }
+    }
+    
+    
+    foreach($member->getSportsgroup() as $sportsgroup){
+                
+                foreach($sportsgroup->getSection() as $section){
+                
+                $member->addSection($section);
+            }
+            }
+            
+            
+      }else{
+          
+          $member->getSection()->clear();
+      }
+     
+            
+            
+            
+            
+            
+            
+            
   
           foreach ($originalrehabs as $rehab) {
             if (false === $member->getRehabilitationcertificate()->contains($rehab)) {
@@ -272,8 +314,19 @@ class MemberController extends Controller
             }
         }
             
-            
+            foreach ($originalphonenr as $phonenr) {
+            if (false === $member->getPhonenumber()->contains($phonenr)) {
+                
+
+                $manager->remove($phonenr);
+
+            }
+        }
            
+  
+           
+    
+    
             $manager->persist($member);
           
             $manager->flush();

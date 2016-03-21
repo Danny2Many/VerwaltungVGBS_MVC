@@ -28,41 +28,57 @@
 
 {% block body %}
     <div class="container">
-        <div class="row">
-            <div class="well"><h3>Bitte füllen Sie alle, mit einem <red>*</red> markierten, Felder aus.</h3></div>
+        <div class="row vert-offset-bottom-2">
+           <div class="col-md-12">
+         <div class="alert alert-info">
+             <strong>{% include 'form/requiredtext.html' %}</strong>
+            </div>
+           </div>
         </div>
-    {{ form_start(form) }}
-    <div class="row panel panel-default" >
-   
-        <div class="stammheading panel-heading"><h2>Stammdaten</h2></div>
-        <div class="col-lg-12 panel-body">
             
+    {{ form_start(form) }}
+    <div class="row">
+           <div class="col-md-12">
+   
+        <legend><h2>Stammdaten</h2></legend>
+        
+       
+       
        {% if (attribute(form, 'memid') is defined) %}
            {{ form_row(form.memid) }}
        {% endif %}
        
-       {{ form_row(form.title) }}
+       {{ form_row(form.personaldata.title) }}
         
-       {{ form_row(form.firstname) }}
+       {{ form_row(form.personaldata.firstname) }}
         
-       {{ form_row(form.lastname) }}
+       {{ form_row(form.personaldata.lastname) }}
      
-       {{ form_row(form.birthday) }}
+       {{ form_row(form.personaldata.birthday) }}
    
-       {{ form_row(form.streetaddress) }}
+       {{ form_row(form.personaldata.streetaddress) }}
   
-       {{ form_row(form.postcode) }}
+       {{ form_row(form.personaldata.postcode) }}
        
-        {{ form_row(form.mailbox) }}
+        {{ form_row(form.personaldata.mailbox) }}
 
-       {{ form_row(form.location) }}
+       {{ form_row(form.personaldata.location) }}
        
-      {% for pn in form.phonenumber %}
-            {{ form_row(pn.phonenumber) }}
+       <div id="pn" data-prototype="{{ forms.textCollectionItem(form.personaldata.phonenumber.vars.prototype, 'phonenumber', 'Telefonnr. löschen')|e }}">
+      {% for pn in form.personaldata.phonenumber %}
+            {{ forms.textCollectionItem(pn, 'phonenumber', 'Telefonnr. löschen') }}
         {% endfor %}
-       
-      
-       {{ form_row(form.email) }}
+        
+       </div>
+        
+      <div class="form-group ">
+          <div class="col-sm-10 col-sm-push-2">
+              <a href="#" class="btn-add" data-target="pn">
+                  <button class="btn btn-info">
+                      <span class="glyphicon glyphicon-plus"></span>Telefonnr. hinzufügen
+                  </button>
+              </a></div></div>
+       {{ form_row(form.personaldata.email) }}
   
        {{ form_row(form.admissiondate) }}
      
@@ -73,7 +89,7 @@
        {% endif %}
 
        
-       {{ form_row(form.section) }}
+       
        {{ form_row(form.state) }}
       
     
@@ -85,15 +101,18 @@
             </div>
 
 
-     <div class="row panel panel-default" >
-        <div class="gesundhheading panel-heading"><h2>Gesundheitsdaten</h2></div>
-        <div class="col-lg-12 panel-body">
+     <div class="row">
+           <div class="col-md-12 vert-offset-top-2">
+        <legend><h2>Gesundheitsdaten</h2></legend>
+        
   
-    <div class="rehab" data-prototype="{{ forms.rehabCollectionItem(form.rehabilitationcertificate.vars.prototype)|e }}">
+    <div id="rc" data-prototype="{{ forms.rehabCollectionItem(form.rehabilitationcertificate.vars.prototype)|e }}">
         {% for rc in form.rehabilitationcertificate %}
             {{ forms.rehabCollectionItem(rc) }}
         {% endfor %}
     </div>
+    <div class="form-group "><div class="col-sm-10 col-sm-push-2"><a href="#" class="btn-add" data-target="rc"><button class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>Rehaschein hinzufügen</button></a></div></div>
+  
        {{ form_row(form.decreaseddues) }}
  
        {{ form_row(form.healthinsurance) }}
@@ -137,9 +156,10 @@
             </div>
 
 {% if (attribute(form, 'admissioncharge') is defined) %}
-    <div class="row panel panel-default" >
-        <div class="finanzheading panel-heading" id="finanzform"><h2>Finanzdaten</h2></div>
-        <div class="col-lg-12 panel-body">
+    <div class="row">
+           <div class="col-md-12 vert-offset-top-2">
+        <legend><h2>Finanzdaten</h2></legend>
+        
 
 
     
@@ -162,7 +182,8 @@
         
         
         
-        
+         <div class="row vert-offset-top-1">
+           <div class="col-md-12"> 
          <div class="form-group">
              <div class="col-sm-10 col-sm-push-2">
   {{ form_widget(form.save) }}
@@ -176,10 +197,12 @@
  
   {{ form_row(form._token) }}
              </div>
-</div>
-       
+        </div>
+           </div>
+         </div>
     
 
-</div>
+
     {{ form_end(form, {'render_rest': false}) }}
+    </div>
 {% endblock %}
