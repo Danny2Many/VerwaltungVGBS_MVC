@@ -1,13 +1,17 @@
 
 {% extends 'basic.html.twig' %}
 {% form_theme searchform 'bootstrap_3_layout.html.twig' %}
-
+{% block columndefs %}
+     "columnDefs": [
+    { "width": "10%", "targets": 17 }
+  ]  
+  {% endblock %}
 {% block title %}Mitglieder - Stammdaten{% endblock %}
 {% block fixedcolnum %} 7 {% endblock %}
 {% block viewlink %}{{ path('member_home') }}{% endblock %}
 {% block viewname %}Mitglieder - Stammdaten{% endblock %}
 {% block MitglAktiv %} active {% endblock %}
-{% block StammAktiv %} active {% endblock %}
+
 
 
 
@@ -31,7 +35,7 @@
     {% block thead %}
         
             
-        <th>Bearb.</th><th>M_Nr</th><th>Abt</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Geb.Datum</th><th>Ort</th><th>Strasse, Hausnr</th><th>PLZ</th><th>Postfach</th><th>Telefon</th><th>E-Mail</th><th>Sportgruppe/n</th><th>Eintr.Datum</th><th>Aufnahmebest.</th><th>Rehaschein/e</th><th>abgelaufene Rehaschein/e</th><th>Verm. Beitr.</th><th>Krankenkasse</th><th>Zusatzinfo</th> 
+        <th>Bearb.</th><th>M_Nr</th><th>Abt</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Geb.Datum</th><th>Ort</th><th>Strasse, Hausnr</th><th>PLZ</th><th>Postfach</th><th>Telefon</th><th>E-Mail</th><th>Sportgruppe/n</th><th>Eintr.Datum</th><th>Aufnahmebest.</th><th>RS-Nr.-Ablaufd.-Einheiten</th><th>abgelaufene Rehaschein/e</th><th>Verm. Beitr.</th><th>Krankenkasse</th><th>Zusatzinfo</th> 
         <th>Ehrung</th><th>Arbeitsplatzhaltung</th><th>chron. Berufserkr.</th><th>Schmerzen in HWS</th><th>Schmerzen in BWS</th><th>Schmerzen in LWS</th><th>obere Extremitäten</th><th>untere Extremitäten</th><th>sonst. Beeinträchtigungen</th><th>Medikamente</th><th>weit. bewegl. Aktivitäten</th><th>Hf-Ruhe/Min</th><th>Hf-Max/Min</th><th>Hf bei 50%</th><th>Hf bei 55%</th><th>Hf bei 60%</th><th>Hf bei 65%</th><th>Hf bei 70%</th><th>Hf bei 75%</th><th>Hf bei 80%</th><th>Hf bei 85%</th>
         
     {% endblock %}
@@ -120,18 +124,17 @@
                     
 
                     
-                    
-                    
-                    
-                    <td>{% for RC in rehab if date(RC.terminationdate) < date() %}
-          
-                         {{loop.index}}:{{RC.terminationdate|date("d.m.Y") }}|{{RC.rehabunits }}<br>
+                  <td>{% for RC in rehab if date(RC.terminationdate) < date() %}
+                          
+                        
+                    {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>
                         
                          {% else %}
                          {{ "-" }}
-                    {% endfor %}</td>
+                    {% endfor %}
+                   </td>  
                     
-                    
+                
                     
                 <td>{{ data.decreaseddues|striptags }}</td>
                 <td>{{ data.healthinsurance is empty ? "-" : data.healthinsurance|striptags}}</td>

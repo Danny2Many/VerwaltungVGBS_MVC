@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\MemYearInfo;
 use AppBundle\Entity\MemMonthlyDues;
-
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormError;
 
 class MemberController extends Controller
@@ -108,9 +108,9 @@ class MemberController extends Controller
          
             ));
     }
+  
     
-    
-    
+    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     
     /**
      * @Route("/mitglieder/anlegen/{letter}", defaults={"letter": "A"}, name="addmem", requirements={"letter": "[A-Z]"})
@@ -138,7 +138,6 @@ class MemberController extends Controller
 
         //if the form is valid -> persist it to the database
         if($addmemform->isSubmitted() && $addmemform->isValid()){
-
 
            if(!empty($member->getSportsgroup())){ 
             foreach($member->getSportsgroup() as $sportsgroup){
@@ -205,7 +204,7 @@ class MemberController extends Controller
     }
     
     
-    
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
     
     /**
      * @Route("/mitglieder/bearbeiten/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"ID": "\d+", "letter": "[A-Z]"}, name="editmem")
@@ -230,6 +229,7 @@ class MemberController extends Controller
         
          $originalrehabs = new ArrayCollection();
          $originalphonenr = new ArrayCollection();
+         $originalsections = new ArrayCollection();
 
     // Create an ArrayCollection of the current Rehab objects in the database
     foreach ($member->getRehabilitationcertificate() as $rehab) {
@@ -241,11 +241,19 @@ class MemberController extends Controller
         $originalphonenr->add($phonenr);
     }
     
+    
+     // Create an ArrayCollection of the current Rehab objects in the database
+    foreach ($member->getSection() as $section) {
+        
+        $originalsections->add($section);
+    }
+    
+    
         $editmemform->handleRequest($request);
         
         
         if($editmemform->get('delete')->isClicked()){
-            $manager=$this->getDoctrine()->getManager();
+
             $manager->remove($member);
             $manager->flush();
             return $this->redirectToRoute('member_home', array('letter' => $letter, 'info' => 'entfernt'));
@@ -256,6 +264,45 @@ class MemberController extends Controller
     
         //if the form is valid -> persist it to the database
         if($editmemform->isSubmitted() && $editmemform->isValid()){
+       
+      if(!$member->getSportsgroup()->isEmpty()){      
+            
+            
+    foreach ($member->getSportsgroup() as $sportsgroup) {
+        
+        foreach ($originalsections as $section) {
+            
+            if (false === $sportsgroup->getSection()->contains($section)) {
+                
+
+                $member->removeSection($section);
+                
+            }
+        }
+    }
+    
+    
+    foreach($member->getSportsgroup() as $sportsgroup){
+                
+                foreach($sportsgroup->getSection() as $section){
+                
+                $member->addSection($section);
+            }
+            }
+            
+            
+      }else{
+          
+          $member->getSection()->clear();
+      }
+     
+            
+            
+            
+            
+            
+            
+            
   
           foreach ($originalrehabs as $rehab) {
             if (false === $member->getRehabilitationcertificate()->contains($rehab)) {
@@ -275,6 +322,10 @@ class MemberController extends Controller
             }
         }
            
+  
+           
+    
+    
             $manager->persist($member);
           
             $manager->flush();
