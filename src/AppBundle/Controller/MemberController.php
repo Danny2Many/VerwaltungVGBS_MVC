@@ -38,7 +38,10 @@ class MemberController extends Controller
         'Name' => 'lastname',
         'Vorname' => 'firstname',
         'Strasse' => 'streetaddress',
-        'E-Mail' => 'email');
+        'E-Mail' => 'email',
+        'Sportgruppe' => 'token',
+        'RS-Ablaufd.' => 'terminationdate',
+        'Krankenkasse' => 'healthinsurance');
      
  
     $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('member_home')));
@@ -53,13 +56,24 @@ class MemberController extends Controller
     $searchval=$request->query->get('search')['searchfield'];
     $searchcol=$request->query->get('search')['column'];
     
-    
-    
-    
-    $qb->where($qb->expr()->like('m.'.$searchcol, ':member'))
+    if($searchcol=='token'){
+    $query=$qb->Join('m.sportsgroup', 'i')           
+            ->where($qb->expr()->like('i.token',':tok'))
+            ->setParameter('tok','%'.$searchval.'%')
+            ->getQuery();
+    }else 
+    if($searchcol=='terminationdate'){
+    $query=$qb->Join('m.rehabilitationcertificate', 'i')           
+            ->where($qb->expr()->like('i.terminationdate',':token'))
+            ->setParameter('token','%'.$searchval.'%')
+            ->getQuery();
+    }else{
+    $query=$qb->where($qb->expr()->like('m.'.$searchcol, ':member'))
                    ->setParameter('member','%'.$searchval.'%')
                    ->getQuery();
+    } 
     
+       
     
      
      

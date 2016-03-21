@@ -54,7 +54,10 @@ class Member extends HealthData
      */
     protected $yearinfo;
     
-    
+    /**
+     * @ORM\OneToMany(targetEntity="MemPhoneNumber", mappedBy="member", cascade={"persist"})
+     */
+    protected $phonenumber;
     
     public function __construct() {
         
@@ -625,5 +628,55 @@ public function setSection($section)
     public function getYearinfo()
     {
         return $this->yearinfo;
+    }
+    
+    /**
+* Set phonenumber
+*
+* @param string $phonenumber
+*
+* @return MemPhoneNumber
+*/
+public function setPhonenumber($phonenumber)
+{
+   $this->phonenumber = $phonenumber;
+
+   return $this;
+}
+
+/**
+    * Get phonenumber
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhonenumber()
+    {
+        return $this->phonenumber;
+    }
+     
+
+/** 
+* Add phonenumber
+*
+* @param \AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber
+*
+* @return Member
+*/
+ public function addPhonenumber(\AppBundle\Entity\MemPhoneNumber $phonenumber)
+    {               
+        $phonenumber->setMember($this);
+        $this->phonenumber[] = $phonenumber;
+
+        return $this;
+    }
+
+    /**
+     * Remove phonenumber
+     *
+     * @param \AppBundle\Entity\MemPhoneNumber $phonenumber
+    */
+    public function removePhonenumber(\AppBundle\Entity\MemPhoneNumber $phonenumber)
+    {
+        $this->phonenumber->removeElement($phonenumber);
     }
 }
