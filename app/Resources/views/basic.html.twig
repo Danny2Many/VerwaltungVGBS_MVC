@@ -70,7 +70,7 @@
                             <ul class="nav navbar-nav">
                                 <li class="{% block HomeAktiv %}{% endblock %}"><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
                                 <li class="{% block MitglAktiv %}#{% endblock %}"><a href="{{ path('member_home') }}">Mitglieder</a></li>
-                                <li class="{% block NMitglAktiv %}#{% endblock %}"><a href="#">Nichtmitglieder</a></li>
+                                <li class="{% block NMitglAktiv %}{% endblock %}"><a href="{{path('nonmember_home')}}">Nichtmitglieder</a></li>
                                 <li class="{% block AustrittAktiv %}#{% endblock %}"><a href="#">Austrittsliste</a></li>
                                 <li class="{% block SportgrAktiv %}#{% endblock %}"><a href="#">Sportgruppen</a></li>
                                 <li class="dropdown {% block FinanzAktiv %}{% endblock %}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Finanzverwaltung<span class="caret"></span></a>
