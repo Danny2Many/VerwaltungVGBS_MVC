@@ -114,9 +114,15 @@
             <td>{{ data.trainingconfirmation is empty ? "-" : data.trainingconfirmation|date("d.m.Y")}}</td>
              
             {% set rehab = data.rehabilitationcertificate %}
-            <td>
+            <td{% for RC in rehab %}
+                        {% if ('now'|date("Y") == RC.terminationdate|date("Y") or 'now'|date("Y") > RC.terminationdate|date("Y")) %}class="yellow"{% endif %}
+                        {% endfor %}>
                 {% for RC in rehab if date(RC.terminationdate) > date() or date(RC.terminationdate) < date() %}
-                    {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>
+                    {% if 'now'|date("Y") == RC.terminationdate|date("Y") %}<strong>{% endif %}
+                    {% if 'now'|date("Y.m.d") > RC.terminationdate|date("Y.m.d") %}<strong><font color="red">{% endif %}                   
+                        {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>                
+                    {% if ('now'|date("Y") == RC.terminationdate|date("Y") or 'now'|date("Y") > RC.terminationdate|date("Y")) %}</font></strong>{% endif %}
+
                 {% else %}
                     {{ "-" }}
                 {% endfor %}
