@@ -92,32 +92,23 @@
                  
                 <td>{{ data.admissionconfirmation is empty ? "-" : data.admissionconfirmation|date("d.m.Y") }}</td>
 
-
-                <td>{% if data.rehabilitationcertificate is empty %}
-                   {{ "-" }}
-                    {% else  %}
-                         {% set i =1 %}
-                         {% for RC in data.rehabilitationcertificate %}
-                             
-                         {{i}}:{{RC.terminationdate|date("d.m.Y") }}|{{ RC.rehabunits  }}<br>
-                        {% set i =i+1 %}
-                  {% endfor %}{% endif %}</td>
-                 
+                
              
                 {% set rehab = data.rehabilitationcertificate %}
                 
                 
-                <td>{% for RC in rehab if date(RC.terminationdate) > date() %}
-                          
-                        
-                    {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>
-                        
-                         {% else %}
-                         {{ "-" }}
+                <td{% for RC in rehab %}
+                        {% if ('now'|date("Y") == RC.terminationdate|date("Y") and 'now'|date("Y.m.d") < RC.terminationdate|date("Y.m.d")) %}class="yellow"{% endif %}
+                        {% endfor %}>
+                {% for RC in rehab if date(RC.terminationdate) > date() %}
+                    {% if 'now'|date("Y") == RC.terminationdate|date("Y") %}<strong>{% endif %}
+                    {% if date(RC.terminationdate) < date('+2months') %}<strong><font color="red">{% endif %}                   
+                        {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>                
+                    {% if ('now'|date("Y") == RC.terminationdate|date("Y") or 'now'|date("Y") > RC.terminationdate|date("Y")) %}</font></strong>{% endif %}
 
-                    {% endfor %}
-
-                   </td>
+                {% else %}
+                    {{ "-" }}
+                {% endfor %}
                     
 
                     

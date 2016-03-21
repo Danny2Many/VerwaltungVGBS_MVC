@@ -43,6 +43,7 @@
 <th>Trainingsbeginn</th>
 <th>Teilnahmebeginnbest.</th>
 <th>RS-Nr.-Ablaufd.-Einheiten</th>
+<th>abgelaufene Rehaschein/e</th>
 <th>Krankenkasse</th>
 <th>Zusatzinfo</th> 
 <th>Arbeitsplatzhaltung</th>
@@ -114,18 +115,29 @@
             <td>{{ data.trainingconfirmation is empty ? "-" : data.trainingconfirmation|date("d.m.Y")}}</td>
              
             {% set rehab = data.rehabilitationcertificate %}
+            
             <td{% for RC in rehab %}
-                        {% if ('now'|date("Y") == RC.terminationdate|date("Y") or 'now'|date("Y") > RC.terminationdate|date("Y")) %}class="yellow"{% endif %}
+                        {% if ('now'|date("Y") == RC.terminationdate|date("Y") and 'now'|date("Y.m.d") < RC.terminationdate|date("Y.m.d")) %}class="yellow"{% endif %}
                         {% endfor %}>
-                {% for RC in rehab if date(RC.terminationdate) > date() or date(RC.terminationdate) < date() %}
+                {% for RC in rehab if date(RC.terminationdate) > date() %}
                     {% if 'now'|date("Y") == RC.terminationdate|date("Y") %}<strong>{% endif %}
-                    {% if 'now'|date("Y.m.d") > RC.terminationdate|date("Y.m.d") %}<strong><font color="red">{% endif %}                   
+                    {% if date(RC.terminationdate) < date('+2months') %}<strong><font color="red">{% endif %}                   
                         {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>                
                     {% if ('now'|date("Y") == RC.terminationdate|date("Y") or 'now'|date("Y") > RC.terminationdate|date("Y")) %}</font></strong>{% endif %}
 
                 {% else %}
                     {{ "-" }}
                 {% endfor %}
+                
+            <td>{% for RC in rehab if date(RC.terminationdate) < date() %}
+
+
+                {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>
+
+                     {% else %}
+                     {{ "-" }}
+                {% endfor %}
+               </td>
             </td>
    
             <td>{{ data.healthinsurance is empty ? "-" : data.healthinsurance|striptags }}</td>
