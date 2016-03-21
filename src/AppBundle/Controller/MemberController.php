@@ -139,6 +139,7 @@ class MemberController extends Controller
         //if the form is valid -> persist it to the database
         if($addmemform->isSubmitted() && $addmemform->isValid()){
 
+
            if(!empty($member->getSportsgroup())){ 
             foreach($member->getSportsgroup() as $sportsgroup){
                 foreach($sportsgroup->getSection() as $section){

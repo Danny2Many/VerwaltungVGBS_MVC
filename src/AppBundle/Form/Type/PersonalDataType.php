@@ -50,10 +50,10 @@ class PersonalDataType extends AbstractType{
                     
             ->add('location', SanitizedTextType::class, array('label' => 'Ort:', 'disabled' => $options['location_disabled']))
                     
-
             ->add('phonenumber', CollectionType::class, array('entry_type' => PhoneNumberType::class, 'entry_options' => array('data_class' => $options['pn_data_class'], 'disabled'  => $options['phonenumber_disabled']), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
                      
             ->add('email', SanitizedEmailType::class, array('label' => 'E-Mail:', 'required' => false, 'disabled' => $options['email_disabled']))
+
                    ;
     }
     
