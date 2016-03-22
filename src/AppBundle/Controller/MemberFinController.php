@@ -7,12 +7,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Form\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Form\Type\Member\FinanceMemberType;
+
 
 class MemberFinController extends Controller{
     
     
     /**
-     * @Route("/mitglieder/finanzen/{year}/{halfyear}/{letter}", defaults={"year"=2016,"halfyear"=1, "letter"="A"}, name="member_fin", requirements={ "letter": "[A-Z]", "year": "[1-9][0-9]{3}", "halfyear": "1|2"})
+     * @Route("/finanzen/mitglieder/{year}/{halfyear}/{letter}", defaults={"year"=2016,"halfyear"=1, "letter"="A"}, name="member_fin", requirements={ "letter": "[A-Z]", "year": "[1-9][0-9]{3}", "halfyear": "1|2"})
      */
     public function indexAction(Request $request,$letter, $year, $halfyear){
         
@@ -105,6 +107,62 @@ class MemberFinController extends Controller{
 
             
          
+            ));
+    }
+    
+    
+    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    
+    /**
+     * @Route("/finanzen/mitglieder/bearbeiten/{year}/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"ID": "\d+", "letter": "[A-Z]", "year": "[1-9][0-9]{3}"}, name="editmemfin")
+     * 
+     */
+    public function editmemberAction(Request $request, $ID, $letter, $year)
+    {
+        $manager=$this->getDoctrine()->getManager();
+        $repository = $this->getDoctrine()->getRepository('AppBundle:Member');
+        $qb=$repository->createQueryBuilder('m');
+//        $qb->join('m.monthlydues', 'md')
+//           ->join('m.yearinfo', 'yi')
+//           ->where('md.year='.$year)
+//           ->andWhere('yi.year='.$year)
+//           ->andWhere('m.memid='.$ID);
+//        
+//        
+//        $query=
+        
+        $member=$repository->findOneBy(array('memid' => $ID));
+        
+        
+     if (!$member) {
+        throw $this->createNotFoundException('Es konnte kein Mitglied mit der Mitgliedsnr.: '.$ID.' gefunden werden');
+    }
+       
+      
+        $editmemfinform = $this->createForm(FinanceMemberType::class, $member);
+ 
+        $editmemfinform->handleRequest($request);
+        
+        
+       
+    
+        //if the form is valid -> persist it to the database
+        if($editmemfinform->isSubmitted() && $editmemfinform->isValid()){
+            $manager->persist($member);
+            $manager->flush();
+  
+           
+        }
+        
+        
+      return $this->render(
+        'Mitglieder/memberfinform.html.twig',
+        array(
+            
+            'form' => $editmemfinform->createView(),
+            'cletter' => $letter,
+            'title' => 'Mitglied bearbeiten',
+            'year' => $year
             ));
     }
 }

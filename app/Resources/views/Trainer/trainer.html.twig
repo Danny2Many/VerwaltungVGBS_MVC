@@ -23,7 +23,7 @@
 {% block thead %}
     
     <th>Bearb.</th>
-    <th>T_Nr.</th>
+    <th>Trainer Nr.</th>
     <th>Anr.</th>
     <th>Name</th>
     <th>Vorname</th>
@@ -109,7 +109,7 @@
                     {% else  %}
                          {% for licence in data.licence %}
                             {% if 'now'|date("Y") == licence.expirationdate|date("Y") %}<strong>{% endif %}
-                                {% if 'now'|date("Y.m.d") > licence.expirationdate|date("Y.m.d") %}<strong><font color="red">{% endif %}
+                            {% if 'now'|date("Y.m.d") > licence.expirationdate|date("Y.m.d") %}<strong><font color="red">{% endif %}
                                 {{ licence.licencetype|striptags }}<br>
                             
                                 {% if ('now'|date("Y") == licence.expirationdate|date("Y") or 'now'|date("Y") > licence.expirationdate|date("Y")) %}</font></strong>{% endif %}

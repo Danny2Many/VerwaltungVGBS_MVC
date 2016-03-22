@@ -33,7 +33,10 @@ class NonMemberController extends Controller {
         'Name' => 'lastname',
         'Vorname' => 'firstname',
         'Straße' => 'streetaddress',
-        'E-Mail' => 'email');
+        'E-Mail' => 'email',
+        'Sportgruppe' => 'token',
+        'RS-Ablaufd.' => 'terminationdate',
+        'Krankenkasse' => 'healthinsurance');
     
     $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('nonmember_home')));
     $searchform->handleRequest($request);
@@ -43,10 +46,27 @@ class NonMemberController extends Controller {
     $searchval=$request->query->get('search')['searchfield'];
     $searchcol=$request->query->get('search')['column'];
     
-     
+    if($searchcol=='token'){
+    $query=$qb->Join('n.sportsgroup', 'i')           
+            ->where($qb->expr()->like('i.token',':tok'))
+            ->setParameter('tok','%'.$searchval.'%')
+            ->getQuery();
+    }else 
+    if($searchcol=='terminationdate'){
+    $query=$qb->Join('n.rehabilitationcertificate', 'i')           
+            ->where($qb->expr()->like('i.terminationdate',':token'))
+            ->setParameter('token','%'.$searchval.'%')
+            ->getQuery();
+    }else{
     $query=$qb->where($qb->expr()->like('n.'.$searchcol, ':nonmember'))
                    ->setParameter('nonmember','%'.$searchval.'%')
                    ->getQuery();
+    } 
+    
+    
+//    $query=$qb->where($qb->expr()->like('n.'.$searchcol, ':nonmember'))
+//                   ->setParameter('nonmember','%'.$searchval.'%')
+//                   ->getQuery();
     
     $nonmemberlist=$query->getResult();
     $disabled='';

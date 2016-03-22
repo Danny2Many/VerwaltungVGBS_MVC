@@ -12,39 +12,76 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-
+use AppBundle\Form\Type\PersonalDataType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use AppBundle\Form\Type\MonthlyDuesType;
+use AppBundle\Form\Type\YearInfoType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class FinanceMemberType extends AbstractType {
     
      public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+                ->add('memid', IntegerType::class, array('disabled' => true, 'label' => 'Mitgliedsnr.:'))
+            ->add('personaldata', PersonalDataType::class, array(
+        'data_class' => 'AppBundle\Entity\Member',
+        'pn_data_class' => 'AppBundle\Entity\MemPhoneNumber',
+        'title_disabled' => true,
+        'firstname_disabled' => true,
+        'lastname_disabled' => true,
+        'birthday_disabled' => true,
+        'streetaddress_disabled' => true,
+        'postcode_disabled' => true,
+        'mailbox_disabled' => true,
+        'location_disabled' => true,
+        'phonenumber_disabled' => true,
+        'email_disabled' => true
+        
+    ))
+           ->add('section', EntityType::class,  array(
+            'class' => 'AppBundle:Section',
+            'choice_label' => 'SectionName',
+            'multiple' => true,
+            'required' => false,
+            'label' => 'Abteilungen/n:'
             
-            ->add('MitgliedsbeitrMonat', MoneyType::class, array('label' => 'Mitgliedsbeitr./Monat:'))
-            ->add('Aufnahmegebuehr', MoneyType::class, array('label' =>'Aufnahmegebühr:'))
-            ->add('Aufnahmegebuehr_gez', MoneyType::class)
+        ))
             
-            ->add('Zahlungseingang', ChoiceType::class, array('choices'  => array(
-        'nein' => 'nein',
-        'ja' => 'ja',
+            
+           ->add('state', ChoiceType::class, array(
+    'choices'  => array(
+        'aktiv' => 'aktiv',
+        'inaktiv' => 'inaktiv',
         
     ),
-    
+   
     'choices_as_values' => true,
-    'label' => 'Zahlungseingang:'
+    'label' => 'Status:',
+    'disabled' => true
     
 ))
+                
+                ->add('sportsgroup', EntityType::class,  array(
+            'class' => 'AppBundle:MemSportsgroup',
+                    'query_builder' => function (EntityRepository $er) {
+        return $er->createQueryBuilder('sg')
+            ->where('u.username', 'ASC');
+    },
+            'choice_label' => 'token',
+            'multiple' => true,
+            'required' => false,
+            'label' => 'Sportgruppe/n:',
+            'disabled' => true
             
+        ))
+                ->add('admissioncharge', MoneyType::class)
+                ->add('admissionchargepayed', MoneyType::class, array('required' => false))
             
-            ->add('Beitr_QuartMonat1', MoneyType::class)
-            ->add('Beitr_QuartMonat1_gez', MoneyType::class)
-            ->add('Beitr_QuartMonat2', MoneyType::class)
-            ->add('Beitr_QuartMonat2_gez', MoneyType::class)
-            ->add('Beitr_QuartMonat3', MoneyType::class)
-            ->add('Beitr_QuartMonat3_gez', MoneyType::class)               
-            ->add('Umlage', MoneyType::class)
-            ->add('Spende', MoneyType::class)
-            ->add('zusaetzlInfo', MoneyType::class)
+            ->add('monthlydues', CollectionType::class, array('entry_type' => MonthlyDuesType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\MemMonthlyDues')))
+            ->add('yearinfo', CollectionType::class, array('entry_type' => YearInfoType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\MemYearInfo')))
+            
     
             
                    
@@ -54,7 +91,7 @@ class FinanceMemberType extends AbstractType {
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\MitgliederFinanzen',
+            'data_class' => 'AppBundle\Entity\Member',
         ));
     }
 }

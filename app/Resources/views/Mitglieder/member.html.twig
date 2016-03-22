@@ -1,13 +1,17 @@
 
 {% extends 'basic.html.twig' %}
 {% form_theme searchform 'bootstrap_3_layout.html.twig' %}
-
+{% block columndefs %}
+     "columnDefs": [
+    { "width": "10%", "targets": 17 }
+  ]  
+  {% endblock %}
 {% block title %}Mitglieder - Stammdaten{% endblock %}
 {% block fixedcolnum %} 7 {% endblock %}
 {% block viewlink %}{{ path('member_home') }}{% endblock %}
 {% block viewname %}Mitglieder - Stammdaten{% endblock %}
 {% block MitglAktiv %} active {% endblock %}
-{% block StammAktiv %} active {% endblock %}
+
 
 
 
@@ -31,7 +35,7 @@
     {% block thead %}
         
             
-        <th>Bearb.</th><th>M_Nr</th><th>Abt</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Geb.Datum</th><th>Ort</th><th>Strasse, Hausnr</th><th>PLZ</th><th>Postfach</th><th>Telefon</th><th>E-Mail</th><th>Sportgruppe/n</th><th>Eintr.Datum</th><th>Aufnahmebest.</th><th>Rehaschein/e</th><th>abgelaufene Rehaschein/e</th><th>Verm. Beitr.</th><th>Krankenkasse</th><th>Zusatzinfo</th> 
+        <th>Bearb.</th><th>M_Nr</th><th>Abt</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Geb.Datum</th><th>Ort</th><th>Strasse, Hausnr</th><th>PLZ</th><th>Postfach</th><th>Telefon</th><th>E-Mail</th><th>Sportgruppe/n</th><th>Eintr.Datum</th><th>Aufnahmebest.</th><th>RS-Nr.-Ablaufd.-Einheiten</th><th>abgelaufene Rehaschein/e</th><th>Verm. Beitr.</th><th>Krankenkasse</th><th>Zusatzinfo</th> 
         <th>Ehrung</th><th>Arbeitsplatzhaltung</th><th>chron. Berufserkr.</th><th>Schmerzen in HWS</th><th>Schmerzen in BWS</th><th>Schmerzen in LWS</th><th>obere Extremitäten</th><th>untere Extremitäten</th><th>sonst. Beeinträchtigungen</th><th>Medikamente</th><th>weit. bewegl. Aktivitäten</th><th>Hf-Ruhe/Min</th><th>Hf-Max/Min</th><th>Hf bei 50%</th><th>Hf bei 55%</th><th>Hf bei 60%</th><th>Hf bei 65%</th><th>Hf bei 70%</th><th>Hf bei 75%</th><th>Hf bei 80%</th><th>Hf bei 85%</th>
         
     {% endblock %}
@@ -70,14 +74,11 @@
                 <td>{{ data.streetaddress|striptags }}</td>
                 <td>{{ data.postcode|striptags }}</td>
                 <td>{{ data.mailbox is empty ? "-" : data.mailbox|striptags }}</td>  
-                <td>{% if data.phonenumber is empty %}
-                   {{ "-" }}
-                    {% else  %}
-                         {% for PN in data.phonenumber %}
-                            {{ PN.phonenumber|striptags }}<br>
-                    {% endfor %}
-                    
-                    {% endif %}</td>
+                <td>{% for PN in data.phonenumber %}
+                        {{ PN.phonenumber }}<br>
+                        {% else  %}
+                        {{ "-" }}    
+                    {% endfor %}</td>
                 <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>
                 <td>{% for sportsgroup in data.sportsgroup %}
                         {{ sportsgroup.Token }}<br>
@@ -91,47 +92,37 @@
                  
                 <td>{{ data.admissionconfirmation is empty ? "-" : data.admissionconfirmation|date("d.m.Y") }}</td>
 
-
-                <td>{% if data.rehabilitationcertificate is empty %}
-                   {{ "-" }}
-                    {% else  %}
-                         {% set i =1 %}
-                         {% for RC in data.rehabilitationcertificate %}
-                             
-                         {{i}}:{{RC.terminationdate|date("d.m.Y") }}|{{ RC.rehabunits  }}<br>
-                        {% set i =i+1 %}
-                  {% endfor %}{% endif %}</td>
-                 
+                
              
                 {% set rehab = data.rehabilitationcertificate %}
                 
                 
-                <td>{% for RC in rehab if date(RC.terminationdate) > date() %}
+                <td{% for RC in rehab %}
+                        {% if ('now'|date("Y") == RC.terminationdate|date("Y") and 'now'|date("Y.m.d") < RC.terminationdate|date("Y.m.d")) %}class="yellow"{% endif %}
+                        {% endfor %}>
+                {% for RC in rehab if date(RC.terminationdate) > date() %}
+                    {% if 'now'|date("Y") == RC.terminationdate|date("Y") %}<strong>{% endif %}
+                    {% if date(RC.terminationdate) < date('+2months') %}<strong><font color="red">{% endif %}                   
+                        {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>                
+                    {% if ('now'|date("Y") == RC.terminationdate|date("Y") or 'now'|date("Y") > RC.terminationdate|date("Y")) %}</font></strong>{% endif %}
+
+                {% else %}
+                    {{ "-" }}
+                {% endfor %}
+                    
+
+                    
+                  <td>{% for RC in rehab if date(RC.terminationdate) < date() %}
                           
                         
                     {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>
                         
                          {% else %}
                          {{ "-" }}
-
                     {% endfor %}
-
-                   </td>
+                   </td>  
                     
-
-                    
-                    
-                    
-                    
-                    <td>{% for RC in rehab if date(RC.terminationdate) < date() %}
-          
-                         {{loop.index}}:{{RC.terminationdate|date("d.m.Y") }}|{{RC.rehabunits }}<br>
-                        
-                         {% else %}
-                         {{ "-" }}
-                    {% endfor %}</td>
-                    
-                    
+                
                     
                 <td>{{ data.decreaseddues|striptags }}</td>
                 <td>{{ data.healthinsurance is empty ? "-" : data.healthinsurance|striptags}}</td>
