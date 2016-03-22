@@ -70,14 +70,11 @@ protected $section;
     
     /**
      * @ORM\Column(type="integer")
-        * 
-     * 
      */
     protected $roomid;
     
     /**
      * @ORM\Column(type="integer")
-        
      */
     protected $trainerid;
     

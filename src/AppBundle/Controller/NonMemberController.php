@@ -41,7 +41,7 @@ class NonMemberController extends Controller {
     if($searchform->isSubmitted() && $searchform->isValid()){
      $letter=null;   
     $searchval=$request->query->get('search')['searchfield'];
-    $searchcol=$request->query->get('search')['Spalte'];
+    $searchcol=$request->query->get('search')['column'];
     
      
     $query=$qb->where($qb->expr()->like('n.'.$searchcol, ':nonmember'))

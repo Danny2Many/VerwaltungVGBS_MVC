@@ -1,0 +1,19 @@
+{% extends "basic.html.twig" %}
+{% form_theme searchform 'bootstrap_3_layout.html.twig' %}
+
+{% block viewlink %}{{ path('sportsgroup_home') }}{% endblock %}
+{% block title %} Sportgruppen {% endblock %}
+{% block viewname %}Sportgruppen{% endblock %}
+{% block SportgrAktiv %} active {% endblock %}
+
+ {% block thead %}
+<th>Sportgruppe/Info</th>
+<th>Uhrzeit<br>Nr</th>
+<th>Räumlichkeit</th>
+<th>Gruppenbezeichnung</th>
+{% endblock %}
+ 
+{% block tbody %}
+{% for data in tabledata %}
+{% endfor %}    
+{% endblock %}
