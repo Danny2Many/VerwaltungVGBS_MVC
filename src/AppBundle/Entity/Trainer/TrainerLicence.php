@@ -19,7 +19,6 @@ class TrainerLicence {
     /**
      * @ORM\Id
      * @ORM\Column(type="integer") 
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $liid;
     
@@ -52,6 +51,16 @@ class TrainerLicence {
      */
     protected $expirationdate;
     
+    /**
+     * @ORM\Column(type="date")
+     */
+    protected $deleted;
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="date")
+     */
+    protected $recorded;
 
     /**
      * Get liid
@@ -205,5 +214,67 @@ class TrainerLicence {
     public function getTrainer()
     {
         return $this->trainer;
+    }
+
+    /**
+     * Set liid
+     *
+     * @param integer $liid
+     *
+     * @return TrainerLicence
+     */
+    public function setLiid($liid)
+    {
+        $this->liid = $liid;
+
+        return $this;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param \DateTime $deleted
+     *
+     * @return TrainerLicence
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return \DateTime
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * Set recorded
+     *
+     * @param \DateTime $recorded
+     *
+     * @return TrainerLicence
+     */
+    public function setRecorded($recorded)
+    {
+        $this->recorded = $recorded;
+
+        return $this;
+    }
+
+    /**
+     * Get recorded
+     *
+     * @return \DateTime
+     */
+    public function getRecorded()
+    {
+        return $this->recorded;
     }
 }

@@ -19,7 +19,6 @@ class TrainerPhoneNumber {
     /**
      * @ORM\Id
      * @ORM\Column(type="integer") 
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $tpnid;
     
@@ -39,6 +38,17 @@ class TrainerPhoneNumber {
      * )
      */
     protected $phonenumber;
+    
+    /**
+     * @ORM\Column(type="date")
+     */
+    protected $deleted;
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="date")
+     */
+    protected $recorded;
     
 
     /**
@@ -121,5 +131,67 @@ class TrainerPhoneNumber {
     public function getTrainer()
     {
         return $this->trainer;
+    }
+
+    /**
+     * Set tpnid
+     *
+     * @param integer $tpnid
+     *
+     * @return TrainerPhoneNumber
+     */
+    public function setTpnid($tpnid)
+    {
+        $this->tpnid = $tpnid;
+
+        return $this;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param \DateTime $deleted
+     *
+     * @return TrainerPhoneNumber
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return \DateTime
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * Set recorded
+     *
+     * @param \DateTime $recorded
+     *
+     * @return TrainerPhoneNumber
+     */
+    public function setRecorded($recorded)
+    {
+        $this->recorded = $recorded;
+
+        return $this;
+    }
+
+    /**
+     * Get recorded
+     *
+     * @return \DateTime
+     */
+    public function getRecorded()
+    {
+        return $this->recorded;
     }
 }

@@ -14,24 +14,15 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="TrainerFocus")
  */
 class TrainerFocus {
+    
     /**
      * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="theme")
      * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
      */
-    private $trainer;
-    
-    
-    
-    
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer") 
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $tfid;
-    
+    private $trainer;   
+        
      /**
-     * 
+     * @ORM\Id
      * @ORM\Column(type="integer") 
      * 
      */
@@ -44,19 +35,16 @@ class TrainerFocus {
       */
     protected $theme;
 
-    
-
-   
-
     /**
-     * Get tfid
-     *
-     * @return integer
+     * @ORM\Column(type="date")
      */
-    public function getTfid()
-    {
-        return $this->tfid;
-    }
+    protected $deleted;
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="date")
+     */
+    protected $recorded;   
 
     /**
      * Set trainerid
@@ -67,6 +55,7 @@ class TrainerFocus {
      */
     public function setTrainerid($trainerid)
     {
+        
         $this->trainerid = $trainerid;
 
         return $this;
@@ -128,5 +117,53 @@ class TrainerFocus {
     public function getTrainer()
     {
         return $this->trainer;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param \DateTime $deleted
+     *
+     * @return TrainerFocus
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return \DateTime
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * Set recorded
+     *
+     * @param \DateTime $recorded
+     *
+     * @return TrainerFocus
+     */
+    public function setRecorded($recorded)
+    {
+        $this->recorded = $recorded;
+
+        return $this;
+    }
+
+    /**
+     * Get recorded
+     *
+     * @return \DateTime
+     */
+    public function getRecorded()
+    {
+        return $this->recorded;
     }
 }

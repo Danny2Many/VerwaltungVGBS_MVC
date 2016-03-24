@@ -107,8 +107,11 @@ class TrainerController extends Controller
         $phonenumber = new TrainerPhoneNumber();
         $licence = new TrainerLicence();
         
+        $trainer->setTrainerid(10);
         $trainer->addPhonenumber($phonenumber);
         $trainer->addLicence($licence);
+        
+        $trainer->setRecorded('2000-10-10');
         
         $addtrainerform = $this->createForm(AddTrainerType::class, $trainer);
         

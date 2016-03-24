@@ -15,10 +15,18 @@ class Trainer extends PersonalData {
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
      */
+    
+//          @ORM\GeneratedValue(strategy="AUTO") 
+
     protected $trainerid;
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="date")
+     */
+    protected $recorded;
     
     /**
      * @ORM\Column(type="string")
@@ -33,7 +41,7 @@ class Trainer extends PersonalData {
     protected $section;
     
     /**
-     * @ORM\OneToMany(targetEntity="TrainerFocus", mappedBy="trainer", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="TrainerFocus", mappedBy="trainer", cascade={"persist"})
      */
     protected $theme;
 
@@ -52,6 +60,13 @@ class Trainer extends PersonalData {
      * @ORM\Column(type="string")
      */
     protected $state;
+    
+    /**
+     * @ORM\Column(type="date")
+     */
+    protected $deleted;
+    
+    
 
 
 
@@ -311,5 +326,67 @@ class Trainer extends PersonalData {
     public function getState()
     {
         return $this->state;
+    }
+
+    /**
+     * Set trainerid
+     *
+     * @param integer $trainerid
+     *
+     * @return Trainer
+     */
+    public function setTrainerid($trainerid)
+    {
+        $this->trainerid = $trainerid;
+
+        return $this;
+    }
+
+    /**
+     * Set recorded
+     *
+     * @param \DateTime $recorded
+     *
+     * @return Trainer
+     */
+    public function setRecorded($recorded)
+    {
+        $this->recorded = $recorded;
+
+        return $this;
+    }
+
+    /**
+     * Get recorded
+     *
+     * @return \DateTime
+     */
+    public function getRecorded()
+    {
+        return $this->recorded;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param \DateTime $deleted
+     *
+     * @return Trainer
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return \DateTime
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
     }
 }
