@@ -12,125 +12,49 @@ use AppBundle\Entity\HealthData;
 /**
  * @ORM\Entity
  * @ORM\Table(name="Member")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Member extends HealthData
 {
     
-
-      /**
-     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\MemSportsgroup")
-     * @ORM\JoinTable(name="Member_Sportsgroup",
- *      joinColumns={@ORM\JoinColumn(name="memid", referencedColumnName="memid")},
- *      inverseJoinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")})
-     */
-
-    protected $sportsgroup; 
-    
-        /**
-     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
-     * @ORM\JoinTable(name="Member_Section",
- *      joinColumns={@ORM\JoinColumn(name="memid", referencedColumnName="memid")},
- *      inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
-     */
-
-    protected $section;
-    
-    
-    /**
-     * @ORM\OneToMany(targetEntity="MemRehabilitationCertificate", mappedBy="member", cascade={"all"})
-     */
-    protected $rehabilitationcertificate;
-
-
-    
-    /**
-     * @ORM\OneToMany(targetEntity="MemMonthlyDues", mappedBy="member", cascade={"all"})
-     */
-    protected $monthlydues;
-    
-    
-    /**
-     * @ORM\OneToMany(targetEntity="MemYearInfo", mappedBy="member", cascade={"all"})
-     */
-    protected $yearinfo;
-    
-    
-    
+    protected $phonenumber;
+   
     public function __construct() {
         
         $this->sportsgroup = new ArrayCollection();
-        $this->rehabilitationcertificate = new ArrayCollection();
-        $this->phonenumber = new ArrayCollection();
-        $this->monthlydues = new ArrayCollection();
-        $this->section = new ArrayCollection();
+//        $this->rehabilitationcertificate = new ArrayCollection();
+          $this->phonenumber = new ArrayCollection();
+
+     
     }
-    
     
    
-
-    
-    
-    /**
-     * Add sportsgroup
-     *
-     * @param \AppBundle\Entity\Sportsgroup $sportsgroup
-     *
-     * @return Member
-     */
-    public function addSportsgroup(\AppBundle\Entity\Sportsgroup $sportsgroup)
-    {
-        $this->sportsgroup[] = $sportsgroup;
-
-        return $this;
-    }
-
-    /**
-     * Remove sportsgroup
-     *
-     * @param \AppBundle\Entity\Sportsgroup $sportsgroup
-     */
-    public function removeSportsgroup(\AppBundle\Entity\Sportsgroup $sportsgroup)
-    {
-        $this->sportsgroup->removeElement($sportsgroup);
-    }
-
-    /**
-     * Get sportsgroups
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSportsgroup()
-    {
-        return $this->sportsgroup;
-    }
-     
-/**
- * Set categories
- * @param \Doctrine\Common\Collections\Collection $categories
- *
- * @return Post
- */
-public function setSportsgroup($sportsgroup)
-{
-
-    if(!is_array($sportsgroup))
-    {
-        $sportsgroup = array($sportsgroup);
-    }
-    $this->sportsgroup = $sportsgroup;
-
-    return $this;
-}
-
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="string") 
+     * 
      */
     protected $memid;
 
    
+    
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="string")
+     * 
+     */
+    protected $recorded;
+    
+    
+    /**
+     * 
+     * @ORM\Column(type="string")
+     * 
+     */
+    protected $deleted;
+    
     
       /**
      * @ORM\Column(type="date")
@@ -138,6 +62,14 @@ public function setSportsgroup($sportsgroup)
      * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
      */
     protected $admissiondate;
+    
+    /**
+     * @ORM\Column(type="date")
+       * 
+     * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+     */
+    protected $quitdate;
+    
     
   
       /**
@@ -159,13 +91,18 @@ public function setSportsgroup($sportsgroup)
       
     
        /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="binary")
         * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"kein", "(verminderter Beitrag)"}, message = "Bitte wählen Sie eine gültigen option.")
+     * 
      */
     protected $decreaseddues;
     
-     
+    /**
+     * @ORM\Column(type="binary")
+        * 
+     * 
+     */
+    protected $newsletter; 
     
     
       /**
@@ -206,13 +143,17 @@ public function setSportsgroup($sportsgroup)
     /**
      * Get memid
      *
-     * @return integer
+     * @return string
      */
     public function getMemid()
     {
         return $this->memid;
     }
 
+    
+    
+    
+    
     /**
      * Set admissiondate
      *
@@ -361,29 +302,7 @@ public function setSportsgroup($sportsgroup)
 
     
 
-    /**
-     * Set stresstest
-     *
-     * @param string $stresstest
-     *
-     * @return Member
-     */
-    public function setStresstest($stresstest)
-    {
-        $this->stresstest = $stresstest;
-
-        return $this;
-    }
-
-    /**
-     * Get stresstest
-     *
-     * @return string
-     */
-    public function getStresstest()
-    {
-        return $this->stresstest;
-    }
+   
 
     /**
      * Set inforehabdues
@@ -457,173 +376,132 @@ public function setSportsgroup($sportsgroup)
         return $this->admissionchargepayed;
     }
 
+     
+    
+    
+    
+    
+    
+    
+
+   
+
+
+
     /**
-     * Add section
+     * Set memid
      *
-     * @param \AppBundle\Entity\Section $section
+     * @param string $memid
      *
      * @return Member
      */
-    public function addSection(\AppBundle\Entity\Section $section)
+    public function setMemid($memid)
     {
-        if(!$this->section->contains($section)){
-        $this->section[] = $section;
+        $this->memid = $memid;
 
         return $this;
-    }
-    }
-    
-    
-    
-    /**
-     * Remove section
-     *
-     * @param \AppBundle\Entity\Section $section
-     */
-    public function removeSection(\AppBundle\Entity\Section $section)
-    {
-        $this->section->removeElement($section);
-    }
-
-    /**
-     * Get section
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSection()
-    {
-        return $this->section;
-    }
-
-    
-   /**
- * Set categories
- * 
- *
- * @return Post
- */
-public function setSection($section)
-{
-
-    if(!is_array($section))
-    {
-        $section = array($section);
-    }
-    $this->section = $section;
-
-    return $this;
-} 
-    
-    
-    
-    
-    
-    /**
-     * Add rehabilitationcertificate
-     *
-     * @param \AppBundle\Entity\MemRehabilitationCertificate $rehabilitationcertificate
-     *
-     * @return Member
-     */
-    public function addRehabilitationcertificate(\AppBundle\Entity\MemRehabilitationCertificate $rehabilitationcertificate)
-    {
-  
-        $rehabilitationcertificate->setMember($this);
-        $this->rehabilitationcertificate[] = $rehabilitationcertificate;
-
-        return $this;
-        
-    }
-
-    /**
-     * Remove rehabilitationcertificate
-     *
-     * @param \AppBundle\Entity\MemRehabilitationCertificate $rehabilitationcertificate
-     */
-    public function removeRehabilitationcertificate(\AppBundle\Entity\MemRehabilitationCertificate $rehabilitationcertificate)
-    {
-        $this->rehabilitationcertificate->removeElement($rehabilitationcertificate);
-    }
-
-    /**
-     * Get rehabilitationcertificate
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getRehabilitationcertificate()
-    {
-        return $this->rehabilitationcertificate;
     }
 
    
 
     /**
-     * Add monthlydue
+     * Set quitdate
      *
-     * @param \AppBundle\Entity\MemMonthlyDues $monthlydue
+     * @param \DateTime $quitdate
      *
      * @return Member
      */
-    public function addMonthlydue(\AppBundle\Entity\MemMonthlyDues $monthlydue)
+    public function setQuitdate($quitdate)
     {
-        $monthlydue->setMember($this);
-        $this->monthlydues[] = $monthlydue;
+        $this->quitdate = $quitdate;
 
         return $this;
     }
 
     /**
-     * Remove monthlydue
+     * Get quitdate
      *
-     * @param \AppBundle\Entity\MemMonthlyDues $monthlydue
+     * @return \DateTime
      */
-    public function removeMonthlydue(\AppBundle\Entity\MemMonthlyDues $monthlydue)
+    public function getQuitdate()
     {
-        $this->monthlydues->removeElement($monthlydue);
+        return $this->quitdate;
     }
 
-    /**
-     * Get monthlydues
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getMonthlydues()
-    {
-        return $this->monthlydues;
-    }
+    
 
     /**
-     * Add yearinfo
+     * Set newsletter
      *
-     * @param \AppBundle\Entity\MemYearInfo $yearinfo
+     * @param binary $newsletter
      *
      * @return Member
      */
-    public function addYearinfo(\AppBundle\Entity\MemYearInfo $yearinfo)
+    public function setNewsletter($newsletter)
     {
-        $yearinfo->setMember($this);
-        $this->yearinfo[] = $yearinfo;
+        $this->newsletter = implode($newsletter);
 
         return $this;
     }
 
     /**
-     * Remove yearinfo
+     * Get newsletter
      *
-     * @param \AppBundle\Entity\MemYearInfo $yearinfo
+     * @return binary
      */
-    public function removeYearinfo(\AppBundle\Entity\MemYearInfo $yearinfo)
+    public function getNewsletter()
     {
-        $this->yearinfo->removeElement($yearinfo);
+        return $this->newsletter;
+    }
+
+    
+
+ 
+
+    /**
+ * @ORM\PrePersist
+ */
+    public function setRecorded()
+    {
+        $now= new \DateTime();
+        $this->recorded = $now->format('Y-m-d');
+
+        return $this;
     }
 
     /**
-     * Get yearinfo
+     * Get recorded
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return string
      */
-    public function getYearinfo()
+    public function getRecorded()
     {
-        return $this->yearinfo;
+        return $this->recorded;
     }
+
+    /**
+     * Set deleted
+     *
+     * @param string $deleted
+     *
+     * @return Member
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return string
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    
 }

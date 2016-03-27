@@ -86,10 +86,7 @@ class PersonalData {
     
     
     
-       /**
-     * @ORM\OneToMany(targetEntity="MemPhoneNumber", mappedBy="member", cascade={"persist"})
-     */
-    protected $phonenumber;
+       
     
        /**
      * @ORM\Column(type="string", options={"default":"-"})
@@ -98,40 +95,7 @@ class PersonalData {
      */
     protected $email;
     
-     /**
-     * Add phonenumber
-     *
-     * @param \AppBundle\Entity\MemPhoneNumber $phonenumber
-     *
-     * @return Member
-     */
-    public function addPhonenumber(\AppBundle\Entity\MemPhoneNumber $phonenumber)
-    {
-        $phonenumber->setMember($this);
-        $this->phonenumber[] = $phonenumber;
-
-        return $this;
-    }
-
-    /**
-     * Remove phonenumber
-     *
-     * @param \AppBundle\Entity\MemPhoneNumber $phonenumber
-     */
-    public function removePhonenumber(\AppBundle\Entity\MemPhoneNumber $phonenumber)
-    {
-        $this->phonenumber->removeElement($phonenumber);
-    }
-
-    /**
-     * Get phonenumber
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPhonenumber()
-    {
-        return $this->phonenumber;
-    }
+     
     function getFirstname() {
         return $this->firstname;
     }

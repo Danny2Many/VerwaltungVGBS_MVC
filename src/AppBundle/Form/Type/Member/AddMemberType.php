@@ -18,8 +18,8 @@ class AddMemberType extends BaseMemberType {
         
     {
         parent::buildForm($builder, $options);
-        $builder->add('admissioncharge', MoneyType::class, array('mapped' => false, 'label' => 'Aufnahmegebühr:'))
-                ->add('dues', MoneyType::class, array('mapped' => false, 'label' => 'Monatlicher Beitr:'));
+        $builder->add('admissioncharge', MoneyType::class, array('label' => 'Aufnahmegebühr:'));
+//                ->add('dues', MoneyType::class, array('mapped' => false, 'label' => 'Monatlicher Beitr:'));
           
 
     }

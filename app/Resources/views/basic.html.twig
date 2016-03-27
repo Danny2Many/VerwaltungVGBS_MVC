@@ -106,7 +106,7 @@
                             <button type="submit" class="btn btn-default">
                                 <span class="glyphicon glyphicon-search"></span> suchen
                             </button>
-                            <a href="{{ path(path) }}"><input type="button" class="btn btn-default" value="suche abbrechen" {% if  searchform.vars.submitted == false %}{{ 'disabled' }}{% endif %} ></a>
+                            <a href="{{ path(path) }}"><input type="button" class="btn btn-default" value="Suche abbrechen" {% if  searchform.vars.submitted == false %}{{ 'disabled' }}{% endif %} ></a>
                             
                             {{ form_end(searchform) }}
                         {% endblock %}
@@ -172,13 +172,13 @@
   {% for letter in 'a'|upper..'z'|upper %}
   {% if letter == cletter %}
      
-      <li class="active"><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>
+      <li class="active"><a href="{{ path(path, {'letter': letter, 'adminyear': adminyear}) }}">{{ letter }}</a></li>
       
       {% else %}
-      <li><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>
+      <li><a href="{{ path(path, {'letter': letter, 'adminyear': adminyear}) }}">{{ letter }}</a></li>
   {% endif %}
   {% endfor %}
-  <li class="active"><a href="{{ path(path, {'letter': cletter}) }}">{{ tabledata|length }} Person/en wurden gefunden</a></li>
+  <li class="active"><a href="{{ path(path, {'letter': cletter, 'adminyear': adminyear}) }}">{{ tabledata|length }} Person/en wurden gefunden</a></li>
 </ul> 
         
             </div>

@@ -23,16 +23,24 @@ use Symfony\Component\Form\FormError;
 class MemberController extends Controller
 {
 /**
-     * @Route("/mitglieder/{letter}", defaults={"letter"="A"}, name="member_home", requirements={"letter": "[A-Z]"})
+     * @Route("/mitglieder/{adminyear}/{letter}", defaults={"letter"="A", "adminyear"=2016}, name="member_home", requirements={"letter": "[A-Z]", "adminyear": "[1-9][0-9]{3}"})
      */
-    public function indexAction(Request $request, $letter)
+    public function indexAction(Request $request, $letter, $adminyear)
     {
     
-
-    $repository = $this->getDoctrine()
-    ->getRepository('AppBundle:Member');
     
-    $qb=$repository->createQueryBuilder('m');
+    $dependencies=['Member', 'MemPhoneNumber', 'MemRehabilitationCertificate'];
+    
+    $qb= [];
+    foreach($dependencies as $dependent){
+     
+     $qb[$dependent] = $this->getDoctrine()->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
+     $qb[$dependent]->select(array('ditto', $qb[$dependent]->expr()->max('ditto.recorded')))
+                ->where('ditto.recorded <= :year')
+                ->groupBy('ditto.memid')
+                ->setParameter('year', $adminyear.'-12-31');
+     
+    }
     
     $choices=array('Mitgliedsnr.' => 'memid',
         'Name' => 'lastname',
@@ -47,16 +55,20 @@ class MemberController extends Controller
     $searchform->handleRequest($request);
     
     
-    
+    //the search
     if($searchform->isSubmitted() && $searchform->isValid()){
-     $letter=null;   
+     
+        //setting the letter to null for the pagination not to show any letter
+     $letter=null;
+     
+     //getting the values of the field and column
     $searchval=$request->query->get('search')['searchfield'];
     $searchcol=$request->query->get('search')['column'];
     
     
     
-    
-    $qb->where($qb->expr()->like('m.'.$searchcol, ':member'))
+    //building the query
+    $qb['Member']->where($qb['Member']->expr()->like('ditto.'.$searchcol, ':member'))
                    ->setParameter('member','%'.$searchval.'%')
                    ->getQuery();
     
@@ -66,21 +78,21 @@ class MemberController extends Controller
     }else{
         
         
-        $qb->where($qb->expr()->like('m.lastname', ':letter'))
+        $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.lastname', ':letter'))
                    ->setParameter('letter',$letter.'%');
                    
         
         
           switch($letter){
-            case 'A': $qb->orWhere($qb->expr()->like('m.lastname', ':umlautletter'))
+            case 'A': $qb['Member']->orWhere($qb['Member']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ä%'); 
             break;
         
-            case 'O': $qb->orWhere($qb->expr()->like('m.lastname', ':umlautletter'))
+            case 'O': $qb['Member']->orWhere($qb['Member']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ö%'); 
             break;
         
-            case 'U': $qb->orWhere($qb->expr()->like('m.lastname', ':umlautletter'))
+            case 'U': $qb['Member']->orWhere($qb['Member']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ü%'); 
             break;
         }
@@ -94,7 +106,27 @@ class MemberController extends Controller
     
     
     
-     $memberlist=$qb->getQuery()->getResult();
+     $memberlist=$qb['Member']->getQuery()->getResult();
+     $phonenumberlist=$qb['MemPhoneNumber']->getQuery()->getResult();
+     $rehabcertlist=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
+     
+     
+     $memberdependentlist=[];
+     foreach ($phonenumberlist as $pn){
+         
+         $memberdependentlist[$pn[0]->getMemid()]['phonenumbers'][]=$pn;
+     }
+     
+     
+      foreach ($rehabcertlist as $rc){
+        
+         $memberdependentlist[$rc[0]->getMemid()]['rehabcerts'][]=$rc;
+         
+     }
+     
+     
+     
+     
 
     return $this->render(
         'Mitglieder/member.html.twig',
@@ -102,8 +134,9 @@ class MemberController extends Controller
             'tabledata' => $memberlist,
             'colorclass' => "bluetheader",
             'searchform' => $searchform->createView(),
-                      
+            'memberdependentlist' => $memberdependentlist,         
             'cletter' => $letter,
+            'adminyear' => $adminyear,
             'path' => 'member_home'
            
          
@@ -114,10 +147,10 @@ class MemberController extends Controller
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     
     /**
-     * @Route("/mitglieder/anlegen/{letter}", defaults={"letter": "A"}, name="addmem", requirements={"letter": "[A-Z]"})
+     * @Route("/mitglieder/anlegen/{adminyear}/{letter}", defaults={"letter": "A", "adminyear": 2016}, name="addmem", requirements={"letter": "[A-Z]", "adminyear": "[1-9][0-9]{3}"})
      * 
      */
-    public function addmemberAction(Request $request, $letter)
+    public function addmemberAction(Request $request, $letter, $adminyear)
     {
         
         $member = new Member();
@@ -140,44 +173,14 @@ class MemberController extends Controller
         //if the form is valid -> persist it to the database
         if($addmemform->isSubmitted() && $addmemform->isValid()){
             
-           if(!empty($member->getSportsgroup())){ 
-            foreach($member->getSportsgroup() as $sportsgroup){
-                foreach($sportsgroup->getSection() as $section){
-                
-                $member->addSection($section);
-            }
-            }
-           }
+            $memid=uniqid('m'); 
+            $member->setMemid($memid);
             
-            $admcharge = $addmemform->get('admissioncharge')->getData();
-            $member->setAdmissioncharge($admcharge);
+            foreach($member->getPhoneNumber() as $pn){
+            $pn->setMemid($memid);
+            }
             
-            $admdate = $member->getAdmissiondate();
-            $dues= $addmemform->get('dues')->getData();
-          
-          $repository=$this->getDoctrine()->getRepository('AppBundle:AdministrationYear');
-          
-          $year=$repository->findOneBy(array('year' => $admdate->format('Y')));
-          
-          
-          if($year != null){
-          
-          $yearinfo = new MemYearInfo();
-          $yearinfo->setAdminyear($year);
-          
-          $member->addYearinfo($yearinfo);
-          
-          $months=['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
-          
-          foreach ($months as $month){
-          
-          $$month= new MemMonthlyDues();
-          $$month->setAdminyear($year)
-                  ->setMonth($month)
-                  ->setDues($dues);
-          $member->addMonthlydue($$month);
-          }
-     
+            
             $manager= $this->getDoctrine()->getManager();
             
             $manager->persist($member);
@@ -187,8 +190,8 @@ class MemberController extends Controller
             
            $this->addFlash('notice', 'Diese Person wurde erfolgreich angelegt!'); 
           return $this->redirectToRoute('member_home', array('letter' => $letter));
-          }
-          $addmemform->get('admissiondate')->addError(new FormError('Dieses Verwaltungsjahr wurde noch nicht angelegt.'));
+          
+          
         }
         
         
@@ -207,7 +210,7 @@ class MemberController extends Controller
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
     
     /**
-     * @Route("/mitglieder/bearbeiten/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"ID": "\d+", "letter": "[A-Z]"}, name="editmem")
+     * @Route("/mitglieder/bearbeiten/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"letter": "[A-Z]"}, name="editmem")
      * 
      */
     public function editmemberAction(Request $request, $ID, $letter)
