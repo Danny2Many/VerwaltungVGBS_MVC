@@ -17,13 +17,16 @@ use AppBundle\Entity\HealthData;
 class Member extends HealthData
 {
     
+    protected $rehabilitationcertificate;
     protected $phonenumber;
+    
+    
    
     public function __construct() {
         
-        $this->sportsgroup = new ArrayCollection();
+//        $this->sportsgroup = new ArrayCollection();
         $this->rehabilitationcertificate = new ArrayCollection();
-        $this->phonenumber = new ArrayCollection();
+        $this->phonenumber = new ArrayCollection();;
 
      
     }
@@ -38,7 +41,10 @@ class Member extends HealthData
     protected $memid;
 
    
-    
+    public function __toString()
+ {
+  return $this->memid;
+ }
     
     /**
      * @ORM\Id
@@ -503,13 +509,7 @@ class Member extends HealthData
         return $this->deleted;
     }
 
-   /**
-     * Add phonenumber
-     *
-     * @param \AppBundle\Entity\MemPhoneNumber $pn
-     *
-     * @return Member
-     */
+   
     public function addPhonenumber(\AppBundle\Entity\MemPhoneNumber $pn)
     {
         $pn->setMemid($this);
@@ -518,24 +518,38 @@ class Member extends HealthData
         return $this;
     }
 
-    /**
-     * Remove phonenumber
-     *
-     * @param \AppBundle\Entity\MemPhoneNumber $pn
-     */
+    
     public function removePhonenumber(\AppBundle\Entity\MemPhoneNumber $pn)
     {
         $this->phonenumber->removeElement($pn);
     }
 
-    /**
-     * Get phonenumber
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
+    
     public function getPhonenumber()
     {
         return $this->phonenumber;
     } 
     
+    
+    public function addRehabilitationcertificate(\AppBundle\Entity\MemRehabilitationCertificate $rehabilitationcertificate)
+    {
+  
+        $rehabilitationcertificate->setMemid($this);
+        $this->rehabilitationcertificate[] = $rehabilitationcertificate;
+
+        return $this;
+        
+    }
+
+   
+    public function removeRehabilitationcertificate(\AppBundle\Entity\MemRehabilitationCertificate $rehabilitationcertificate)
+    {
+        $this->rehabilitationcertificate->removeElement($rehabilitationcertificate);
+    }
+
+    
+    public function getRehabilitationcertificate()
+    {
+        return $this->rehabilitationcertificate;
+    }
 }

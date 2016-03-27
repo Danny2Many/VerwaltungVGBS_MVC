@@ -120,10 +120,10 @@
                    </td>
                     
                     
-                  <td>{% for RC in rehab if date(RC.terminationdate) < date() %}
+                  <td>{% for RC in rehab if date(RC[0].terminationdate) < date() %}
                           
                         
-                    {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>
+                    {{'RS'}}{{loop.index}}-<strong>{{RC[0].terminationdate|date("d.m.Y") }}</strong>-{{RC[0].rehabunits }}<br>
                         
                          {% else %}
                          {{ "-" }}

@@ -176,11 +176,25 @@ class MemberController extends Controller
             $memid=uniqid('m'); 
             $member->setMemid($memid);
             
-          
+         
             $manager= $this->getDoctrine()->getManager();
             
-            $manager->persist($member);
+
             
+            foreach($member->getPhonenumber() as $pn){
+                
+              $manager->persist($pn);
+              
+          }
+            
+             foreach($member->getRehabilitationcertificate() as $rc){
+              $manager->persist($rc);
+              
+          }
+          
+          
+          
+          $manager->persist($member);
           
             $manager->flush();
             
