@@ -22,8 +22,8 @@ class Member extends HealthData
     public function __construct() {
         
         $this->sportsgroup = new ArrayCollection();
-//        $this->rehabilitationcertificate = new ArrayCollection();
-          $this->phonenumber = new ArrayCollection();
+        $this->rehabilitationcertificate = new ArrayCollection();
+        $this->phonenumber = new ArrayCollection();
 
      
     }
@@ -503,6 +503,39 @@ class Member extends HealthData
         return $this->deleted;
     }
 
-    
+   /**
+     * Add phonenumber
+     *
+     * @param \AppBundle\Entity\MemPhoneNumber $pn
+     *
+     * @return Member
+     */
+    public function addPhonenumber(\AppBundle\Entity\MemPhoneNumber $pn)
+    {
+        $pn->setMemid($this);
+        $this->phonenumber[] = $pn;
+
+        return $this;
+    }
+
+    /**
+     * Remove phonenumber
+     *
+     * @param \AppBundle\Entity\MemPhoneNumber $pn
+     */
+    public function removePhonenumber(\AppBundle\Entity\MemPhoneNumber $pn)
+    {
+        $this->phonenumber->removeElement($pn);
+    }
+
+    /**
+     * Get phonenumber
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhonenumber()
+    {
+        return $this->phonenumber;
+    } 
     
 }

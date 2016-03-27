@@ -176,11 +176,7 @@ class MemberController extends Controller
             $memid=uniqid('m'); 
             $member->setMemid($memid);
             
-            foreach($member->getPhoneNumber() as $pn){
-            $pn->setMemid($memid);
-            }
-            
-            
+          
             $manager= $this->getDoctrine()->getManager();
             
             $manager->persist($member);
