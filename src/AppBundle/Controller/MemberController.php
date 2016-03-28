@@ -182,12 +182,13 @@ class MemberController extends Controller
 
             
             foreach($member->getPhonenumber() as $pn){
-                
+              $pn->setPnid(uniqid('pn'));
               $manager->persist($pn);
               
           }
             
              foreach($member->getRehabilitationcertificate() as $rc){
+              $rc->setRcid(uniqid('rc'));
               $manager->persist($rc);
               
           }
@@ -223,61 +224,72 @@ class MemberController extends Controller
      * @Route("/mitglieder/bearbeiten/{adminyear}/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"letter": "[A-Z]"}, name="editmem")
      * 
      */
-    public function editmemberAction(Request $request, $ID, $letter)
+    public function editmemberAction(Request $request, $adminyear, $ID, $letter)
     {
-        
-    $doctrine=$this->getDoctrine();   
-    $dependencies=['Member', 'MemPhoneNumber', 'MemRehabilitationCertificate'];
+      
     
-    $qb= [];
-    foreach($dependencies as $dependent){
-     
+    
+    
+    $doctrine=$this->getDoctrine();   
+    $dependencies=array('Member' => 'mem', 'MemPhoneNumber'=> 'pn', 'MemRehabilitationCertificate'=> 'rc');
+    
+    $qb=[];
+    foreach($dependencies as $dependent => $idprefix){
+            
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
      $qb[$dependent]->select(array('ditto', $qb[$dependent]->expr()->max('ditto.recorded')))
                 ->where('ditto.recorded <= :year')
-                ->groupBy('ditto.memid')
-                ->setParameter('year', $adminyear.'-12-31');
+                ->andWhere('ditto.memid = :memid')
+                ->groupBy('ditto.'.$idprefix.'id')
+                ->setParameter('year', $adminyear.'-12-31')
+                ->setParameter('memid', $ID);
      
     }
         
         
         
         
-        $manager= $this->getDoctrine()->getManager();
-        $repository = $this->getDoctrine()
-    ->getRepository('AppBundle:Member');
-        
-        $member=$repository->findOneBy(array('memid' => $ID));
+        $manager= $doctrine->getManager();
+        $member=$qb['Member']->getQuery()->getSingleResult()[0];
         
         
-     if (!$member) {
+        
+        if (!$member) {
         throw $this->createNotFoundException('Es konnte kein Mitglied mit der Mitgliedsnr.: '.$ID.' gefunden werden');
     }
+        
+        $phonenumbers=$qb['MemPhoneNumber']->getQuery()->getResult()[0][0];
+        $rehabcerts=$qb['MemRehabilitationCertificate']->getQuery()->getResult()[0];
+        
        
-      
-        $editmemform = $this->createForm(EditMemberType::class, $member);
-        
-        
          $originalrehabs = new ArrayCollection();
          $originalphonenr = new ArrayCollection();
          $originalsections = new ArrayCollection();
 
     // Create an ArrayCollection of the current Rehab objects in the database
-    foreach ($member->getRehabilitationcertificate() as $rehab) {
+    foreach ($rehabcerts as $rehab) {
+        
+        $member->addRehabilitationcertificate($rehab);
         $originalrehabs->add($rehab);
     }
      
-    // Create an ArrayCollection of the current Rehab objects in the database
-    foreach ($member->getPhonenumber() as $phonenr) {
+    // Create an ArrayCollection of the current Phonenr objects in the database
+    foreach ($phonenumbers as $phonenr) {
+        $member->addPhonenumber($phonenr);
         $originalphonenr->add($phonenr);
     }
     
     
-     // Create an ArrayCollection of the current Rehab objects in the database
-    foreach ($member->getSection() as $section) {
+//     // Create an ArrayCollection of the current Rehab objects in the database
+//    foreach ($member->getSection() as $section) {
+//        
+//        $originalsections->add($section);
+//    }
+      
+        $editmemform = $this->createForm(EditMemberType::class, $member);
         
-        $originalsections->add($section);
-    }
+        
+
     
     
         $editmemform->handleRequest($request);
@@ -379,3 +391,5 @@ class MemberController extends Controller
     }
     
 }
+
+

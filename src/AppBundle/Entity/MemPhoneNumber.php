@@ -15,11 +15,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 class MemPhoneNumber {
     
   
-    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="string") 
+     * 
+     */
+    protected $pnid;
    
     
     /**
-     * @ORM\Id
+     * 
      * @ORM\Column(type="string") 
      * 
      */
@@ -38,7 +43,7 @@ class MemPhoneNumber {
 
     
      /**
-     * @ORM\Id
+     * 
      * @ORM\Column(type="string")
      * 
      */
@@ -160,4 +165,28 @@ class MemPhoneNumber {
     }
 
    
+
+    /**
+     * Set pnid
+     *
+     * @param string $pnid
+     *
+     * @return MemPhoneNumber
+     */
+    public function setPnid($pnid)
+    {
+        $this->pnid = $pnid;
+
+        return $this;
+    }
+
+    /**
+     * Get pnid
+     *
+     * @return string
+     */
+    public function getPnid()
+    {
+        return $this->pnid;
+    }
 }

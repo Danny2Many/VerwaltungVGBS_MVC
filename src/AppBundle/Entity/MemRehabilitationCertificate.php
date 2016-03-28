@@ -17,11 +17,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 class MemRehabilitationCertificate {
     
     
-    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="string") 
+     * 
+     */
+    protected $rcid;
     
     
      /**
-     * @ORM\Id
+     * 
      * @ORM\Column(type="string") 
      * 
      */
@@ -29,7 +34,7 @@ class MemRehabilitationCertificate {
     
     
     /**
-     * @ORM\Id
+     * 
      * @ORM\Column(type="string")
      * 
      */
@@ -196,5 +201,19 @@ class MemRehabilitationCertificate {
     public function getDeleted()
     {
         return $this->deleted;
+    }
+
+    /**
+     * Set rcid
+     *
+     * @param string $rcid
+     *
+     * @return MemRehabilitationCertificate
+     */
+    public function setRcid($rcid)
+    {
+        $this->rcid = $rcid;
+
+        return $this;
     }
 }

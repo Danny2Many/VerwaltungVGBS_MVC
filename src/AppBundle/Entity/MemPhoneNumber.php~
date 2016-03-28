@@ -14,21 +14,17 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class MemPhoneNumber {
     
-  /**
-     * @ORM\ManyToOne(targetEntity="Member", inversedBy="phonenumber", cascade={"persist"})
-     * @ORM\JoinColumn(name="memid", referencedColumnName="memid")
-     */
-    private $member;
-    
+  
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
      * 
      */
-    protected $pnid; 
+    protected $pnid;
+   
     
     /**
-     * @ORM\Id
+     * 
      * @ORM\Column(type="string") 
      * 
      */
@@ -47,7 +43,7 @@ class MemPhoneNumber {
 
     
      /**
-     * @ORM\Id
+     * 
      * @ORM\Column(type="string")
      * 
      */
@@ -120,34 +116,6 @@ class MemPhoneNumber {
         return $this->phonenumber;
     }
 
-    /**
-     * Set member
-     *
-     * @param \AppBundle\Entity\Member $member
-     *
-     * @return MemPhoneNumber
-     */
-    public function setMember(\AppBundle\Entity\Member $member = null)
-    {
-        $this->member = $member;
-
-        return $this;
-    }
-
-    /**
-     * Get member
-     *
-     * @return \AppBundle\Entity\Member
-     */
-    public function getMember()
-    {
-        return $this->member;
-    }
-
-    
-
-    
-
 
 
    /**
@@ -195,4 +163,6 @@ class MemPhoneNumber {
     {
         return $this->deleted;
     }
+
+   
 }

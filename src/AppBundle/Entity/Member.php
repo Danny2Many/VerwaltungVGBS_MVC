@@ -457,7 +457,7 @@ class Member extends HealthData
      */
     public function getNewsletter()
     {
-        return $this->newsletter;
+        return array($this->newsletter);
     }
 
     
