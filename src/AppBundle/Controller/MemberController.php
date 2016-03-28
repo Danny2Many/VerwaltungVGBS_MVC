@@ -28,13 +28,13 @@ class MemberController extends Controller
     public function indexAction(Request $request, $letter, $adminyear)
     {
     
-    
+    $doctrine=$this->getDoctrine();
     $dependencies=['Member', 'MemPhoneNumber', 'MemRehabilitationCertificate'];
     
     $qb= [];
     foreach($dependencies as $dependent){
      
-     $qb[$dependent] = $this->getDoctrine()->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
+     $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
      $qb[$dependent]->select(array('ditto', $qb[$dependent]->expr()->max('ditto.recorded')))
                 ->where('ditto.recorded <= :year')
                 ->groupBy('ditto.memid')
@@ -220,11 +220,29 @@ class MemberController extends Controller
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
     
     /**
-     * @Route("/mitglieder/bearbeiten/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"letter": "[A-Z]"}, name="editmem")
+     * @Route("/mitglieder/bearbeiten/{adminyear}/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"letter": "[A-Z]"}, name="editmem")
      * 
      */
     public function editmemberAction(Request $request, $ID, $letter)
     {
+        
+    $doctrine=$this->getDoctrine();   
+    $dependencies=['Member', 'MemPhoneNumber', 'MemRehabilitationCertificate'];
+    
+    $qb= [];
+    foreach($dependencies as $dependent){
+     
+     $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
+     $qb[$dependent]->select(array('ditto', $qb[$dependent]->expr()->max('ditto.recorded')))
+                ->where('ditto.recorded <= :year')
+                ->groupBy('ditto.memid')
+                ->setParameter('year', $adminyear.'-12-31');
+     
+    }
+        
+        
+        
+        
         $manager= $this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()
     ->getRepository('AppBundle:Member');
