@@ -11,52 +11,47 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class NonMemSportsgroup {
     
-/**
-* @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
-* @ORM\JoinTable(name="NonMemSportsgroup_Section",
-* joinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")},
-* inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
-*/ 
-protected $section; 
+    /**
+    * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
+    * @ORM\JoinTable(name="NonMemSportsgroup_Section",
+    * joinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")},
+    * inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
+    */ 
+    protected $section; 
 
     /**
      * @ORM\Id
      * @ORM\Column(type="integer") 
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $sgid;
-    
+//    
+//    /**
+//     * @ORM\Column(type="string")
+//        * @Assert\NotBlank()
+//     * @Assert\Choice(choices = {"Mitglieder", "Nichtmitglieder"}, message = "Bitte wählen Sie eine gültige Kategorie.")
+//     */
+//    protected $category;
+//    
+//    /**
+//     * @ORM\Column(type="string")
+//     */
+//    protected $type;
+//    
     /**
      * @ORM\Column(type="string")
-        * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"Mitglieder", "Nichtmitglieder"}, message = "Bitte wählen Sie eine gültige Kategorie.")
-     */
-    protected $category;
-    
-    /**
-     * @ORM\Column(type="string")
-        * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"Mitglieder", "Nichtmitglieder"}, message = "Bitte wählen Sie eine gültige Kategorie.")
-     */
-    protected $type;
-    
-    /**
-     * @ORM\Column(type="string")
-        * @Assert\NotBlank()
-     * 
+     * @Assert\NotBlank()
      */
     protected $name;
     
     /**
      * @ORM\Column(type="string")
-        * @Assert\NotBlank()
-     * 
+     * @Assert\NotBlank()
      */
     protected $day;
     
     /**
      * @ORM\Column(type="time")
-        * @Assert\NotBlank()
+     * @Assert\NotBlank()
      * 
      */
     protected $time;
@@ -85,6 +80,16 @@ protected $section;
      */
     protected $token;
     
+        /**
+    * @ORM\Column(type="date")
+    */
+    protected $recorded;
+
+    /**
+    * @ORM\Column(type="date")
+    */
+    protected $deleted;
+
 
     /**
      * Get sgid
@@ -95,54 +100,54 @@ protected $section;
     {
         return $this->sgid;
     }
-
-    /**
-     * Set category
-     *
-     * @param string $category
-     *
-     * @return NonMemSportsgroup
-     */
-    public function setCategory($category)
-    {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    /**
-     * Get category
-     *
-     * @return string
-     */
-    public function getCategory()
-    {
-        return $this->category;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     *
-     * @return NonMemSportsgroup
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
+//
+//    /**
+//     * Set category
+//     *
+//     * @param string $category
+//     *
+//     * @return NonMemSportsgroup
+//     */
+//    public function setCategory($category)
+//    {
+//        $this->category = $category;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get category
+//     *
+//     * @return string
+//     */
+//    public function getCategory()
+//    {
+//        return $this->category;
+//    }
+//
+//    /**
+//     * Set type
+//     *
+//     * @param string $type
+//     *
+//     * @return NonMemSportsgroup
+//     */
+//    public function setType($type)
+//    {
+//        $this->type = $type;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get type
+//     *
+//     * @return string
+//     */
+//    public function getType()
+//    {
+//        return $this->type;
+//    }
 
     /**
      * Set name
@@ -351,5 +356,69 @@ protected $section;
     public function getSection()
     {
         return $this->section;
+    }
+
+    /**
+     * Set recorded
+     *
+     * @param \DateTime $recorded
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setRecorded($recorded)
+    {
+        $this->recorded = $recorded;
+
+        return $this;
+    }
+
+    /**
+     * Get recorded
+     *
+     * @return \DateTime
+     */
+    public function getRecorded()
+    {
+        return $this->recorded;
+    }
+
+
+
+    /**
+     * Set deleted
+     *
+     * @param \DateTime $deleted
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return \DateTime
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * Set sgid
+     *
+     * @param integer $sgid
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setSgid($sgid)
+    {
+        $this->sgid = $sgid;
+
+        return $this;
     }
 }
