@@ -24,9 +24,9 @@ class Trainer extends PersonalData {
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="string")
      */
-    protected $recorded;
+    private $recorded;
     
     /**
      * @ORM\Column(type="string")
@@ -345,7 +345,7 @@ class Trainer extends PersonalData {
     /**
      * Set recorded
      *
-     * @param \DateTime $recorded
+     * @param string $recorded
      *
      * @return Trainer
      */
@@ -359,7 +359,7 @@ class Trainer extends PersonalData {
     /**
      * Get recorded
      *
-     * @return \DateTime
+     * @return string
      */
     public function getRecorded()
     {
@@ -373,7 +373,7 @@ class Trainer extends PersonalData {
      *
      * @return Trainer
      */
-    public function setDeleted($deleted)
+    public function setDeleted(\DateTime $deleted)
     {
         $this->deleted = $deleted;
 

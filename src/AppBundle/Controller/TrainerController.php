@@ -13,6 +13,7 @@ use AppBundle\Entity\Trainer\Trainer;
 use AppBundle\Entity\Trainer\TrainerPhoneNumber;
 use AppBundle\Entity\Trainer\TrainerFocus;
 use AppBundle\Entity\Trainer\TrainerLicence;
+use \DateTime;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -108,10 +109,18 @@ class TrainerController extends Controller
         $licence = new TrainerLicence();
         
         $trainer->setTrainerid(10);
+        $phonenumber->setTrainerid(10);
+        
+        
+        $today =new \DateTime('now');
+        $trainer->setRecorded($today->format('Y-m-d'));
+        $phonenumber->setRecorded($today->format('Y-m-d'));
+        
+        
+        
         $trainer->addPhonenumber($phonenumber);
         $trainer->addLicence($licence);
         
-        $trainer->setRecorded('2000-10-10');
         
         $addtrainerform = $this->createForm(AddTrainerType::class, $trainer);
         

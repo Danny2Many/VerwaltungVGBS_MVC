@@ -16,14 +16,9 @@ class TrainerPhoneNumber {
      */
     private $trainer;
     
+     
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
-     */
-    protected $tpnid;
-    
-    /**
-     * 
      * @ORM\Column(type="integer") 
      * 
      */
@@ -46,21 +41,12 @@ class TrainerPhoneNumber {
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="string")
      */
     protected $recorded;
     
 
-    /**
-     * Get tpnid
-     *
-     * @return integer
-     */
-    public function getTpnid()
-    {
-        return $this->tpnid;
-    }
-
+  
     /**
      * Set trainerid
      *
@@ -133,20 +119,7 @@ class TrainerPhoneNumber {
         return $this->trainer;
     }
 
-    /**
-     * Set tpnid
-     *
-     * @param integer $tpnid
-     *
-     * @return TrainerPhoneNumber
-     */
-    public function setTpnid($tpnid)
-    {
-        $this->tpnid = $tpnid;
-
-        return $this;
-    }
-
+ 
     /**
      * Set deleted
      *
@@ -174,7 +147,7 @@ class TrainerPhoneNumber {
     /**
      * Set recorded
      *
-     * @param \DateTime $recorded
+     * @param string $recorded
      *
      * @return TrainerPhoneNumber
      */
@@ -188,7 +161,7 @@ class TrainerPhoneNumber {
     /**
      * Get recorded
      *
-     * @return \DateTime
+     * @return string
      */
     public function getRecorded()
     {
