@@ -69,10 +69,7 @@ class HealthData extends PersonalData {
      */
        protected $pulseatrest;
     
-     /**
-     * @ORM\Column(type="text")
-     */
-    protected $stresstest;
+     
     
     
       /**

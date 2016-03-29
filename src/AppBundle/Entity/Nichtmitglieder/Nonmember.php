@@ -33,7 +33,7 @@ protected $sportsgroup;
 /**
 * @ORM\Id
 * @ORM\Column(type="integer") 
-* @ORM\GeneratedValue(strategy="AUTO")
+* 
 */
 protected $nmemid;    
     
@@ -72,6 +72,17 @@ protected $rehabilitationcertificate;
   * @ORM\OneToMany(targetEntity="NonMemPhoneNumber", mappedBy="nonmember", cascade={"persist"})
   */
 protected $phonenumber;
+
+/**
+* @ORM\Id
+* @ORM\Column(type="string")
+*/
+protected $recorded;
+
+/**
+* @ORM\Column(type="date")
+*/
+protected $deleted;
 
 
     /**
@@ -404,7 +415,68 @@ public function setPhonenumber($phonenumber)
         $this->phonenumber->removeElement($phonenumber);
     }
 
-    
- 
 
+  
+
+    /**
+     * Get recorded
+     *
+     * @return \String
+     */
+    public function getRecorded()
+    {
+        return $this->recorded;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param \DateTime $deleted
+     *
+     * @return Nonmember
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return \DateTime
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * Set nmemid
+     *
+     * @param integer $nmemid
+     *
+     * @return Nonmember
+     */
+    public function setNmemid($nmemid)
+    {
+        $this->nmemid = $nmemid;
+
+        return $this;
+    }
+
+    /**
+     * Set recorded
+     *
+     * @param \String $recorded
+     *
+     * @return Nonmember
+     */
+    public function setRecorded($recorded)
+    {
+        $this->recorded = $recorded;
+
+        return $this;
+    }
 }

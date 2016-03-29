@@ -40,7 +40,7 @@
     <div class="row">
            <div class="col-md-12">
    
-        <legend><h2>Stammdaten</h2></legend>
+               <legend><h2>Stammdaten</h2></legend>
         
        
        
@@ -79,6 +79,8 @@
                   </button>
               </a></div></div>
        {{ form_row(form.personaldata.email) }}
+       
+       {{ form_row(form.newsletter) }}
   
        {{ form_row(form.admissiondate) }}
      
@@ -93,7 +95,7 @@
        {{ form_row(form.state) }}
       
     
-       {{ form_row(form.sportsgroup) }}
+     {#  {{ form_row(form.sportsgroup) }}#}
          
         
     
@@ -166,7 +168,7 @@
  
       
            {{ form_row(form.admissioncharge) }}
-           {{ form_row(form.dues) }}
+           {#{{ form_row(form.dues) }}#}
            
         
     

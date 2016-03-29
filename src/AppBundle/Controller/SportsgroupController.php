@@ -12,11 +12,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class SportsgroupController extends Controller {
     /**
-    * @Route("/sportgruppen/{letter}", defaults={"letter"="A"}, name="sportsgroup_home")
+    * @Route("/sportgruppen/{letter}", defaults={"letter"="M"}, name="sportsgroup_home" , requirements={"letter": "[A-Z]"})
     */ 
      public function indexAction (Request $request, $letter){
          
-        $repository = $this->getDoctrine()
+    $repository = $this->getDoctrine()
     ->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup');
     
     $qb=$repository->createQueryBuilder('s');
@@ -35,11 +35,8 @@ class SportsgroupController extends Controller {
     $query=$qb->where($qb->expr()->like('s.'.$searchcol, ':sportsgroup'))
                    ->setParameter('sportsgroup','%'.$searchval.'%')
                    ->getQuery();
-    
-    
     $disabled=''; 
-    
-    
+       
     }
      else
     {
@@ -51,11 +48,20 @@ class SportsgroupController extends Controller {
     }
        return $this->render(
         'Sportgruppen/sportsgroup.html.twig',
-        array(  
+        array(              
+            'colorclass' => "bluetheader",
             'searchform' => $searchform->createView(),
+            'disabled' => $disabled,
             'cletter' => $letter,
             'tabledata' => $sportsgrouplist, 
             'path' => 'sportsgroup_home'
             ));
 }
+    /**
+     * @Route("/sportgruppen/anlegen/{letter}", defaults={"letter": "A"}, name="addsportsgroup", requirements={"letter": "[A-Z]"})
+     * 
+     */
+     public function addsportsgroupAction (Request $request, $letter){
+     }
+     
 }

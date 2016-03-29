@@ -6,134 +6,55 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
-use AppBundle\Entity\PersonalData;
+use AppBundle\Entity\HealthData;
 
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="Member")
+ * @ORM\HasLifecycleCallbacks()
  */
-class Member extends PersonalData
+class Member extends HealthData
 {
     
-
-      /**
-     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Sportsgroup")
-     * @ORM\JoinTable(name="Member_Sportsgroup",
- *      joinColumns={@ORM\JoinColumn(name="memid", referencedColumnName="memid")},
- *      inverseJoinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")})
-     */
-
-    protected $sportsgroup; 
-    
-        /**
-     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
-     * @ORM\JoinTable(name="Member_Section",
- *      joinColumns={@ORM\JoinColumn(name="memid", referencedColumnName="memid")},
- *      inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
-     */
-
-    protected $section;
-    
-    
-    /**
-     * @ORM\OneToMany(targetEntity="MemRehabilitationCertificate", mappedBy="member")
-     */
-    private $rehabilitationcertificate;
-
-/**
-     * @ORM\OneToMany(targetEntity="MemPhoneNumber", mappedBy="Member")
-     */
-    private $phonenumber;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="MemMonthlyDues", mappedBy="Member")
-     */
-    private $monthlydues;
-    
-    
-    /**
-     * @ORM\OneToMany(targetEntity="MemYearInfo", mappedBy="Member")
-     */
-    private $yearinfo;
-    
-    
-    
+//    protected $phonenumber;
+   
     public function __construct() {
         
         $this->sportsgroup = new ArrayCollection();
-        $this->rehabilitationcertificate = new ArrayCollection();
-        $this->phonenumber = new ArrayCollection();
-        $this->monthlydues = new ArrayCollection();
-        $this->section = new ArrayCollection();
+//        $this->rehabilitationcertificate = new ArrayCollection();
+//          $this->phonenumber = new ArrayCollection();
+
+     
     }
-    
     
    
-
-    
-    
-    /**
-     * Add sportsgroup
-     *
-     * @param \AppBundle\Entity\Sportsgroup $sportsgroup
-     *
-     * @return Member
-     */
-    public function addSportsgroup(\AppBundle\Entity\Sportsgroup $sportsgroup)
-    {
-        $this->sportsgroup[] = $sportsgroup;
-
-        return $this;
-    }
-
-    /**
-     * Remove sportsgroup
-     *
-     * @param \AppBundle\Entity\Sportsgroup $sportsgroup
-     */
-    public function removeSportsgroup(\AppBundle\Entity\Sportsgroup $sportsgroup)
-    {
-        $this->sportsgroup->removeElement($sportsgroup);
-    }
-
-    /**
-     * Get sportsgroups
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSportsgroup()
-    {
-        return $this->sportsgroup;
-    }
-     
-/**
- * Set categories
- * @param \Doctrine\Common\Collections\Collection $categories
- *
- * @return Post
- */
-public function setSportsgroup($sportsgroup)
-{
-
-    if(!is_array($sportsgroup))
-    {
-        $sportsgroup = array($sportsgroup);
-    }
-    $this->sportsgroup = $sportsgroup;
-
-    return $this;
-}
-
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="string") 
+     * 
      */
     protected $memid;
 
    
+    
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="string")
+     * 
+     */
+    protected $recorded;
+    
+    
+    /**
+     * 
+     * @ORM\Column(type="string")
+     * 
+     */
+    protected $deleted;
+    
     
       /**
      * @ORM\Column(type="date")
@@ -141,6 +62,14 @@ public function setSportsgroup($sportsgroup)
      * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
      */
     protected $admissiondate;
+    
+    /**
+     * @ORM\Column(type="date")
+       * 
+     * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
+     */
+    protected $quitdate;
+    
     
   
       /**
@@ -162,16 +91,18 @@ public function setSportsgroup($sportsgroup)
       
     
        /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="binary")
         * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"kein", "(verminderter Beitrag)"}, message = "Bitte wählen Sie eine gültigen option.")
+     * 
      */
     protected $decreaseddues;
     
-       /**
-     * @ORM\Column(type="string")
+    /**
+     * @ORM\Column(type="binary")
+        * 
+     * 
      */
-    protected $healthinsurance;
+    protected $newsletter; 
     
     
       /**
@@ -184,70 +115,7 @@ public function setSportsgroup($sportsgroup)
      */
     protected $tribute;
     
-       /**
-     * @ORM\Column(type="text")
-     */
-    protected $workplaceposture;
-    
-    
-       /**
-     * @ORM\Column(type="string")
-     */
-    protected $chronoccupationaldis;
-    
-    
-       /**
-     * @ORM\Column(type="string")
-     */
-       protected $paincervicalspine;
-    
-        /**
-     * @ORM\Column(type="string")
-     */
-        protected $painthoracicspine;
-    
-       /**
-     * @ORM\Column(type="string")
-     */
-       protected $painlumbarspine;
-    
-       /**
-     * @ORM\Column(type="string")
-     */
-       protected $upperlimbs;
-    
-       /**
-     * @ORM\Column(type="string")
-     */
-       protected $lowerlimbs;
-    
-       /**
-     * @ORM\Column(type="text")
-     */
-       protected $otherimpairments;
-    
-      /**
-     * @ORM\Column(type="string")
-     */
-      protected $medication;
-    
-       /**
-     * @ORM\Column(type="string")
-     */
-       protected $additionalagilactivities;
-    
-       /**
-     * @ORM\Column(type="integer")
-        * @Assert\Type(
-     * type="numeric",
-     * message="{{ value }} ist kein gültiger {{ type }}.")
-     */
-       protected $pulseatrest;
-    
-     /**
-     * @ORM\Column(type="text")
-     */
-    protected $stresstest;
+     
     
    
       /**
@@ -269,6 +137,371 @@ public function setSportsgroup($sportsgroup)
     
 
    
+
+    
+
+    /**
+     * Get memid
+     *
+     * @return string
+     */
+    public function getMemid()
+    {
+        return $this->memid;
+    }
+
+    
+    
+    
+    
+    /**
+     * Set admissiondate
+     *
+     * @param \DateTime $admissiondate
+     *
+     * @return Member
+     */
+    public function setAdmissiondate($admissiondate)
+    {
+        $this->admissiondate = $admissiondate;
+
+        return $this;
+    }
+
+    /**
+     * Get admissiondate
+     *
+     * @return \DateTime
+     */
+    public function getAdmissiondate()
+    {
+        return $this->admissiondate;
+    }
+
+    /**
+     * Set state
+     *
+     * @param string $state
+     *
+     * @return Member
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * Get state
+     *
+     * @return string
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * Set admissionconfirmation
+     *
+     * @param \DateTime $admissionconfirmation
+     *
+     * @return Member
+     */
+    public function setAdmissionconfirmation($admissionconfirmation)
+    {
+        $this->admissionconfirmation = $admissionconfirmation;
+
+        return $this;
+    }
+
+    /**
+     * Get admissionconfirmation
+     *
+     * @return \DateTime
+     */
+    public function getAdmissionconfirmation()
+    {
+        return $this->admissionconfirmation;
+    }
+
+    /**
+     * Set decreaseddues
+     *
+     * @param string $decreaseddues
+     *
+     * @return Member
+     */
+    public function setDecreaseddues($decreaseddues)
+    {
+        $this->decreaseddues = $decreaseddues;
+
+        return $this;
+    }
+
+    /**
+     * Get decreaseddues
+     *
+     * @return string
+     */
+    public function getDecreaseddues()
+    {
+        return $this->decreaseddues;
+    }
+
+   
+
+    /**
+     * Set additionalinfo
+     *
+     * @param string $additionalinfo
+     *
+     * @return Member
+     */
+    public function setAdditionalinfo($additionalinfo)
+    {
+        $this->additionalinfo = $additionalinfo;
+
+        return $this;
+    }
+
+    /**
+     * Get additionalinfo
+     *
+     * @return string
+     */
+    public function getAdditionalinfo()
+    {
+        return $this->additionalinfo;
+    }
+
+    /**
+     * Set tribute
+     *
+     * @param string $tribute
+     *
+     * @return Member
+     */
+    public function setTribute($tribute)
+    {
+        $this->tribute = $tribute;
+
+        return $this;
+    }
+
+    /**
+     * Get tribute
+     *
+     * @return string
+     */
+    public function getTribute()
+    {
+        return $this->tribute;
+    }
+
+    
+
+   
+
+    /**
+     * Set inforehabdues
+     *
+     * @param string $inforehabdues
+     *
+     * @return Member
+     */
+    public function setInforehabdues($inforehabdues)
+    {
+        $this->inforehabdues = $inforehabdues;
+
+        return $this;
+    }
+
+    /**
+     * Get inforehabdues
+     *
+     * @return string
+     */
+    public function getInforehabdues()
+    {
+        return $this->inforehabdues;
+    }
+
+    /**
+     * Set admissioncharge
+     *
+     * @param float $admissioncharge
+     *
+     * @return Member
+     */
+    public function setAdmissioncharge($admissioncharge)
+    {
+        $this->admissioncharge = $admissioncharge;
+
+        return $this;
+    }
+
+    /**
+     * Get admissioncharge
+     *
+     * @return float
+     */
+    public function getAdmissioncharge()
+    {
+        return $this->admissioncharge;
+    }
+
+    /**
+     * Set admissionchargepayed
+     *
+     * @param float $admissionchargepayed
+     *
+     * @return Member
+     */
+    public function setAdmissionchargepayed($admissionchargepayed)
+    {
+        $this->admissionchargepayed = $admissionchargepayed;
+
+        return $this;
+    }
+
+    /**
+     * Get admissionchargepayed
+     *
+     * @return float
+     */
+    public function getAdmissionchargepayed()
+    {
+        return $this->admissionchargepayed;
+    }
+
+     
+    
+    
+    
+    
+    
+    
+
+   
+
+
+
+    /**
+     * Set memid
+     *
+     * @param string $memid
+     *
+     * @return Member
+     */
+    public function setMemid($memid)
+    {
+        $this->memid = $memid;
+
+        return $this;
+    }
+
+   
+
+    /**
+     * Set quitdate
+     *
+     * @param \DateTime $quitdate
+     *
+     * @return Member
+     */
+    public function setQuitdate($quitdate)
+    {
+        $this->quitdate = $quitdate;
+
+        return $this;
+    }
+
+    /**
+     * Get quitdate
+     *
+     * @return \DateTime
+     */
+    public function getQuitdate()
+    {
+        return $this->quitdate;
+    }
+
+    
+
+    /**
+     * Set newsletter
+     *
+     * @param binary $newsletter
+     *
+     * @return Member
+     */
+    public function setNewsletter($newsletter)
+    {
+        $this->newsletter = implode($newsletter);
+
+        return $this;
+    }
+
+    /**
+     * Get newsletter
+     *
+     * @return binary
+     */
+    public function getNewsletter()
+    {
+        return $this->newsletter;
+    }
+
+    
+
+ 
+
+    /**
+ * @ORM\PrePersist
+ */
+    public function setRecorded()
+    {
+        $now= new \DateTime();
+        $this->recorded = $now->format('Y-m-d');
+
+        return $this;
+    }
+
+    /**
+     * Get recorded
+     *
+     * @return string
+     */
+    public function getRecorded()
+    {
+        return $this->recorded;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param string $deleted
+     *
+     * @return Member
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return string
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
 
     
 }

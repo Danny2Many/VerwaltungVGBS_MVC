@@ -11,6 +11,8 @@ use AppBundle\Form\Type\Nichtmitglieder\AddNonMemberType;
 use AppBundle\Form\Type\Nichtmitglieder\EditNonMemberType;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber;
+use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Component\Form\FormBuilder;
 use AppBundle\Entity\Section;
 
 use Symfony\Component\Form\FormBuilderInterface;
@@ -91,8 +93,8 @@ class NonMemberController extends Controller {
                          ->setParameter('umlautletter','Ü%'); 
             break;
         }
-        $query=$query->getQuery()->getResult();
-        $nonmemberlist=$query;
+ 
+        $nonmemberlist=$query->getQuery()->getResult();
         $disabled='disabled';
         
     }
@@ -112,9 +114,18 @@ class NonMemberController extends Controller {
      * 
      */
     public function addnonmeberAction (Request $request, $letter){
+      
         
      $nonmember = new Nonmember ();
      $phonenumber = new NonMemPhoneNumber();
+     
+     $nonmember->setNmemid(101);
+     $phonenumber->setPhid(101);
+     
+     $today = new \DateTime('now');
+     $nonmember->setRecorded($today->format('Y-m-d'));
+     $phonenumber->setRecorded($today->format('Y-m-d'));
+     
      $nonmember->addPhonenumber($phonenumber);
         
         $addnonmemform = $this->createForm(AddNonMemberType::class, $nonmember);
