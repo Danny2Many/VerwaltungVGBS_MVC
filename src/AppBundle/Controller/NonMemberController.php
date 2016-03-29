@@ -21,7 +21,7 @@ use AppBundle\Form\SanitizedTextType;
 
 class NonMemberController extends Controller {
     /**
-     * @Route("/nichtmitglieder/{adminyear}/{letter}", defaults={"letter"="A", "adminyear"=2016}, name="nonmember_home", requirements={"letter": "[A-Z]"}, , "adminyear": "[1-9][0-9]{3}"})
+     * @Route("/nichtmitglieder/{adminyear}/{letter}", defaults={"letter"="A", "adminyear"=2016}, name="nonmember_home", requirements={"letter": "[A-Z]",  "adminyear": "[1-9][0-9]{3}"})
     */    
     public function indexAction (Request $request, $letter, $adminyear ) {   
   
