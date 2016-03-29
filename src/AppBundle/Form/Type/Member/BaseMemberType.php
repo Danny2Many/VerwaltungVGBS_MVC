@@ -67,6 +67,18 @@ public function buildForm(FormBuilderInterface $builder, array $options)
     'label' => 'verminderter Beitrag:'
     
 ))
+                ->add('newsletter', ChoiceType::class, array(
+    
+    // *this line is important*
+    'choices_as_values' => true,
+    'expanded' => true,
+    'multiple' => true,
+    'choices' => array('Soll das Mitglied den kostenlosen VGBS-Newsletter erhalten?' => 1),
+    
+    'label' => 'Newsletter:',
+    'required' => false
+    
+))
 
                 ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\MemRehabilitationCertificate'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
 
