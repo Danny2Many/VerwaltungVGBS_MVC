@@ -12,30 +12,44 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="MemRehabilitationCertificate")
+ * @ORM\HasLifecycleCallbacks()
  */
 class MemRehabilitationCertificate {
-    /**
-     * @ORM\ManyToOne(targetEntity="Member", inversedBy="rehabilitationcertificate")
-     * @ORM\JoinColumn(name="memid", referencedColumnName="memid")
-     */
-    private $member;
-    
-    
     
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="string") 
+     * 
      */
     protected $rcid;
     
+    
      /**
      * 
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
      * 
      */
     protected $memid;
+    
+    
+    /**
+     * 
+     * @ORM\Column(type="string")
+     * 
+     */
+    protected $recorded;
+    
+    
+    /**
+     * 
+     * @ORM\Column(type="string")
+     * 
+     */
+    protected $deleted;
+    
+    
+    
     
      /**
       *  
@@ -61,7 +75,7 @@ class MemRehabilitationCertificate {
     /**
      * Set memid
      *
-     * @param integer $memid
+     * @param string $memid
      *
      * @return MemRehabilitationCertificate
      */
@@ -75,7 +89,7 @@ class MemRehabilitationCertificate {
     /**
      * Get memid
      *
-     * @return integer
+     * @return string
      */
     public function getMemid()
     {
@@ -108,29 +122,7 @@ class MemRehabilitationCertificate {
         return $this->terminationdate;
     }
 
-    /**
-     * Set member
-     *
-     * @param \AppBundle\Entity\Member $member
-     *
-     * @return MemRehabilitationCertificate
-     */
-    public function setMember(\AppBundle\Entity\Member $member = null)
-    {
-        $this->member = $member;
-
-        return $this;
-    }
-
-    /**
-     * Get member
-     *
-     * @return \AppBundle\Entity\Member
-     */
-    public function getMember()
-    {
-        return $this->member;
-    }
+    
 
     /**
      * Get rcid
@@ -164,5 +156,64 @@ class MemRehabilitationCertificate {
     public function getRehabunits()
     {
         return $this->rehabunits;
+    }
+
+    /**
+ * @ORM\PrePersist
+ */
+    public function setRecorded()
+    {
+        $now= new \DateTime();
+        $this->recorded = $now->format('Y-m-d');
+
+        return $this;
+    }
+
+    /**
+     * Get recorded
+     *
+     * @return string
+     */
+    public function getRecorded()
+    {
+        return $this->recorded;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param string $deleted
+     *
+     * @return MemRehabilitationCertificate
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return string
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * Set rcid
+     *
+     * @param string $rcid
+     *
+     * @return MemRehabilitationCertificate
+     */
+    public function setRcid($rcid)
+    {
+        $this->rcid = $rcid;
+
+        return $this;
     }
 }

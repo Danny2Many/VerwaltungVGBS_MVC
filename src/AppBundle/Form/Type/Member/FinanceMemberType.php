@@ -40,35 +40,11 @@ class FinanceMemberType extends AbstractType {
         'email_disabled' => true
         
     ))
-           ->add('section', EntityType::class,  array(
-            'class' => 'AppBundle:Section',
-            'choice_label' => 'SectionName',
-            'multiple' => true,
-            'required' => false,
-            'label' => 'Abteilungen/n:'
-            
-        ))
-            
-            
-           ->add('state', ChoiceType::class, array(
-    'choices'  => array(
-        'aktiv' => 'aktiv',
-        'inaktiv' => 'inaktiv',
-        
-    ),
-   
-    'choices_as_values' => true,
-    'label' => 'Status:',
-    'disabled' => true
-    
-))
+           
                 
                 ->add('sportsgroup', EntityType::class,  array(
             'class' => 'AppBundle:MemSportsgroup',
-                    'query_builder' => function (EntityRepository $er) {
-        return $er->createQueryBuilder('sg')
-            ->where('u.username', 'ASC');
-    },
+                    
             'choice_label' => 'token',
             'multiple' => true,
             'required' => false,
