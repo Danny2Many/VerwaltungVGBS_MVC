@@ -42,9 +42,16 @@ public function buildForm(FormBuilderInterface $builder, array $options){
                 'choices_as_values' => true,
                 'label' => 'Status:'
         ))    
-//        ->add('rehabunity1', SanitizedTextType::class, array('label' => 'Reha.Einheit 1:', 'required' => false))        
-//        
-//        ->add('rehabunity2', SanitizedTextType::class, array('label' => 'Reha.Einheit 2:', 'required' => false))        
+     
+        ->add('newsletter', ChoiceType::class, array(
+        // *this line is important*
+                'choices_as_values' => true,
+                'expanded' => true,
+                'multiple' => true,
+                'choices' => array('Soll das Mitglied den kostenlosen VGBS-Newsletter erhalten?' => 1),
+                    'label' => 'Newsletter:',
+                    'required' => false 
+        ))
                 
         ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true, ))
                        
