@@ -116,7 +116,7 @@
                         {% endfor %}>
                 {% for RC in rehab if date(RC[0].terminationdate) > date() %}
                     {% if 'now'|date("Y") == RC[0].terminationdate|date("Y") %}<strong>{% endif %}
-                    {% if date(RC.terminationdate) < date('+2months') %}<font color="red">{% endif %}                   
+                    {% if date(RC[0].terminationdate) < date('+2months') %}<font color="red">{% endif %}                   
                         {{'RS'}}{{loop.index}}-<strong>{{RC[0].terminationdate|date("d.m.Y") }}</strong>-{{RC[0].rehabunits }}<br>                
                     {% if ('now'|date("Y") == RC[0].terminationdate|date("Y") or 'now'|date("Y") > RC[0].terminationdate|date("Y")) %}</font></strong>{% endif %}
 

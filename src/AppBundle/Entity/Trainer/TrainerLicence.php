@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="TrainerLicence")
+ * @ORM\HasLifecycleCallbacks()
  */
 class TrainerLicence {
     
@@ -18,7 +19,7 @@ class TrainerLicence {
     protected $liid;
     
     /**
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
      */
     protected $trainerid;
     
@@ -52,8 +53,7 @@ class TrainerLicence {
     protected $deleted;
     
     /**
-     * @ORM\Id
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="string")
      */
     protected $recorded;
 
@@ -250,15 +250,12 @@ class TrainerLicence {
     }
 
     /**
-     * Set recorded
-     *
-     * @param \DateTime $recorded
-     *
-     * @return TrainerLicence
+     * @ORM\PrePersist
      */
-    public function setRecorded($recorded)
+    public function setRecorded()
     {
-        $this->recorded = $recorded;
+        $now= new \DateTime();
+        $this->recorded = $now->format('Y-m-d');
 
         return $this;
     }

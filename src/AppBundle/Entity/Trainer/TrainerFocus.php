@@ -16,11 +16,15 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class TrainerFocus {
     
-     
-        
      /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
+     * 
+     */
+    protected $tfid;
+        
+     /**
+     * @ORM\Column(type="string") 
      * 
      */
     protected $trainerid;
@@ -38,8 +42,7 @@ class TrainerFocus {
     protected $deleted;
     
     /**
-     * @ORM\Id
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="string")
      */
     protected $recorded;   
 
@@ -61,7 +64,7 @@ class TrainerFocus {
     /**
      * Get trainerid
      *
-     * @return integer
+     * @return string
      */
     public function getTrainerid()
     {
@@ -141,11 +144,7 @@ class TrainerFocus {
     }
 
     /**
-     * Set recorded
-     *
-     * @param \DateTime $recorded
-     *
-     * @return TrainerFocus
+     * @ORM\PrePersist
      */
     public function setRecorded()
     {
@@ -163,5 +162,29 @@ class TrainerFocus {
     public function getRecorded()
     {
         return $this->recorded;
+    }
+    
+    /**
+     * Get tfid
+     *
+     * @return integer
+     */
+    public function getTfid()
+    {
+        return $this->tfid;
+    }
+    
+    /**
+     * Set tfid
+     *
+     * @param integer $tfid
+     *
+     * @return TrainerLicence
+     */
+    public function setTfid($tfid)
+    {
+        $this->tfid = $tfid;
+
+        return $this;
     }
 }

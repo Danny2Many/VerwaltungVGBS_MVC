@@ -21,6 +21,11 @@ class Trainer extends PersonalData {
     
     protected $trainerid;
     
+    public function __toString()
+    {
+        return $this->trainerid;
+    }
+    
     /**
      * @ORM\Id
      * @ORM\Column(type="string")
@@ -145,16 +150,10 @@ class Trainer extends PersonalData {
 
     
 
-    /**
-     * Add licence
-     *
-     * @param \AppBundle\Entity\Trainer\TrainerLicence $licence
-     *
-     * @return Trainer
-     */
+    
     public function addLicence(\AppBundle\Entity\Trainer\TrainerLicence $licence)
     {
-        $licence->setTrainer($this);
+        $licence->setTrainerid($this);
 
         $this->licence[] = $licence;
 
@@ -195,16 +194,10 @@ class Trainer extends PersonalData {
         return $this;
     }
 
-    /**
-     * Add theme
-     *
-     * @param \AppBundle\Entity\Trainer\TrainerFocus $theme
-     *
-     * @return Trainer
-     */
+    
     public function addTheme(\AppBundle\Entity\Trainer\TrainerFocus $theme)
     {
-        $theme->setTrainer($this);
+        $theme->setTrainerid($this);
 
         $this->theme[] = $theme;
 
@@ -271,16 +264,10 @@ class Trainer extends PersonalData {
     }
      
 
-    /** 
-     * Add phonenumber
-     *
-     * @param \AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber
-     *
-     * @return Trainer
-     */
+   
     public function addPhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
     {               
-        $phonenumber->setTrainer($this);
+        $phonenumber->setTrainerid($this);
         $this->phonenumber[] = $phonenumber;
 
         return $this;
@@ -334,13 +321,9 @@ class Trainer extends PersonalData {
         return $this;
     }
 
-    /**
-     * Set recorded
-     *
-     * @param string $recorded
-     *
-     * @return Trainer
-     */
+   /**
+    * @ORM\PrePersist
+    */
     public function setRecorded()
     {
         $now= new \DateTime();

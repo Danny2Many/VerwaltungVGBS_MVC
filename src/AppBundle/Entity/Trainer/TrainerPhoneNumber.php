@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="TrainerPhoneNumber")
+ * @ORM\HasLifecycleCallbacks()
  */
 class TrainerPhoneNumber {
     
@@ -22,7 +23,7 @@ class TrainerPhoneNumber {
     
      
     /**
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
      * 
      */
     protected $trainerid;   
@@ -52,7 +53,7 @@ class TrainerPhoneNumber {
     /**
      * Set trainerid
      *
-     * @param integer $trainerid
+     * @param string $trainerid
      *
      * @return TrainerPhoneNumber
      */
@@ -147,11 +148,7 @@ class TrainerPhoneNumber {
     }
 
     /**
-     * Set recorded
-     *
-     * @param string $recorded
-     *
-     * @return TrainerPhoneNumber
+     * @ORM\PrePersist
      */
     public function setRecorded()
     {
@@ -177,7 +174,7 @@ class TrainerPhoneNumber {
      *
      * @param string $tpnid
      *
-     * @return MemPhoneNumber
+     * @return TrainerPhoneNumber
      */
     public function setTpnid($tpnid)
     {

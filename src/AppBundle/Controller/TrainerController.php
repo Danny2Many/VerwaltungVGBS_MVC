@@ -14,6 +14,7 @@ use AppBundle\Entity\Trainer\TrainerPhoneNumber;
 use AppBundle\Entity\Trainer\TrainerFocus;
 use AppBundle\Entity\Trainer\TrainerLicence;
 use \DateTime;
+use AppBundle\Form\Type\Member\EditMemberType;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -28,7 +29,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class TrainerController extends Controller
 {
     /**
-     * @Route("/trainer/{adminyear}/{letter}", defaults={"letter"="alle", "adminyear"=2016},name="trainer_home", requirements={"letter": "[A-Z]|alle", "adminyer": "[1-9][0-9]{3}"})
+     * @Route("/trainer/{adminyear}/{letter}", defaults={"letter"="alle", "adminyear"=2016},name="trainer_home", requirements={"letter": "[A-Z]|alle", "adminyear": "[1-9][0-9]{3}"})
      */
     public function indexAction (Request $request, $letter, $adminyear)
     {
@@ -65,7 +66,7 @@ class TrainerController extends Controller
     
     
     
-    $qb['Trainer']->where($qb['Trainer']->expr()->like('ditto.'.$searchcol, ':trainer'))
+    $qb['Trainer\Trainer']->where($qb['Trainer\Trainer']->expr()->like('ditto.'.$searchcol, ':trainer'))
         ->setParameter('trainer','%'.$searchval.'%')
         ->getQuery();
     
@@ -73,19 +74,19 @@ class TrainerController extends Controller
          
     }else if($letter != 'alle'){
           
-        $qb->where($qb['Trainer']->expr()->like('ditto.lastname', ':letter'))
+        $qb['Trainer\Trainer']->andWhere($qb['Trainer\Trainer']->expr()->like('ditto.lastname', ':letter'))
                    ->setParameter('letter',$letter.'%');
         
         switch($letter){
-            case 'A': $qb['Trainer']->orWhere($qb['Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'A': $qb['Trainer\Trainer']->orWhere($qb['Trainer\Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ä%'); 
             break;
         
-            case 'O': $qb['Trainer']->orWhere($qb['Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'O': $qb['TrainTrainer\Trainerer']->orWhere($qb['Trainer\Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ö%'); 
             break;
         
-            case 'U': $qb['Trainer']->orWhere($qb['Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'U': $qb['Trainer\Trainer']->orWhere($qb['Trainer\Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ü%'); 
             break;
         }        
@@ -104,12 +105,12 @@ class TrainerController extends Controller
      
      foreach ($licencelist as $lc){
          
-         $trainerdependentlist[$lc[0]->getTrainerid()]['phonenumbers'][]=$lc;
+         $trainerdependentlist[$lc[0]->getTrainerid()]['licences'][]=$lc;
      }
 
      foreach ($focuslist as $fc){
          
-         $trainerdependentlist[$fc[0]->getTrainerid()]['phonenumbers'][]=$fc;
+         $trainerdependentlist[$fc[0]->getTrainerid()]['focuses'][]=$fc;
      }
 
 
@@ -131,7 +132,7 @@ class TrainerController extends Controller
     /**
      * @Route("/trainer/anlegen/{adminyear}/{letter}", defaults={"letter": "A", "adminyear": 2016}, name="addtrainer", requirements={"letter": "[A-Z]","adminyear": "[1-9][0-9]{3}"})
      */    
-    public function addtrainerAction(Request $request, $letter) {        
+    public function addtrainerAction(Request $request, $letter, $adminyear) {        
         
         $trainer = new Trainer();
         $phonenumber = new TrainerPhoneNumber();
@@ -154,16 +155,19 @@ class TrainerController extends Controller
             $manager= $this->getDoctrine()->getManager();
                         
             foreach($trainer->getPhonenumber() as $pn){
-              $pn->setTrainerid(uniqid('pn'));
-              $manager->persist($pn);
-              
-          }
+                 $pn->setTpnid(uniqid('pn'));
+                 $manager->persist($pn);              
+            }
             
-             foreach($trainer->getLicence() as $lc){
-              $lc->setLicence(uniqid('lc'));
-              $manager->persist($lc);
-              
-          }
+            foreach($trainer->getLicence() as $lc){
+                $lc->setLiid(uniqid('lc'));
+                $manager->persist($lc);              
+            }
+          
+            foreach($trainer->getTheme() as $th){
+                $th->setTfid(uniqid('th'));
+                $manager->persist($th);              
+            }
           
           
           
@@ -188,43 +192,64 @@ class TrainerController extends Controller
 //-------------------------------------------------------------------------------------------------   
     
     /**
-     * @Route("/trainer/bearbeiten/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"ID": "\d+", "letter": "[A-Z]"}, name="edittrainer")
+     * @Route("/trainer/bearbeiten/{adminyear}/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"letter": "[A-Z]"}, name="edittrainer")
      * 
      */   
-    public function edittrainerAction(Request $request, $ID, $letter)
+    public function edittrainerAction(Request $request, $adminyear, $ID, $letter)
     {
-        $manager= $this->getDoctrine()->getManager();
-        $repository = $this->getDoctrine()->getRepository('AppBundle:Trainer\Trainer');
+        $doctrine= $this->getDoctrine();
+        $dependencies=['Trainer\Trainer' => 'trainer', 'Trainer\TrainerPhoneNumber'=>'tpn', 'Trainer\TrainerFocus'=>'tf','Trainer\TrainerLicence'=>'li'];
+
+        $qb= [];
+        foreach($dependencies as $dependent => $idprefix){
+     
+            $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
+            $qb[$dependent]->select(array('ditto', $qb[$dependent]->expr()->max('ditto.recorded')))
+                    ->where('ditto.recorded <= :year')
+                    ->andWhere('ditto.trainerid = :trainerid')
+                    ->groupBy('ditto.'.$idprefix.'id')
+                    ->setParameter('year', $adminyear.'-12-31')
+                    ->setParameter('trainerid',$ID);     
+        }
         
-        $trainer=$repository->findOneBy(array('trainerid' => $ID));
+        $manager= $doctrine->getManager();
+        $trainer=$qb['Trainer\Trainer']->getQuery()->getSingleResult()[0];
+        
+        
         
         if(!$trainer){
             throw $this->createNotFoundException('Es konnte kein Trainer mit der Trainernr.: '.$ID.' gefunden werden');
         }
         
-        $edittrainerform = $this->createForm(EditTrainerType::class, $trainer);
+        $phonenumbers=$qb['Trainer\TrainerPhoneNumber']->getQuery()->getResult()[0];
+        $licences=$qb['Trainer\TrainerLicence']->getQuery()->getResult()[0];        
+        $focuses=$qb['Trainer\TrainerFocus']->getQuery()->getResult()[0];        
+
         
         $originallicences = new ArrayCollection();
         $originalphonenr = new ArrayCollection();
         $originalthemes = new ArrayCollection();
 
 
-        foreach ($trainer->getLicence() as $licence) {
+        foreach ($licences as $licence) {
+            $trainer->addLicence($licence);
             $originallicences->add($licence);
         }
 
-        foreach ($trainer->getPhonenumber() as $phonenr) {
+        foreach ($phonenumbers as $phonenr) {
+            $trainer->addPhonenumber($phonenr);
             $originalphonenr->add($phonenr);
         }
         
-        foreach ($trainer->getTheme() as $theme) {
+        foreach ($focuses as $theme) {
+            $trainer->addTheme($theme);
             $originalthemes->add($theme);
         }
         
-        $edittrainerform->handleRequest($request);
+        $edittrainerform = $this->createForm(EditMemberType::class, $trainer);
+        $edittrainerform -> handleRequest($request);
         
         if($edittrainerform->get('delete')->isClicked()){
-            $manager=$this->getDoctrine()->getManager();
             $manager->remove($trainer);
             $manager->flush();
             $this->addflash('notice', 'Dieser Übungsleiter wurde erfolgreich gelöscht!');
