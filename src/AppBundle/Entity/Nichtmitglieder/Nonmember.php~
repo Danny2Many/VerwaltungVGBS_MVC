@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="NonMember")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Nonmember extends HealthData {
 
@@ -32,7 +33,7 @@ protected $sportsgroup;
 
 /**
 * @ORM\Id
-* @ORM\Column(type="integer") 
+* @ORM\Column(type="string") 
 * 
 */
 protected $nmemid;    
@@ -75,7 +76,7 @@ protected $phonenumber;
 
 /**
 * @ORM\Id
-* @ORM\Column(type="date")
+* @ORM\Column(type="string")
 */
 protected $recorded;
 
@@ -84,6 +85,11 @@ protected $recorded;
 */
 protected $deleted;
 
+/**
+* @ORM\Column(type="binary")
+* 
+*/protected $newsletter; 
+    
 
     /**
      * Constructor
@@ -98,7 +104,7 @@ protected $deleted;
     /**
      * Get nmemID
      *
-     * @return integer
+     * @return string
      */
     public function getNMemID()
     {
@@ -421,7 +427,7 @@ public function setPhonenumber($phonenumber)
     /**
      * Get recorded
      *
-     * @return \DateTime
+     * @return \String
      */
     public function getRecorded()
     {
@@ -450,5 +456,33 @@ public function setPhonenumber($phonenumber)
     public function getDeleted()
     {
         return $this->deleted;
+    }
+
+    /**
+     * Set nmemid
+     *
+     * @param integer $nmemid
+     *
+     * @return Nonmember
+     */
+    public function setNmemid($nmemid)
+    {
+        $this->nmemid = $nmemid;
+
+        return $this;
+    }
+
+    /**
+     * Set recorded
+     *
+     * @param \String $recorded
+     *
+     * @return Nonmember
+     */
+    public function setRecorded($recorded)
+    {
+        $this->recorded = $recorded;
+
+        return $this;
     }
 }

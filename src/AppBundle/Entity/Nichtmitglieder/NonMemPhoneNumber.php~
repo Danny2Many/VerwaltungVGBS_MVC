@@ -20,7 +20,7 @@ class NonMemPhoneNumber {
      * @ORM\Id
      * @ORM\Column(type="integer") 
      */
-    protected $phid;
+    protected $pnid;
    
     /**
      * 
@@ -36,7 +36,7 @@ class NonMemPhoneNumber {
     protected $phonenumber;
     
     /**
-    * @ORM\Column(type="date")
+    * @ORM\Column(type="string")
     */
     protected $recorded;
 
@@ -47,15 +47,7 @@ class NonMemPhoneNumber {
 
 
 
-    /**
-     * Get phid
-     *
-     * @return integer
-     */
-    public function getPhid()
-    {
-        return $this->phid;
-    }
+
 
     /**
      * Set nmemid
@@ -132,7 +124,7 @@ class NonMemPhoneNumber {
     /**
      * Set recorded
      *
-     * @param \DateTime $recorded
+     * @param \String $recorded
      *
      * @return NonMemPhoneNumber
      */
@@ -146,7 +138,7 @@ class NonMemPhoneNumber {
     /**
      * Get recorded
      *
-     * @return \DateTime
+     * @return \String
      */
     public function getRecorded()
     {
@@ -179,5 +171,19 @@ class NonMemPhoneNumber {
     public function getDeleted()
     {
         return $this->deleted;
+    }
+
+    /**
+     * Set phid
+     *
+     * @param integer $phid
+     *
+     * @return NonMemPhoneNumber
+     */
+    public function setPhid($phid)
+    {
+        $this->phid = $phid;
+
+        return $this;
     }
 }

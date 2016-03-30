@@ -56,6 +56,23 @@ class NonMemRehabilitationCertificate {
     protected $rehabunits;
 
     /**
+     * 
+     * @ORM\Column(type="string")
+     * 
+     */
+    protected $recorded;
+    
+    
+    /**
+     * 
+     * @ORM\Column(type="string")
+     * 
+     */
+    protected $deleted;
+    
+    
+    
+    /**
      * Get rcid
      *
      * @return integer
@@ -65,6 +82,20 @@ class NonMemRehabilitationCertificate {
         return $this->rcid;
     }
 
+    /**
+     * Set rcid
+     *
+     * @param string $rcid
+     *
+     * @return MemRehabilitationCertificate
+     */
+    public function setRcid($rcid)
+    {
+        $this->rcid = $rcid;
+
+        return $this;
+    }
+    
     /**
      * Set nmemid
      *
@@ -159,5 +190,53 @@ class NonMemRehabilitationCertificate {
     public function getRehabunits()
     {
         return $this->rehabunits;
+    }
+
+    /**
+     * Set recorded
+     *
+     * @param string $recorded
+     *
+     * @return NonMemRehabilitationCertificate
+     */
+    public function setRecorded($recorded)
+    {
+        $this->recorded = $recorded;
+
+        return $this;
+    }
+
+    /**
+     * Get recorded
+     *
+     * @return string
+     */
+    public function getRecorded()
+    {
+        return $this->recorded;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param string $deleted
+     *
+     * @return NonMemRehabilitationCertificate
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return string
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
     }
 }

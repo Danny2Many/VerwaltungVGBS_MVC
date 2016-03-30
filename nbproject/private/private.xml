@@ -5,10 +5,8 @@
         <group>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Controller/NonMemberController.php</file>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Nichtmitglieder/NonMemPhoneNumber.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Trainer/Trainer.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Controller/TrainerController.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/app/config/config.yml</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Nichtmitglieder/NonMemRehabilitationCertificate.php</file>
+            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Member.php</file>
+            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Form/Type/Nichtmitglieder/BaseNonMemberType.php</file>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/app/Resources/views/Nicht_Mitglieder/nonmemberform.html.twig</file>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/app/Resources/views/Nicht_Mitglieder/nonmember.html.twig</file>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Nichtmitglieder/Nonmember.php</file>

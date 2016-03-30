@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class SportsgroupController extends Controller {
     /**
-    * @Route("/sportgruppen/{letter}", defaults={"letter"="M"}, name="sportsgroup_home" , requirements={"letter": "[A-Z]"})
+    * @Route("/sportgruppen/{adminyear}/{letter}", defaults={"letter"="A", "adminyear"=2016}, name="sportsgroup_home" , requirements={"letter": "[A-Z]", "adminyear": "[1-9][0-9]{3}"}})
     */ 
      public function indexAction (Request $request, $letter){
          

@@ -21,20 +21,20 @@ use AppBundle\Form\SanitizedTextType;
 
 class NonMemberController extends Controller {
     /**
-     * @Route("/nichtmitglieder/{adminyear}/{letter}", defaults={"letter"="A", "adminyear"=2016}, name="nonmember_home", requirements={"letter": "[A-Z]"}, , "adminyear": "[1-9][0-9]{3}"})
+     * @Route("/nichtmitglieder/{adminyear}/{letter}", defaults={"letter"="A", "adminyear"=2016}, name="nonmember_home", requirements={"letter": "[A-Z]", "adminyear": "[1-9][0-9]{3}"})
     */    
     public function indexAction (Request $request, $letter, $adminyear ) {   
   
       
     $doctrine = $this->getDoctrine();
-    $dependencies=['NonMember', 'NonMemPhoneNumber', 'NonMemRehabilitationCertificate'];
+    $dependencies=['Nichtmitglieder\Nonmember', 'Nichtmitglieder\NonMemPhoneNumber', 'Nichtmitglieder\NonMemRehabilitationCertificate'];
     $qb=[];
     foreach($dependencies as $dependent){
      
         $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
         $qb[$dependent]->select(array('ditto', $qb[$dependent]->expr()->max('ditto.recorded')))
                 ->where('ditto.recorded <= :year')
-                ->groupBy('ditto.memid')
+                ->groupBy('ditto.nmemid')
                 ->setParameter('year', $adminyear.'-12-31');
     }
     
@@ -56,47 +56,47 @@ class NonMemberController extends Controller {
         $searchval=$request->query->get('search')['searchfield'];
         $searchcol=$request->query->get('search')['column'];
     
-    //building the query
-    $qb['NonMember']->where($qb['NonMember']->expr()->like('ditto.'.$searchcol, ':nonmember'))
+        //building the query
+        $qb['Nichtmitglieder\Nonmember']->where($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.'.$searchcol, ':nonmember'))
                    ->setParameter('nonmember','%'.$searchval.'%')
                    ->getQuery();    
         
     }else{        
         
-        $qb['Member']->andWhere($qb['NonMember']->expr()->like('ditto.lastname', ':letter'))
+        $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.lastname', ':letter'))
                    ->setParameter('letter',$letter.'%');                
         
         
           switch($letter){
-            case 'A': $qb['NonMember']->orWhere($qb['NonMember']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'A': $qb['Nichtmitglieder\Nonmember']->orWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ä%'); 
             break;
         
-            case 'O': $qb['NonMember']->orWhere($qb['NonMember']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'O': $qb['Nichtmitglieder\Nonmember']->orWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ö%'); 
             break;
         
-            case 'U': $qb['NonMember']->orWhere($qb['NonMember']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'U': $qb['Nichtmitglieder\Nonmember']->orWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ü%'); 
             break;
         }    
     }    
   
-    $nonmemberlist=$qb['NonMember']->getQuery()->getResult();
-    $phonenumberlist=$qb['NonMemPhoneNumber']->getQuery()->getResult();
-    $rehabcertlist=$qb['NonMemRehabilitationCertificate']->getQuery()->getResult();
+    $nonmemberlist=$qb['Nichtmitglieder\Nonmember']->getQuery()->getResult();
+    $phonenumberlist=$qb['Nichtmitglieder\NonMemPhoneNumber']->getQuery()->getResult();
+    $rehabcertlist=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
 
 
     $nonmemberdependentlist=[];
     foreach ($phonenumberlist as $pn){
 
-        $nonmemberdependentlist[$pn[0]->getNMemid()]['phonenumbers'][]=$pn;
+        $nonmemberdependentlist[$pn[0]->getNMemID()]['phonenumbers'][]=$pn;
     }
 
 
      foreach ($rehabcertlist as $rc){
 
-        $nonmemberdependentlist[$rc[0]->getNMemid()]['rehabcerts'][]=$rc;
+        $nonmemberdependentlist[$rc[0]->getNMemID()]['rehabcerts'][]=$rc;
 
     }
     
@@ -131,7 +131,7 @@ class NonMemberController extends Controller {
         if($addnonmemform->isSubmitted() && $addnonmemform->isValid()){
         
             $nmemid=uniqid('n'); 
-            $nonmember->setNMemid($nmemid);
+            $nonmember->setNMemID($nmemid);
             
             $manager= $this->getDoctrine()->getManager();
             
@@ -164,13 +164,13 @@ class NonMemberController extends Controller {
         
     }
      /**
-     * @Route("/nichtmitglieder/bearbeiten/{adminyear}/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"ID": "\d+", "letter": "[A-Z]"}, name="editnonmem")
+     * @Route("/nichtmitglieder/bearbeiten/{adminyear}/{letter}/{ID}", defaults={"letter": "[A-Z]"}, name="editnonmem")
      * 
      */
     public function editnonmeberAction (Request $request, $adminyear, $ID, $letter){
         
     $doctrine=$this->getDoctrine();   
-    $dependencies=array('NonMember' => 'nmem', 'NonMemPhoneNumber'=> 'pn', 'NonMemRehabilitationCertificate'=> 'rc');
+    $dependencies=array('Nonmember' => 'nmem', 'NonMemPhoneNumber'=> 'pn', 'NonMemRehabilitationCertificate'=> 'rc');
     
     $qb=[];
     foreach($dependencies as $dependent => $idprefix){
@@ -178,7 +178,7 @@ class NonMemberController extends Controller {
     $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
     $qb[$dependent]->select(array('ditto', $qb[$dependent]->expr()->max('ditto.recorded')))
                 ->where('ditto.recorded <= :year')
-                ->andWhere('ditto.nmemid = :memid')
+                ->andWhere('ditto.nmemid = :nmemid')
                 ->groupBy('ditto.'.$idprefix.'id')
                 ->setParameter('year', $adminyear.'-12-31')
                 ->setParameter('nmemid', $ID);
@@ -186,13 +186,13 @@ class NonMemberController extends Controller {
     }
         
         $manager=getDoctrine()->getManager();
-        $nonmember=$qb['NonMember']->getQuery()->getSingleResult()[0];
+        $nonmember=$qb['Nonmember']->getQuery()->getSingleResult()[0];
         
         if (!$nonmember){
-            throw $this->createNotFoundForm('Es konnte kein Mitglied mit der Nichtmitgliedsnr.: '.$ID.' gefunden werden');
+            throw $this->createNotFoundForm('Es konnte kein Nichtmitglied mit der Nichtmitgliedsnr.: '.$ID.' gefunden werden');
         }
-        $phonenumbers=$qb['NonMemPhoneNumber']->getQuery()->getResult()[0][0];
-        $rehabcerts=$qb['NonMemRehabilitationCertificate']->getQuery()->getResult()[0];
+        $phonenumbers=$qb['Nichtmitglieder\NonMemPhoneNumber']->getQuery()->getResult()[0][0];
+        $rehabcerts=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult()[0];
         
         $originalrehabs = new ArrayCollection();
         $originalphonenr = new ArrayCollection();
@@ -222,13 +222,13 @@ class NonMemberController extends Controller {
             $manager->flush();
             return $this->redirectToRoute('nonmember_home', array('letter' => $letter, 'info' => 'entfernt'));
         
-        
+        }
          //if the form is valid -> persist it to the database
         if($editnonmemform->isSubmitted() && $editnonmemform->isValid()){ 
             if(!$nonmember->getSportsgroup()->isEmpty()){      
             foreach ($nonmember->getSportsgroup() as $sportsgroup) {
                 foreach ($originalsections as $section) {
-                    if (false === $sportsgroup->getSection()->contains($section)) 
+                    if (false === $sportsgroup->getSection()->contains($section)) {
                         $nonmember->removeSection($section);
                     }
                 }
@@ -250,7 +250,7 @@ class NonMemberController extends Controller {
         }     
 
         foreach ($originalphonenr as $phonenr) {
-            if (false === $member->getPhonenumber()->contains($phonenr)) {
+            if (false === $nonmember->getPhonenumber()->contains($phonenr)) {
                 $manager->remove($phonenr);
             }
         }
