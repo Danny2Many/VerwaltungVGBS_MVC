@@ -48,71 +48,71 @@
         {% for data in tabledata %}
             
             <tr> 
-                {% if data[0].lastname|first == 'Ä' %}
+                {% if data.lastname|first == 'Ä' %}
                     {% set first = 'A' %}
-                    {% elseif data[0].lastname|first == 'Ö' %}
+                    {% elseif data.lastname|first == 'Ö' %}
                     {% set first = 'O' %}
-                    {% elseif data[0].lastname|first == 'Ü' %}
+                    {% elseif data.lastname|first == 'Ü' %}
                     {% set first = 'U' %}
                     {% else %}
-                    {% set first = data[0].lastname|first %}   
+                    {% set first = data.lastname|first %}   
                 {% endif %}
-                <td><center><a href="{{ path('editmem', {'letter': first|capitalize, 'ID': data[0].memid, 'adminyear': adminyear }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
-                <td>{{ data[0].memid }}</td>
+                <td><center><a href="{{ path('editmem', {'letter': first|capitalize, 'ID': data.memid, 'adminyear': adminyear }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
+                <td>{{ data.memid }}</td>
                 {#<td>{% for Sec in data.section %}
                         {{ Sec.sectionname }}<br>
                         {% else  %}
                         {{ "-" }}
                     {% endfor %}</td>#}
-                <td>{{ data[0].state|striptags }}</td>
+                <td>{{ data.state|striptags }}</td>
                
-                <td>{{ data[0].title|striptags }}</td>
-                <td>{{ data[0].lastname|striptags }}</td>
-                <td>{{ data[0].firstname|striptags }}</td>                
-                <td>{{ data[0].birthday|date("d.m.Y") }}</td>
-                <td>{{ data[0].location|striptags }}</td>
-                <td>{{ data[0].streetaddress|striptags }}</td>
-                <td>{{ data[0].postcode|striptags }}</td>
-                <td>{{ data[0].mailbox is empty ? "-" : data[0].mailbox|striptags }}</td>
+                <td>{{ data.title|striptags }}</td>
+                <td>{{ data.lastname|striptags }}</td>
+                <td>{{ data.firstname|striptags }}</td>                
+                <td>{{ data.birthday|date("d.m.Y") }}</td>
+                <td>{{ data.location|striptags }}</td>
+                <td>{{ data.streetaddress|striptags }}</td>
+                <td>{{ data.postcode|striptags }}</td>
+                <td>{{ data.mailbox is empty ? "-" : data.mailbox|striptags }}</td>
                 
-                {% if memberdependentlist[data[0].memid]['phonenumbers'] is defined %}
-                {% set pns =memberdependentlist[data[0].memid]['phonenumbers'] %}
+                {% if memberdependentlist[data.memid]['phonenumbers'] is defined %}
+                {% set pns =memberdependentlist[data.memid]['phonenumbers'] %}
                 {% else %}
                   {% set pns ='' %}  
                 {% endif %}
                
                 <td>{% for PN in pns %}
-                        {{ PN[0].phonenumber }}<br>
+                        {{ PN.phonenumber }}<br>
                         {% else  %}
                         {{ "-" }}    
                     {% endfor %}</td>
                     
-                <td>{{ data[0].email is empty ? "-" : data[0].email|striptags }}</td>
+                <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>
                 {#<td>{% for sportsgroup in data.sportsgroup %}
                         {{ sportsgroup.Token }}<br>
                         {% else  %}
                             {{ "-" }}
                     {% endfor %}
                    </td>#}
-                 <td>{{ data[0].admissiondate|date("d.m.Y") }}</td>
+                 <td>{{ data.admissiondate|date("d.m.Y") }}</td>
                  
                  
                  
-                <td>{{ data[0].admissionconfirmation is empty ? "-" : data.admissionconfirmation|date("d.m.Y") }}</td>
+                <td>{{ data.admissionconfirmation is empty ? "-" : data.admissionconfirmation|date("d.m.Y") }}</td>
                 
              
-                {% if memberdependentlist[data[0].memid]['rehabcerts'] is defined %}
-                {% set rehab =memberdependentlist[data[0].memid]['rehabcerts'] %}
+                {% if memberdependentlist[data.memid]['rehabcerts'] is defined %}
+                {% set rehab =memberdependentlist[data.memid]['rehabcerts'] %}
                 {% else %}
                   {% set rehab ='' %}  
                 {% endif %}
                 
                 
                 
-                <td>{% for RC in rehab if date(RC[0].terminationdate) > date() %}
+                <td>{% for RC in rehab if date(RC.terminationdate) > date() %}
                           
                         
-                    {{'RS'}}{{loop.index}}-<strong>{{RC[0].terminationdate|date("d.m.Y") }}</strong>-{{RC[0].rehabunits }}<br>
+                    {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>
                         
                          {% else %}
                          {{ "-" }}
@@ -120,10 +120,10 @@
                    </td>
                     
                     
-                  <td>{% for RC in rehab if date(RC[0].terminationdate) < date() %}
+                  <td>{% for RC in rehab if date(RC.terminationdate) < date() %}
                           
                         
-                    {{'RS'}}{{loop.index}}-<strong>{{RC[0].terminationdate|date("d.m.Y") }}</strong>-{{RC[0].rehabunits }}<br>
+                    {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>
                         
                          {% else %}
                          {{ "-" }}
@@ -132,34 +132,36 @@
                     
                 
                     
-                <td>{{ data[0].decreaseddues == '0' ? "kein" : 'vermindert' }}</td>
-                <td>{{ data[0].healthinsurance is empty ? "-" : data[0].healthinsurance|striptags}}</td>
-                <td>{{ data[0].additionalinfo is empty ? "-" : data[0].additionalinfo|striptags }}</td>
-                <td>{{ data[0].tribute is empty ? "-" : data[0].Tribute|striptags }}</td>
-                <td>{{ data[0].workplaceposture is empty ? "-" : data[0].workplaceposture|striptags }}</td>
-                <td>{{ data[0].chronoccupationaldis is empty ? "-" : data[0].chronoccupationaldis|striptags }}</td>
-                <td>{{ data[0].paincervicalspine is empty ? "-" : data[0].paincervicalspine|striptags }}</td>
-                <td>{{ data[0].painthoracicspine is empty ? "-" : data[0].painthoracicspine|striptags }}</td>
-                <td>{{ data[0].painlumbarspine is empty ? "-" : data[0].painlumbarspine|striptags }}</td>
-                <td>{{ data[0].upperlimbs is empty ? "-" : data[0].upperlimbs|striptags }}</td>
-                <td>{{ data[0].lowerlimbs is empty ? "-" : data[0].lowerlimbs|striptags }}</td>
-                <td>{{ data[0].otherimpairments is empty ? "-" : data[0].otherimpairments|striptags }}</td>
-                <td>{{ data[0].medication is empty ? "-" : data[0].medication|striptags }}</td>
-                <td>{{ data[0].additionalagilactivities is empty ? "-" : data[0].additionalagilactivities|striptags }}</td>
+                <td>{{ data.decreaseddues == '0' ? "kein" : 'vermindert' }}</td>
+                <td>{{ data.healthinsurance is empty ? "-" : data.healthinsurance|striptags}}</td>
+                <td>{{ data.additionalinfo is empty ? "-" : data.additionalinfo|striptags }}</td>
+                <td>{{ data.tribute is empty ? "-" : data.Tribute|striptags }}</td>
+                <td>{{ data.workplaceposture is empty ? "-" : data.workplaceposture|striptags }}</td>
+                <td>{{ data.chronoccupationaldis is empty ? "-" : data.chronoccupationaldis|striptags }}</td>
+                <td>{{ data.paincervicalspine is empty ? "-" : data.paincervicalspine|striptags }}</td>
+                <td>{{ data.painthoracicspine is empty ? "-" : data.painthoracicspine|striptags }}</td>
+                <td>{{ data.painlumbarspine is empty ? "-" : data.painlumbarspine|striptags }}</td>
+                <td>{{ data.upperlimbs is empty ? "-" : data.upperlimbs|striptags }}</td>
+                <td>{{ data.lowerlimbs is empty ? "-" : data.lowerlimbs|striptags }}</td>
+                <td>{{ data.otherimpairments is empty ? "-" : data.otherimpairments|striptags }}</td>
+                <td>{{ data.medication is empty ? "-" : data.medication|striptags }}</td>
+                <td>{{ data.additionalagilactivities is empty ? "-" : data.additionalagilactivities|striptags }}</td>
                
-                <td>{{ data[0].pulseatrest is empty ? "-" : data[0].pulseatrest|striptags }}</td>
+                <td>{{ data.pulseatrest is empty ? "-" : data.pulseatrest|striptags }}</td>
                 
-                 {% if data[0].pulseatrest is not empty %}
-                {% set hfmax = 220 - data[0].birthday|age  %}
-                {% set hfres = hfmax - data[0].pulseatrest  %}
-                {% set hfbei50 = data[0].pulseatrest+(0.5*hfres)|round  %}
-                {% set hfbei55 = data[0].pulseatrest+(0.55*hfres)|round  %}
-                {% set hfbei60 = data[0].pulseatrest+(0.6*hfres)|round  %}
-                {% set hfbei65 = data[0].pulseatrest+(0.65*hfres)|round  %}
-                {% set hfbei70 = data[0].pulseatrest+(0.7*hfres)|round  %}
-                {% set hfbei75 = data[0].pulseatrest+(0.75*hfres)|round  %}
-                {% set hfbei80 = data[0].pulseatrest+(0.8*hfres)|round  %}
-                {% set hfbei85 = data[0].pulseatrest+(0.85*hfres)|round  %}
+                 {% if data.pulseatrest is not empty %}
+                {% set pulseatrest = data.pulseatrest %}
+                
+                {% set hfmax = 220 - data.birthday|age  %}
+                {% set hfres = hfmax - pulseatrest  %}
+                {% set hfbei50 = pulseatrest+(0.5*hfres)|round  %}
+                {% set hfbei55 = pulseatrest+(0.55*hfres)|round  %}
+                {% set hfbei60 = pulseatrest+(0.6*hfres)|round  %}
+                {% set hfbei65 = pulseatrest+(0.65*hfres)|round  %}
+                {% set hfbei70 = pulseatrest+(0.7*hfres)|round  %}
+                {% set hfbei75 = pulseatrest+(0.75*hfres)|round  %}
+                {% set hfbei80 = pulseatrest+(0.8*hfres)|round  %}
+                {% set hfbei85 = pulseatrest+(0.85*hfres)|round  %}
                 {% else %}
                 {% set hfmax = "-"  %}
                 {% set hfbei50 = "-"  %}

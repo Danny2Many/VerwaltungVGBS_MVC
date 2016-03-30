@@ -29,18 +29,26 @@ class MemberController extends Controller
     {
     
     $doctrine=$this->getDoctrine();
-    $dependencies=['Member', 'MemPhoneNumber', 'MemRehabilitationCertificate'];
+    $dependencies=array('Member' => 'mem', 'MemPhoneNumber'=> 'pn', 'MemRehabilitationCertificate'=> 'rc');
     
     $qb= [];
-    foreach($dependencies as $dependent){
-     
+    foreach($dependencies as $dependent => $idprefix){
+   
+        //building the subquery: SELECT max(recorded) FROM % AS dittosub WHERE dittosub.type = ditto.type
+     $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
+     $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.recorded'))
+                          ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
+                          
+        
+     //building the query: SELECT ditto FROM % AS ditto WHERE ditto.recorded=( subquery ) AND ditto.recorded<=$adminyear 
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-     $qb[$dependent]->select(array('ditto', $qb[$dependent]->expr()->max('ditto.recorded')))
-                ->where('ditto.recorded <= :year')
-                ->groupBy('ditto.memid')
-                ->setParameter('year', $adminyear.'-12-31');
-     
+     $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
+                    ->andWhere('ditto.recorded<=:adminyear')
+                    ->setParameter('adminyear',$adminyear.'-12-31');
     }
+    
+    
+    
     
     $choices=array('Mitgliedsnr.' => 'memid',
         'Name' => 'lastname',
@@ -68,9 +76,9 @@ class MemberController extends Controller
     
     
     //building the query
-    $qb['Member']->where($qb['Member']->expr()->like('ditto.'.$searchcol, ':member'))
-                   ->setParameter('member','%'.$searchval.'%')
-                   ->getQuery();
+    $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.'.$searchcol, ':member'))
+                   ->setParameter('member','%'.$searchval.'%');
+                   
     
     
      
@@ -79,7 +87,7 @@ class MemberController extends Controller
         
         
         $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.lastname', ':letter'))
-                   ->setParameter('letter',$letter.'%');
+                     ->setParameter('letter',$letter.'%');
                    
         
         
@@ -114,13 +122,13 @@ class MemberController extends Controller
      $memberdependentlist=[];
      foreach ($phonenumberlist as $pn){
          
-         $memberdependentlist[$pn[0]->getMemid()]['phonenumbers'][]=$pn;
+         $memberdependentlist[$pn->getMemid()]['phonenumbers'][]=$pn;
      }
      
      
       foreach ($rehabcertlist as $rc){
         
-         $memberdependentlist[$rc[0]->getMemid()]['rehabcerts'][]=$rc;
+         $memberdependentlist[$rc->getMemid()]['rehabcerts'][]=$rc;
          
      }
      
@@ -230,27 +238,35 @@ class MemberController extends Controller
     
     
     
-    $doctrine=$this->getDoctrine();   
+    $doctrine=$this->getDoctrine(); 
+    $manager= $doctrine->getManager();
     $dependencies=array('Member' => 'mem', 'MemPhoneNumber'=> 'pn', 'MemRehabilitationCertificate'=> 'rc');
     
     $qb=[];
     foreach($dependencies as $dependent => $idprefix){
-            
+        //building the subquery: SELECT max(recorded) FROM % AS dittosub WHERE dittosub.type = ditto.type 
+     $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
+     $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.recorded'))
+                          ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
+                          
+        
+     //building the query: SELECT ditto FROM % AS ditto WHERE ditto.recorded=( subquery ) AND ditto.recorded<=$adminyear AND ditto.memid=§ID
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-     $qb[$dependent]->select(array('ditto', $qb[$dependent]->expr()->max('ditto.recorded')))
-                ->where('ditto.recorded <= :year')
-                ->andWhere('ditto.memid = :memid')
-                ->groupBy('ditto.'.$idprefix.'id')
-                ->setParameter('year', $adminyear.'-12-31')
-                ->setParameter('memid', $ID);
+     $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
+                    ->andWhere('ditto.memid=:ID')
+                    ->andWhere('ditto.recorded<=:adminyear')
+                    ->setParameter('ID',$ID)
+                    ->setParameter('adminyear',$adminyear.'-12-31');
      
+
+        
     }
         
         
         
         
-        $manager= $doctrine->getManager();
-        $member=$qb['Member']->getQuery()->getSingleResult()[0];
+        
+        $member=$qb['Member']->getQuery()->getSingleResult();
         
         
         
@@ -258,14 +274,21 @@ class MemberController extends Controller
         throw $this->createNotFoundException('Es konnte kein Mitglied mit der Mitgliedsnr.: '.$ID.' gefunden werden');
     }
         
-        $phonenumbers=$qb['MemPhoneNumber']->getQuery()->getResult()[0][0];
-        $rehabcerts=$qb['MemRehabilitationCertificate']->getQuery()->getResult()[0];
-        
-       
+        $phonenumbers=$qb['MemPhoneNumber']->getQuery()->getResult();
+        $rehabcerts=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
+       echo '<pre>'; 
+        print_r($rehabcerts);
+        echo '</pre>';
          $originalrehabs = new ArrayCollection();
          $originalphonenr = new ArrayCollection();
          $originalsections = new ArrayCollection();
 
+         
+         
+         
+         
+         
+         
     // Create an ArrayCollection of the current Rehab objects in the database
     foreach ($rehabcerts as $rehab) {
         
