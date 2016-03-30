@@ -28,15 +28,24 @@ use Doctrine\Common\Collections\ArrayCollection;
 class TrainerController extends Controller
 {
     /**
-     * @Route("/trainer/{letter}", defaults={"letter"="alle"},name="trainer_home", requirements={"letter": "[A-Z]|alle"})
+     * @Route("/trainer/{adminyear}/{letter}", defaults={"letter"="alle", "adminyear"=2016},name="trainer_home", requirements={"letter": "[A-Z]|alle", "adminyer": "[1-9][0-9]{3}"})
      */
-    public function indexAction (Request $request, $letter)
+    public function indexAction (Request $request, $letter, $adminyear)
     {
         
-        $repository = $this->getDoctrine()
-        ->getRepository('AppBundle:Trainer\Trainer');
-        
-        $qb=$repository->createQueryBuilder('t');
+        $doctrine=$this->getDoctrine();
+        $dependencies=['Trainer\Trainer', 'Trainer\TrainerPhoneNumber', 'Trainer\TrainerFocus','Trainer\TrainerLicence'];
+    
+        $qb= [];
+        foreach($dependencies as $dependent){
+     
+            $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
+            $qb[$dependent]->select(array('ditto', $qb[$dependent]->expr()->max('ditto.recorded')))
+                    ->where('ditto.recorded <= :year')
+                    ->groupBy('ditto.trainerid')
+                    ->setParameter('year', $adminyear.'-12-31');
+     
+    }
         
         $choices=array('Trainernr.' => 'trainerid',
         'Name' => 'lastname',
@@ -55,42 +64,62 @@ class TrainerController extends Controller
     $searchcol=$request->query->get('search')['column'];   
     
     
-    if($searchcol=='licencetype'){
-    $qb->Join('t.licence', 'i')           
-        ->where($qb->expr()->like('i.licencetype',':type'))
-        ->setParameter('type','%'.$searchval.'%');
-    }else{
-    $qb->where($qb->expr()->like('t.'.$searchcol, ':trainer'))
-        ->setParameter('trainer','%'.$searchval.'%');
-    }
+    
+    $qb['Trainer']->where($qb['Trainer']->expr()->like('ditto.'.$searchcol, ':trainer'))
+        ->setParameter('trainer','%'.$searchval.'%')
+        ->getQuery();
+    
      
          
     }else if($letter != 'alle'){
           
-        $qb->where($qb->expr()->like('t.lastname', ':letter'))
+        $qb->where($qb['Trainer']->expr()->like('ditto.lastname', ':letter'))
                    ->setParameter('letter',$letter.'%');
         
         switch($letter){
-            case 'A': $qb->orWhere($qb->expr()->like('t.lastname', ':umlautletter'))
+            case 'A': $qb['Trainer']->orWhere($qb['Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ä%'); 
             break;
         
-            case 'O': $qb->orWhere($qb->expr()->like('t.lastname', ':umlautletter'))
+            case 'O': $qb['Trainer']->orWhere($qb['Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ö%'); 
             break;
         
-            case 'U': $qb->orWhere($qb->expr()->like('t.lastname', ':umlautletter'))
+            case 'U': $qb['Trainer']->orWhere($qb['Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ü%'); 
             break;
         }        
     }else{ $letter=null; }    
         
-    $trainerlist=$qb->getQuery()->getResult();
+    $trainerlist=$qb['Trainer\Trainer']->getQuery()->getResult();
+    $phonenumberlist=$qb['Trainer\TrainerPhoneNumber']->getQuery()->getResult();
+    $licencelist=$qb['Trainer\TrainerLicence']->getQuery()->getResult();
+    $focuslist=$qb['Trainer\TrainerFocus']->getQuery()->getResult();
+    
+    $trainerdependentlist=[];
+     foreach ($phonenumberlist as $pn){
+         
+         $trainerdependentlist[$pn[0]->getTrainerid()]['phonenumbers'][]=$pn;
+     }
+     
+     foreach ($licencelist as $lc){
+         
+         $trainerdependentlist[$lc[0]->getTrainerid()]['phonenumbers'][]=$lc;
+     }
+
+     foreach ($focuslist as $fc){
+         
+         $trainerdependentlist[$fc[0]->getTrainerid()]['phonenumbers'][]=$fc;
+     }
+
+
         return $this->render('Trainer/trainer.html.twig',
                 array('tabledata'=>$trainerlist,
                     'colorclass'=>"bluetheader",
                     'searchform'=>$searchform->createView(),
+                    'trainerdependentlist' => $trainerdependentlist,         
                     'cletter'=>$letter,
+                    'adminyear' => $adminyear,
                     'path'=>'trainer_home'));
     }
     
@@ -100,22 +129,13 @@ class TrainerController extends Controller
     
     
     /**
-     * @Route("/trainer/anlegen/{letter}", defaults={"letter": "A"}, name="addtrainer", requirements={"letter": "[A-Z]"})
+     * @Route("/trainer/anlegen/{adminyear}/{letter}", defaults={"letter": "A", "adminyear": 2016}, name="addtrainer", requirements={"letter": "[A-Z]","adminyear": "[1-9][0-9]{3}"})
      */    
     public function addtrainerAction(Request $request, $letter) {        
         
         $trainer = new Trainer();
         $phonenumber = new TrainerPhoneNumber();
-        $licence = new TrainerLicence();
-        
-        $trainer->setTrainerid(10);
-        $phonenumber->setTrainerid(10);
-        
-        
-        $today =new \DateTime('now');
-        $trainer->setRecorded($today->format('Y-m-d'));
-        $phonenumber->setRecorded($today->format('Y-m-d'));
-        
+        $licence = new TrainerLicence();     
         
         
         $trainer->addPhonenumber($phonenumber);
@@ -125,16 +145,35 @@ class TrainerController extends Controller
         $addtrainerform = $this->createForm(AddTrainerType::class, $trainer);
         
         $addtrainerform->handleRequest($request);
+        
         if ($addtrainerform->isSubmitted() && $addtrainerform->isValid()){
             
-                      
+            $trainerid=uniqid('tr'); 
+            $trainer->setTrainerid($trainerid);            
+         
+            $manager= $this->getDoctrine()->getManager();
+                        
+            foreach($trainer->getPhonenumber() as $pn){
+              $pn->setTrainerid(uniqid('pn'));
+              $manager->persist($pn);
+              
+          }
             
-            $manager = $this->getDoctrine()->getManager();
+             foreach($trainer->getLicence() as $lc){
+              $lc->setLicence(uniqid('lc'));
+              $manager->persist($lc);
+              
+          }
+          
+          
+          
+
             $manager->persist($trainer);
-            $manager->flush();            
+          
+            $manager->flush();           
             $this->addFlash('notice', 'Dieser Übungsleiter wurde erfolgreich angelegt!');
             
-            return $this->redirectToRoute('trainer_home', array('letter' => $letter, 'info' => 'gespeichert'));
+            return $this->redirectToRoute('trainer_home', array('letter' => $letter));
         }
 
         

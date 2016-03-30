@@ -12,14 +12,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="TrainerFocus")
+ * @ORM\HasLifecycleCallbacks()
  */
 class TrainerFocus {
     
-    /**
-     * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="theme")
-     * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
-     */
-    private $trainer;   
+     
         
      /**
      * @ORM\Id
@@ -150,9 +147,10 @@ class TrainerFocus {
      *
      * @return TrainerFocus
      */
-    public function setRecorded($recorded)
+    public function setRecorded()
     {
-        $this->recorded = $recorded;
+        $now= new \DateTime();
+        $this->recorded = $now->format('Y-m-d');
 
         return $this;
     }

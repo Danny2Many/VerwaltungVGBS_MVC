@@ -10,16 +10,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="Trainer")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Trainer extends PersonalData {
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
     
-//          @ORM\GeneratedValue(strategy="AUTO") 
-
     protected $trainerid;
     
     /**
@@ -32,28 +31,21 @@ class Trainer extends PersonalData {
      * @ORM\Column(type="string")
      */
     protected $type;
-    /**
-     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
-     * @ORM\JoinTable(name="Trainer_Section",
-     * joinColumns={@ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")},
-     * inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
-     */
-    protected $section;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
+//     * @ORM\JoinTable(name="Trainer_Section",
+//     * joinColumns={@ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")},
+//     * inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
+//     */
+//    protected $section;
     
-    /**
-     * @ORM\OneToMany(targetEntity="TrainerFocus", mappedBy="trainer", cascade={"persist"})
-     */
+  
     protected $theme;
 
 
-    /**
-     * @ORM\OneToMany(targetEntity="TrainerLicence", mappedBy="trainer", cascade={"all"})
-     */  
     protected $licence;
     
-    /**
-     * @ORM\OneToMany(targetEntity="TrainerPhoneNumber", mappedBy="trainer", cascade={"all"})
-     */ 
+    
     protected $phonenumber;
     
     /**
@@ -349,9 +341,10 @@ class Trainer extends PersonalData {
      *
      * @return Trainer
      */
-    public function setRecorded($recorded)
+    public function setRecorded()
     {
-        $this->recorded = $recorded;
+        $now= new \DateTime();
+        $this->recorded = $now->format('Y-m-d');
 
         return $this;
     }
@@ -373,7 +366,7 @@ class Trainer extends PersonalData {
      *
      * @return Trainer
      */
-    public function setDeleted(\DateTime $deleted)
+    public function setDeleted( $deleted)
     {
         $this->deleted = $deleted;
 

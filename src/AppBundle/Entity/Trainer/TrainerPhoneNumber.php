@@ -10,15 +10,18 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class TrainerPhoneNumber {
     
+    
     /**
-     * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="phonenumber", cascade={"persist"})
-     * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
+     * @ORM\Id
+     * @ORM\Column(type="string") 
+     * 
      */
-    private $trainer;
+    protected $tpnid;
+    
+  
     
      
     /**
-     * @ORM\Id
      * @ORM\Column(type="integer") 
      * 
      */
@@ -40,7 +43,6 @@ class TrainerPhoneNumber {
     protected $deleted;
     
     /**
-     * @ORM\Id
      * @ORM\Column(type="string")
      */
     protected $recorded;
@@ -151,9 +153,11 @@ class TrainerPhoneNumber {
      *
      * @return TrainerPhoneNumber
      */
-    public function setRecorded($recorded)
+    public function setRecorded()
     {
-        $this->recorded = $recorded;
+        $now= new \DateTime();
+        
+        $this->recorded = $now->format('Y-m-d');
 
         return $this;
     }
@@ -166,5 +170,29 @@ class TrainerPhoneNumber {
     public function getRecorded()
     {
         return $this->recorded;
+    }
+    
+    /**
+     * Set tpnid
+     *
+     * @param string $tpnid
+     *
+     * @return MemPhoneNumber
+     */
+    public function setTpnid($tpnid)
+    {
+        $this->tpnid = $tpnid;
+
+        return $this;
+    }
+
+    /**
+     * Get tpnid
+     *
+     * @return string
+     */
+    public function getTpnid()
+    {
+        return $this->tpnid;
     }
 }

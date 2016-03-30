@@ -10,11 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class TrainerLicence {
     
-    /**
-     * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="licence")
-     * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
-     */
-    private $trainer;
     
     /**
      * @ORM\Id
