@@ -120,8 +120,8 @@
             <td>{{ data.trainingconfirmation is empty ? "-" : data.trainingconfirmation|date("d.m.Y")}}</td>
              
 
-                {% if nonmemberdependentlist[data[0].nmemid]['rehabcerts'] is defined %}
-                {% set rehab =nonmemberdependentlist[data[0].nmemid]['rehabcerts'] %}
+                {% if nonmemberdependentlist[data.nmemid]['rehabcerts'] is defined %}
+                {% set rehab =nonmemberdependentlist[data.nmemid]['rehabcerts'] %}
 
                 {% else %}
                   {% set rehab ='' %}  
