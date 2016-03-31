@@ -193,7 +193,8 @@ class MemberController extends Controller
         $member = new Member();
         $phonenumber = new MemPhoneNumber();
         
-        
+        $memid=uniqid('m'); 
+        $member->setMemid($memid);
        
             
         $member->addPhonenumber($phonenumber);
@@ -211,14 +212,17 @@ class MemberController extends Controller
         if($addmemform->isSubmitted() && $addmemform->isValid()){
 
             
-            $memid=uniqid('m'); 
-            $member->setMemid($memid);
+            
 
             
          
             $manager= $this->getDoctrine()->getManager();
             
-
+foreach($member->getRehabilitationcertificate() as $rc){
+              $rc->setRcid(uniqid('rc'));
+              $manager->persist($rc);
+              
+          }
             
             foreach($member->getPhonenumber() as $pn){
               $pn->setPnid(uniqid('pn'));
@@ -226,11 +230,7 @@ class MemberController extends Controller
               
           }
             
-             foreach($member->getRehabilitationcertificate() as $rc){
-              $rc->setRcid(uniqid('rc'));
-              $manager->persist($rc);
-              
-          }
+             
           
           
           
