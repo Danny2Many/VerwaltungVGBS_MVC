@@ -222,15 +222,9 @@ protected $deleted;
         return $this->additionalinfo;
     }
 
-    /**
-     * Set rehabilitationcertificate
-     *
-     * @param \DateTime $rehabilitationcertificate
-     *
-     * @return Nonmember
-     */
+
     public function setRehabilitationcertificate($rehabilitationcertificate)
-    {
+    {   $rehabilitationcertificate->setNMemID($this->nmemid);
         $this->rehabilitationcertificate = $rehabilitationcertificate;
 
         return $this;
@@ -245,7 +239,7 @@ protected $deleted;
 
     public function addRehabilitationcertificate(\AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate $rehabilitationcertificate)
     {
-        $rehabilitationcertificate->setNMemID($this);
+        $rehabilitationcertificate->setNMemID($this->nmemid);
         $this->rehabilitationcertificate[] = $rehabilitationcertificate;
 
         return $this;
@@ -377,7 +371,7 @@ protected $deleted;
 * @return NonMemPhoneNumber
 */
 public function setPhonenumber($phonenumber)
-{
+{  
    $this->phonenumber = $phonenumber;
 
    return $this;
@@ -395,10 +389,10 @@ public function setPhonenumber($phonenumber)
      
 
 
- public function addPhonenumber(\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $pn)
+ public function addPhonenumber(\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber)
     {               
-        $pn->setNMemID($this);
-        $this->phonenumber[] = $pn;
+        $phonenumber->setNMemID($this);
+        $this->phonenumber[] = $phonenumber;
 
         return $this;
     }
