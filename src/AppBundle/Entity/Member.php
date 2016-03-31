@@ -515,7 +515,7 @@ class Member extends HealthData
     public function addRehabilitationcertificate(\AppBundle\Entity\MemRehabilitationCertificate $rehabilitationcertificate)
     {
   
-        $rehabilitationcertificate->setMemid($this);
+        $rehabilitationcertificate->setMemid($this->memid);
         $this->rehabilitationcertificate[] = $rehabilitationcertificate;
 
         return $this;
@@ -534,51 +534,26 @@ class Member extends HealthData
         return $this->rehabilitationcertificate;
     }
     
-    /**
-* Set phonenumber
-*
-* @param string $phonenumber
-*
-* @return MemPhoneNumber
-*/
-public function setPhonenumber($phonenumber)
-{
-   $this->phonenumber = $phonenumber;
+ 
 
-   return $this;
-}
 
-/**
-    * Get phonenumber
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
+
     public function getPhonenumber()
     {
         return $this->phonenumber;
     }
      
 
-/** 
-* Add phonenumber
-*
-* @param \AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber
-*
-* @return Member
-*/
+
  public function addPhonenumber(\AppBundle\Entity\MemPhoneNumber $phonenumber)
     {               
-        $phonenumber->setMemid($this);
+        $phonenumber->setMemid($this->memid);
         $this->phonenumber[] = $phonenumber;
 
         return $this;
     }
 
-    /**
-     * Remove phonenumber
-     *
-     * @param \AppBundle\Entity\MemPhoneNumber $phonenumber
-    */
+    
     public function removePhonenumber(\AppBundle\Entity\MemPhoneNumber $phonenumber)
     {
         $this->phonenumber->removeElement($phonenumber);
