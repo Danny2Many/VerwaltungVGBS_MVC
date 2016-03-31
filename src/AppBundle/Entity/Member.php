@@ -542,7 +542,7 @@ class Member extends HealthData
 * @return MemPhoneNumber
 */
 public function setPhonenumber($phonenumber)
-{
+{$phonenumber->setMemid($this);
    $this->phonenumber = $phonenumber;
 
    return $this;
