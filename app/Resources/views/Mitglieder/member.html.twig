@@ -139,7 +139,7 @@
                     
           
                     
-                <td>{{ data.decreaseddues == '0' ? "kein" : 'vermindert' }}</td>
+                <td>{{ data.decreaseddues == 0 ? "kein" : 'vermindert' }}</td>
                 <td>{{ data.healthinsurance is empty ? "-" : data.healthinsurance|striptags}}</td>
                 <td>{{ data.additionalinfo is empty ? "-" : data.additionalinfo|striptags }}</td>
                 <td>{{ data.tribute is empty ? "-" : data.Tribute|striptags }}</td>

@@ -7,31 +7,36 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="NonMemPhoneNumber")
+ * @ORM\HasLifecycleCallbacks()
  */
 class NonMemPhoneNumber {
     
-  /**
-     * @ORM\ManyToOne(targetEntity="Nonmember", inversedBy="phonenumber", cascade={"persist"})
-     * @ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")
-     */
-    private $nonmember;
-     
+//  /**
+//     * @ORM\ManyToOne(targetEntity="Nonmember", inversedBy="phonenumber", cascade={"persist"})
+//     * @ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")
+//     */
+//    private $nonmember;
+//     
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
      */
-    protected $phid;
+    protected $pnid;
    
     /**
      * 
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
      * 
      */
     protected $nmemid;   
     
-   /**
+    /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/\d\/\d/",
+     *     message="Ihre Telefonnummer entspricht entweder nicht dem gegebenen Format oder enthält einen Buchstaben."
+     * )
      */
     protected $phonenumber;
     
@@ -41,30 +46,22 @@ class NonMemPhoneNumber {
     protected $recorded;
 
     /**
-    * @ORM\Column(type="date")
+    * @ORM\Column(type="string")
     */
     protected $deleted;
 
 
 
-    /**
-     * Get phid
-     *
-     * @return integer
-     */
-    public function getPhid()
-    {
-        return $this->phid;
-    }
+
 
     /**
      * Set nmemid
      *
-     * @param integer $nmemid
+     * @param string $nmemid
      *
      * @return NonMemPhoneNumber
      */
-    public function setNmemid($nmemid)
+    public function setNmemID($nmemid)
     {
         $this->nmemid = $nmemid;
 
@@ -74,9 +71,9 @@ class NonMemPhoneNumber {
     /**
      * Get nmemid
      *
-     * @return integer
+     * @return sting
      */
-    public function getNmemid()
+    public function getNmemID()
     {
         return $this->nmemid;
     }
@@ -105,40 +102,16 @@ class NonMemPhoneNumber {
         return $this->phonenumber;
     }
 
-    /**
-     * Set nonmember
-     *
-     * @param \AppBundle\Entity\Nichtmitglieder\Nonmember $nonmember
-     *
-     * @return NonMemPhoneNumber
-     */
-    public function setNonmember(\AppBundle\Entity\Nichtmitglieder\Nonmember $nonmember = null)
-    {
-        $this->nonmember = $nonmember;
 
-        return $this;
-    }
 
     /**
-     * Get nonmember
-     *
-     * @return \AppBundle\Entity\Nichtmitglieder\Nonmember
-     */
-    public function getNonmember()
-    {
-        return $this->nonmember;
-    }
-
-    /**
-     * Set recorded
-     *
-     * @param \String $recorded
-     *
-     * @return NonMemPhoneNumber
-     */
+    * @ORM\PrePersist
+    */
     public function setRecorded($recorded)
     {
-        $this->recorded = $recorded;
+        $now= new \DateTime();
+        
+        $this->recorded = $now->format('Y-m-d');
 
         return $this;
     }
@@ -146,7 +119,7 @@ class NonMemPhoneNumber {
     /**
      * Get recorded
      *
-     * @return \String
+     * @return string
      */
     public function getRecorded()
     {
@@ -160,7 +133,7 @@ class NonMemPhoneNumber {
     /**
      * Set deleted
      *
-     * @param \DateTime $deleted
+     * @param string $deleted
      *
      * @return NonMemPhoneNumber
      */
@@ -174,24 +147,35 @@ class NonMemPhoneNumber {
     /**
      * Get deleted
      *
-     * @return \DateTime
+     * @return srtring
      */
     public function getDeleted()
     {
         return $this->deleted;
     }
 
+
     /**
-     * Set phid
+     * Set pnid
      *
-     * @param integer $phid
+     * @param string $pnid
      *
      * @return NonMemPhoneNumber
      */
-    public function setPhid($phid)
+    public function setPnid($pnid)
     {
-        $this->phid = $phid;
+        $this->pnid = $pnid;
 
         return $this;
+    }
+
+    /**
+     * Get pnid
+     *
+     * @return string
+     */
+    public function getPnid()
+    {
+        return $this->pnid;
     }
 }

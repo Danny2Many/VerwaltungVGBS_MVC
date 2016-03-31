@@ -54,27 +54,36 @@
     {% for data in tabledata %}
         {% autoescape  %}
         <tr>
-        <td>{{ data.name|striptags }}</td> 
-        {#<td>{{ data.time }}</td>  #} 
-        <td>{{ data.roomid|striptags }}</td>
-        <td>{{ data.token|striptags }}</td>  
-        <td>{{ data.token|striptags }}</td> 
-        <td>{{ data.trainerid|striptags }}</td>
-        <td>{{ data.trainerid|striptags }}</td> 
-        <td>{{ data.trainerid|striptags }}</td> 
-        <td>{{ data.trainerid|striptags }}</td> 
-        <td>{{ data.trainerid|striptags }}</td> 
-        <td>{{ data.trainerid|striptags }}</td>
-        <td>{{ data.trainerid|striptags }}</td> 
-        <td>{{ data.trainerid|striptags }}</td> 
-        <td>{{ data.trainerid|striptags }}</td> 
-        <td>{{ data.trainerid|striptags }}</td> 
-        <td>{{ data.trainerid|striptags }}</td>
-        <td>{{ data.trainerid|striptags }}</td> 
-        <td>{{ data.trainerid|striptags }}</td> 
-        <td>{{ data.trainerid|striptags }}</td> 
-        <td>{{ data.trainerid|striptags }}</td>
-        <td>{{ data.trainerid|striptags }}</td> 
+        <td>{{ data[0].name|striptags }}</td> 
+         <td>{{ data[0].roomid|striptags }}</td>
+        <td>{{ data[0].roomid|striptags }}</td> 
+        <td>{{ data[0].token|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td>
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td>
+        {% if sportsgroupdependentlist[data[0].sgid]['terminationdate'] is defined %}
+        {% set terminationdate =sportsgroupdependentlist[data[0].sgid]['terminationdate'] %}
+        {% else %}
+          {% set terminationdate ='' %}  
+        {% endif %}
+        <td>{% for TD in terminationdate if date(TD[0].terminationdate) > date() %}                     
+                {{'TD'}}{{loop.index}}-<strong>{{TD[0].terminationdate|date("d.m.Y") }}</strong>-{{TD[0].terminationdate }}<br>
+            {% else %}
+                {{ "-" }}
+            {% endfor %}
+        </td>
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td>
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td>
+        <td>{{ data[0].trainerid|striptags }}</td> 
         
         
 
