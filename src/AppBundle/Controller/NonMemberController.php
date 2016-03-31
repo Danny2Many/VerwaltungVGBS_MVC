@@ -129,15 +129,14 @@ class NonMemberController extends Controller {
       
 
     $nonmember = new Nonmember ();
-    $phonenumber = new NonMemPhoneNumber();
-
+    $phonenumber = new NonMemPhoneNumber();    
+    $nmemid=uniqid('n'); 
+    $nonmember->setNMemID($nmemid);
     $nonmember->addPhonenumber($phonenumber);
 
     $addnonmemform = $this->createForm(AddNonMemberType::class, $nonmember);
     
     
-    $nmemid=uniqid('n'); 
-    $nonmember->setNMemID($nmemid);
     $addnonmemform->handleRequest($request);     
         
         //if the form is valid -> persist it to the database
