@@ -10,48 +10,60 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="Trainer")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Trainer extends PersonalData {
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="string")
      */
+    
     protected $trainerid;
+    
+    public function __toString()
+    {
+        return $this->trainerid;
+    }
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="string")
+     */
+    private $recorded;
     
     /**
      * @ORM\Column(type="string")
      */
     protected $type;
-    /**
-     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
-     * @ORM\JoinTable(name="Trainer_Section",
-     * joinColumns={@ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")},
-     * inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
-     */
-    protected $section;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
+//     * @ORM\JoinTable(name="Trainer_Section",
+//     * joinColumns={@ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")},
+//     * inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
+//     */
+//    protected $section;
     
-    /**
-     * @ORM\OneToMany(targetEntity="TrainerFocus", mappedBy="trainer", cascade={"all"})
-     */
+  
     protected $theme;
 
 
-    /**
-     * @ORM\OneToMany(targetEntity="TrainerLicence", mappedBy="trainer", cascade={"all"})
-     */  
     protected $licence;
     
-    /**
-     * @ORM\OneToMany(targetEntity="TrainerPhoneNumber", mappedBy="trainer", cascade={"all"})
-     */ 
+    
     protected $phonenumber;
     
     /**
      * @ORM\Column(type="string")
      */
     protected $state;
+    
+    /**
+     * @ORM\Column(type="date")
+     */
+    protected $deleted;
+    
+    
 
 
 
@@ -138,16 +150,10 @@ class Trainer extends PersonalData {
 
     
 
-    /**
-     * Add licence
-     *
-     * @param \AppBundle\Entity\Trainer\TrainerLicence $licence
-     *
-     * @return Trainer
-     */
+    
     public function addLicence(\AppBundle\Entity\Trainer\TrainerLicence $licence)
     {
-        $licence->setTrainer($this);
+        $licence->setTrainerid($this);
 
         $this->licence[] = $licence;
 
@@ -188,16 +194,10 @@ class Trainer extends PersonalData {
         return $this;
     }
 
-    /**
-     * Add theme
-     *
-     * @param \AppBundle\Entity\Trainer\TrainerFocus $theme
-     *
-     * @return Trainer
-     */
+    
     public function addTheme(\AppBundle\Entity\Trainer\TrainerFocus $theme)
     {
-        $theme->setTrainer($this);
+        $theme->setTrainerid($this);
 
         $this->theme[] = $theme;
 
@@ -264,16 +264,10 @@ class Trainer extends PersonalData {
     }
      
 
-    /** 
-     * Add phonenumber
-     *
-     * @param \AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber
-     *
-     * @return Trainer
-     */
+   
     public function addPhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
     {               
-        $phonenumber->setTrainer($this);
+        $phonenumber->setTrainerid($this);
         $this->phonenumber[] = $phonenumber;
 
         return $this;
@@ -311,5 +305,64 @@ class Trainer extends PersonalData {
     public function getState()
     {
         return $this->state;
+    }
+
+    /**
+     * Set trainerid
+     *
+     * @param integer $trainerid
+     *
+     * @return Trainer
+     */
+    public function setTrainerid($trainerid)
+    {
+        $this->trainerid = $trainerid;
+
+        return $this;
+    }
+
+   /**
+    * @ORM\PrePersist
+    */
+    public function setRecorded()
+    {
+        $now= new \DateTime();
+        $this->recorded = $now->format('Y-m-d');
+
+        return $this;
+    }
+
+    /**
+     * Get recorded
+     *
+     * @return string
+     */
+    public function getRecorded()
+    {
+        return $this->recorded;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param \DateTime $deleted
+     *
+     * @return Trainer
+     */
+    public function setDeleted( $deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return \DateTime
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
     }
 }

@@ -22,8 +22,8 @@ use Symfony\Component\Form\FormError;
 
 class MemberController extends Controller
 {
-/**
 
+    /**
      * @Route("/mitglieder/{adminyear}/{letter}", defaults={"letter"="A", "adminyear"=2016}, name="member_home", requirements={"letter": "[A-Z]", "adminyear": "[1-9][0-9]{3}"})
      */
     public function indexAction(Request $request, $letter, $adminyear)
@@ -50,6 +50,7 @@ class MemberController extends Controller
     
     
 
+    
     
     
     $choices=array('Mitgliedsnr.' => 'memid',
@@ -95,9 +96,11 @@ class MemberController extends Controller
 //                   ->setParameter('member','%'.$searchval.'%')
 //                   ->getQuery();
 //    } 
+
     
     
     //building the query
+
     $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.'.$searchcol, ':member'))
                    ->setParameter('member','%'.$searchval.'%');
                    
@@ -168,6 +171,7 @@ class MemberController extends Controller
             'searchform' => $searchform->createView(),
 
             'memberdependentlist' => $memberdependentlist,         
+
             'cletter' => $letter,
             'adminyear' => $adminyear,
             'path' => 'member_home'

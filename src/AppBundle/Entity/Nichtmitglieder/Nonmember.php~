@@ -33,13 +33,13 @@ protected $sportsgroup;
 /**
 * @ORM\Id
 * @ORM\Column(type="integer") 
-* @ORM\GeneratedValue(strategy="AUTO")
+* 
 */
 protected $nmemid;    
     
 /**
 * @ORM\Column(type="string")
-  * @Assert\NotBlank()
+* @Assert\NotBlank()
 * @Assert\Choice(choices = {"aktiv", "inaktiv"}, message = "Bitte wählen Sie einen gültigen Status.")
 */
 protected $state;
@@ -59,17 +59,6 @@ protected $trainingstartdate;
 protected $trainingconfirmation;
 
 /**
-* @ORM\Column(type="integer") 
-*/  
-protected $rehabunity1;
-
-/**
-* @ORM\Column(type="integer") 
-*/
-protected $rehabunity2;
- 
-
-/**
 * @ORM\Column(type="string")
 */
 protected $additionalinfo;
@@ -79,10 +68,21 @@ protected $additionalinfo;
 */
 protected $rehabilitationcertificate;
 
- /**
- ** @ORM\OneToMany(targetEntity="NonMemPhoneNumber", mappedBy="nonmember", cascade={"persist"})
- */
+/**
+  * @ORM\OneToMany(targetEntity="NonMemPhoneNumber", mappedBy="nonmember", cascade={"persist"})
+  */
 protected $phonenumber;
+
+/**
+* @ORM\Id
+* @ORM\Column(type="date")
+*/
+protected $recorded;
+
+/**
+* @ORM\Column(type="date")
+*/
+protected $deleted;
 
 
     /**
@@ -90,7 +90,7 @@ protected $phonenumber;
      */
     public function __construct()
     {
-        $this->phonenumber = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->phonenumber = new ArrayCollection();
         $this->rehabilitationcertificate = new ArrayCollection();
         $this->section = new ArrayCollection();
     }
@@ -153,53 +153,7 @@ protected $phonenumber;
         return $this->trainingconfirmation;
     }
 
-    /**
-     * Set settlement1
-     *
-     * @param \DateTime $settlementdate1
-     *
-     * @return NonMember
-     */
-    public function setSettlementdate1($settlementdate1)
-    {
-        $this->settlementdate1 = $settlementdate1;
-
-        return $this;
-    }
-
-    /**
-     * Get settlement1
-     *
-     * @return \DateTime
-     */
-    public function getSettlementdate1()
-    {
-        return $this->settlementdate1;
-    }
-
-    /**
-     * Set settlement2
-     *
-     * @param \DateTime $settlementdate2
-     *
-     * @return NonMember
-     */
-    public function setSettlementdate2($settlementdate2)
-    {
-        $this->settlementdate2 = $settlementdate2;
-
-        return $this;
-    }
-
-    /**
-     * Get settlement2
-     *
-     * @return \DateTime
-     */
-    public function getSettlementdate2()
-    {
-        return $this->settlementdate2;
-    }
+   
 
     /**
      * Set stresstest
@@ -366,12 +320,13 @@ protected $phonenumber;
      * @return Nonmember
      */
     public function addSection(\AppBundle\Entity\Section $section)
-    {
+    {  
+        if(!$this->section->contains($section)){
         $this->section[] = $section;
-
         return $this;
+        }
     }
-
+    
     /**
      * Remove section
      *
@@ -409,6 +364,91 @@ public function setSection($section)
 
     return $this;
 } 
+   
+/**
+* Set phonenumber
+*
+* @param string $phonenumber
+*
+* @return NonMemPhoneNumber
+*/
+public function setPhonenumber($phonenumber)
+{
+   $this->phonenumber = $phonenumber;
 
-    
+   return $this;
+}
+
+/**
+    * Get phonenumber
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhonenumber()
+    {
+        return $this->phonenumber;
+    }
+     
+
+/** 
+* Add phonenumber
+*
+* @param \AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber
+*
+* @return Nonmember
+*/
+ public function addPhonenumber(\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber)
+    {               
+        $phonenumber->setNonmember($this);
+        $this->phonenumber[] = $phonenumber;
+
+        return $this;
+    }
+
+    /**
+     * Remove phonenumber
+     *
+     * @param \AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber
+    */
+    public function removePhonenumber(\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber)
+    {
+        $this->phonenumber->removeElement($phonenumber);
+    }
+
+
+  
+
+    /**
+     * Get recorded
+     *
+     * @return \DateTime
+     */
+    public function getRecorded()
+    {
+        return $this->recorded;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param \DateTime $deleted
+     *
+     * @return Nonmember
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return \DateTime
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
 }

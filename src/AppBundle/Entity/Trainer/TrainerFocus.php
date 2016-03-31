@@ -12,27 +12,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="TrainerFocus")
+ * @ORM\HasLifecycleCallbacks()
  */
 class TrainerFocus {
-    /**
-     * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="theme")
-     * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
-     */
-    private $trainer;
-    
-    
-    
-    
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer") 
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $tfid;
     
      /**
+     * @ORM\Id
+     * @ORM\Column(type="string") 
      * 
-     * @ORM\Column(type="integer") 
+     */
+    protected $tfid;
+        
+     /**
+     * @ORM\Column(type="string") 
      * 
      */
     protected $trainerid;
@@ -44,19 +36,15 @@ class TrainerFocus {
       */
     protected $theme;
 
-    
-
-   
-
     /**
-     * Get tfid
-     *
-     * @return integer
+     * @ORM\Column(type="date")
      */
-    public function getTfid()
-    {
-        return $this->tfid;
-    }
+    protected $deleted;
+    
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $recorded;   
 
     /**
      * Set trainerid
@@ -67,6 +55,7 @@ class TrainerFocus {
      */
     public function setTrainerid($trainerid)
     {
+        
         $this->trainerid = $trainerid;
 
         return $this;
@@ -75,7 +64,7 @@ class TrainerFocus {
     /**
      * Get trainerid
      *
-     * @return integer
+     * @return string
      */
     public function getTrainerid()
     {
@@ -128,5 +117,74 @@ class TrainerFocus {
     public function getTrainer()
     {
         return $this->trainer;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param \DateTime $deleted
+     *
+     * @return TrainerFocus
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return \DateTime
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setRecorded()
+    {
+        $now= new \DateTime();
+        $this->recorded = $now->format('Y-m-d');
+
+        return $this;
+    }
+
+    /**
+     * Get recorded
+     *
+     * @return \DateTime
+     */
+    public function getRecorded()
+    {
+        return $this->recorded;
+    }
+    
+    /**
+     * Get tfid
+     *
+     * @return integer
+     */
+    public function getTfid()
+    {
+        return $this->tfid;
+    }
+    
+    /**
+     * Set tfid
+     *
+     * @param integer $tfid
+     *
+     * @return TrainerLicence
+     */
+    public function setTfid($tfid)
+    {
+        $this->tfid = $tfid;
+
+        return $this;
     }
 }

@@ -86,6 +86,7 @@
                         {% else  %}
                         {{ "-" }}    
                     {% endfor %}</td>
+                    
                 <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>
                 {#<td>{% for sportsgroup in data.sportsgroup %}
                         {{ sportsgroup.Token }}<br>
@@ -98,7 +99,6 @@
                  
                  
                 <td>{{ data.admissionconfirmation is empty ? "-" : data.admissionconfirmation|date("d.m.Y") }}</td>
-
                 
              
                 {% if memberdependentlist[data.memid]['rehabcerts'] is defined %}
@@ -106,23 +106,26 @@
                 {% else %}
                   {% set rehab ='' %}  
                 {% endif %}
+
+                
+             
                 
                 
-                
+
                 <td{% for RC in rehab %}
                         {% if ('now'|date("Y") == RC.terminationdate|date("Y") and 'now'|date("Y.m.d") < RC.terminationdate|date("Y.m.d")) %}class="yellow"{% endif %}
                         {% endfor %}>
                 {% for RC in rehab if date(RC.terminationdate) > date() %}
                     {% if 'now'|date("Y") == RC.terminationdate|date("Y") %}<strong>{% endif %}
-                    {% if date(RC.terminationdate) < date('+2months') %}<strong><font color="red">{% endif %}                   
-                        {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>                
+                    {% if date(RC.terminationdate) < date('+2months') %}<font color="red">{% endif %}
+                    {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>
                     {% if ('now'|date("Y") == RC.terminationdate|date("Y") or 'now'|date("Y") > RC.terminationdate|date("Y")) %}</font></strong>{% endif %}
-
-                {% else %}
-                    {{ "-" }}
-                {% endfor %}
+   
+                         {% else %}
+                         {{ "-" }}
+                    {% endfor %}
+                   </td>
                     
-
                     
                   <td>{% for RC in rehab if date(RC.terminationdate) < date() %}
                           
@@ -134,7 +137,7 @@
                     {% endfor %}
                    </td>  
                     
-                
+          
                     
                 <td>{{ data.decreaseddues == 0 ? "kein" : 'vermindert' }}</td>
                 <td>{{ data.healthinsurance is empty ? "-" : data.healthinsurance|striptags}}</td>
@@ -190,8 +193,7 @@
             </tr>
             
         {% endfor %}
-  
-{% endblock %}
+            {% endblock %}
             
                 
             
