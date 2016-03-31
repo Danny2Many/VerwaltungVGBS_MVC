@@ -143,7 +143,7 @@ class TrainerController extends Controller
     
     
     /**
-     * @Route("/trainer/anlegen/{adminyear}/{letter}", defaults={"letter": "A", "adminyear": 2016}, name="addtrainer", requirements={"letter": "[A-Z]","adminyear": "[1-9][0-9]{3}"})
+     * @Route("/trainer/anlegen/{adminyear}/{letter}", defaults={"letter": "alle", "adminyear": 2016}, name="addtrainer", requirements={"letter": "[A-Z]|alle","adminyear": "[1-9][0-9]{3}"})
      */    
     public function addtrainerAction(Request $request, $letter, $adminyear) {        
         
