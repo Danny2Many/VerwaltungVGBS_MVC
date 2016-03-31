@@ -7,25 +7,23 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="TrainerPhoneNumber")
+ * @ORM\HasLifecycleCallbacks()
  */
 class TrainerPhoneNumber {
     
-    /**
-     * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="phonenumber", cascade={"persist"})
-     * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
-     */
-    private $trainer;
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="string") 
+     * 
      */
     protected $tpnid;
     
+  
+    
+     
     /**
-     * 
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
      * 
      */
     protected $trainerid;   
@@ -40,21 +38,22 @@ class TrainerPhoneNumber {
      */
     protected $phonenumber;
     
-
     /**
-     * Get tpnid
-     *
-     * @return integer
+     * @ORM\Column(type="date")
      */
-    public function getTpnid()
-    {
-        return $this->tpnid;
-    }
+    protected $deleted;
+    
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $recorded;
+    
 
+  
     /**
      * Set trainerid
      *
-     * @param integer $trainerid
+     * @param string $trainerid
      *
      * @return TrainerPhoneNumber
      */
@@ -121,5 +120,76 @@ class TrainerPhoneNumber {
     public function getTrainer()
     {
         return $this->trainer;
+    }
+
+ 
+    /**
+     * Set deleted
+     *
+     * @param \DateTime $deleted
+     *
+     * @return TrainerPhoneNumber
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return \DateTime
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setRecorded()
+    {
+        $now= new \DateTime();
+        
+        $this->recorded = $now->format('Y-m-d');
+
+        return $this;
+    }
+
+    /**
+     * Get recorded
+     *
+     * @return string
+     */
+    public function getRecorded()
+    {
+        return $this->recorded;
+    }
+    
+    /**
+     * Set tpnid
+     *
+     * @param string $tpnid
+     *
+     * @return TrainerPhoneNumber
+     */
+    public function setTpnid($tpnid)
+    {
+        $this->tpnid = $tpnid;
+
+        return $this;
+    }
+
+    /**
+     * Get tpnid
+     *
+     * @return string
+     */
+    public function getTpnid()
+    {
+        return $this->tpnid;
     }
 }

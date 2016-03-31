@@ -7,24 +7,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="TrainerLicence")
+ * @ORM\HasLifecycleCallbacks()
  */
 class TrainerLicence {
     
-    /**
-     * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="licence")
-     * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
-     */
-    private $trainer;
     
     /**
      * @ORM\Id
      * @ORM\Column(type="integer") 
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $liid;
     
     /**
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
      */
     protected $trainerid;
     
@@ -52,6 +47,15 @@ class TrainerLicence {
      */
     protected $expirationdate;
     
+    /**
+     * @ORM\Column(type="date")
+     */
+    protected $deleted;
+    
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $recorded;
 
     /**
      * Get liid
@@ -205,5 +209,64 @@ class TrainerLicence {
     public function getTrainer()
     {
         return $this->trainer;
+    }
+
+    /**
+     * Set liid
+     *
+     * @param integer $liid
+     *
+     * @return TrainerLicence
+     */
+    public function setLiid($liid)
+    {
+        $this->liid = $liid;
+
+        return $this;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param \DateTime $deleted
+     *
+     * @return TrainerLicence
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return \DateTime
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setRecorded()
+    {
+        $now= new \DateTime();
+        $this->recorded = $now->format('Y-m-d');
+
+        return $this;
+    }
+
+    /**
+     * Get recorded
+     *
+     * @return \DateTime
+     */
+    public function getRecorded()
+    {
+        return $this->recorded;
     }
 }
