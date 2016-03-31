@@ -570,7 +570,7 @@ public function setPhonenumber($phonenumber)
 */
  public function addPhonenumber(\AppBundle\Entity\MemPhoneNumber $phonenumber)
     {               
-        $phonenumber->setMember($this);
+        $phonenumber->setMemid($this);
         $this->phonenumber[] = $phonenumber;
 
         return $this;
