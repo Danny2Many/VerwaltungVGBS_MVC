@@ -18,8 +18,10 @@ class Member extends HealthData
 {
     
     protected $rehabilitationcertificate;
+
     protected $phonenumber;
     
+
     
    
     public function __construct() {
@@ -30,9 +32,7 @@ class Member extends HealthData
 
      
     }
-    
-   
-    
+        
     /**
      * @ORM\Id
      * @ORM\Column(type="string") 
@@ -55,13 +55,11 @@ class Member extends HealthData
     
     
     /**
-     * 
      * @ORM\Column(type="string")
      * 
      */
     protected $deleted;
-    
-    
+   
       /**
      * @ORM\Column(type="date")
        * @Assert\NotBlank()
@@ -510,25 +508,8 @@ class Member extends HealthData
     }
 
    
-    public function addPhonenumber(\AppBundle\Entity\MemPhoneNumber $pn)
-    {
-        $pn->setMemid($this);
-        $this->phonenumber[] = $pn;
-
-        return $this;
-    }
-
     
-    public function removePhonenumber(\AppBundle\Entity\MemPhoneNumber $pn)
-    {
-        $this->phonenumber->removeElement($pn);
-    }
-
-    
-    public function getPhonenumber()
-    {
-        return $this->phonenumber;
-    } 
+ 
     
     
     public function addRehabilitationcertificate(\AppBundle\Entity\MemRehabilitationCertificate $rehabilitationcertificate)
@@ -551,5 +532,55 @@ class Member extends HealthData
     public function getRehabilitationcertificate()
     {
         return $this->rehabilitationcertificate;
+    }
+    
+    /**
+* Set phonenumber
+*
+* @param string $phonenumber
+*
+* @return MemPhoneNumber
+*/
+public function setPhonenumber($phonenumber)
+{
+   $this->phonenumber = $phonenumber;
+
+   return $this;
+}
+
+/**
+    * Get phonenumber
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhonenumber()
+    {
+        return $this->phonenumber;
+    }
+     
+
+/** 
+* Add phonenumber
+*
+* @param \AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber
+*
+* @return Member
+*/
+ public function addPhonenumber(\AppBundle\Entity\MemPhoneNumber $phonenumber)
+    {               
+        $phonenumber->setMemid($this);
+        $this->phonenumber[] = $phonenumber;
+
+        return $this;
+    }
+
+    /**
+     * Remove phonenumber
+     *
+     * @param \AppBundle\Entity\MemPhoneNumber $phonenumber
+    */
+    public function removePhonenumber(\AppBundle\Entity\MemPhoneNumber $phonenumber)
+    {
+        $this->phonenumber->removeElement($phonenumber);
     }
 }

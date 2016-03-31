@@ -1,0 +1,210 @@
+
+
+{% extends 'basic.html.twig' %}
+{% form_theme searchform 'bootstrap_3_layout.html.twig' %}
+{% block columndefs %}
+     "columnDefs": [
+    { "width": "11%", "targets": 15 }
+  ]  
+{% endblock %}
+{% block viewlink %}{{ path('trainer_home') }}{% endblock %}
+{% block title %} Übungsleiter {% endblock %}
+{% block viewname %}Übungsleiter{% endblock %}
+{% block TrainerAktiv %} active {% endblock %}
+{% block fixedcolnum %} 6 {% endblock %}
+
+
+
+
+{% block add %}
+    <div class="inline">
+    <a href="{{ path('addtrainer', {'letter': cletter }) }}"><button    class="add btn btn-default">
+    <span class="glyphicon glyphicon-plus"></span> neuen Übungsleiter anlegen </button></a>  
+    </div>  
+{% endblock %}
+
+{% block color %} {{colorclass}} {% endblock %}
+
+{% block thead %}
+    
+    <th>Bearb.</th>
+    <th>Trainer Nr.</th>
+    <th>Anr.</th>
+    <th>Name</th>
+    <th>Vorname</th>
+    <th>Status</th>
+    <th>Geb.Datum</th>
+    <th>Ort</th>
+    <th>Straße, Hausnr.</th>
+    <th>PLZ</th>
+    <th>Telefon</th>
+    <th>E-Mail</th>
+    <th>Postfach</th>
+    <th>Art</th>
+    <th>Schwerpunkt</th>
+    <th>Lizenz</th>
+    <th>Lizenz-Nr.</th>
+    <th>ausgestellt</th>
+    <th>gültig bis</th>    
+    
+{% endblock %}
+
+{% block tbody %}
+        {% for data in tabledata %}
+            {% autoescape  %}
+            <tr>
+                 {% if data[0].lastname|first == 'Ä' %}
+                    {% set first = 'A' %}
+                    {% elseif data[0].lastname|first == 'Ö' %}
+                    {% set first = 'O' %}
+                    {% elseif data[0].lastname|first == 'Ü' %}
+                    {% set first = 'U' %}
+                    {% else %}
+                    {% set first = data[0].lastname|first %}   
+                {% endif %}
+            <td><center><a href="{{ path('edittrainer', {'letter': first|capitalize, 'ID': data[0].trainerid, 'adminyear': adminyear }) }}">
+                <button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></a></center></td>
+            <td>{{ data[0].trainerid }}</td>
+            <td>{{ data[0].title|striptags }}</td>
+            <td>{{ data[0].lastname|striptags }}</td>
+            <td>{{ data[0].firstname|striptags }}</td>
+            <td>{{ data[0].state|striptags }}</td>
+            <td>{{ data[0].birthday|date("d.m.Y") }}</td>
+            <td>{{ data[0].location|striptags }}</td>
+            <td>{{ data[0].streetaddress|striptags }}</td>
+            <td>{{ data[0].postcode|striptags }}</td>
+            
+            {% if trainerdependentlist[data[0].trainerid]['phonenumbers'] is defined %}
+                {% set pns =trainerdependentlist[data[0].trainerid]['phonenumbers'] %}
+                {% else %}
+                    {% set pns ='' %}  
+                {% endif %}
+            
+            <td>{% for PN in pns %}
+                        {{ PN[0].phonenumber }}<br>
+                        {% else  %}
+                        {{ "-" }}    
+                    {% endfor %}</td>
+                    
+            <td>{{ data[0].email is empty ? "-" : data[0].email|striptags }}</td>                    
+            <td>{{ data[0].mailbox is empty ? "-" : data[0].mailbox|striptags }}</td>
+            <td>{{ data[0].type|striptags }}</td>
+            
+            {#<td>{% if data[0].section is empty %}
+                   {{ "-" }}
+                    {% else  %}
+                         {% for Sec in data[0].section %}
+                            {{ Sec.sectionname|striptags }}<br>
+                    {% endfor %}
+                    
+                    {% endif %}</td>#}
+            
+            {% if trainerdependentlist[data[0].trainerid]['focuses'] is defined %}
+                {% set foc =trainerdependentlist[data[0].trainerid]['focuses'] %}
+                {% else %}
+                    {% set foc ='' %}  
+            {% endif %}
+            
+            <td>{% for FC in foc %}
+                        {{ FC[0].theme }}<br>
+                        {% else  %}
+                        {{ "-" }}    
+                    {% endfor %}</td>
+                    
+            {% if trainerdependentlist[data[0].trainerid]['licences'] is defined %}
+                {% set lic =trainerdependentlist[data[0].trainerid]['licences'] %}
+                {% else %}
+                    {% set lic ='' %}  
+            {% endif %}
+                    
+            <td{% for licence in lic %}
+                        {% if ('now'|date("Y") == licence[0].expirationdate|date("Y") or 'now'|date("Y") > licence[0].expirationdate|date("Y")) %}class="yellow"{% endif %}
+                        {% endfor %} >
+                    {% if lic is empty %}
+                   {{ "-" }}
+                    {% else  %}
+                         {% for licence in lic %}
+                            {% if 'now'|date("Y") == licence[0].expirationdate|date("Y") %}<strong>{% endif %}
+                            {% if 'now'|date("Y.m.d") > licence[0].expirationdate|date("Y.m.d") %}<strong><font color="red">{% endif %}
+                                {{ licence[0].licencetype|striptags }}<br>
+                            
+                                {% if ('now'|date("Y") == licence[0].expirationdate|date("Y") or 'now'|date("Y") > licence[0].expirationdate|date("Y")) %}</font></strong>{% endif %}
+                    {% endfor %}
+                    
+                    {% endif %}</td>
+                    
+            <td{% for licence in lic %}
+                        {% if ('now'|date("Y") == licence[0].expirationdate|date("Y") or 'now'|date("Y") > licence[0].expirationdate|date("Y")) %}class="yellow"{% endif %}
+                        {% endfor %} >
+                    {% if lic is empty %}
+                   {{ "-" }}
+                    {% else  %}
+                         {% for licence in lic %}
+                            {% if 'now'|date("Y") == licence[0].expirationdate|date("Y") %}<strong>{% endif %}
+                            {% if 'now'|date("Y.m.d") > licence[0].expirationdate|date("Y.m.d") %}<strong><font color="red">{% endif %}
+                                {{ licence[0].licencenumber|striptags }}<br>
+                                
+                            {% if ('now'|date("Y") == licence[0].expirationdate|date("Y") or 'now'|date("Y") > licence[0].expirationdate|date("Y")) %}</font></strong>{% endif %}
+                    {% endfor %}
+                    
+                    {% endif %}</td>
+                    
+                    <td{% for licence in lic %}
+                        {% if ('now'|date("Y") == licence[0].expirationdate|date("Y") or 'now'|date("Y") > licence[0].expirationdate|date("Y")) %}class="yellow"{% endif %}
+                        {% endfor %} >
+                    {% if lic is empty %}
+                   {{ "-" }}
+                    {% else  %}
+                         {% for licence in lic %}
+                            {% if 'now'|date("Y") == licence[0].expirationdate|date("Y") %}<strong>{% endif %}
+                            {% if 'now'|date("Y.m.d") > licence[0].expirationdate|date("Y.m.d") %}<strong><font color="red">{% endif %}
+                                {{ licence[0].issuedate|date("d.m.Y") }}<br>
+                                
+                            {% if ('now'|date("Y") == licence[0].expirationdate|date("Y") or 'now'|date("Y") > licence[0].expirationdate|date("Y")) %}</font></strong>{% endif %}
+                    {% endfor %}
+                    
+                    {% endif %}</td>
+                    
+                    <td{% for licence in lic %}
+                        {% if ('now'|date("Y") == licence[0].expirationdate|date("Y") or 'now'|date("Y") > licence[0].expirationdate|date("Y")) %}class="yellow"{% endif %}
+                        {% endfor %} >
+                    {% if lic is empty %}
+                   {{ "-" }}
+                    {% else  %}
+                         {% for licence in lic %}
+                            {% if 'now'|date("Y") == licence[0].expirationdate|date("Y") %}<strong>{% endif %}
+                            {% if 'now'|date("Y.m.d") > licence[0].expirationdate|date("Y.m.d") %}<strong><font color="red">{% endif %}
+                                {{ licence[0].expirationdate|date("d.m.Y") }}<br>
+                        
+                            {% if ('now'|date("Y") == licence[0].expirationdate|date("Y") or 'now'|date("Y") > licence[0].expirationdate|date("Y")) %}</font></strong>{% endif %}
+                    {% endfor %}
+                    
+                    {% endif %}</td>
+                    
+            </tr>
+            {% endautoescape %} 
+        {% endfor %}
+{% endblock %}
+    
+    {% block pagination %}
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="pagination">
+                    
+                <li {% if cletter == null %}class="active"{% endif %}><a href="{{ path(path, {'all': 'alle'}) }}">ALLE</a></li>   
+                
+                {% for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'] %}
+                    
+                    {% if letter == cletter %}     
+                    <li class="active"><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>      
+                    {% else %}
+                    <li><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>                    
+                    {% endif %}
+                    
+                {% endfor %}
+                
+                <li class="active"><a href="{{ path(path, {'letter': cletter}) }}">{{ tabledata|length }} Personen wurden gefunden</a></li>
+                </ul>         
+            </div>           
+        </div>        
+    {% endblock %}

@@ -1,26 +1,20 @@
-{% macro textCollectionItem(formData, method, removetext) %}
-    
-    
-        
-        {% set name = formData.vars.full_name %}
-    
-    
+{% macro textCollectionItem(formData, method, removetext) %}    
+            
+    {% set name = formData.vars.full_name %}
     <div class="form-group" data-content="{{ name }}">
-        {{ form_label(attribute(formData, method)) }}
-    <div class="col-sm-3">
-   {{ form_widget(attribute(formData, method)) }}
-   
-    </div>
-   
-       <div class="col-sm-7">
-          
-           <a class="btn-remove" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> {{ removetext }}</button></a>
-           
-       </div>
-   
-    </div>
-{% endmacro %}
 
+        {{ form_label(attribute(formData, method)) }} 
+        
+    <div class="col-sm-3">
+        {{ form_widget(attribute(formData, method)) }} 
+        
+    </div>   
+       <div class="col-sm-7">          
+           <a class="btn-remove" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> {{ removetext }}</button></a>
+       </div>   
+    </div>
+           
+{% endmacro %}
 
 
 
@@ -49,8 +43,57 @@
        <div class="col-sm-3">
           
            <a class="btn-remove" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> Rehaschein löschen</button></a>
-           
+
        </div>
-   
     </div>
 {% endmacro %}
+
+{% macro licenceCollectionItem(formData) %}   
+        
+        {% set name = formData.vars.full_name %}
+    
+    
+    <div class="form-group" data-content="{{ name }}">
+        {{ form_label(attribute(formData, 'licencetype')) }}
+    <div class="col-sm-3">
+   {{ form_widget(attribute(formData, 'licencetype')) }}
+   
+    </div>
+   <div class="col-sm-1">
+   {{ form_label(attribute(formData, 'licencenumber')) }}
+   
+    </div>
+    <div class="col-sm-3">
+         
+   {{ form_widget(attribute(formData, 'licencenumber')) }}
+   
+    </div>
+       
+    </div>
+   
+   <div class="form-group" data-content="{{ name }}">
+        {{ form_label(attribute(formData, 'issuedate')) }}
+    <div class="col-sm-3">
+   {{ form_widget(attribute(formData, 'issuedate')) }}
+   
+    </div>
+   <div class="col-sm-1">
+   {{ form_label(attribute(formData, 'expirationdate')) }}
+   
+    </div>
+    <div class="col-sm-3">
+         
+   {{ form_widget(attribute(formData, 'expirationdate')) }}
+   
+    </div>
+       <div class="col-sm-3">
+          
+           <a class="btn-remove" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> Lizenz löschen</button></a>
+
+        </div>
+    </div>
+        
+{% endmacro %}
+
+
+

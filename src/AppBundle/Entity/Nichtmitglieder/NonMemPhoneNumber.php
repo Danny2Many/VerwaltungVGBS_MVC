@@ -1,33 +1,34 @@
 <?php
 
-
-
-namespace AppBundle\Entity;
-
+namespace AppBundle\Entity\Nichtmitglieder;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="MemPhoneNumber")
+ * @ORM\Table(name="NonMemPhoneNumber")
  * @ORM\HasLifecycleCallbacks()
  */
-class MemPhoneNumber {
+class NonMemPhoneNumber {
     
+//  /**
+//     * @ORM\ManyToOne(targetEntity="Nonmember", inversedBy="phonenumber", cascade={"persist"})
+//     * @ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")
+//     */
+//    private $nonmember;
+//     
     /**
      * @ORM\Id
      * @ORM\Column(type="string") 
-     * 
      */
     protected $pnid;
    
-    
     /**
      * 
      * @ORM\Column(type="string") 
      * 
      */
-    protected $memid;   
+    protected $nmemid;   
     
     /**
      * @ORM\Column(type="string")
@@ -39,56 +40,42 @@ class MemPhoneNumber {
      */
     protected $phonenumber;
     
-
-    
-     /**
-     * 
-     * @ORM\Column(type="string")
-     * 
-     */
+    /**
+    * @ORM\Column(type="string")
+    */
     protected $recorded;
-    
-    
+
     /**
-     * 
-     * @ORM\Column(type="string")
-     * 
-     */
+    * @ORM\Column(type="string")
+    */
     protected $deleted;
-    
+
+
+
+
 
     /**
-     * Get phid
+     * Set nmemid
      *
-     * @return integer
+     * @param string $nmemid
+     *
+     * @return NonMemPhoneNumber
      */
-    public function getPhid()
+    public function setNmemID($nmemid)
     {
-        return $this->phid;
-    }
-
-    /**
-     * Set memid
-     *
-     * @param string $memid
-     *
-     * @return MemPhoneNumber
-     */
-    public function setMemid($memid)
-    {
-        $this->memid = $memid;
+        $this->nmemid = $nmemid;
 
         return $this;
     }
 
     /**
-     * Get memid
+     * Get nmemid
      *
-     * @return string
+     * @return sting
      */
-    public function getMemid()
+    public function getNmemID()
     {
-        return $this->memid;
+        return $this->nmemid;
     }
 
     /**
@@ -96,7 +83,7 @@ class MemPhoneNumber {
      *
      * @param string $phonenumber
      *
-     * @return MemPhoneNumber
+     * @return NonMemPhoneNumber
      */
     public function setPhonenumber($phonenumber)
     {
@@ -117,10 +104,10 @@ class MemPhoneNumber {
 
 
 
-   /**
- * @ORM\PrePersist
- */
-    public function setRecorded()
+    /**
+    * @ORM\PrePersist
+    */
+    public function setRecorded($recorded)
     {
         $now= new \DateTime();
         
@@ -139,12 +126,16 @@ class MemPhoneNumber {
         return $this->recorded;
     }
 
+ 
+
+
+
     /**
      * Set deleted
      *
      * @param string $deleted
      *
-     * @return MemPhoneNumber
+     * @return NonMemPhoneNumber
      */
     public function setDeleted($deleted)
     {
@@ -156,21 +147,20 @@ class MemPhoneNumber {
     /**
      * Get deleted
      *
-     * @return string
+     * @return srtring
      */
     public function getDeleted()
     {
         return $this->deleted;
     }
 
-   
 
     /**
      * Set pnid
      *
      * @param string $pnid
      *
-     * @return MemPhoneNumber
+     * @return NonMemPhoneNumber
      */
     public function setPnid($pnid)
     {

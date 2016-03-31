@@ -22,7 +22,8 @@ use Symfony\Component\Form\FormError;
 
 class MemberController extends Controller
 {
-/**
+
+    /**
      * @Route("/mitglieder/{adminyear}/{letter}", defaults={"letter"="A", "adminyear"=2016}, name="member_home", requirements={"letter": "[A-Z]", "adminyear": "[1-9][0-9]{3}"})
      */
     public function indexAction(Request $request, $letter, $adminyear)
@@ -48,13 +49,18 @@ class MemberController extends Controller
     }
     
     
+
+    
     
     
     $choices=array('Mitgliedsnr.' => 'memid',
         'Name' => 'lastname',
         'Vorname' => 'firstname',
         'Strasse' => 'streetaddress',
-        'E-Mail' => 'email');
+        'E-Mail' => 'email',
+        'Sportgruppe' => 'token',
+        'RS-Ablaufd.' => 'terminationdate',
+        'Krankenkasse' => 'healthinsurance');
      
  
     $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('member_home')));
@@ -73,13 +79,34 @@ class MemberController extends Controller
     $searchval=$request->query->get('search')['searchfield'];
     $searchcol=$request->query->get('search')['column'];
     
+
+//    if($searchcol=='token'){
+//    $query=$qb->Join('m.sportsgroup', 'i')           
+//            ->where($qb->expr()->like('i.token',':tok'))
+//            ->setParameter('tok','%'.$searchval.'%')
+//            ->getQuery();
+//    }else 
+//    if($searchcol=='terminationdate'){
+//    $query=$qb->Join('m.rehabilitationcertificate', 'i')           
+//            ->where($qb->expr()->like('i.terminationdate',':token'))
+//            ->setParameter('token','%'.$searchval.'%')
+//            ->getQuery();
+//    }else{
+//    $query=$qb->where($qb->expr()->like('m.'.$searchcol, ':member'))
+//                   ->setParameter('member','%'.$searchval.'%')
+//                   ->getQuery();
+//    } 
+
     
     
     //building the query
+
     $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.'.$searchcol, ':member'))
                    ->setParameter('member','%'.$searchval.'%');
                    
+
     
+       
     
      
      
@@ -142,7 +169,9 @@ class MemberController extends Controller
             'tabledata' => $memberlist,
             'colorclass' => "bluetheader",
             'searchform' => $searchform->createView(),
+
             'memberdependentlist' => $memberdependentlist,         
+
             'cletter' => $letter,
             'adminyear' => $adminyear,
             'path' => 'member_home'
@@ -180,9 +209,11 @@ class MemberController extends Controller
 
         //if the form is valid -> persist it to the database
         if($addmemform->isSubmitted() && $addmemform->isValid()){
+
             
             $memid=uniqid('m'); 
             $member->setMemid($memid);
+
             
          
             $manager= $this->getDoctrine()->getManager();
@@ -203,6 +234,7 @@ class MemberController extends Controller
           
           
           
+
           $manager->persist($member);
           
             $manager->flush();
@@ -211,6 +243,7 @@ class MemberController extends Controller
           return $this->redirectToRoute('member_home', array('letter' => $letter));
           
           
+
         }
         
         
@@ -229,7 +262,7 @@ class MemberController extends Controller
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
     
     /**
-     * @Route("/mitglieder/bearbeiten/{adminyear}/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"letter": "[A-Z]"}, name="editmem")
+     * @Route("/mitglieder/bearbeiten/{adminyear}/{letter}/{ID}", defaults={"letter": "[A-Z]"}, name="editmem")
      * 
      */
     public function editmemberAction(Request $request, $adminyear, $ID, $letter)
@@ -276,12 +309,14 @@ class MemberController extends Controller
         
         $phonenumbers=$qb['MemPhoneNumber']->getQuery()->getResult();
         $rehabcerts=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
+        
        echo '<pre>'; 
         print_r($rehabcerts);
         echo '</pre>';
+        
          $originalrehabs = new ArrayCollection();
          $originalphonenr = new ArrayCollection();
-         $originalsections = new ArrayCollection();
+        
 
          
          
@@ -319,12 +354,10 @@ class MemberController extends Controller
         
         
         if($editmemform->get('delete')->isClicked()){
-            
-           
+
             $manager->remove($member);
             $manager->flush();
-            $this->addFlash('notice', 'Diese Person wurde erfolgreich gelöscht!'); 
-            return $this->redirectToRoute('member_home', array('letter' => $letter));
+            return $this->redirectToRoute('member_home', array('letter' => $letter, 'info' => 'entfernt'));
         }
 
         
@@ -333,45 +366,7 @@ class MemberController extends Controller
         //if the form is valid -> persist it to the database
         if($editmemform->isSubmitted() && $editmemform->isValid()){
        
-      if(!$member->getSportsgroup()->isEmpty()){      
-            
-            
-    foreach ($member->getSportsgroup() as $sportsgroup) {
-        
-        foreach ($originalsections as $section) {
-            
-            if (false === $sportsgroup->getSection()->contains($section)) {
-                
-
-                $member->removeSection($section);
-                
-            }
-        }
-    }
-    
-    
-    foreach($member->getSportsgroup() as $sportsgroup){
-                
-                foreach($sportsgroup->getSection() as $section){
-                
-                $member->addSection($section);
-            }
-            }
-            
-            
-      }else{
-          
-          $member->getSection()->clear();
-      }
-     
-            
-            
-            
-            
-            
-            
-            
-  
+   
           foreach ($originalrehabs as $rehab) {
             if (false === $member->getRehabilitationcertificate()->contains($rehab)) {
                 
@@ -395,11 +390,11 @@ class MemberController extends Controller
     
     
             $manager->persist($member);
-            
+          
             $manager->flush();
             
-          $this->addFlash('notice', 'Die Daten wurden erfolgreich gespeichert!'); 
-          return $this->redirectToRoute('member_home', array('letter' => $letter));  
+            
+          return $this->redirectToRoute('member_home', array('letter' => $letter, 'info' => 'gespeichert'));  
         }
         
         

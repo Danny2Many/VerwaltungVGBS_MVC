@@ -14,9 +14,7 @@ class RehabCertType extends AbstractType{
     {
         $builder->add('terminationdate',DateType::class, array('label' => 'RS gültig bis:', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag')))
                 ->add('rehabunits',IntegerType::class, array('label' => 'Einheiten:'));
-        
     }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

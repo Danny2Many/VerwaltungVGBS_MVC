@@ -1,0 +1,93 @@
+{% extends "basic.html.twig" %}
+{% form_theme searchform 'bootstrap_3_layout.html.twig' %}
+
+{% block viewlink %}{{ path('sportsgroup_home') }}{% endblock %}
+{% block title %} Sportgruppen {% endblock %}
+{% block viewname %}Sportgruppen{% endblock %}
+{% block SportgrAktiv %} active {% endblock %}
+{% block fixedcolnum %} 4 {% endblock %}
+
+{% block add %}
+    <a href="{{ path('addsportsgroup', {'letter': cletter }) }}"><button    class="add btn btn-default">
+      <span class="glyphicon glyphicon-plus"></span> neue Sportgruppe anlegen
+        </button></a>  
+{% endblock %}
+
+{% block color %} {{ colorclass }} {% endblock %}
+
+{% block thead %}
+
+<tr>
+    <th colspan="4"></th>
+    <th colspan="3" class="overhead">Mitgleider/Kurs-TN</th>
+    <th colspan="2" class="overhead">Kapazität</th>
+    <th colspan="2"></th>
+    <th colspan="5" class="overhead">BSSA_Zertifizierung</th>
+    <th colspan="4" class="overhead">Finanzen</th>
+</tr>
+<tr>
+    <th>Sportgruppe/Info</th>
+    <th>Uhrzeit</th>
+    <th>Räumlichkeit</th>
+    <th>Gruppenbezeichnung</th>
+    <th>gesamt</th>
+    <th>weiblich</th>
+    <th>männlich</th>
+    <th>gesamt</th>
+    <th>offen</th>
+    <th>Voranmeldungen</th>
+    <th>Vetretungsmöglichkeiten</th>
+    <th>Laufzeit bis</th>
+    <th>Erstanmeldung</th>
+    <th>Letzte Änderung</th>
+    <th>VGBS-GruppenNr.</th>
+    <th>BSSA-Zertifikatnr.</th>
+    <th>Einnahmen gesamt/Monat</th>
+    <th>Anzahl RS</th>
+    <th>ÜL-Kosten + Halle</th>
+    <th>Saldo</th>
+</tr>    
+    
+{% endblock %}
+ 
+{% block tbody %}
+    {% for data in tabledata %}
+        {% autoescape  %}
+        <tr>
+        <td>{{ data[0].name|striptags }}</td> 
+         <td>{{ data[0].roomid|striptags }}</td>
+        <td>{{ data[0].roomid|striptags }}</td> 
+        <td>{{ data[0].token|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td>
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td>
+        {% if sportsgroupdependentlist[data[0].sgid]['terminationdate'] is defined %}
+        {% set terminationdate =sportsgroupdependentlist[data[0].sgid]['terminationdate'] %}
+        {% else %}
+          {% set terminationdate ='' %}  
+        {% endif %}
+        <td>{% for TD in terminationdate if date(TD[0].terminationdate) > date() %}                     
+                {{'TD'}}{{loop.index}}-<strong>{{TD[0].terminationdate|date("d.m.Y") }}</strong>-{{TD[0].terminationdate }}<br>
+            {% else %}
+                {{ "-" }}
+            {% endfor %}
+        </td>
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td>
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        <td>{{ data[0].trainerid|striptags }}</td>
+        <td>{{ data[0].trainerid|striptags }}</td> 
+        
+        
+
+        
+        {% endautoescape %}
+    {% endfor %}    
+{% endblock %}

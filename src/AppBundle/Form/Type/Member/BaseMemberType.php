@@ -67,7 +67,7 @@ public function buildForm(FormBuilderInterface $builder, array $options)
     'label' => 'verminderter Beitrag:'
     
 ))
-                
+
                 ->add('newsletter', ChoiceType::class, array(
     
     // *this line is important*
@@ -80,7 +80,9 @@ public function buildForm(FormBuilderInterface $builder, array $options)
     'required' => false
     
 ))
+
                 ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\MemRehabilitationCertificate'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
+
                 ->add('healthinsurance', SanitizedTextType::class, array('label' => 'Krankenkasse:', 'required' => false))
                         
                 
@@ -109,9 +111,7 @@ public function buildForm(FormBuilderInterface $builder, array $options)
                         
                 ->add('pulseatrest', NumberType::class, array( 'label' => 'Hf-Ruhe/Min:', 'scale' => 0, 'required' => false))
                  
-                
-                
-                 
+                          
           ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
           ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))
           ->add('reset', ResetType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'zurücksetzen'));

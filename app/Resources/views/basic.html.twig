@@ -1,9 +1,7 @@
-
-
-
 <!DOCTYPE html>
 <html>
     <head>
+
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block meta %}
             <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,11 +38,15 @@
         "bFilter": false,
         "bInfo": false,
         fixedColumns: {
+
         leftColumns: {% block fixedcolnum %}{% endblock %}
+
     },
-            {% block columndefs %}
+            {% block columnDefs %}
        
   {% endblock %}
+
+
     } );
     
     new $.fn.dataTable( oTable );
@@ -68,17 +70,17 @@
                         <nav class="navbar navbar-default  col-md-12">
                             <ul class="nav navbar-nav">
                                 <li class="{% block HomeAktiv %}{% endblock %}"><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-                                
                                 <li class="{% block MitglAktiv %}#{% endblock %}"><a href="{{ path('member_home') }}">Mitglieder</a></li>
-                                <li class="{% block NMitglAktiv %}#{% endblock %}"><a href="#">Nichtmitglieder</a></li>
+                                <li class="{% block NMitglAktiv %}{% endblock %}"><a href="{{path('nonmember_home')}}">Nichtmitglieder</a></li>
                                 <li class="{% block AustrittAktiv %}#{% endblock %}"><a href="#">Austrittsliste</a></li>
-                                <li class="{% block SportgrAktiv %}#{% endblock %}"><a href="#">Sportgruppen</a></li>
+                                <li class="{% block SportgrAktiv %}#{% endblock %}"><a href="{{path('sportsgroup_home')}}">Sportgruppen</a></li>
                                 <li class="dropdown {% block FinanzAktiv %}{% endblock %}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Finanzverwaltung<span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <li class="{% block MitglFinAktiv %}#{% endblock %}"><a href="{{ path('member_fin') }}">Mitglieder</a></li>
                                         <li class="{% block BeitragAktiv %}#{% endblock %}"><a href="#">Beitragsverwaltung</a></li>
                                     </ul>
                                 </li>
+                                <li class="{% block TrainerAktiv %}#{% endblock %}"><a href="{{path('trainer_home')}}">Übungsleiter</a></li>
                             </ul>
                         </nav>
                     </header>
@@ -187,7 +189,8 @@
         </div>
         
        {% endblock %}
-            </div>
+        </div>
+            
         {% endblock %}
         
     </body>

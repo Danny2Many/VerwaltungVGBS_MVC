@@ -84,18 +84,15 @@ class PersonalData {
      */
     protected $location;
     
-    
-    
-       
-    
-       /**
+
+    /**
      * @ORM\Column(type="string", options={"default":"-"})
      * @Assert\Email(message = "Die E-Mail '{{ value }}' ist keine gültige E-Mail.",
      *     checkMX = true)
      */
     protected $email;
     
-     
+
     function getFirstname() {
         return $this->firstname;
     }
