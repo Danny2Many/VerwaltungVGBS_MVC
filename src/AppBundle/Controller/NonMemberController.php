@@ -19,7 +19,7 @@ use AppBundle\Form\SanitizedTextType;
 
 class NonMemberController extends Controller {
     /**
-     * @Route("/nichtmitglieder/{letter}", defaults={"letter"="A"}, name="nonmember_home", requirements={"letter": "[A-Z]"})
+     * @Route("/nichtmitglieder/{adminyear}/{letter}", defaults={"letter"="A", "adminyear"=2016}, name="nonmember_home", requirements={"letter": "[A-Z]"})
     */    
     public function indexAction (Request $request, $letter ) {   
   
@@ -104,11 +104,12 @@ class NonMemberController extends Controller {
             'disabled' => $disabled,
             'cletter' => $letter,
             'tabledata' => $nonmemberlist, 
-            'path' => 'nonmember_home'
+            'path' => 'nonmember_home',
+             'adminyear' => $adminyear
             ));
     }     
       /**
-     * @Route("/nichtmitglieder/anlegen/{letter}", defaults={"letter": "A"}, name="addnonmem", requirements={"letter": "[A-Z]"})
+     * @Route("/nichtmitglieder/anlegen/{adminyear}/{letter}", defaults={"letter": "A", "adminyear"=2016}, name="addnonmem", requirements={"letter": "[A-Z]"})
      * 
      */
     public function addnonmeberAction (Request $request, $letter){
