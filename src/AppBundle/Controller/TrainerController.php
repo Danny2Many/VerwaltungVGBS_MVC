@@ -66,11 +66,21 @@ class TrainerController extends Controller
     
     
     
+//    $qb['Trainer\Trainer']->where($qb['Trainer\Trainer']->expr()->like('ditto.'.$searchcol, ':trainer'))
+//        ->setParameter('trainer','%'.$searchval.'%')
+//        ->getQuery();
+    
+     if($searchcol=='licencetype'){
+    $qb['Trainer\TrainerLicence']
+//            ->Join('ditto.licence', 'i')           
+        ->where($qb['Trainer\TrainerLicence']->expr()->like('ditto.'.$searchcol,':type'))
+        ->setParameter('type','%'.$searchval.'%')
+        ->getQuery();
+    }else{
     $qb['Trainer\Trainer']->where($qb['Trainer\Trainer']->expr()->like('ditto.'.$searchcol, ':trainer'))
         ->setParameter('trainer','%'.$searchval.'%')
         ->getQuery();
-    
-     
+    }
          
     }else if($letter != 'alle'){
           
