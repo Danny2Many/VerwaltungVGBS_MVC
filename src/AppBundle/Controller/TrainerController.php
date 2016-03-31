@@ -35,16 +35,19 @@ class TrainerController extends Controller
     {
         
         $doctrine=$this->getDoctrine();
-        $dependencies=['Trainer\Trainer', 'Trainer\TrainerPhoneNumber', 'Trainer\TrainerFocus','Trainer\TrainerLicence'];
+        $dependencies=['Trainer\Trainer' => 'trainer', 'Trainer\TrainerPhoneNumber' =>'tpn', 'Trainer\TrainerFocus'=>'tf','Trainer\TrainerLicence'=>'li'];
     
         $qb= [];
-        foreach($dependencies as $dependent){
+        foreach($dependencies as $dependent => $idprefix){
      
+            $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
+            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.recorded'))
+                    ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
+            
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-            $qb[$dependent]->select(array('ditto', $qb[$dependent]->expr()->max('ditto.recorded')))
-                    ->where('ditto.recorded <= :year')
-                    ->groupBy('ditto.trainerid')
-                    ->setParameter('year', $adminyear.'-12-31');
+            $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
+                    ->andWhere('ditto.recorded<=:adminyear')
+                    ->setParameter('adminyear',$adminyear.'-12-31');
      
     }
         
@@ -70,17 +73,17 @@ class TrainerController extends Controller
 //        ->setParameter('trainer','%'.$searchval.'%')
 //        ->getQuery();
     
-     if($searchcol=='licencetype'){
-    $qb['Trainer\TrainerLicence']
-//            ->Join('ditto.licence', 'i')           
-        ->where($qb['Trainer\TrainerLicence']->expr()->like('ditto.'.$searchcol,':type'))
-        ->setParameter('type','%'.$searchval.'%')
-        ->getQuery();
-    }else{
-    $qb['Trainer\Trainer']->where($qb['Trainer\Trainer']->expr()->like('ditto.'.$searchcol, ':trainer'))
-        ->setParameter('trainer','%'.$searchval.'%')
-        ->getQuery();
-    }
+//     if($searchcol=='licencetype'){
+//    $qb['Trainer\TrainerLicence']
+////            ->Join('ditto.licence', 'i')           
+//        ->where($qb['Trainer\TrainerLicence']->expr()->like('ditto.'.$searchcol,':type'))
+//        ->setParameter('type','%'.$searchval.'%')
+//        
+//    }else{
+    $qb['Trainer\Trainer']->andWhere($qb['Trainer\Trainer']->expr()->like('ditto.'.$searchcol, ':trainer'))
+        ->setParameter('trainer','%'.$searchval.'%');
+  
+//    }
          
     }else if($letter != 'alle'){
           
@@ -110,17 +113,17 @@ class TrainerController extends Controller
     $trainerdependentlist=[];
      foreach ($phonenumberlist as $pn){
          
-         $trainerdependentlist[$pn[0]->getTrainerid()]['phonenumbers'][]=$pn;
+         $trainerdependentlist[$pn->getTrainerid()]['phonenumbers'][]=$pn;
      }
      
      foreach ($licencelist as $lc){
          
-         $trainerdependentlist[$lc[0]->getTrainerid()]['licences'][]=$lc;
+         $trainerdependentlist[$lc->getTrainerid()]['licences'][]=$lc;
      }
 
      foreach ($focuslist as $fc){
          
-         $trainerdependentlist[$fc[0]->getTrainerid()]['focuses'][]=$fc;
+         $trainerdependentlist[$fc->getTrainerid()]['focuses'][]=$fc;
      }
 
 
