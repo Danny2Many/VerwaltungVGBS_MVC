@@ -67,6 +67,7 @@ public function buildForm(FormBuilderInterface $builder, array $options)
     'label' => 'verminderter Beitrag:'
     
 ))
+
                 ->add('newsletter', ChoiceType::class, array(
     
     // *this line is important*

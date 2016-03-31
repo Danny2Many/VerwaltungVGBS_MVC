@@ -119,9 +119,10 @@
             <td>{{ data.trainingstartdate|date("d.m.Y") }}</td>
             <td>{{ data.trainingconfirmation is empty ? "-" : data.trainingconfirmation|date("d.m.Y")}}</td>
              
-            
-                {% if nonmemberdependentlist[data.nmemid]['rehabcerts'] is defined %}
-                {% set rehab =nonmemberdependentlist[data.nmemid]['rehabcerts'] %}
+
+                {% if nonmemberdependentlist[data[0].nmemid]['rehabcerts'] is defined %}
+                {% set rehab =nonmemberdependentlist[data[0].nmemid]['rehabcerts'] %}
+
                 {% else %}
                   {% set rehab ='' %}  
                 {% endif %}                      

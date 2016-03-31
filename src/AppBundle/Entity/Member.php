@@ -55,13 +55,11 @@ class Member extends HealthData
     
     
     /**
-     * 
      * @ORM\Column(type="string")
      * 
      */
     protected $deleted;
-    
-    
+   
       /**
      * @ORM\Column(type="date")
        * @Assert\NotBlank()
@@ -105,8 +103,10 @@ class Member extends HealthData
     
     /**
      * @ORM\Column(type="binary")
+        * 
      * 
-     */protected $newsletter; 
+     */
+    protected $newsletter; 
     
     
       /**
@@ -154,6 +154,10 @@ class Member extends HealthData
         return $this->memid;
     }
 
+    
+    
+    
+    
     /**
      * Set admissiondate
      *
@@ -376,6 +380,18 @@ class Member extends HealthData
         return $this->admissionchargepayed;
     }
 
+     
+    
+    
+    
+    
+    
+    
+
+   
+
+
+
     /**
      * Set memid
      *
@@ -417,14 +433,17 @@ class Member extends HealthData
     }
 
     
+
     /**
      * Set newsletter
+     *
      * @param binary $newsletter
      *
      * @return Member
      */
     public function setNewsletter($newsletter)
-    {$this->newsletter = implode($newsletter);
+    {
+        $this->newsletter = implode($newsletter);
 
         return $this;
     }
@@ -434,11 +453,14 @@ class Member extends HealthData
      *
      * @return binary
      */
-  
     public function getNewsletter()
-    { return array($this->newsletter);  }
+    {
+        return array($this->newsletter);
+    }
 
     
+
+ 
 
     /**
  * @ORM\PrePersist
@@ -486,15 +508,8 @@ class Member extends HealthData
     }
 
    
-    public function addPhonenumber(\AppBundle\Entity\MemPhoneNumber $pn)
-    {
-        $pn->setMemid($this);
-        $this->phonenumber[] = $pn;
-
-        return $this;
-    }
-
     
+ 
     
     
     public function addRehabilitationcertificate(\AppBundle\Entity\MemRehabilitationCertificate $rehabilitationcertificate)
@@ -544,6 +559,20 @@ public function setPhonenumber($phonenumber)
     }
      
 
+/** 
+* Add phonenumber
+*
+* @param \AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber
+*
+* @return Member
+*/
+ public function addPhonenumber(\AppBundle\Entity\MemPhoneNumber $phonenumber)
+    {               
+        $phonenumber->setMemid($this);
+        $this->phonenumber[] = $phonenumber;
+
+        return $this;
+    }
 
     /**
      * Remove phonenumber
