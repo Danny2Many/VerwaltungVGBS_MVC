@@ -57,14 +57,28 @@ public function buildForm(FormBuilderInterface $builder, array $options)
           
           ->add('decreaseddues', ChoiceType::class, array(
     'choices'  => array(
-        'kein' => 'kein',
-        '(verminderter Beitrag)' => '(verminderter Beitrag)',
+        'kein' => 0,
+        'verminderter Beitrag' => 1,
         
     ),
     // *this line is important*
     'choices_as_values' => true,
     
     'label' => 'verminderter Beitrag:'
+    
+))
+
+                
+                ->add('newsletter', ChoiceType::class, array(
+    
+    // *this line is important*
+    'choices_as_values' => true,
+    'expanded' => true,
+    'multiple' => true,
+    'choices' => array('Soll das Mitglied den kostenlosen VGBS-Newsletter erhalten?' => 1),
+    
+    'label' => 'Newsletter:',
+    'required' => false
     
 ))
 
@@ -97,14 +111,9 @@ public function buildForm(FormBuilderInterface $builder, array $options)
                 ->add('additionalagilactivities', SanitizedTextareaType::class, array('label' => 'weit. bewegl. Aktivitäten:', 'required' => false))
                         
                 ->add('pulseatrest', NumberType::class, array( 'label' => 'Hf-Ruhe/Min:', 'scale' => 0, 'required' => false))
-                ->add('sportsgroup', EntityType::class,  array(
-            'class' => 'AppBundle:MemSportsgroup',
-            'choice_label' => 'token',
-            'multiple' => true,
-            'required' => false,
-            'label' => 'Sportgruppe/n:'
-            
-        )) 
+                 
+                
+                
                  
           ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
           ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))

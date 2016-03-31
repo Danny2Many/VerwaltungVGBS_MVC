@@ -1,0 +1,45 @@
+﻿Merge remote-tracking branch 'refs/remotes/origin/Danny_System'
+
+# Conflicts:
+#	nbproject/private/private.xml
+#	src/AppBundle/Controller/MemberController.php
+#	src/AppBundle/Entity/Member.php
+#	src/AppBundle/Entity/PersonalData.php
+#	src/AppBundle/Form/Type/Member/BaseMemberType.php
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   ../../../../../.gitignore
+#	modified:   ../../../../../app/Resources/views/Mitglieder/member.html.twig
+#	modified:   ../../../../../app/Resources/views/Mitglieder/memberform.html.twig
+#	modified:   ../../../../../app/Resources/views/basic.html.twig
+#	modified:   ../../../Controller/MemberController.php
+#	deleted:    ../../../Entity/AdministrationYear.php
+#	modified:   ../../../Entity/HealthData.php
+#	modified:   ../../../Entity/MemPhoneNumber.php
+#	modified:   ../../../Entity/MemPhoneNumber.php~
+#	modified:   ../../../Entity/MemRehabilitationCertificate.php
+#	modified:   ../../../Entity/MemRehabilitationCertificate.php~
+#	modified:   ../../../Entity/MemSportsgroup.php
+#	modified:   ../../../Entity/Member.php
+#	modified:   ../../../Entity/Member.php~
+#	modified:   ../../../Entity/PersonalData.php
+#	modified:   AddMemberType.php
+#	modified:   BaseMemberType.php
+#	modified:   EditMemberType.php
+#	modified:   FinanceMemberType.php
+#	modified:   ../../../../../web/css/style.css
+#
+

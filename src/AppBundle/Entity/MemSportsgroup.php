@@ -29,19 +29,9 @@ class MemSportsgroup {
      */
     protected $sgid;
     
-    /**
-     * @ORM\Column(type="string")
-        * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"Mitglieder", "Nichtmitglieder"}, message = "Bitte wählen Sie eine gültige Kategorie.")
-     */
-    protected $category;
     
-    /**
-     * @ORM\Column(type="string")
-        * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"Mitglieder", "Nichtmitglieder"}, message = "Bitte wählen Sie eine gültige Kategorie.")
-     */
-    protected $type;
+    
+    
     
     /**
      * @ORM\Column(type="string")
@@ -104,53 +94,7 @@ class MemSportsgroup {
         return $this->sgid;
     }
 
-    /**
-     * Set category
-     *
-     * @param string $category
-     *
-     * @return Sportsgroup
-     */
-    public function setCategory($category)
-    {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    /**
-     * Get category
-     *
-     * @return string
-     */
-    public function getCategory()
-    {
-        return $this->category;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     *
-     * @return Sportsgroup
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
+    
 
     /**
      * Set name

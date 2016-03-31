@@ -85,7 +85,9 @@ class PersonalData {
     protected $location;
     
     
-    
+
+       
+
     
        /**
      * @ORM\Column(type="string", options={"default":"-"})
@@ -94,7 +96,7 @@ class PersonalData {
      */
     protected $email;
     
-   
+
     function getFirstname() {
         return $this->firstname;
     }

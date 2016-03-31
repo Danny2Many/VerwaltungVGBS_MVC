@@ -10,25 +10,22 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="MemPhoneNumber")
+ * @ORM\HasLifecycleCallbacks()
  */
 class MemPhoneNumber {
     
-  /**
-     * @ORM\ManyToOne(targetEntity="Member", inversedBy="phonenumber", cascade={"persist"})
-     * @ORM\JoinColumn(name="memid", referencedColumnName="memid")
-     */
-    private $member;
-    
+  
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="string") 
+     * 
      */
-    protected $phid;
+    protected $pnid;
+   
     
     /**
      * 
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
      * 
      */
     protected $memid;   
@@ -45,6 +42,21 @@ class MemPhoneNumber {
     
 
     
+     /**
+     * 
+     * @ORM\Column(type="string")
+     * 
+     */
+    protected $recorded;
+    
+    
+    /**
+     * 
+     * @ORM\Column(type="string")
+     * 
+     */
+    protected $deleted;
+    
 
     /**
      * Get phid
@@ -59,7 +71,7 @@ class MemPhoneNumber {
     /**
      * Set memid
      *
-     * @param integer $memid
+     * @param string $memid
      *
      * @return MemPhoneNumber
      */
@@ -73,7 +85,7 @@ class MemPhoneNumber {
     /**
      * Get memid
      *
-     * @return integer
+     * @return string
      */
     public function getMemid()
     {
@@ -104,27 +116,77 @@ class MemPhoneNumber {
         return $this->phonenumber;
     }
 
-    /**
-     * Set member
-     *
-     * @param \AppBundle\Entity\Member $member
-     *
-     * @return MemPhoneNumber
-     */
-    public function setMember(\AppBundle\Entity\Member $member = null)
+
+
+   /**
+ * @ORM\PrePersist
+ */
+    public function setRecorded()
     {
-        $this->member = $member;
+        $now= new \DateTime();
+        
+        $this->recorded = $now->format('Y-m-d');
 
         return $this;
     }
 
     /**
-     * Get member
+     * Get recorded
      *
-     * @return \AppBundle\Entity\Member
+     * @return string
      */
-    public function getMember()
+    public function getRecorded()
     {
-        return $this->member;
+        return $this->recorded;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param string $deleted
+     *
+     * @return MemPhoneNumber
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return string
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+   
+
+    /**
+     * Set pnid
+     *
+     * @param string $pnid
+     *
+     * @return MemPhoneNumber
+     */
+    public function setPnid($pnid)
+    {
+        $this->pnid = $pnid;
+
+        return $this;
+    }
+
+    /**
+     * Get pnid
+     *
+     * @return string
+     */
+    public function getPnid()
+    {
+        return $this->pnid;
     }
 }

@@ -23,16 +23,34 @@ use Symfony\Component\Form\FormError;
 class MemberController extends Controller
 {
 /**
-     * @Route("/mitglieder/{letter}/{info}", defaults={"info"=null, "letter"="A"}, name="member_home", requirements={"info": "null|gespeichert|entfernt", "letter": "[A-Z]"})
+
+     * @Route("/mitglieder/{adminyear}/{letter}", defaults={"letter"="A", "adminyear"=2016}, name="member_home", requirements={"letter": "[A-Z]", "adminyear": "[1-9][0-9]{3}"})
      */
-    public function indexAction(Request $request, $info, $letter)
+    public function indexAction(Request $request, $letter, $adminyear)
     {
-
-
-    $repository = $this->getDoctrine()
-    ->getRepository('AppBundle:Member');
     
-    $qb=$repository->createQueryBuilder('m');
+    $doctrine=$this->getDoctrine();
+    $dependencies=array('Member' => 'mem', 'MemPhoneNumber'=> 'pn', 'MemRehabilitationCertificate'=> 'rc');
+    
+    $qb= [];
+    foreach($dependencies as $dependent => $idprefix){
+   
+        //building the subquery: SELECT max(recorded) FROM % AS dittosub WHERE dittosub.type = ditto.type
+     $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
+     $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.recorded'))
+                          ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
+                          
+        
+     //building the query: SELECT ditto FROM % AS ditto WHERE ditto.recorded=( subquery ) AND ditto.recorded<=$adminyear 
+     $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
+     $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
+                    ->andWhere('ditto.recorded<=:adminyear')
+                    ->setParameter('adminyear',$adminyear.'-12-31');
+    }
+    
+    
+
+    
     
     $choices=array('Mitgliedsnr.' => 'memid',
         'Name' => 'lastname',
@@ -50,28 +68,40 @@ class MemberController extends Controller
     $searchform->handleRequest($request);
     
     
-    
+    //the search
     if($searchform->isSubmitted() && $searchform->isValid()){
-     $letter=null;   
+     
+        //setting the letter to null for the pagination not to show any letter
+     $letter=null;
+     
+     //getting the values of the field and column
     $searchval=$request->query->get('search')['searchfield'];
     $searchcol=$request->query->get('search')['column'];
     
-    if($searchcol=='token'){
-    $query=$qb->Join('m.sportsgroup', 'i')           
-            ->where($qb->expr()->like('i.token',':tok'))
-            ->setParameter('tok','%'.$searchval.'%')
-            ->getQuery();
-    }else 
-    if($searchcol=='terminationdate'){
-    $query=$qb->Join('m.rehabilitationcertificate', 'i')           
-            ->where($qb->expr()->like('i.terminationdate',':token'))
-            ->setParameter('token','%'.$searchval.'%')
-            ->getQuery();
-    }else{
-    $query=$qb->where($qb->expr()->like('m.'.$searchcol, ':member'))
-                   ->setParameter('member','%'.$searchval.'%')
-                   ->getQuery();
-    } 
+
+//    if($searchcol=='token'){
+//    $query=$qb->Join('m.sportsgroup', 'i')           
+//            ->where($qb->expr()->like('i.token',':tok'))
+//            ->setParameter('tok','%'.$searchval.'%')
+//            ->getQuery();
+//    }else 
+//    if($searchcol=='terminationdate'){
+//    $query=$qb->Join('m.rehabilitationcertificate', 'i')           
+//            ->where($qb->expr()->like('i.terminationdate',':token'))
+//            ->setParameter('token','%'.$searchval.'%')
+//            ->getQuery();
+//    }else{
+//    $query=$qb->where($qb->expr()->like('m.'.$searchcol, ':member'))
+//                   ->setParameter('member','%'.$searchval.'%')
+//                   ->getQuery();
+//    } 
+    
+    
+    //building the query
+    $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.'.$searchcol, ':member'))
+                   ->setParameter('member','%'.$searchval.'%');
+                   
+
     
        
     
@@ -80,21 +110,21 @@ class MemberController extends Controller
     }else{
         
         
-        $qb->where($qb->expr()->like('m.lastname', ':letter'))
-                   ->setParameter('letter',$letter.'%');
+        $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.lastname', ':letter'))
+                     ->setParameter('letter',$letter.'%');
                    
         
         
           switch($letter){
-            case 'A': $qb->orWhere($qb->expr()->like('m.lastname', ':umlautletter'))
+            case 'A': $qb['Member']->orWhere($qb['Member']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ä%'); 
             break;
         
-            case 'O': $qb->orWhere($qb->expr()->like('m.lastname', ':umlautletter'))
+            case 'O': $qb['Member']->orWhere($qb['Member']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ö%'); 
             break;
         
-            case 'U': $qb->orWhere($qb->expr()->like('m.lastname', ':umlautletter'))
+            case 'U': $qb['Member']->orWhere($qb['Member']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ü%'); 
             break;
         }
@@ -108,7 +138,27 @@ class MemberController extends Controller
     
     
     
-     $memberlist=$qb->getQuery()->getResult();
+     $memberlist=$qb['Member']->getQuery()->getResult();
+     $phonenumberlist=$qb['MemPhoneNumber']->getQuery()->getResult();
+     $rehabcertlist=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
+     
+     
+     $memberdependentlist=[];
+     foreach ($phonenumberlist as $pn){
+         
+         $memberdependentlist[$pn->getMemid()]['phonenumbers'][]=$pn;
+     }
+     
+     
+      foreach ($rehabcertlist as $rc){
+        
+         $memberdependentlist[$rc->getMemid()]['rehabcerts'][]=$rc;
+         
+     }
+     
+     
+     
+     
 
     return $this->render(
         'Mitglieder/member.html.twig',
@@ -116,7 +166,10 @@ class MemberController extends Controller
             'tabledata' => $memberlist,
             'colorclass' => "bluetheader",
             'searchform' => $searchform->createView(),
+
+            'memberdependentlist' => $memberdependentlist,         
             'cletter' => $letter,
+            'adminyear' => $adminyear,
             'path' => 'member_home'
            
          
@@ -127,10 +180,10 @@ class MemberController extends Controller
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     
     /**
-     * @Route("/mitglieder/anlegen/{letter}", defaults={"letter": "A"}, name="addmem", requirements={"letter": "[A-Z]"})
+     * @Route("/mitglieder/anlegen/{adminyear}/{letter}", defaults={"letter": "A", "adminyear": 2016}, name="addmem", requirements={"letter": "[A-Z]", "adminyear": "[1-9][0-9]{3}"})
      * 
      */
-    public function addmemberAction(Request $request, $letter)
+    public function addmemberAction(Request $request, $letter, $adminyear)
     {
         
         $member = new Member();
@@ -153,57 +206,40 @@ class MemberController extends Controller
         //if the form is valid -> persist it to the database
         if($addmemform->isSubmitted() && $addmemform->isValid()){
 
-
-           if(!empty($member->getSportsgroup())){ 
-            foreach($member->getSportsgroup() as $sportsgroup){
-                foreach($sportsgroup->getSection() as $section){
-                
-                $member->addSection($section);
-            }
-            }
-           }
+            
+            $memid=uniqid('m'); 
+            $member->setMemid($memid);
 
             
-            $admcharge = $addmemform->get('admissioncharge')->getData();
-            $member->setAdmissioncharge($admcharge);
-            
-            $admdate = $member->getAdmissiondate();
-            $dues= $addmemform->get('dues')->getData();
-          
-          $repository=$this->getDoctrine()->getRepository('AppBundle:AdministrationYear');
-          
-          $year=$repository->findOneBy(array('year' => $admdate->format('Y')));
-          
-          
-          if($year != null){
-          
-          $yearinfo = new MemYearInfo();
-          $yearinfo->setAdminyear($year);
-          
-          $member->addYearinfo($yearinfo);
-          
-          $months=['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
-          
-          foreach ($months as $month){
-          
-          $$month= new MemMonthlyDues();
-          $$month->setAdminyear($year)
-                  ->setMonth($month)
-                  ->setDues($dues);
-          $member->addMonthlydue($$month);
-          }
-     
+         
             $manager= $this->getDoctrine()->getManager();
-           
-            $manager->persist($member);
             
+
+            
+            foreach($member->getPhonenumber() as $pn){
+              $pn->setPnid(uniqid('pn'));
+              $manager->persist($pn);
+              
+          }
+            
+             foreach($member->getRehabilitationcertificate() as $rc){
+              $rc->setRcid(uniqid('rc'));
+              $manager->persist($rc);
+              
+          }
+          
+          
+          
+
+          $manager->persist($member);
           
             $manager->flush();
             
-            
-          return $this->redirectToRoute('member_home', array('letter' => $letter, 'info' => 'gespeichert'));
-          }
-          $addmemform->get('admissiondate')->addError(new FormError('Dieses Verwaltungsjahr wurde noch nicht angelegt.'));
+           $this->addFlash('notice', 'Diese Person wurde erfolgreich angelegt!'); 
+          return $this->redirectToRoute('member_home', array('letter' => $letter));
+          
+          
+
         }
         
         
@@ -222,46 +258,90 @@ class MemberController extends Controller
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
     
     /**
-     * @Route("/mitglieder/bearbeiten/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"ID": "\d+", "letter": "[A-Z]"}, name="editmem")
+     * @Route("/mitglieder/bearbeiten/{adminyear}/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"letter": "[A-Z]"}, name="editmem")
      * 
      */
-    public function editmemberAction(Request $request, $ID, $letter)
+    public function editmemberAction(Request $request, $adminyear, $ID, $letter)
     {
-        $manager= $this->getDoctrine()->getManager();
-        $repository = $this->getDoctrine()
-    ->getRepository('AppBundle:Member');
+      
+    
+    
+    
+    $doctrine=$this->getDoctrine(); 
+    $manager= $doctrine->getManager();
+    $dependencies=array('Member' => 'mem', 'MemPhoneNumber'=> 'pn', 'MemRehabilitationCertificate'=> 'rc');
+    
+    $qb=[];
+    foreach($dependencies as $dependent => $idprefix){
+        //building the subquery: SELECT max(recorded) FROM % AS dittosub WHERE dittosub.type = ditto.type 
+     $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
+     $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.recorded'))
+                          ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
+                          
         
-        $member=$repository->findOneBy(array('memid' => $ID));
+     //building the query: SELECT ditto FROM % AS ditto WHERE ditto.recorded=( subquery ) AND ditto.recorded<=$adminyear AND ditto.memid=§ID
+     $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
+     $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
+                    ->andWhere('ditto.memid=:ID')
+                    ->andWhere('ditto.recorded<=:adminyear')
+                    ->setParameter('ID',$ID)
+                    ->setParameter('adminyear',$adminyear.'-12-31');
+     
+
+        
+    }
         
         
-     if (!$member) {
+        
+        
+        
+        $member=$qb['Member']->getQuery()->getSingleResult();
+        
+        
+        
+        if (!$member) {
         throw $this->createNotFoundException('Es konnte kein Mitglied mit der Mitgliedsnr.: '.$ID.' gefunden werden');
     }
-       
-      
-        $editmemform = $this->createForm(EditMemberType::class, $member);
         
-        
+        $phonenumbers=$qb['MemPhoneNumber']->getQuery()->getResult();
+        $rehabcerts=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
+       echo '<pre>'; 
+        print_r($rehabcerts);
+        echo '</pre>';
          $originalrehabs = new ArrayCollection();
          $originalphonenr = new ArrayCollection();
          $originalsections = new ArrayCollection();
 
+         
+         
+         
+         
+         
+         
     // Create an ArrayCollection of the current Rehab objects in the database
-    foreach ($member->getRehabilitationcertificate() as $rehab) {
+    foreach ($rehabcerts as $rehab) {
+        
+        $member->addRehabilitationcertificate($rehab);
         $originalrehabs->add($rehab);
     }
      
-    // Create an ArrayCollection of the current Rehab objects in the database
-    foreach ($member->getPhonenumber() as $phonenr) {
+    // Create an ArrayCollection of the current Phonenr objects in the database
+    foreach ($phonenumbers as $phonenr) {
+        $member->addPhonenumber($phonenr);
         $originalphonenr->add($phonenr);
     }
     
     
-     // Create an ArrayCollection of the current Rehab objects in the database
-    foreach ($member->getSection() as $section) {
+//     // Create an ArrayCollection of the current Rehab objects in the database
+//    foreach ($member->getSection() as $section) {
+//        
+//        $originalsections->add($section);
+//    }
+      
+        $editmemform = $this->createForm(EditMemberType::class, $member);
         
-        $originalsections->add($section);
-    }
+        
+
     
     
         $editmemform->handleRequest($request);
@@ -280,45 +360,7 @@ class MemberController extends Controller
         //if the form is valid -> persist it to the database
         if($editmemform->isSubmitted() && $editmemform->isValid()){
        
-      if(!$member->getSportsgroup()->isEmpty()){      
-            
-            
-    foreach ($member->getSportsgroup() as $sportsgroup) {
-        
-        foreach ($originalsections as $section) {
-            
-            if (false === $sportsgroup->getSection()->contains($section)) {
-                
-
-                $member->removeSection($section);
-                
-            }
-        }
-    }
-    
-    
-    foreach($member->getSportsgroup() as $sportsgroup){
-                
-                foreach($sportsgroup->getSection() as $section){
-                
-                $member->addSection($section);
-            }
-            }
-            
-            
-      }else{
-          
-          $member->getSection()->clear();
-      }
-     
-            
-            
-            
-            
-            
-            
-            
-  
+   
           foreach ($originalrehabs as $rehab) {
             if (false === $member->getRehabilitationcertificate()->contains($rehab)) {
                 
@@ -361,3 +403,5 @@ class MemberController extends Controller
     }
     
 }
+
+
