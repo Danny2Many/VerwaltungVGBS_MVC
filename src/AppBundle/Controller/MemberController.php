@@ -309,12 +309,14 @@ class MemberController extends Controller
         
         $phonenumbers=$qb['MemPhoneNumber']->getQuery()->getResult();
         $rehabcerts=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
+        
        echo '<pre>'; 
         print_r($rehabcerts);
         echo '</pre>';
+        
          $originalrehabs = new ArrayCollection();
          $originalphonenr = new ArrayCollection();
-         $originalsections = new ArrayCollection();
+        
 
          
          
