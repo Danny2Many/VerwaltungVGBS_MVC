@@ -17,3 +17,6 @@ services:
         class: AppBundle\Form\SanitizedTextareaType
         tags:
             - { name: form.type }
+    app.index_manager:
+        class: AppBundle\Services\IndexManager
+        arguments: [doctrine.orm.entity_manager]
