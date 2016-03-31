@@ -8,20 +8,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="NonMemSportsgroup")
+ * @ORM\HasLifecycleCallbacks()
  */
 class NonMemSportsgroup {
-    
-    /**
-    * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
-    * @ORM\JoinTable(name="NonMemSportsgroup_Section",
-    * joinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")},
-    * inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
-    */ 
-    protected $section; 
+//    
+//    /**
+//    * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
+//    * @ORM\JoinTable(name="NonMemSportsgroup_Section",
+//    * joinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")},
+//    * inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
+//    */ 
+//    protected $section; 
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
      */
     protected $sgid;
 //    
@@ -80,8 +81,9 @@ class NonMemSportsgroup {
      */
     protected $token;
     
-        /**
-    * @ORM\Column(type="date")
+    /**
+     * @ORM\Id
+    * @ORM\Column(type="string")
     */
     protected $recorded;
 
@@ -358,13 +360,10 @@ class NonMemSportsgroup {
         return $this->section;
     }
 
-    /**
-     * Set recorded
-     *
-     * @param \DateTime $recorded
-     *
-     * @return NonMemSportsgroup
-     */
+    
+  /**
+ * @ORM\PrePersist
+ */
     public function setRecorded($recorded)
     {
         $this->recorded = $recorded;

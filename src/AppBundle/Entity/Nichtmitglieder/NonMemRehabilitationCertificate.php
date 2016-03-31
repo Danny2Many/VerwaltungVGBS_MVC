@@ -10,26 +10,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="NonMemRehabilitationCertificate")
+ * @ORM\HasLifecycleCallbacks()
  */
 class NonMemRehabilitationCertificate {
-    /**
-     * @ORM\ManyToOne(targetEntity="NonMember", inversedBy="rehabilitationcertificate")
-     * @ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")
-     */
-    private $nonmember;
-    
-       
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="string") 
      */
     protected $rcid;
     
      /**
      * 
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
      * 
      */
     protected $nmemid;
@@ -87,7 +80,7 @@ class NonMemRehabilitationCertificate {
      *
      * @param string $rcid
      *
-     * @return MemRehabilitationCertificate
+     * @return NonMemRehabilitationCertificate
      */
     public function setRcid($rcid)
     {
@@ -99,11 +92,11 @@ class NonMemRehabilitationCertificate {
     /**
      * Set nmemid
      *
-     * @param integer $nmemid
+     * @param string $nmemid
      *
      * @return NonMemRehabilitationCertificate
      */
-    public function setNMemid($nmemid)
+    public function setNMemID($nmemid)
     {
         $this->nmemid = $nmemid;
 
@@ -113,9 +106,9 @@ class NonMemRehabilitationCertificate {
     /**
      * Get nmemid
      *
-     * @return integer
+     * @return string
      */
-    public function getNMemid()
+    public function getNMemID()
     {
         return $this->nmemid;
     }
@@ -144,30 +137,30 @@ class NonMemRehabilitationCertificate {
         return $this->terminationdate;
     }
 
-    /**
-     * Set nonmember
-     *
-     * @param \AppBundle\Entity\Nichtmitglieder\Nonmember $nonmember
-     *
-     * @return NonMemRehabilitationCertificate
-     */
-    public function setNonmember(\AppBundle\Entity\Nichtmitglieder\Nonmember $nonmember = null)
-    {
-        $this->nonmember = $nonmember;
-
-        return $this;
-    }
-
-    /**
-     * Get nonmember
-     *
-     * @return \AppBundle\Entity\Nichtmitglieder\Nonmember
-     */
-    public function getNonmember()
-    {
-        return $this->nonmember;
-        
-    }
+//    /**
+//     * Set nonmember
+//     *
+//     * @param \AppBundle\Entity\Nichtmitglieder\Nonmember $nonmember
+//     *
+//     * @return NonMemRehabilitationCertificate
+//     */
+//    public function setNonmember(\AppBundle\Entity\Nichtmitglieder\Nonmember $nonmember = null)
+//    {
+//        $this->nonmember = $nonmember;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get nonmember
+//     *
+//     * @return \AppBundle\Entity\Nichtmitglieder\Nonmember
+//     */
+//    public function getNonmember()
+//    {
+//        return $this->nonmember;
+//        
+//    }
     /**
      * Set rehabunits
      *
@@ -193,15 +186,12 @@ class NonMemRehabilitationCertificate {
     }
 
     /**
-     * Set recorded
-     *
-     * @param string $recorded
-     *
-     * @return NonMemRehabilitationCertificate
-     */
-    public function setRecorded($recorded)
+    * @ORM\PrePersist
+    */
+    public function setRecorded()
     {
-        $this->recorded = $recorded;
+        $now= new \DateTime();
+        $this->recorded = $now->format('Y-m-d');
 
         return $this;
     }

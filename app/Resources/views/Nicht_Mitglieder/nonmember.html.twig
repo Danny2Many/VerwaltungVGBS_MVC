@@ -120,7 +120,7 @@
             <td>{{ data[0].trainingconfirmation is empty ? "-" : data[0].trainingconfirmation|date("d.m.Y")}}</td>
              
             
-                {% if onmemberdependentlist[data[0].nmemid]['rehabcerts'] is defined %}
+                {% if nonmemberdependentlist[data[0].nmemid]['rehabcerts'] is defined %}
                 {% set rehab =nonmemberdependentlist[data[0].nmemid]['rehabcerts'] %}
                 {% else %}
                   {% set rehab ='' %}  
@@ -140,19 +140,19 @@
                     {% endfor %}
             </td>  
    
-            <td>{{ data[0].healthinsurance is empty ? "-" : data.healthinsurance|striptags }}</td>
-            <td>{{ data[0].additionalinfo is empty ? "-" : data.additionalinfo|striptags }}</td>
-            <td>{{ data[0].workplaceposture is empty ? "-" : data.workplaceposture|striptags }}</td>
-            <td>{{ data[0].chronoccupationaldis is empty ? "-" : data.chronoccupationaldis|striptags }}</td>
-            <td>{{ data[0].paincervicalspine is empty ? "-" : data.paincervicalspine|striptags }}</td>
-            <td>{{ data[0].painthoracicspine is empty ? "-" : data.painthoracicspine|striptags }}</td>
-            <td>{{ data[0].painlumbarspine is empty ? "-" : data.painlumbarspine|striptags }}</td>
-            <td>{{ data[0].upperlimbs is empty ? "-" : data.upperlimbs|striptags }}</td>
-            <td>{{ data[0].lowerlimbs is empty ? "-" : data.lowerlimbs|striptags }}</td>
-            <td>{{ data[0].otherimpairments is empty ? "-" : data.otherimpairments|striptags }}</td>
-            <td>{{ data[0].medication is empty ? "-" : data.medication|striptags }}</td>
-            <td>{{ data[0].additionalagilactivities is empty ? "-" : data.additionalagilactivities|striptags }}</td>
-            <td>{{ data[0].pulseatrest is empty ? "-" : data.pulseatrest|striptags }}</td>
+            <td>{{ data[0].healthinsurance is empty ? "-" : data[0].healthinsurance|striptags }}</td>
+            <td>{{ data[0].additionalinfo is empty ? "-" : data[0].additionalinfo|striptags }}</td>
+            <td>{{ data[0].workplaceposture is empty ? "-" : data[0].workplaceposture|striptags }}</td>
+            <td>{{ data[0].chronoccupationaldis is empty ? "-" : data[0].chronoccupationaldis|striptags }}</td>
+            <td>{{ data[0].paincervicalspine is empty ? "-" : data[0].paincervicalspine|striptags }}</td>
+            <td>{{ data[0].painthoracicspine is empty ? "-" : data[0].painthoracicspine|striptags }}</td>
+            <td>{{ data[0].painlumbarspine is empty ? "-" : data[0].painlumbarspine|striptags }}</td>
+            <td>{{ data[0].upperlimbs is empty ? "-" : data[0].upperlimbs|striptags }}</td>
+            <td>{{ data[0].lowerlimbs is empty ? "-" : data[0].lowerlimbs|striptags }}</td>
+            <td>{{ data[0].otherimpairments is empty ? "-" : data[0].otherimpairments|striptags }}</td>
+            <td>{{ data[0].medication is empty ? "-" : data[0].medication|striptags }}</td>
+            <td>{{ data[0].additionalagilactivities is empty ? "-" : data[0].additionalagilactivities|striptags }}</td>
+            <td>{{ data[0].pulseatrest is empty ? "-" : data[0].pulseatrest|striptags }}</td>
            
             {% if data[0].pulseatrest is not empty %}
                 {% set hfmax = 220 - data[0].birthday|age  %}

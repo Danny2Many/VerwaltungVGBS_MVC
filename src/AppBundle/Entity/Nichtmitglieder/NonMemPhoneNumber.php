@@ -25,7 +25,7 @@ class NonMemPhoneNumber {
    
     /**
      * 
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
      * 
      */
     protected $nmemid;   
