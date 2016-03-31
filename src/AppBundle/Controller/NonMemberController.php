@@ -28,15 +28,21 @@ class NonMemberController extends Controller {
   
       
     $doctrine = $this->getDoctrine();
-    $dependencies=['Nichtmitglieder\Nonmember', 'Nichtmitglieder\NonMemPhoneNumber', 'Nichtmitglieder\NonMemRehabilitationCertificate'];
+    $dependencies=['Nichtmitglieder\Nonmember' => 'nmem', 'Nichtmitglieder\NonMemPhoneNumber' => 'pn', 'Nichtmitglieder\NonMemRehabilitationCertificate' => 'rc'];
     $qb=[];
-    foreach($dependencies as $dependent){
-     
-        $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-        $qb[$dependent]->select(array('ditto', $qb[$dependent]->expr()->max('ditto.recorded')))
-                ->where('ditto.recorded <= :year')
-                ->groupBy('ditto.nmemid')
-                ->setParameter('year', $adminyear.'-12-31');
+      foreach($dependencies as $dependent => $idprefix){
+   
+        //building the subquery: SELECT max(recorded) FROM % AS dittosub WHERE dittosub.type = ditto.type
+     $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
+     $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.recorded'))
+                          ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
+                          
+        
+     //building the query: SELECT ditto FROM % AS ditto WHERE ditto.recorded=( subquery ) AND ditto.recorded<=$adminyear 
+     $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
+     $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
+                    ->andWhere('ditto.recorded<=:adminyear')
+                    ->setParameter('adminyear',$adminyear.'-12-31');
     }
     
     
@@ -57,10 +63,10 @@ class NonMemberController extends Controller {
         $searchval=$request->query->get('search')['searchfield'];
         $searchcol=$request->query->get('search')['column'];
     
-        //building the query
-        $qb['Nichtmitglieder\Nonmember']->where($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.'.$searchcol, ':nonmember'))
-                   ->setParameter('nonmember','%'.$searchval.'%')
-                   ->getQuery();    
+    //building the query
+    $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.'.$searchcol, ':nonmember'))
+               ->setParameter('nonmember','%'.$searchval.'%');
+
         
     }else{        
         
@@ -91,13 +97,13 @@ class NonMemberController extends Controller {
     $nonmemberdependentlist=[];
     foreach ($phonenumberlist as $pn){
 
-        $nonmemberdependentlist[$pn[0]->getNMemID()]['phonenumbers'][]=$pn;
+        $nonmemberdependentlist[$pn->getNMemID()]['phonenumbers'][]=$pn;
     }
 
 
      foreach ($rehabcertlist as $rc){
 
-        $nonmemberdependentlist[$rc[0]->getNMemID()]['rehabcerts'][]=$rc;
+        $nonmemberdependentlist[$rc->getNMemID()]['rehabcerts'][]=$rc;
 
     }
     
@@ -123,18 +129,20 @@ class NonMemberController extends Controller {
       
 
     $nonmember = new Nonmember ();
-    $phonenumber = new NonMemPhoneNumber();
-
+    $phonenumber = new NonMemPhoneNumber();    
+    $nmemid=uniqid('n'); 
+    $nonmember->setNMemID($nmemid);
     $nonmember->addPhonenumber($phonenumber);
 
     $addnonmemform = $this->createForm(AddNonMemberType::class, $nonmember);
+    
+    
     $addnonmemform->handleRequest($request);     
         
         //if the form is valid -> persist it to the database
         if($addnonmemform->isSubmitted() && $addnonmemform->isValid()){
         
-            $nmemid=uniqid('n'); 
-            $nonmember->setNMemID($nmemid);
+            
             
             $manager= $this->getDoctrine()->getManager();
             
@@ -189,13 +197,13 @@ class NonMemberController extends Controller {
     }
         
         $manager=getDoctrine()->getManager();
-        $nonmember=$qb['Nonmember']->getQuery()->getSingleResult()[0];
+        $nonmember=$qb['Nonmember']->getQuery()->getSingleResult();
         
         if (!$nonmember){
             throw $this->createNotFoundForm('Es konnte kein Nichtmitglied mit der Nichtmitgliedsnr.: '.$ID.' gefunden werden');
         }
-        $phonenumbers=$qb['Nichtmitglieder\NonMemPhoneNumber']->getQuery()->getResult()[0][0];
-        $rehabcerts=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult()[0];
+        $phonenumbers=$qb['Nichtmitglieder\NonMemPhoneNumber']->getQuery()->getResult();
+        $rehabcerts=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
         
         $originalrehabs = new ArrayCollection();
         $originalphonenr = new ArrayCollection();
