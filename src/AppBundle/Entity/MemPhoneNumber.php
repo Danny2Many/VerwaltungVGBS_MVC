@@ -14,7 +14,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class MemPhoneNumber {
     
-  
     /**
      * @ORM\Id
      * @ORM\Column(type="string") 

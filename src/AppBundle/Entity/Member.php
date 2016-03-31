@@ -32,9 +32,7 @@ class Member extends HealthData
 
      
     }
-    
-   
-    
+        
     /**
      * @ORM\Id
      * @ORM\Column(type="string") 
