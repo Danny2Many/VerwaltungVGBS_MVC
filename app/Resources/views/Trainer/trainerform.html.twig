@@ -49,8 +49,8 @@
                     
                     {{ form_row(form.personaldata.email) }}
                     {{ form_row(form.type) }}
-                    {{ form_row(form.section) }}
-
+{#                    {{ form_row(form.section) }}
+#}
                     <div id="tf" data-prototype="{{ forms.textCollectionItem(form.theme.vars.prototype, 'theme', 'Schwerpunkt löschen')|e }}">
                         {% for tf in form.theme %}
                             {{ forms.textCollectionItem(tf, 'theme', 'Schwerpunkt löschen' ) }}

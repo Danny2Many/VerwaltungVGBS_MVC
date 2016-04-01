@@ -211,22 +211,27 @@ class TrainerController extends Controller
     public function edittrainerAction(Request $request, $adminyear, $ID, $letter)
     {
         $doctrine= $this->getDoctrine();
+        $manager= $doctrine->getManager();
         $dependencies=['Trainer\Trainer' => 'trainer', 'Trainer\TrainerPhoneNumber'=>'tpn', 'Trainer\TrainerFocus'=>'tf','Trainer\TrainerLicence'=>'li'];
 
         $qb= [];
         foreach($dependencies as $dependent => $idprefix){
-     
+      
+            
+            $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
+            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.recorded'))
+                                ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
+
+
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-            $qb[$dependent]->select(array('ditto', $qb[$dependent]->expr()->max('ditto.recorded')))
-                    ->where('ditto.recorded <= :year')
-                    ->andWhere('ditto.trainerid = :trainerid')
-                    ->groupBy('ditto.'.$idprefix.'id')
-                    ->setParameter('year', $adminyear.'-12-31')
-                    ->setParameter('trainerid',$ID);     
+            $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
+                            ->andWhere('ditto.trainerid=:ID')
+                            ->andWhere('ditto.recorded<=:adminyear')
+                            ->setParameter('ID',$ID)
+                            ->setParameter('adminyear',$adminyear.'-12-31');
         }
         
-        $manager= $doctrine->getManager();
-        $trainer=$qb['Trainer\Trainer']->getQuery()->getSingleResult()[0];
+        $trainer=$qb['Trainer\Trainer']->getQuery()->getSingleResult();
         
         
         
@@ -234,9 +239,9 @@ class TrainerController extends Controller
             throw $this->createNotFoundException('Es konnte kein Trainer mit der Trainernr.: '.$ID.' gefunden werden');
         }
         
-        $phonenumbers=$qb['Trainer\TrainerPhoneNumber']->getQuery()->getResult()[0];
-        $licences=$qb['Trainer\TrainerLicence']->getQuery()->getResult()[0];        
-        $focuses=$qb['Trainer\TrainerFocus']->getQuery()->getResult()[0];        
+        $phonenumbers=$qb['Trainer\TrainerPhoneNumber']->getQuery()->getResult();
+        $licences=$qb['Trainer\TrainerLicence']->getQuery()->getResult();        
+        $focuses=$qb['Trainer\TrainerFocus']->getQuery()->getResult();        
 
         
         $originallicences = new ArrayCollection();
@@ -259,7 +264,7 @@ class TrainerController extends Controller
             $originalthemes->add($theme);
         }
         
-        $edittrainerform = $this->createForm(EditMemberType::class, $trainer);
+        $edittrainerform = $this->createForm(EditTrainerType::class, $trainer);
         $edittrainerform -> handleRequest($request);
         
         if($edittrainerform->get('delete')->isClicked()){
