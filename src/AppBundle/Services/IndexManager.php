@@ -9,8 +9,7 @@ class IndexManager{
     
     protected $em;
     
-    public function __construct($entityname,$entityManager) {
-      $this->entityname=$entityname;
+    public function __construct($entityManager) {
       $this->em=$entityManager;
     }
     
@@ -50,6 +49,15 @@ class IndexManager{
         
         return $this->entityname;
     }
+    
+    public function setEntityname($entityname)
+    {
+        $this->entityname = $entityname;
+
+        return $this;
+    }
+    
+     
     
     
     public function getIndexEntity(){
