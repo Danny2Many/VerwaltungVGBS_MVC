@@ -103,10 +103,6 @@ class MemberController extends Controller
 
     $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.'.$searchcol, ':member'))
                    ->setParameter('member','%'.$searchval.'%');
-                   
-
-    
-       
     
      
      

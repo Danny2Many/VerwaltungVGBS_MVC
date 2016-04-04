@@ -1,5 +1,7 @@
 <?php
 
+namespace AppBundle\Services;
+
 
 class IndexManager{
   
@@ -54,7 +56,7 @@ class IndexManager{
         $qb=  $this->em->createQueryBuilder();
         $qb ->select('ditto')
             ->from('AppBundle:Indices', 'ditto')
-            ->where('index=:tablename')
+            ->where('tablename=:tablename')
             ->setParameter('tablename', $this->entityname);
         
         
