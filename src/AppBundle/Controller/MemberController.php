@@ -142,6 +142,9 @@ class MemberController extends Controller
      $rehabcertlist=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
      
      
+     $now=date("Y-m-d");
+     
+     
      $memberdependentlist=[];
      foreach ($phonenumberlist as $pn){
          
@@ -149,9 +152,13 @@ class MemberController extends Controller
      }
      
      
+     
       foreach ($rehabcertlist as $rc){
-        
-         $memberdependentlist[$rc->getMemid()]['rehabcerts'][]=$rc;
+        if($rc->getTerminationdate()->format("Y-m-d") > $now){
+         $memberdependentlist[$rc->getMemid()]['validrehabcerts'][]=$rc;
+        }else{
+          $memberdependentlist[$rc->getMemid()]['expiredrehabcerts'][]=$rc;  
+        }
          
      }
      
@@ -192,7 +199,8 @@ class MemberController extends Controller
         $im=  $this->get('app.index_manager')
                    ->setEntityName('Member');
                    
-   
+        $memid=$im->getCurrentIndex();
+        $member->setMemid($memid);
     
         
         
@@ -213,8 +221,7 @@ class MemberController extends Controller
         if($addmemform->isSubmitted() && $addmemform->isValid()){
         
             
-        $memid=$im->getCurrentIndex();
-        $member->setMemid($memid);
+        
 
             
          
@@ -239,11 +246,11 @@ class MemberController extends Controller
 
             $manager->persist($member);
           
-            $prove=$manager->flush();
+            $manager->flush();
             
-            if($prove){
-                $im->add();
-            }
+            
+            $im->add();
+            
             
            $this->addFlash('notice', 'Diese Person wurde erfolgreich angelegt!'); 
           return $this->redirectToRoute('member_home', array('letter' => $letter));

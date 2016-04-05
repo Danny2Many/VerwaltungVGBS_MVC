@@ -110,18 +110,33 @@ label.required:after {
     content: "* ";
     color: red;
 }
-red {
+
+
+.red {
     color: red;
 }
 
+
+/*open dues*/
 td.red, input[type="text"].red {
     color: white;
     background-color: #ff4d4d;
 }
 
-td.yellow {
+
+/*rehabcerts in table*/
+.yellowbackground {
+    
     background-color: yellow;
 }
+
+/*rehabcerts in table*/
+.strong{
+    font-weight: bold;
+}
+
+
+
 
 th.overhead {
     background-color: #cce6ff;
@@ -221,10 +236,17 @@ ul.nav{
 }
 
 
-formheader{
+/*formheader{
     
     background-color: lightgray;
     border-radius: 5px;
     width: inherit;
     height: 50px;
+}*/
+
+
+.adminyeardropdown{
+    background-color: dodgerblue;
+    font-size:1.5em;
+    
 }
