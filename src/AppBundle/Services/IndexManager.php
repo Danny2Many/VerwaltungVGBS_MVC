@@ -16,7 +16,7 @@ class IndexManager{
     public function add($number=1){
         
         
-        $index=getIndexEntity()->setIndex($index->getCurrentIndex()+$number);
+        $index=$this->getIndexEntity()->setIndex($index->getCurrentIndex()+$number);
         
         $this->em->persist($index);
         $this->em->push($index);
@@ -28,7 +28,7 @@ class IndexManager{
     public function remove($number=1){
         
         
-        $index=getIndexEntity()->setIndex($index->getCurrentIndex()-$number);
+        $index=$this->getIndexEntity()->setIndex($index->getCurrentIndex()-$number);
         
         $this->em->persist($index);
         $this->em->push($index);
@@ -64,7 +64,7 @@ class IndexManager{
         $qb=  $this->em->createQueryBuilder();
         $qb ->select('ditto')
             ->from('AppBundle:Indices', 'ditto')
-            ->where('tablename=:tablename')
+            ->where('ditto.tablename=:tablename')
             ->setParameter('tablename', $this->entityname);
         
         

@@ -11,15 +11,17 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="Indices")
  */
 class Indices {
-   /* 
+   /** 
     * @ORM\Id
     * @ORM\Column(type="string") 
     */
-   private $tablename;
-   /* 
+   protected $tablename;
+   /** 
     * @ORM\Column(type="integer") 
     */
-   private $index;
+   protected $index;
     
-    
+   
+
+
 }

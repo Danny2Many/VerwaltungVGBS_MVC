@@ -191,6 +191,7 @@ class MemberController extends Controller
         
         $memid = $this->get('app.index_manager');
         $memid->setEntityname('member');
+        $memid->add();
         $member->setMemid($memid->getCurrentIndex());
 
             
