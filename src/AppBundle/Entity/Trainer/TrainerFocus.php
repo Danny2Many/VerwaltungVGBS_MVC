@@ -49,7 +49,7 @@ class TrainerFocus {
     /**
      * Set trainerid
      *
-     * @param integer $trainerid
+     * @param string $trainerid
      *
      * @return TrainerFocus
      */

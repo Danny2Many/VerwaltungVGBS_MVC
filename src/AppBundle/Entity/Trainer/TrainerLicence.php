@@ -70,7 +70,7 @@ class TrainerLicence {
     /**
      * Set trainerid
      *
-     * @param integer $trainerid
+     * @param string $trainerid
      *
      * @return TrainerLicence
      */
@@ -84,7 +84,7 @@ class TrainerLicence {
     /**
      * Get trainerid
      *
-     * @return integer
+     * @return string
      */
     public function getTrainerid()
     {

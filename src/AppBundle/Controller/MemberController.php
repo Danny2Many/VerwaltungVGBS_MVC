@@ -35,7 +35,7 @@ class MemberController extends Controller
     $qb= [];
     foreach($dependencies as $dependent => $idprefix){
    
-        //building the subquery: SELECT max(recorded) FROM % AS dittosub WHERE dittosub.type = ditto.type
+        //building the subquery: SELECT max(recorded) FROM % AS dittosub WHERE dittosub.id = ditto.id
      $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
      $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.recorded'))
                           ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
@@ -136,7 +136,7 @@ class MemberController extends Controller
     
     
     
-    
+    //get the builded queries
      $memberlist=$qb['Member']->getQuery()->getResult();
      $phonenumberlist=$qb['MemPhoneNumber']->getQuery()->getResult();
      $rehabcertlist=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
@@ -189,16 +189,18 @@ class MemberController extends Controller
         $member = new Member();
         $phonenumber = new MemPhoneNumber();
         
+
+        $im=  $this->get('app.index_manager')
+                   ->setEntityName('Member')
+                   ->add();   
+    
+        $memid=$im->getCurrentIndex();
+        $member->setMemid($memid);
         
-       
-            
-        $member->addPhonenumber($phonenumber);
-               
+                   
+        $member->addPhonenumber($phonenumber);               
       
         $addmemform = $this->createForm(AddMemberType::class, $member);
-        
-        
-     
         $addmemform->handleRequest($request);
         
         
@@ -207,14 +209,17 @@ class MemberController extends Controller
         if($addmemform->isSubmitted() && $addmemform->isValid()){
 
             
-            $memid=uniqid('m'); 
-            $member->setMemid($memid);
+            
 
             
          
             $manager= $this->getDoctrine()->getManager();
             
-
+            foreach($member->getRehabilitationcertificate() as $rc){
+              $rc->setRcid(uniqid('rc'));
+              $manager->persist($rc);
+              
+          }
             
             foreach($member->getPhonenumber() as $pn){
               $pn->setPnid(uniqid('pn'));
@@ -222,11 +227,7 @@ class MemberController extends Controller
               
           }
             
-             foreach($member->getRehabilitationcertificate() as $rc){
-              $rc->setRcid(uniqid('rc'));
-              $manager->persist($rc);
-              
-          }
+             
           
           
           
