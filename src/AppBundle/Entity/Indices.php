@@ -21,9 +21,9 @@ class Indices{
     
     
    /** 
-    * @ORM\Column(type="integer", name="Index") 
+    * @ORM\Column(type="integer", name="CurrentIndex") 
     */
-    protected $index;
+    protected $currentindex;
     
     
     
@@ -55,26 +55,26 @@ class Indices{
     
     
     /**
-     * Get index
+     * Get currentindex
      *
      * @return integer
      */
-    public function getIndex()
+    public function getCurrentindex()
     {
-        return $this->Index;
+        return $this->currentindex;
     }
    
 
     /**
-     * Set index
+     * Set currentindex
      *
-     * @param integer $index
+     * @param integer $currentindex
      *
      * @return Indices
      */
-    public function setIndex($index)
+    public function setIndex($currentindex)
     {
-        $this->index = $index;
+        $this->currentindex = $currentindex;
 
         return $this;
     }

@@ -190,12 +190,11 @@ class MemberController extends Controller
         $phonenumber = new MemPhoneNumber();
         
         $im=  $this->get('app.index_manager')
-                   ->setEntityName('Member')
-                   ->add();
+                   ->setEntityName('Member');
+                   
    
     
         
-        $member->setMemid($memid);
         
        
             
@@ -212,9 +211,10 @@ class MemberController extends Controller
 
         //if the form is valid -> persist it to the database
         if($addmemform->isSubmitted() && $addmemform->isValid()){
-
+        
             
-            
+        $memid=$im->getCurrentIndex();
+        $member->setMemid($memid);
 
             
          
@@ -237,9 +237,13 @@ class MemberController extends Controller
           
           
 
-          $manager->persist($member);
+            $manager->persist($member);
           
-            $manager->flush();
+            $prove=$manager->flush();
+            
+            if($prove){
+                $im->add();
+            }
             
            $this->addFlash('notice', 'Diese Person wurde erfolgreich angelegt!'); 
           return $this->redirectToRoute('member_home', array('letter' => $letter));

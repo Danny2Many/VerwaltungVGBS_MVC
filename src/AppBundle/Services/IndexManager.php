@@ -21,7 +21,7 @@ class IndexManager{
         $index=$this->getIndexEntity()->setIndex($this->getCurrentIndex()+$number);
         
         $this->em->persist($index);
-        $this->em->push($index);
+        $this->em->flush($index);
         
         return $this;
     }
@@ -35,12 +35,13 @@ class IndexManager{
         $this->em->persist($index);
         $this->em->push($index);
         
+        return $this;
     }
     
     
     public function getCurrentIndex(){
         
-        return $this->getIndexEntity()->getIndex();
+        return $this->getIndexEntity()->getCurrentindex();
     }
     
     
@@ -48,6 +49,8 @@ class IndexManager{
     
     function setEntityName($entityname) {
         $this->entityname = $entityname;
+        
+        return $this;
     }
 
         
@@ -71,7 +74,7 @@ class IndexManager{
         return $index;
         }
         else{
-            throw new Exception('Division durch Null.');
+            throw new Exception('Existiert nüscht!!!!');
         }
     }
 }
