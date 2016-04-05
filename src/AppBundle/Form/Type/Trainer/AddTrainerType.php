@@ -47,13 +47,13 @@ class AddTrainerType extends AbstractType{
         ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
         ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))
         ->add('reset', ResetType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'zurücksetzen'))
-        ->add('section', EntityType::class,  array(
-            'class' => 'AppBundle:Section',
-            'choice_label' => 'sectionname',
-            'multiple' => true,
-            'expanded' => true,
-            'label' => 'Abteilung/en:',
-            'required' => false))
+//        ->add('section', EntityType::class,  array(
+//            'class' => 'AppBundle:Section',
+//            'choice_label' => 'sectionname',
+//            'multiple' => true,
+//            'expanded' => true,
+//            'label' => 'Abteilung/en:',
+//            'required' => false))
         ->add('theme', CollectionType::class, array('entry_type' => TrainerFocusType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\Trainer\TrainerFocus'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
         ->add('licence', CollectionType::class, array('entry_type' => TrainerLicenceType::class,'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
 

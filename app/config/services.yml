@@ -19,4 +19,4 @@ services:
             - { name: form.type }
     app.index_manager:
         class: AppBundle\Services\IndexManager
-        arguments: [doctrine.orm.entity_manager]
+        arguments: ['@doctrine.orm.entity_manager']

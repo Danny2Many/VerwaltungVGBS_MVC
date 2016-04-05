@@ -67,7 +67,7 @@ class TrainerPhoneNumber {
     /**
      * Get trainerid
      *
-     * @return integer
+     * @return string
      */
     public function getTrainerid()
     {

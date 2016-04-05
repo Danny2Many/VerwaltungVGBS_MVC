@@ -73,7 +73,7 @@ class Trainer extends PersonalData {
      */
     public function __construct()
     {
-        $this->section = new \Doctrine\Common\Collections\ArrayCollection();
+//        $this->section = new \Doctrine\Common\Collections\ArrayCollection();
         $this->licence = new \Doctrine\Common\Collections\ArrayCollection();
         $this->phonenumber = new \Doctrine\Common\Collections\ArrayCollection();
         $this->theme = new \Doctrine\Common\Collections\ArrayCollection();
@@ -83,7 +83,7 @@ class Trainer extends PersonalData {
     /**
      * Get trainerid
      *
-     * @return integer
+     * @return string
      */
     public function getTrainerid()
     {
@@ -113,40 +113,40 @@ class Trainer extends PersonalData {
     {
         return $this->type;
     }
-
-    /**
-     * Add section
-     *
-     * @param \AppBundle\Entity\Section $section
-     *
-     * @return Trainer
-     */
-    public function addSection(\AppBundle\Entity\Section $section)
-    {
-        $this->section[] = $section;
-
-        return $this;
-    }
-
-    /**
-     * Remove section
-     *
-     * @param \AppBundle\Entity\Section $section
-     */
-    public function removeSection(\AppBundle\Entity\Section $section)
-    {
-        $this->section->removeElement($section);
-    }
-
-    /**
-     * Get section
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSection()
-    {
-        return $this->section;
-    }
+//
+//    /**
+//     * Add section
+//     *
+//     * @param \AppBundle\Entity\Section $section
+//     *
+//     * @return Trainer
+//     */
+//    public function addSection(\AppBundle\Entity\Section $section)
+//    {
+//        $this->section[] = $section;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Remove section
+//     *
+//     * @param \AppBundle\Entity\Section $section
+//     */
+//    public function removeSection(\AppBundle\Entity\Section $section)
+//    {
+//        $this->section->removeElement($section);
+//    }
+//
+//    /**
+//     * Get section
+//     *
+//     * @return \Doctrine\Common\Collections\Collection
+//     */
+//    public function getSection()
+//    {
+//        return $this->section;
+//    }
 
     
 
@@ -310,7 +310,7 @@ class Trainer extends PersonalData {
     /**
      * Set trainerid
      *
-     * @param integer $trainerid
+     * @param string $trainerid
      *
      * @return Trainer
      */

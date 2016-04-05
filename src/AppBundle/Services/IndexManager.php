@@ -1,5 +1,7 @@
 <?php
 
+namespace AppBundle\Services;
+
 
 class IndexManager{
   
@@ -7,8 +9,7 @@ class IndexManager{
     
     protected $em;
     
-    public function __construct($entityname,$entityManager) {
-      $this->entityname=$entityname;
+    public function __construct($entityManager) {
       $this->em=$entityManager;
     }
     
@@ -49,12 +50,21 @@ class IndexManager{
         return $this->entityname;
     }
     
+    public function setEntityname($entityname)
+    {
+        $this->entityname = $entityname;
+
+        return $this;
+    }
+    
+     
+    
     
     public function getIndexEntity(){
         $qb=  $this->em->createQueryBuilder();
         $qb ->select('ditto')
             ->from('AppBundle:Indices', 'ditto')
-            ->where('index=:tablename')
+            ->where('tablename=:tablename')
             ->setParameter('tablename', $this->entityname);
         
         

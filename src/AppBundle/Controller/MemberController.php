@@ -103,10 +103,6 @@ class MemberController extends Controller
 
     $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.'.$searchcol, ':member'))
                    ->setParameter('member','%'.$searchval.'%');
-                   
-
-    
-       
     
      
      
@@ -193,9 +189,10 @@ class MemberController extends Controller
         $member = new Member();
         $phonenumber = new MemPhoneNumber();
         
-        $memid=uniqid('m'); 
-        $member->setMemid($memid);
-       
+        $memid = $this->get('app.index_manager');
+        $memid->setEntityname('member');
+        $member->setMemid($memid->getCurrentIndex());
+
             
         $member->addPhonenumber($phonenumber);
                

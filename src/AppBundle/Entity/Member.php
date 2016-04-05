@@ -468,7 +468,7 @@ class Member extends HealthData
     public function setRecorded()
     {
         $now= new \DateTime();
-        $this->recorded = $now->format('Y-m-d');
+        $this->recorded = $now->format('Y-m-d H-i-s');
 
         return $this;
     }
@@ -534,7 +534,6 @@ class Member extends HealthData
         return $this->rehabilitationcertificate;
     }
     
- 
 
 
 
