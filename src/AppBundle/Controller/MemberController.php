@@ -194,7 +194,7 @@ class MemberController extends Controller
                    ->add();
    
     
-        echo $memid=$im->getCurrentIndex();
+        
         $member->setMemid($memid);
         
        
