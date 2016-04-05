@@ -3,27 +3,41 @@
 namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
-
-
-
 /**
  * @ORM\Entity
  * @ORM\Table(name="Indices")
  */
-class Indices {
+
+class Indices{
+    
+    
+    
+   /**
+     * @ORM\Id
+     * @ORM\Column(type="string") 
+     * 
+     */
+    protected $tablename;
+    
+    
+    
    /** 
-    * @ORM\Id
-    * @ORM\Column(type="string") 
-    */
-   protected $tablename;
-   /** 
-    * @ORM\Column(type="integer") 
+    * @ORM\Column(type="integer", name="Index") 
     */
    protected $index;
     
+
+    
+    /**
+     * Get tablename
+     *
+     * @return string
+     */
+    public function getTablename()
+    {
+        return $this->tablename;
+    }
    
-
-
 
     /**
      * Set tablename
@@ -39,15 +53,19 @@ class Indices {
         return $this;
     }
 
+
+    
+    
     /**
-     * Get tablename
+     * Get index
      *
-     * @return string
+     * @return integer
      */
-    public function getTablename()
+    public function getIndex()
     {
-        return $this->tablename;
+        return $this->Index;
     }
+   
 
     /**
      * Set index
@@ -61,15 +79,5 @@ class Indices {
         $this->index = $index;
 
         return $this;
-    }
-
-    /**
-     * Get index
-     *
-     * @return integer
-     */
-    public function getIndex()
-    {
-        return $this->index;
     }
 }

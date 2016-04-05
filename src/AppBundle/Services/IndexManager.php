@@ -10,23 +10,22 @@ class IndexManager{
     protected $em;
     
     public function __construct($entityManager) {
+
       $this->em=$entityManager;
     }
     
     public function add($number=1){
-        
-        
-        $index=$this->getIndexEntity()->setIndex($index->getCurrentIndex()+$number);
+                
+        $index=$this->getIndexEntity()->setIndex($this->getCurrentIndex()+$number);
         
         $this->em->persist($index);
         $this->em->push($index);
         
-        
+        return $this;
     }
     
     
-    public function remove($number=1){
-        
+    public function remove($number=1){        
         
         $index=$this->getIndexEntity()->setIndex($index->getCurrentIndex()-$number);
         
@@ -43,9 +42,13 @@ class IndexManager{
     
     
     
-    public function getTableName(){
+    
+    function setEntityName($entityname) {
+        $this->entityname = $entityname;
+    }
+
         
-          
+    public function getEntityName(){
         
         return $this->entityname;
     }
@@ -65,11 +68,16 @@ class IndexManager{
         $qb ->select('ditto')
             ->from('AppBundle:Indices', 'ditto')
             ->where('ditto.tablename=:tablename')
-            ->setParameter('tablename', $this->entityname);
+            ->setParameter('tablename', $this->getEntityName());
         
         
         $index=$qb->getQuery()->getSingleResult();
         
+        if($index){
         return $index;
+        }
+        else{
+            throw new Exception('Division durch Null.');
+        }
     }
 }
