@@ -19,7 +19,7 @@ class IndexManager{
         $index=$this->getIndexEntity()->setIndex($this->getCurrentIndex()+$number);
         
         $this->em->persist($index);
-        $this->em->push($index);
+        $this->em->flush($index);
         
         return $this;
     }
@@ -38,16 +38,11 @@ class IndexManager{
     public function getCurrentIndex(){
         
         return $this->getIndexEntity()->getIndex();
-    }
+    } 
     
     
     
-    
-    function setEntityName($entityname) {
-        $this->entityname = $entityname;
-    }
-
-        
+          
     public function getEntityName(){
         
         return $this->entityname;

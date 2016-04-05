@@ -22,7 +22,7 @@ class Indices{
     
     
    /** 
-    * @ORM\Column(type="integer", name="Index") 
+    * @ORM\Column(type="integer", name="`Index`") 
     */
    protected $index;
     
@@ -63,7 +63,7 @@ class Indices{
      */
     public function getIndex()
     {
-        return $this->Index;
+        return $this->index;
     }
    
 
