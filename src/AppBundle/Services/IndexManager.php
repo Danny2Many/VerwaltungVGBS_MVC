@@ -10,25 +10,24 @@ class IndexManager{
     protected $em;
     
     public function __construct($entityManager) {
+
       $this->em=$entityManager;
     }
     
     public function add($number=1){
-        
-        
-        $index=getIndexEntity()->setIndex($index->getCurrentIndex()+$number);
+                
+        $index=$this->getIndexEntity()->setIndex($this->getCurrentIndex()+$number);
         
         $this->em->persist($index);
-        $this->em->push($index);
+        $this->em->flush($index);
         
-        
+        return $this;
     }
     
     
-    public function remove($number=1){
+    public function remove($number=1){        
         
-        
-        $index=getIndexEntity()->setIndex($index->getCurrentIndex()-$number);
+        $index=$this->getIndexEntity()->setIndex($index->getCurrentIndex()-$number);
         
         $this->em->persist($index);
         $this->em->push($index);
@@ -39,13 +38,12 @@ class IndexManager{
     public function getCurrentIndex(){
         
         return $this->getIndexEntity()->getIndex();
-    }
+    } 
     
     
     
-    public function getTableName(){
-        
           
+    public function getEntityName(){
         
         return $this->entityname;
     }
@@ -64,12 +62,17 @@ class IndexManager{
         $qb=  $this->em->createQueryBuilder();
         $qb ->select('ditto')
             ->from('AppBundle:Indices', 'ditto')
-            ->where('tablename=:tablename')
-            ->setParameter('tablename', $this->entityname);
+            ->where('ditto.tablename=:tablename')
+            ->setParameter('tablename', $this->getEntityName());
         
         
         $index=$qb->getQuery()->getSingleResult();
         
+        if($index){
         return $index;
+        }
+        else{
+            throw new Exception('Division durch Null.');
+        }
     }
 }
