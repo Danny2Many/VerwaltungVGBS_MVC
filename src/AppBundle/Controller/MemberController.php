@@ -57,7 +57,7 @@ class MemberController extends Controller
                           ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
                           
         
-     //building the query: SELECT ditto FROM % AS ditto WHERE ditto.recorded=( subquery ) AND ditto.recorded<=$adminyear 
+     //building the query: SELECT ditto FROM % AS ditto WHERE ditto.recorded=( subquery ) AND ditto.recorded<=$now 
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
      $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
                     ->andWhere('ditto.recorded<=:adminyear')
