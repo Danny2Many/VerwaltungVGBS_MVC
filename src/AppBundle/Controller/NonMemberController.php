@@ -26,7 +26,17 @@ class NonMemberController extends Controller {
     */    
     public function indexAction (Request $request, $letter, $adminyear ) {   
   
-      
+    //if $adminyear is the current year
+     if($adminyear == date('Y')){
+     
+     $now=date("Y-m-d");
+     
+     }
+     //else take the last day of the choosen year
+     else{
+         $now=$adminyear.'-12-31';
+     }
+     
     $doctrine = $this->getDoctrine();
     $dependencies=['Nichtmitglieder\Nonmember' => 'nmem', 'Nichtmitglieder\NonMemPhoneNumber' => 'pn', 'Nichtmitglieder\NonMemRehabilitationCertificate' => 'rc'];
     $qb=[];
@@ -102,10 +112,13 @@ class NonMemberController extends Controller {
 
 
      foreach ($rehabcertlist as $rc){
-
-        $nonmemberdependentlist[$rc->getNMemID()]['rehabcerts'][]=$rc;
-
-    }
+        if($rc->getTerminationdate()->format("Y-m-d") > $now){
+         $nonmemberdependentlist[$rc->getNMemid()]['validrehabcerts'][]=$rc;
+        }else{
+          $nonmemberdependentlist[$rc->getNMemid()]['expiredrehabcerts'][]=$rc;  
+        }
+         
+     }
     
         return $this->render(
         'Nicht_Mitglieder/nonmember.html.twig',

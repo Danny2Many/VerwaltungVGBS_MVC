@@ -116,7 +116,7 @@
                 <td>
                             
                 {% for RC in validrehab  %}
-              <div class="{% if 'now'|date("Y") == RC.terminationdate|date("Y") %}strong {% endif %}{% if date(RC.terminationdate) < date('+2months') %}red {% endif %}{% if ('now'|date("Y") == RC.terminationdate|date("Y") and 'now'|date("Y.m.d") < RC.terminationdate|date("Y.m.d")) %}yellowbackground{% endif %}">{{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}</div>
+              <div class="{% if date(RC.terminationdate) < date('+2months') %}red {% endif %}{% if ('now'|date("Y") == RC.terminationdate|date("Y") and 'now'|date("Y.m.d") < RC.terminationdate|date("Y.m.d")) %}yellowbackground{% endif %}">{{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}</div>
                     
                     
                          {% else %}
