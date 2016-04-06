@@ -32,17 +32,27 @@ class IndexManager{
         $this->em->persist($index);
         $this->em->push($index);
         
+        return $this;
     }
     
     
     public function getCurrentIndex(){
         
-        return $this->getIndexEntity()->getIndex();
-    } 
+
+        return $this->getIndexEntity()->getCurrentindex();
+    }
     
     
     
-          
+    
+    function setEntityName($entityname) {
+        $this->entityname = $entityname;
+        
+        return $this;
+    }
+
+        
+
     public function getEntityName(){
         
         return $this->entityname;
@@ -72,7 +82,7 @@ class IndexManager{
         return $index;
         }
         else{
-            throw new Exception('Division durch Null.');
+            throw new Exception('Existiert nüscht!!!!');
         }
     }
 }
