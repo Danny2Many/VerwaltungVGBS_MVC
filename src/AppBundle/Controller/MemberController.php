@@ -214,18 +214,18 @@ class MemberController extends Controller
         
 
         $im=  $this->get('app.index_manager')
-                   ->setEntityName('Member');
 
-                   
+                   ->setEntityName('Member')
+                   ->add();   
+    
+
         $memid=$im->getCurrentIndex();
         $member->setMemid($memid);
     
         
         
-       
-            
-        $member->addPhonenumber($phonenumber);
-               
+                   
+        $member->addPhonenumber($phonenumber);               
       
         $addmemform = $this->createForm(AddMemberType::class, $member);
         $addmemform->handleRequest($request);
