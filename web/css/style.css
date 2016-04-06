@@ -246,7 +246,8 @@ ul.nav{
 
 
 .adminyeardropdown{
-    background-color: dodgerblue;
+ 
     font-size:1.5em;
+    border-right: 1px solid darkgray;
     
 }

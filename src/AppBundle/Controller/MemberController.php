@@ -28,7 +28,19 @@ class MemberController extends Controller
      */
     public function indexAction(Request $request, $letter, $adminyear)
     {
-    
+        
+        
+    //if $adminyear is the current year
+     if($adminyear == date('Y')){
+     
+     $now=date("Y-m-d");
+     
+     }
+     //else take the last day of the choosen year
+     else{
+         $now=$adminyear.'-12-31';
+     }
+     
     $doctrine=$this->getDoctrine();
     $dependencies=array('Member' => 'mem', 'MemPhoneNumber'=> 'pn', 'MemRehabilitationCertificate'=> 'rc');
     
@@ -45,7 +57,7 @@ class MemberController extends Controller
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
      $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
                     ->andWhere('ditto.recorded<=:adminyear')
-                    ->setParameter('adminyear',$adminyear.'-12-31');
+                    ->setParameter('adminyear',$now);
     }
     
     
@@ -142,7 +154,7 @@ class MemberController extends Controller
      $rehabcertlist=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
      
      
-     $now=date("Y-m-d");
+     
      
      
      $memberdependentlist=[];

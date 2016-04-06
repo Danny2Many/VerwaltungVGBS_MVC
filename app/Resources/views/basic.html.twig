@@ -73,8 +73,12 @@
                             <ul class="nav navbar-nav">
                                 <li class="dropdown adminyeardropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Verwaltungsjahr: {{ adminyear}}<span class="caret"></span></a>
                                     <ul class="dropdown-menu">
-                                        <li class=""><a href="#">Mitglieder</a></li>
-                                        <li class=""><a href="#">Beitragsverwaltung</a></li>
+                                        {% set end_year = date() | date('Y') %}
+                                        {% set start_year = end_year - 5 %}
+                                        
+                                        {% for year in start_year..end_year %}
+                                            <li class="{% if year == adminyear %}active{% endif %}"><a href="{{path(path, {'adminyear': year})}}">{{year}}</a></li>
+                                        {% endfor %}
                                     </ul>
                                 </li>
                                 <li class="{% block HomeAktiv %}{% endblock %}"><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
