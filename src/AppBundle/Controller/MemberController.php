@@ -41,6 +41,10 @@ class MemberController extends Controller
          $now=$adminyear.'-12-31';
      }
      
+     
+     
+     
+     
     $doctrine=$this->getDoctrine();
     $dependencies=array('Member' => 'mem', 'MemPhoneNumber'=> 'pn', 'MemRehabilitationCertificate'=> 'rc');
     
