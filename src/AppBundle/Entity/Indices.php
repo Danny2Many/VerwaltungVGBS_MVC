@@ -21,7 +21,9 @@ class Indices{
     
     
     
-/**
+
+   /** 
+
     * @ORM\Column(type="integer", name="CurrentIndex") 
     */
     protected $currentindex;
@@ -65,6 +67,8 @@ class Indices{
      */
     public function getCurrentindex()
     {
+
+
         return $this->currentindex;
 
     }

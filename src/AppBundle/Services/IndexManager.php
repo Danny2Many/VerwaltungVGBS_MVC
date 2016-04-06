@@ -27,10 +27,10 @@ class IndexManager{
     
     public function remove($number=1){        
         
-        $index=$this->getIndexEntity()->setIndex($index->getCurrentIndex()-$number);
+        $index=$this->getIndexEntity()->setIndex($this->getCurrentIndex()-$number);
         
         $this->em->persist($index);
-        $this->em->push($index);
+        $this->em->flush($index);
         
         return $this;
     }
@@ -58,12 +58,7 @@ class IndexManager{
         return $this->entityname;
     }
     
-    public function setEntityname($entityname)
-    {
-        $this->entityname = $entityname;
-
-        return $this;
-    }
+   
     
      
     
@@ -82,7 +77,7 @@ class IndexManager{
         return $index;
         }
         else{
-            throw new Exception('Existiert nüscht!!!!');
+            throw new Exception('Existiert nüscht!!<(^^<)!!');
         }
     }
 }
