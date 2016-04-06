@@ -98,29 +98,7 @@ class TrainerPhoneNumber {
         return $this->phonenumber;
     }
 
-    /**
-     * Set trainer
-     *
-     * @param \AppBundle\Entity\Trainer\Trainer $trainer
-     *
-     * @return TrainerPhoneNumber
-     */
-    public function setTrainer(\AppBundle\Entity\Trainer\Trainer $trainer = null)
-    {
-        $this->trainer = $trainer;
-
-        return $this;
-    }
-
-    /**
-     * Get trainer
-     *
-     * @return \AppBundle\Entity\Trainer\Trainer
-     */
-    public function getTrainer()
-    {
-        return $this->trainer;
-    }
+  
 
  
     /**

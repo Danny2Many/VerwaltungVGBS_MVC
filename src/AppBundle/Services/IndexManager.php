@@ -27,33 +27,37 @@ class IndexManager{
     
     public function remove($number=1){        
         
-        $index=$this->getIndexEntity()->setIndex($index->getCurrentIndex()-$number);
+        $index=$this->getIndexEntity()->setIndex($this->getCurrentIndex()-$number);
         
         $this->em->persist($index);
-        $this->em->push($index);
+        $this->em->flush($index);
         
+        return $this;
     }
     
     
     public function getCurrentIndex(){
         
-        return $this->getIndexEntity()->getIndex();
-    } 
+
+        return $this->getIndexEntity()->getCurrentindex();
+    }
     
     
     
-          
+    
+    function setEntityName($entityname) {
+        $this->entityname = $entityname;
+        
+        return $this;
+    }
+
+        
     public function getEntityName(){
         
         return $this->entityname;
     }
     
-    public function setEntityname($entityname)
-    {
-        $this->entityname = $entityname;
-
-        return $this;
-    }
+   
     
      
     
@@ -72,7 +76,7 @@ class IndexManager{
         return $index;
         }
         else{
-            throw new Exception('Division durch Null.');
+            throw new Exception('Existiert nüscht!!<(^^<)!!');
         }
     }
 }

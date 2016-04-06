@@ -28,7 +28,23 @@ class MemberController extends Controller
      */
     public function indexAction(Request $request, $letter, $adminyear)
     {
-    
+        
+        
+    //if $adminyear is the current year
+     if($adminyear == date('Y')){
+     
+     $now=date("Y-m-d");
+     
+     }
+     //else take the last day of the choosen year
+     else{
+         $now=$adminyear.'-12-31';
+     }
+     
+     
+     
+     
+     
     $doctrine=$this->getDoctrine();
     $dependencies=array('Member' => 'mem', 'MemPhoneNumber'=> 'pn', 'MemRehabilitationCertificate'=> 'rc');
     
@@ -41,11 +57,11 @@ class MemberController extends Controller
                           ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
                           
         
-     //building the query: SELECT ditto FROM % AS ditto WHERE ditto.recorded=( subquery ) AND ditto.recorded<=$adminyear 
+     //building the query: SELECT ditto FROM % AS ditto WHERE ditto.recorded=( subquery ) AND ditto.recorded<=$now 
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
      $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
                     ->andWhere('ditto.recorded<=:adminyear')
-                    ->setParameter('adminyear',$adminyear.'-12-31');
+                    ->setParameter('adminyear',$now);
     }
     
     
@@ -142,6 +158,9 @@ class MemberController extends Controller
      $rehabcertlist=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
      
      
+     
+     
+     
      $memberdependentlist=[];
      foreach ($phonenumberlist as $pn){
          
@@ -149,9 +168,13 @@ class MemberController extends Controller
      }
      
      
+     
       foreach ($rehabcertlist as $rc){
-        
-         $memberdependentlist[$rc->getMemid()]['rehabcerts'][]=$rc;
+        if($rc->getTerminationdate()->format("Y-m-d") > $now){
+         $memberdependentlist[$rc->getMemid()]['validrehabcerts'][]=$rc;
+        }else{
+          $memberdependentlist[$rc->getMemid()]['expiredrehabcerts'][]=$rc;  
+        }
          
      }
      
@@ -191,11 +214,12 @@ class MemberController extends Controller
         
 
         $im=  $this->get('app.index_manager')
-                   ->setEntityName('Member')
-                   ->add();   
-    
+                   ->setEntityName('Member');
+
         $memid=$im->getCurrentIndex();
         $member->setMemid($memid);
+    
+        
         
                    
         $member->addPhonenumber($phonenumber);               
@@ -209,7 +233,7 @@ class MemberController extends Controller
         if($addmemform->isSubmitted() && $addmemform->isValid()){
 
             
-            
+        
 
             
          
@@ -232,9 +256,13 @@ class MemberController extends Controller
           
           
 
-          $manager->persist($member);
+            $manager->persist($member);
           
             $manager->flush();
+            
+            
+            $im->add();
+            
             
            $this->addFlash('notice', 'Diese Person wurde erfolgreich angelegt!'); 
           return $this->redirectToRoute('member_home', array('letter' => $letter));

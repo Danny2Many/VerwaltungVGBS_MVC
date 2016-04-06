@@ -1,7 +1,7 @@
 
 {% extends 'basic.html.twig' %}
 {% form_theme searchform 'bootstrap_3_layout.html.twig' %}
-{% block columndefs %}
+ {% block columnDefs %}
      "columnDefs": [
     { "width": "11%", "targets": 15 }
   ]  
@@ -35,7 +35,7 @@
     {% block thead %}
         
             
-        <th>Bearb.</th><th>M_Nr</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Geb.Datum</th><th>Ort</th><th>Strasse, Hausnr</th><th>PLZ</th><th>Postfach</th><th>Telefonnr.</th><th>E-Mail</th><th>Eintr.Datum</th><th>Aufnahmebest.</th><th>Rehaschein/e<br> (RS-Nr.-Ablaufd.-Einheiten)</th><th>abgelaufene Rehaschein/e</th><th>Verm. Beitrag</th><th>Krankenkasse</th><th>Zusatzinfo</th> 
+        <th>Bearb.</th><th>M_Nr</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Geb.Datum</th><th>Ort</th><th>Strasse, Hausnr</th><th>PLZ</th><th>Postfach</th><th>Telefonnr.</th><th>E-Mail</th><th>Eintr.Datum</th><th>Aufnahmebest.</th><th>Rehaschein/e<br> (RSNr.-Ablaufd.-Einheiten)</th><th>abgelaufene Rehaschein/e</th><th>Verm. Beitrag</th><th>Krankenkasse</th><th>Zusatzinfo</th> 
         <th>Ehrung</th><th>Arbeitsplatzhaltung</th><th>chron. Berufserkr.</th><th>Schmerzen in HWS</th><th>Schmerzen in BWS</th><th>Schmerzen in LWS</th><th>obere Extremitäten</th><th>untere Extremitäten</th><th>sonst. Beeinträchtigungen</th><th>Medikamente</th><th>weit. bewegl. Aktivitäten</th><th>Hf-Ruhe/Min</th><th>Hf-Max/Min</th><th>Hf bei 50%</th><th>Hf bei 55%</th><th>Hf bei 60%</th><th>Hf bei 65%</th><th>Hf bei 70%</th><th>Hf bei 75%</th><th>Hf bei 80%</th><th>Hf bei 85%</th>
         
     {% endblock %}
@@ -59,11 +59,7 @@
                 {% endif %}
                 <td><center><a href="{{ path('editmem', {'letter': first|capitalize, 'ID': data.memid, 'adminyear': adminyear }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
                 <td>{{ data.memid }}</td>
-                {#<td>{% for Sec in data.section %}
-                        {{ Sec.sectionname }}<br>
-                        {% else  %}
-                        {{ "-" }}
-                    {% endfor %}</td>#}
+               
                 <td>{{ data.state|striptags }}</td>
                
                 <td>{{ data.title|striptags }}</td>
@@ -101,34 +97,42 @@
                 <td>{{ data.admissionconfirmation is empty ? "-" : data.admissionconfirmation|date("d.m.Y") }}</td>
                 
              
-                {% if memberdependentlist[data.memid]['rehabcerts'] is defined %}
-                {% set rehab =memberdependentlist[data.memid]['rehabcerts'] %}
+                {% if memberdependentlist[data.memid]['validrehabcerts'] is defined %}
+                {% set validrehab =memberdependentlist[data.memid]['validrehabcerts'] %}
                 {% else %}
-                  {% set rehab ='' %}  
+                  {% set validrehab ='' %}  
                 {% endif %}
 
                 
-             
+                {% if memberdependentlist[data.memid]['expiredrehabcerts'] is defined %}
+                {% set expiredrehab =memberdependentlist[data.memid]['expiredrehabcerts'] %}
+                {% else %}
+                  {% set expiredrehab ='' %}  
+                {% endif %}
                 
 
-                
+                {% if adminyear == "now"|date("Y") %}
+                    {% set now = "now"|date("Y-m-d") %}
+                    {% else %}
+                   {% set now = date(adminyear~'-12-31')  %}     
+                {% endif %}
 
-                <td{% for RC in rehab %}
-                        {% if ('now'|date("Y") == RC.terminationdate|date("Y") and 'now'|date("Y.m.d") < RC.terminationdate|date("Y.m.d")) %}class="yellow"{% endif %}
-                        {% endfor %}>
-                {% for RC in rehab if date(RC.terminationdate) > date() %}
-                    {% if 'now'|date("Y") == RC.terminationdate|date("Y") %}<strong>{% endif %}
-                    {% if date(RC.terminationdate) < date('+2months') %}<font color="red">{% endif %}
-                    {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>
-                    {% if ('now'|date("Y") == RC.terminationdate|date("Y") or 'now'|date("Y") > RC.terminationdate|date("Y")) %}</font></strong>{% endif %}
-   
+                <td>
+                            
+                {% for RC in validrehab  %}
+
+              <div class="{% if date(RC.terminationdate)|date("Y-m-d") < now|date_modify("+2 months")|date("Y-m-d") %}red {% endif %}
+                   {% if (now|date("Y") == RC.terminationdate|date("Y") and now|date("Y-m-d") < RC.terminationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
+                  {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}</div>
+                    
+                    
                          {% else %}
                          {{ "-" }}
                     {% endfor %}
                    </td>
                     
                     
-                  <td>{% for RC in rehab if date(RC.terminationdate) < date() %}
+                  <td>{% for RC in expiredrehab  %}
                           
                         
                     {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>
