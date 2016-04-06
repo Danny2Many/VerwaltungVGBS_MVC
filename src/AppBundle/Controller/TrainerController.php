@@ -149,7 +149,13 @@ class TrainerController extends Controller
         
         $trainer = new Trainer();
         $phonenumber = new TrainerPhoneNumber();
-        $licence = new TrainerLicence();     
+        $licence = new TrainerLicence();  
+        
+        $im=  $this->get('app.index_manager')
+                   ->setEntityName('Trainer');
+
+        $trainerid=$im->getCurrentIndex();
+        $trainer->setTrainerid($trainerid);
         
         
         $trainer->addPhonenumber($phonenumber);
@@ -162,9 +168,7 @@ class TrainerController extends Controller
         
         if ($addtrainerform->isSubmitted() && $addtrainerform->isValid()){
             
-            $trainerid=uniqid('tr'); 
-            $trainer->setTrainerid($trainerid);            
-         
+            
             $manager= $this->getDoctrine()->getManager();
                         
             foreach($trainer->getPhonenumber() as $pn){
@@ -187,9 +191,11 @@ class TrainerController extends Controller
 
             $manager->persist($trainer);
           
-            $manager->flush();           
-            $this->addFlash('notice', 'Dieser Übungsleiter wurde erfolgreich angelegt!');
+            $manager->flush();  
+            $im->add();
             
+            
+            $this->addFlash('notice', 'Dieser Übungsleiter wurde erfolgreich angelegt!');
             return $this->redirectToRoute('trainer_home', array('letter' => $letter));
         }
 

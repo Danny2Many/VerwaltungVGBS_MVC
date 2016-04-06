@@ -16,14 +16,14 @@ class Trainer extends PersonalData {
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="integer")
      */
     
     protected $trainerid;
     
     public function __toString()
     {
-        return $this->trainerid;
+        return (string) $this->trainerid;
     }
     
     /**
