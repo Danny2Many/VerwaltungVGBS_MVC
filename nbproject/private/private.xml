@@ -3,23 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Controller/NonMemberController.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/app/config/services.yml</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Member.php</file>
+            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Nichtmitglieder/NonMemSportsgroup.php</file>
+            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/app/Resources/views/Sportgruppen/sportsgroup.html.twig</file>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/BSSACert.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Indices.php</file>
-=======
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/app/config/services.yml</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Services/IndexManager.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Indices.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Member.php</file>
->>>>>>> refs/remotes/origin/Peer_branch
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Controller/MemberController.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/MemPhoneNumber.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Services/IndexManager.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/HealthData.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Nichtmitglieder/Nonmember.php</file>
+            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/web/css/style.css</file>
+            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/app/Resources/views/Trainer/trainer.html.twig</file>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Controller/SportsgroupController.php</file>
         </group>
     </open-files>
