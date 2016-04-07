@@ -96,22 +96,22 @@ class MemberController extends Controller
     $searchcol=$request->query->get('search')['column'];
     
 
-//    if($searchcol=='token'){
-//    $query=$qb->Join('m.sportsgroup', 'i')           
-//            ->where($qb->expr()->like('i.token',':tok'))
-//            ->setParameter('tok','%'.$searchval.'%')
-//            ->getQuery();
-//    }else 
-//    if($searchcol=='terminationdate'){
-//    $query=$qb->Join('m.rehabilitationcertificate', 'i')           
-//            ->where($qb->expr()->like('i.terminationdate',':token'))
-//            ->setParameter('token','%'.$searchval.'%')
-//            ->getQuery();
-//    }else{
-//    $query=$qb->where($qb->expr()->like('m.'.$searchcol, ':member'))
-//                   ->setParameter('member','%'.$searchval.'%')
-//                   ->getQuery();
-//    } 
+    if($searchcol=='terminationdate'){
+        $qb['MemRehabilitationCertificate']->andWhere($qb['MemRehabilitationCertificate']->expr()->like('ditto.'.$searchcol,':type'))
+            ->setParameter('type','%'.$searchval.'%');
+
+            $rehacelist=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
+
+            if($rehacelist){          
+                foreach ($rehacelist as $rc){         
+                $idarray[]=$rc->getMemid();     
+            }
+
+            $qb['Member']->andWhere($qb['MemRehabilitationCertificate']->expr()->in('ditto.memid', $idarray));
+            $qb['MemRehabilitationCertificate']->orWhere($qb['Member']->expr()->in('ditto.memid', $idarray));
+        }
+
+        }else{
 
     
     
@@ -120,7 +120,7 @@ class MemberController extends Controller
     $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.'.$searchcol, ':member'))
                    ->setParameter('member','%'.$searchval.'%');
     
-     
+     }
      
     }else{
         
@@ -158,7 +158,9 @@ class MemberController extends Controller
      $rehabcertlist=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
      
      
-     
+     if(!$rehabcertlist){  
+        $memberlist=$rehabcertlist;            
+        }
      
      
      $memberdependentlist=[];
