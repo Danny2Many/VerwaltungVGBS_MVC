@@ -15,6 +15,7 @@ use AppBundle\Entity\Trainer\TrainerFocus;
 use AppBundle\Entity\Trainer\TrainerLicence;
 use \DateTime;
 use AppBundle\Form\Type\Member\EditMemberType;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -68,34 +69,23 @@ class TrainerController extends Controller
     $searchcol=$request->query->get('search')['column'];   
     
     
-    
-//    $qb['Trainer\Trainer']->where($qb['Trainer\Trainer']->expr()->like('ditto.'.$searchcol, ':trainer'))
-//        ->setParameter('trainer','%'.$searchval.'%')
-//        ->getQuery();
-
-//    if($searchcol=='token'){
-//    $query=$qb->Join('m.sportsgroup', 'i')           
-//            ->where($qb->expr()->like('i.token',':tok'))
-//            ->setParameter('tok','%'.$searchval.'%')
-//            ->getQuery();
-    
      if($searchcol=='licencetype'){
     $qb['Trainer\TrainerLicence']->andWhere($qb['Trainer\TrainerLicence']->expr()->like('ditto.'.$searchcol,':type'))
         ->setParameter('type','%'.$searchval.'%');
        
         $licencelist=$qb['Trainer\TrainerLicence']->getQuery()->getResult();
-
-     foreach ($licencelist as $lc){
-         
-     $idarray[]=$lc->getTrainerid();
      
-     }
-         
+        if($licencelist){          
+            foreach ($licencelist as $lc){         
+            $idarray[]=$lc->getTrainerid();     
+        }
+    
         $qb['Trainer\Trainer']->andWhere($qb['Trainer\TrainerLicence']->expr()->in('ditto.trainerid', $idarray));
-//                ->setParameter('tid',$lc->getTrainerid());
-     
+        $qb['Trainer\TrainerLicence']->orWhere($qb['Trainer\Trainer']->expr()->in('ditto.trainerid', $idarray));
+    }
     
     }else{  
+        
     $qb['Trainer\Trainer']->andWhere($qb['Trainer\Trainer']->expr()->like('ditto.'.$searchcol, ':trainer'))
         ->setParameter('trainer','%'.$searchval.'%');
   
@@ -125,6 +115,10 @@ class TrainerController extends Controller
     $phonenumberlist=$qb['Trainer\TrainerPhoneNumber']->getQuery()->getResult();
     $licencelist=$qb['Trainer\TrainerLicence']->getQuery()->getResult();
     $focuslist=$qb['Trainer\TrainerFocus']->getQuery()->getResult();
+    
+        if(!$licencelist){  
+        $trainerlist=$licencelist;            
+        }
     
     $trainerdependentlist=[];
      foreach ($phonenumberlist as $pn){
