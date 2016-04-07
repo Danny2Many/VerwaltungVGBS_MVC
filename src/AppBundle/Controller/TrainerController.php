@@ -72,11 +72,29 @@ class TrainerController extends Controller
 //    $qb['Trainer\Trainer']->where($qb['Trainer\Trainer']->expr()->like('ditto.'.$searchcol, ':trainer'))
 //        ->setParameter('trainer','%'.$searchval.'%')
 //        ->getQuery();
+
+//    if($searchcol=='token'){
+//    $query=$qb->Join('m.sportsgroup', 'i')           
+//            ->where($qb->expr()->like('i.token',':tok'))
+//            ->setParameter('tok','%'.$searchval.'%')
+//            ->getQuery();
     
      if($searchcol=='licencetype'){
     $qb['Trainer\TrainerLicence']->andWhere($qb['Trainer\TrainerLicence']->expr()->like('ditto.'.$searchcol,':type'))
         ->setParameter('type','%'.$searchval.'%');
-        
+       
+        $licencelist=$qb['Trainer\TrainerLicence']->getQuery()->getResult();
+
+     foreach ($licencelist as $lc){
+         
+     $idarray[]=$lc->getTrainerid();
+     
+     }
+         
+        $qb['Trainer\Trainer']->andWhere($qb['Trainer\TrainerLicence']->expr()->in('ditto.trainerid', $idarray));
+//                ->setParameter('tid',$lc->getTrainerid());
+     
+    
     }else{  
     $qb['Trainer\Trainer']->andWhere($qb['Trainer\Trainer']->expr()->like('ditto.'.$searchcol, ':trainer'))
         ->setParameter('trainer','%'.$searchval.'%');
