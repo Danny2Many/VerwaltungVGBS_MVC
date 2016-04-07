@@ -29,7 +29,7 @@ protected $startdate;
 protected $groupnr;
 
 /**
-* @ORM\Column(type="date")  
+* @ORM\Column(type="string")  
 */ 
 protected $bssacertnr;
 
@@ -149,7 +149,7 @@ protected $deleted;
     /**
      * Set bssacertnr
      *
-     * @param \DateTime $bssacertnr
+     * @param string $bssacertnr
      *
      * @return BSSACert
      */
@@ -163,7 +163,7 @@ protected $deleted;
     /**
      * Get bssacertnr
      *
-     * @return \DateTime
+     * @return string
      */
     public function getBssacertnr()
     {

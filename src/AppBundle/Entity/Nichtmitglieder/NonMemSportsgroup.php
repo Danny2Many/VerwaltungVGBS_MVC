@@ -59,7 +59,6 @@ class NonMemSportsgroup {
     
     /**
      * @ORM\Column(type="string")
-        * @Assert\NotBlank()
      * 
      */
     protected $info;
@@ -70,8 +69,11 @@ class NonMemSportsgroup {
     protected $roomid;
     
     /**
-     * @ORM\Column(type="integer")
-     */
+    * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Trainer\Trainer")
+    * @ORM\JoinTable(name="Trainer_NonMemSportsgroupSub",
+    * joinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")},
+    * inverseJoinColumns={@ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")})
+    */ 
     protected $trainerid;
     
     /**
