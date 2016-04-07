@@ -52,6 +52,7 @@ class IndexManager{
     }
 
         
+
     public function getEntityName(){
         
         return $this->entityname;

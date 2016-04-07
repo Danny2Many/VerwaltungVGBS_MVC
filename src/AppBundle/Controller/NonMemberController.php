@@ -26,9 +26,19 @@ class NonMemberController extends Controller {
     */    
     public function indexAction (Request $request, $letter, $adminyear ) {   
   
-      
+    //if $adminyear is the current year
+     if($adminyear == date('Y')){
+     
+     $now=date("Y-m-d");
+     
+     }
+     //else take the last day of the choosen year
+     else{
+         $now=$adminyear.'-12-31';
+     }
+     
     $doctrine = $this->getDoctrine();
-    $dependencies=['Nichtmitglieder\Nonmember' => 'nmem', 'Nichtmitglieder\NonMemPhoneNumber' => 'pn', 'Nichtmitglieder\NonMemRehabilitationCertificate' => 'rc'];
+    $dependencies=array('Nichtmitglieder\Nonmember' => 'nmem', 'Nichtmitglieder\NonMemPhoneNumber' => 'pn', 'Nichtmitglieder\NonMemRehabilitationCertificate' => 'rc');
     $qb=[];
       foreach($dependencies as $dependent => $idprefix){
    
@@ -42,7 +52,7 @@ class NonMemberController extends Controller {
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
      $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
                     ->andWhere('ditto.recorded<=:adminyear')
-                    ->setParameter('adminyear',$adminyear.'-12-31');
+                    ->setParameter('adminyear',$now);
     }
     
     
@@ -102,14 +112,17 @@ class NonMemberController extends Controller {
 
 
      foreach ($rehabcertlist as $rc){
-
-        $nonmemberdependentlist[$rc->getNMemID()]['rehabcerts'][]=$rc;
-
-    }
+        if($rc->getTerminationdate()->format("Y-m-d") > $now){
+         $nonmemberdependentlist[$rc->getNMemid()]['validrehabcerts'][]=$rc;
+        }else{
+          $nonmemberdependentlist[$rc->getNMemid()]['expiredrehabcerts'][]=$rc;  
+        }
+         
+     }
     
         return $this->render(
         'Nicht_Mitglieder/nonmember.html.twig',
-        array('info' => NULL,
+        array(
             'colorclass' => "bluetheader",
             'searchform' => $searchform->createView(),
             'nonmemberdependentlist' => $nonmemberdependentlist, 
@@ -129,13 +142,17 @@ class NonMemberController extends Controller {
       
 
     $nonmember = new Nonmember ();
-    $phonenumber = new NonMemPhoneNumber();    
-    $nmemid=uniqid('n'); 
-    $nonmember->setNMemID($nmemid);
-    $nonmember->addPhonenumber($phonenumber);
+    $phonenumber = new NonMemPhoneNumber();   
+    $im=  $this->get('app.index_manager')
 
-    $addnonmemform = $this->createForm(AddNonMemberType::class, $nonmember);
+                   ->setEntityName('NonMember');
+
     
+    $nmemid=$im->getCurrentIndex();
+    $nonmember->setNMemID($nmemid);
+    
+    $nonmember->addPhonenumber($phonenumber);
+    $addnonmemform = $this->createForm(AddNonMemberType::class, $nonmember);    
     
     $addnonmemform->handleRequest($request);     
         
@@ -158,6 +175,8 @@ class NonMemberController extends Controller {
             
             $manager->persist($nonmember);     
             $manager->flush();
+            
+            $im->add();
             $this->addflash('notice', 'Diese Person wurde erfolgreich angelegt!');
             
             return $this->redirectToRoute('nonmember_home', array ('letter'=>$letter));

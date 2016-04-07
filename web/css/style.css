@@ -138,11 +138,18 @@ td.red, input[type="text"].red {
 
 
 
-th.overhead {
-    background-color: #cce6ff;
+th.overhead1 {
+    background-color: #00cc99;
 /*    border-left: 1.5px solid black;*/
 /*    border-right: 2px solid black;*/
 }
+
+th.overhead2 {
+    background-color: #e69900;
+/*    border-left: 1.5px solid black;*/
+/*    border-right: 2px solid black;*/
+}
+
 
 ul.nav{
     padding-bottom: 0;

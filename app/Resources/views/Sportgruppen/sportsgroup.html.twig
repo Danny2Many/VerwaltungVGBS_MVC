@@ -5,7 +5,7 @@
 {% block title %} Sportgruppen {% endblock %}
 {% block viewname %}Sportgruppen{% endblock %}
 {% block SportgrAktiv %} active {% endblock %}
-{% block fixedcolnum %} 4 {% endblock %}
+{% block fixedcolnum %} 6 {% endblock %}
 
 {% block add %}
     <a href="{{ path('addsportsgroup', {'letter': cletter }) }}"><button    class="add btn btn-default">
@@ -17,35 +17,43 @@
 
 {% block thead %}
 
-<tr>
+{#<tr>
     <th colspan="4"></th>
-    <th colspan="3" class="overhead">Mitgleider/Kurs-TN</th>
+    <th colspan="3" class="overhead">Mitglieder/Kurs-TN</th>
     <th colspan="2" class="overhead">Kapazität</th>
     <th colspan="2"></th>
     <th colspan="5" class="overhead">BSSA_Zertifizierung</th>
     <th colspan="4" class="overhead">Finanzen</th>
-</tr>
+</tr>#}
+
 <tr>
-    <th>Sportgruppe/Info</th>
+   <th>SGID</th>
+    <th>Sportgruppe</th>
+    <th>Info</th>
     <th>Uhrzeit</th>
     <th>Räumlichkeit</th>
     <th>Gruppenbezeichnung</th>
-    <th>gesamt</th>
-    <th>weiblich</th>
-    <th>männlich</th>
-    <th>gesamt</th>
-    <th>offen</th>
+    <th  class="overhead1"><font color=""> Mitglieder/Kurs-TN</font></th>
+    <th class="overhead1">gesamt</th>
+    <th class="overhead1">weiblich</th>
+    <th class="overhead1">männlich</th>
+    <th class="overhead2"> <font color="">Kapazität</font></th>
+    <th class="overhead2">gesamt</th>
+    <th class="overhead2">offen</th>
     <th>Voranmeldungen</th>
-    <th>Vetretungsmöglichkeiten</th>
-    <th>Laufzeit bis</th>
-    <th>Erstanmeldung</th>
-    <th>Letzte Änderung</th>
-    <th>VGBS-GruppenNr.</th>
-    <th>BSSA-Zertifikatnr.</th>
-    <th>Einnahmen gesamt/Monat</th>
-    <th>Anzahl RS</th>
-    <th>ÜL-Kosten + Halle</th>
-    <th>Saldo</th>
+    <th>Name ÜL</th>
+    <th>Vetretungsmöglichkeit</th>
+    <th class="overhead1">BSSA_Zertifizierung</th>
+    <th class="overhead1">Laufzeit bis</th>
+    <th class="overhead1">Erstanmeldung</th>
+    <th class="overhead1">Letzte Änderung</th>
+    <th class="overhead1">VGBS-GruppenNr.</th>
+    <th class="overhead1">BSSA-Zertifikatnr.</th>
+    <th class="overhead2">Finanzen</th>
+    <th class="overhead2">Einnahmen gesamt/Monat</th>
+    <th class="overhead2">Anzahl RS</th>
+    <th class="overhead2">ÜL-Kosten + Halle</th>
+    <th class="overhead2">Saldo</th>
 </tr>    
     
 {% endblock %}
@@ -54,36 +62,39 @@
     {% for data in tabledata %}
         {% autoescape  %}
         <tr>
-        <td>{{ data[0].name|striptags }}</td> 
-         <td>{{ data[0].roomid|striptags }}</td>
-        <td>{{ data[0].roomid|striptags }}</td> 
-        <td>{{ data[0].token|striptags }}</td> 
-        <td>{{ data[0].trainerid|striptags }}</td>
-        <td>{{ data[0].trainerid|striptags }}</td> 
-        <td>{{ data[0].trainerid|striptags }}</td> 
-        <td>{{ data[0].trainerid|striptags }}</td> 
-        <td>{{ data[0].trainerid|striptags }}</td> 
-        <td>{{ data[0].trainerid|striptags }}</td>
-        {% if sportsgroupdependentlist[data[0].sgid]['terminationdate'] is defined %}
-        {% set terminationdate =sportsgroupdependentlist[data[0].sgid]['terminationdate'] %}
-        {% else %}
-          {% set terminationdate ='' %}  
-        {% endif %}
-        <td>{% for TD in terminationdate if date(TD[0].terminationdate) > date() %}                     
-                {{'TD'}}{{loop.index}}-<strong>{{TD[0].terminationdate|date("d.m.Y") }}</strong>-{{TD[0].terminationdate }}<br>
-            {% else %}
-                {{ "-" }}
+        <td>{{ data.sgid|striptags }}</td>    
+        <td>{{ data.name|striptags }}</td>
+        <td>{{ data.info|striptags }}</td> 
+        <td>{{ data.time|date("h:i") }}</td>
+        <td>{{ data.roomid|striptags }}</td> 
+        <td>{{ data.token|striptags }}</td> 
+        <td bgcolor="#00cc99"></td>
+        <td>{{ data.sgid|striptags }}</td>
+        <td>{{ data.sgid|striptags }}</td> 
+        <td>{{ data.sgid|striptags }}</td>         
+        <td bgcolor="#e69900"></td>        
+        <td>{{ data.sgid|striptags }}</td> 
+        <td>{{ data.sgid|striptags }}</td>        
+        <td>{{ data.sgid|striptags }}</td>
+        <td>{% if data.trainerid is empty %}
+            {{ "-" }}
+            {% else  %}
+                {% for trainerid in data.trainerid %}
+                {{ trainerid.FirstName }}<br>
             {% endfor %}
-        </td>
-        <td>{{ data[0].trainerid|striptags }}</td> 
-        <td>{{ data[0].trainerid|striptags }}</td> 
-        <td>{{ data[0].trainerid|striptags }}</td> 
-        <td>{{ data[0].trainerid|striptags }}</td>
-        <td>{{ data[0].trainerid|striptags }}</td> 
-        <td>{{ data[0].trainerid|striptags }}</td> 
-        <td>{{ data[0].trainerid|striptags }}</td> 
-        <td>{{ data[0].trainerid|striptags }}</td>
-        <td>{{ data[0].trainerid|striptags }}</td> 
+            {% endif %}</td>
+        <td></td>
+        <td bgcolor="#00cc99"></td>
+        <td>{{ data.sgid|striptags }}</td> 
+        <td>{{ data.sgid|striptags }}</td> 
+        <td>{{ data.sgid|striptags }}</td> 
+        <td>{{ data.sgid|striptags }}</td>
+        <td>{{ data.sgid|striptags }}</td> 
+        <td bgcolor="#e69900"></td>
+        <td>{{ data.sgid|striptags }}</td> 
+        <td>{{ data.sgid|striptags }}</td> 
+        <td>{{ data.sgid|striptags }}</td>
+        <td>{{ data.sgid|striptags }}</td> 
         
         
 
@@ -91,3 +102,26 @@
         {% endautoescape %}
     {% endfor %}    
 {% endblock %}
+    
+ {% block pagination %}
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="pagination">
+                    
+                <li {% if cletter == null %}class="active"{% endif %}><a href="{{ path(path, {'all': 'alle'}) }}">ALLE</a></li>   
+                
+                {% for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'] %}
+                    
+                    {% if letter == cletter %}     
+                    <li class="active"><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>      
+                    {% else %}
+                    <li><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>                    
+                    {% endif %}
+                    
+                {% endfor %}
+                
+                <li class="active"><a href="{{ path(path, {'letter': cletter}) }}">{{ tabledata|length }} Personen wurden gefunden</a></li>
+                </ul>         
+            </div>           
+        </div>        
+    {% endblock %}    
