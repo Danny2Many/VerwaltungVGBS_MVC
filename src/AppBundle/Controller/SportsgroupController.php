@@ -13,7 +13,7 @@ use AppBundle\Entity\BSSACert;
 
 class SportsgroupController extends Controller {
     /**
-    * @Route("/sportgruppen/{adminyear}/{letter}", defaults={"letter"="A", "adminyear"=2016}, name="sportsgroup_home" , requirements={"letter": "[A-Z]", "adminyear": "[1-9][0-9]{3}"})
+    * @Route("/sportgruppen/{adminyear}/{letter}", defaults={"letter"="alle", "adminyear"=2016}, name="sportsgroup_home" , requirements={"letter": "[A-Z]|alle", "adminyear": "[1-9][0-9]{3}"})
     */ 
      public function indexAction (Request $request, $letter, $adminyear){
      
@@ -42,7 +42,11 @@ class SportsgroupController extends Controller {
                     ->andWhere('ditto.recorded<=:adminyear')
                     ->setParameter('adminyear',$now);
     }
-    $choices=array('Sportgruppennr.' => 'sgid');
+    $choices=array('Sportgruppennr.' => 'sgid',
+                   'Gruppenbezeichnung' => 'token',
+                   'Sportgruppe/Info' => 'name'
+        
+        );
     
     $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('sportsgroup_home')));
     $searchform->handleRequest($request);
@@ -60,7 +64,7 @@ class SportsgroupController extends Controller {
     
        
     }
-     else
+     else if ($letter !='alle')
     {
         $qb['Nichtmitglieder\NonMemSportsgroup']->andWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->like('ditto.name', ':letter'))
                   ->setParameter('letter',$letter.'%');
@@ -86,7 +90,7 @@ class SportsgroupController extends Controller {
     
     $sportsgroupdependentlist=[];
     foreach ($bssacertlist as $bs){
-        $sportsgroupdependentlist[$rc[0]->getBssaid()]['terminationdate'][]=$bs;        
+        $sportsgroupdependentlist[$bs->getBssaid()]['terminationdate'][]=$bs;        
     }
      
      
@@ -103,7 +107,7 @@ class SportsgroupController extends Controller {
          ));
 }
     /**
-     * @Route("/sportgruppen/anlegen/{letter}", defaults={"letter": "A"}, name="addsportsgroup", requirements={"letter": "[A-Z]"})
+     * @Route("/sportgruppen/anlegen/{adminyear}/{letter}", defaults={"letter": "alle", "adminyear": 2016}, name="addsportsgroup", requirements={"letter": "[A-Z]|alle" ,"adminyear": "[1-9][0-9]{3}"})
      * 
      */
      public function addsportsgroupAction (Request $request, $letter){
