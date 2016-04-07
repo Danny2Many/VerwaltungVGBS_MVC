@@ -42,7 +42,7 @@ protected $sportsgroup;
 protected $nmemid;    
 
 public function __toString(){
-    return $this->nmemid;
+    return (string) $this->nmemid;
 }
     
 /**

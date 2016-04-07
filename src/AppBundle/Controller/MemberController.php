@@ -214,7 +214,9 @@ class MemberController extends Controller
         
 
         $im=  $this->get('app.index_manager')
+
                    ->setEntityName('Member');
+
 
         $memid=$im->getCurrentIndex();
         $member->setMemid($memid);
@@ -226,13 +228,15 @@ class MemberController extends Controller
       
         $addmemform = $this->createForm(AddMemberType::class, $member);
         $addmemform->handleRequest($request);
-        
+     
         
 
         //if the form is valid -> persist it to the database
         if($addmemform->isSubmitted() && $addmemform->isValid()){
 
+
             
+
         
 
             

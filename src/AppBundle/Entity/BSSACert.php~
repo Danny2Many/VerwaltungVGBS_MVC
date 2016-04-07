@@ -1,0 +1,52 @@
+<?php
+namespace AppBundle\Entity;
+use Doctrine\ORM\Mapping as ORM;
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="BSSACert")
+ * @ORM\HasLifecycleCallbacks()
+ */
+class BSSACert {
+ 
+/**
+* @ORM\Id
+* @ORM\Column(type="string")  
+*/    
+protected $bssaid;
+
+/**
+* @ORM\Column(type="date")  
+*/ 
+protected $terminationdate;
+
+/**
+* @ORM\Column(type="date")  
+*/ 
+protected $startdate;
+/**
+* @ORM\Column(type="string")  
+*/ 
+protected $groupnr;
+
+/**
+* @ORM\Column(type="date")  
+*/ 
+protected $bssacertnr;
+
+/**
+* @ORM\Id
+* @ORM\Column(type="string")  
+*/
+protected $recorded;
+
+/**
+* @ORM\Column(type="date")
+*/
+protected $deleted;
+
+
+
+
+    
+ 
+}
