@@ -293,19 +293,19 @@ class TrainerController extends Controller
         if($edittrainerform->isSubmitted() && $edittrainerform->isValid()){
   
           foreach ($originallicences as $licence) {
-            if (false === $trainer->getLicence()->contains($licence)) {   
+            if (false === in_array($licence, $trainer->getLicence())) {   
                 $manager->remove($licence);
             }
         }
             
             foreach ($originalphonenr as $phonenr) {
-            if (false === $trainer->getPhonenumber()->contains($phonenr)) {         
+            if (false === in_array($phonenr, $trainer->getPhonenumber())) {         
                 $manager->remove($phonenr);
             }
         }
         
             foreach ($originalthemes as $theme) {
-            if (false === $trainer->getTheme()->contains($theme)) {         
+            if (false === in_array($theme, $trainer->getTheme())) {         
                 $manager->remove($theme);
             }
         }
