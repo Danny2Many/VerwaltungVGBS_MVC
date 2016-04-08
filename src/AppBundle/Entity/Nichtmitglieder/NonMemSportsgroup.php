@@ -68,12 +68,7 @@ class NonMemSportsgroup {
      */
     protected $roomid;
     
-    /**
-    * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Trainer\Trainer")
-    * @ORM\JoinTable(name="Trainer_NonMemSportsgroupSub",
-    * joinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")},
-    * inverseJoinColumns={@ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")})
-    */ 
+   
     protected $trainerid;
     
     /**
@@ -83,12 +78,7 @@ class NonMemSportsgroup {
      */
     protected $token;
     
-   /**
-    * @ORM\Id
-    * @ORM\Column(type="integer")
-    * @ORM\OneToOne(targetEntity="BSSACert", inversedBy="NonMemSportsgroup")
-    * @ORM\JoinColumn(name="bssaid", referencedColumnName="bssaid")
-    */    
+     
     protected $bssaid;
     /**
      * @ORM\Id
