@@ -90,8 +90,14 @@ class SportsgroupController extends Controller {
     
     $sportsgroupdependentlist=[];
     foreach ($bssacertlist as $bs){
-        $sportsgroupdependentlist[$bs->getBssaid()]['terminationdate'][]=$bs;        
+        $sportsgroupdependentlist[$bs->getBssaid()]['terminationdate'][]=$bs;  
+        $sportsgroupdependentlist[$bs->getBssaid()]['startdate'][]=$bs; 
+        $sportsgroupdependentlist[$bs->getBssaid()]['recorded'][]=$bs; 
+        $sportsgroupdependentlist[$bs->getBssaid()]['groupnr'][]=$bs; 
+        $sportsgroupdependentlist[$bs->getBssaid()]['bssacertnr'][]=$bs; 
     }
+    
+   
      
      
     return $this->render(

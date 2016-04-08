@@ -83,6 +83,13 @@ class NonMemSportsgroup {
      */
     protected $token;
     
+   /**
+    * @ORM\Id
+    * @ORM\Column(type="integer")
+    * @ORM\OneToOne(targetEntity="BSSACert", inversedBy="NonMemSportsgroup")
+    * @ORM\JoinColumn(name="bssaid", referencedColumnName="bssaid")
+    */    
+    protected $bssaid;
     /**
      * @ORM\Id
     * @ORM\Column(type="string")
@@ -421,5 +428,53 @@ class NonMemSportsgroup {
         $this->sgid = $sgid;
 
         return $this;
+    }
+
+    /**
+     * Add trainerid
+     *
+     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
+     *
+     * @return NonMemSportsgroup
+     */
+    public function addTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
+    {
+        $this->trainerid[] = $trainerid;
+
+        return $this;
+    }
+
+    /**
+     * Remove trainerid
+     *
+     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
+     */
+    public function removeTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
+    {
+        $this->trainerid->removeElement($trainerid);
+    }
+
+    /**
+     * Set bssaid
+     *
+     * @param integer $bssaid
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setBssaid($bssaid)
+    {
+        $this->bssaid = $bssaid;
+
+        return $this;
+    }
+
+    /**
+     * Get bssaid
+     *
+     * @return integer
+     */
+    public function getBssaid()
+    {
+        return $this->bssaid;
     }
 }
