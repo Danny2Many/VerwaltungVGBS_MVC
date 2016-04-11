@@ -42,12 +42,12 @@ class TrainerController extends Controller
         foreach($dependencies as $dependent => $idprefix){
      
             $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.recorded'))
+            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
                     ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
             
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-            $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
-                    ->andWhere('ditto.recorded<=:adminyear')
+            $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
+                    ->andWhere('ditto.validfrom<=:adminyear')
                     ->setParameter('adminyear',$adminyear.'-12-31');
      
     }
@@ -235,14 +235,14 @@ class TrainerController extends Controller
       
             
             $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.recorded'))
+            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
                                 ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
 
 
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-            $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
+            $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
                             ->andWhere('ditto.trainerid=:ID')
-                            ->andWhere('ditto.recorded<=:adminyear')
+                            ->andWhere('ditto.validfrom<=:adminyear')
                             ->setParameter('ID',$ID)
                             ->setParameter('adminyear',$adminyear.'-12-31');
         }

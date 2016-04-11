@@ -30,7 +30,7 @@ class Trainer extends PersonalData {
      * @ORM\Id
      * @ORM\Column(type="string")
      */
-    private $recorded;
+    private $validfrom;
     
     /**
      * @ORM\Column(type="string")
@@ -61,7 +61,7 @@ class Trainer extends PersonalData {
     /**
      * @ORM\Column(type="date")
      */
-    protected $deleted;
+    protected $validto;
     
     
 
@@ -324,45 +324,45 @@ class Trainer extends PersonalData {
    /**
     * @ORM\PrePersist
     */
-    public function setRecorded()
+    public function setValidfrom()
     {
         $now= new \DateTime();
-        $this->recorded = $now->format('Y-m-d');
+        $this->validfrom = $now->format('Y');
 
         return $this;
     }
 
     /**
-     * Get recorded
+     * Get validfrom
      *
      * @return string
      */
-    public function getRecorded()
+    public function getValidfrom()
     {
-        return $this->recorded;
+        return $this->validfrom;
     }
 
     /**
-     * Set deleted
+     * Set validto
      *
-     * @param \DateTime $deleted
+     * @param \DateTime $validto
      *
      * @return Trainer
      */
-    public function setDeleted( $deleted)
+    public function setValidto( $validto)
     {
-        $this->deleted = $deleted;
+        $this->validto = $validto;
 
         return $this;
     }
 
     /**
-     * Get deleted
+     * Get validto
      *
      * @return \DateTime
      */
     public function getDeleted()
     {
-        return $this->deleted;
+        return $this->validto;
     }
 }

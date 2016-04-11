@@ -41,12 +41,12 @@ class TrainerPhoneNumber {
     /**
      * @ORM\Column(type="date")
      */
-    protected $deleted;
+    protected $validto;
     
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="date")
      */
-    protected $recorded;
+    protected $validfrom;
     
 
   
@@ -102,49 +102,49 @@ class TrainerPhoneNumber {
 
  
     /**
-     * Set deleted
+     * Set validto
      *
-     * @param \DateTime $deleted
+     * @param \DateTime $validto
      *
      * @return TrainerPhoneNumber
      */
-    public function setDeleted($deleted)
+    public function setValidto($validto)
     {
-        $this->deleted = $deleted;
+        $this->deleted = $validto;
 
         return $this;
     }
 
     /**
-     * Get deleted
+     * Get validto
      *
      * @return \DateTime
      */
-    public function getDeleted()
+    public function getValidto()
     {
-        return $this->deleted;
+        return $this->validto;
     }
 
     /**
      * @ORM\PrePersist
      */
-    public function setRecorded()
+    public function setValidfrom()
     {
         $now= new \DateTime();
         
-        $this->recorded = $now->format('Y-m-d');
+        $this->validfrom = $now->format('Y');
 
         return $this;
     }
 
     /**
-     * Get recorded
+     * Get validfrom
      *
      * @return string
      */
-    public function getRecorded()
+    public function getValidfrom()
     {
-        return $this->recorded;
+        return $this->validfrom;
     }
     
     /**
