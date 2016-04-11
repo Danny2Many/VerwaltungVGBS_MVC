@@ -82,14 +82,14 @@ class NonMemSportsgroup {
     protected $bssaid;
     /**
      * @ORM\Id
-    * @ORM\Column(type="string")
+    * @ORM\Column(type="date")
     */
-    protected $recorded;
+    protected $validfrom;
 
     /**
     * @ORM\Column(type="date")
     */
-    protected $deleted;
+    protected $validto;
 
 
     /**
@@ -466,5 +466,54 @@ class NonMemSportsgroup {
     public function getBssaid()
     {
         return $this->bssaid;
+    }
+
+    /**
+     * Set validfrom
+     *
+     * @param \DateTime $validfrom
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setValidfrom($validfrom)
+    {
+        $now= new \DateTime();
+        $this->validform = $now->format('Y');
+
+        return $this;
+    }
+
+    /**
+     * Get validfrom
+     *
+     * @return \DateTime
+     */
+    public function getValidfrom()
+    {
+        return $this->validfrom;
+    }
+
+    /**
+     * Set validto
+     *
+     * @param \DateTime $validto
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setValidto($validto)
+    {
+        $this->validto = $validto;
+
+        return $this;
+    }
+
+    /**
+     * Get validto
+     *
+     * @return \DateTime
+     */
+    public function getValidto()
+    {
+        return $this->validto;
     }
 }

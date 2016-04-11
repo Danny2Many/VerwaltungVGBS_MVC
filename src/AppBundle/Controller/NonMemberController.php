@@ -42,16 +42,16 @@ class NonMemberController extends Controller {
     $qb=[];
       foreach($dependencies as $dependent => $idprefix){
    
-        //building the subquery: SELECT max(recorded) FROM % AS dittosub WHERE dittosub.type = ditto.type
+        //building the subquery: SELECT max(validfrom) FROM % AS dittosub WHERE dittosub.type = ditto.type
      $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-     $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.recorded'))
+     $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
                           ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
                           
         
-     //building the query: SELECT ditto FROM % AS ditto WHERE ditto.recorded=( subquery ) AND ditto.recorded<=$adminyear 
+     //building the query: SELECT ditto FROM % AS ditto WHERE ditto.validfrom=( subquery ) AND ditto.validfrom<=$adminyear 
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-     $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
-                    ->andWhere('ditto.recorded<=:adminyear')
+     $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
+                    ->andWhere('ditto.validfrom<=:adminyear')
                     ->setParameter('adminyear',$now);
     }
     
@@ -222,8 +222,8 @@ class NonMemberController extends Controller {
     foreach($dependencies as $dependent => $idprefix){
             
     $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-    $qb[$dependent]->select(array('ditto', $qb[$dependent]->expr()->max('ditto.recorded')))
-                ->where('ditto.recorded <= :year')
+    $qb[$dependent]->select(array('ditto', $qb[$dependent]->expr()->max('ditto.validfrom')))
+                ->where('ditto.validfrom <= :year')
                 ->andWhere('ditto.nmemid = :nmemid')
                 ->groupBy('ditto.'.$idprefix.'id')
                 ->setParameter('year', $adminyear.'-12-31')

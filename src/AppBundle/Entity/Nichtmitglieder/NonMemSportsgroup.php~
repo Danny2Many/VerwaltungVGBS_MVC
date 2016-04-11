@@ -68,12 +68,7 @@ class NonMemSportsgroup {
      */
     protected $roomid;
     
-    /**
-    * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Trainer\Trainer")
-    * @ORM\JoinTable(name="Trainer_NonMemSportsgroupSub",
-    * joinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")},
-    * inverseJoinColumns={@ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")})
-    */ 
+   
     protected $trainerid;
     
     /**
@@ -83,22 +78,18 @@ class NonMemSportsgroup {
      */
     protected $token;
     
-    /**
-     * @ORM\Id
-     * @ORM\Column(name="bssaid", type="integer")
-     * @ORM\OneToOne(targetEntity="BSSACert", mappedBy="NonMemSportsgroup")
-     */
+     
     protected $bssaid;
     /**
      * @ORM\Id
-    * @ORM\Column(type="string")
+    * @ORM\Column(type="date")
     */
-    protected $recorded;
+    protected $validfrom;
 
     /**
     * @ORM\Column(type="date")
     */
-    protected $deleted;
+    protected $validto;
 
 
     /**
@@ -451,5 +442,29 @@ class NonMemSportsgroup {
     public function removeTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
     {
         $this->trainerid->removeElement($trainerid);
+    }
+
+    /**
+     * Set bssaid
+     *
+     * @param integer $bssaid
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setBssaid($bssaid)
+    {
+        $this->bssaid = $bssaid;
+
+        return $this;
+    }
+
+    /**
+     * Get bssaid
+     *
+     * @return integer
+     */
+    public function getBssaid()
+    {
+        return $this->bssaid;
     }
 }

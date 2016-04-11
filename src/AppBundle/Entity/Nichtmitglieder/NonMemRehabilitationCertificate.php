@@ -50,20 +50,13 @@ class NonMemRehabilitationCertificate {
 
     /**
      * 
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="date")
      * 
      */
-    protected $recorded;
+    protected $validfrom;
     
     
-    /**
-     * 
-     * @ORM\Column(type="string")
-     * 
-     */
-    protected $deleted;
-    
-    
+  
     
     /**
      * Get rcid
@@ -229,4 +222,31 @@ class NonMemRehabilitationCertificate {
     {
         return $this->deleted;
     }
+
+    /**
+     * Set validfrom
+     *
+     * @param \DateTime $validfrom
+     *
+     * @return NonMemRehabilitationCertificate
+     */
+    public function setValidfrom($validfrom)
+    {
+        $now= new \DateTime();
+        $this->validform = $now->format('Y');
+
+        return $this;
+    }
+
+    /**
+     * Get validfrom
+     *
+     * @return \DateTime
+     */
+    public function getValidfrom()
+    {
+        return $this->validfrom;
+    }
+
+   
 }
