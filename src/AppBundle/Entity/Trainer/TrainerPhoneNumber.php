@@ -39,12 +39,12 @@ class TrainerPhoneNumber {
     protected $phonenumber;
     
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="string")
      */
     protected $validto;
     
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="string")
      */
     protected $validfrom;
     

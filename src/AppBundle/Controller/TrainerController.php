@@ -41,6 +41,18 @@ class TrainerController extends Controller
         $qb= [];
         foreach($dependencies as $dependent => $idprefix){
      
+            if ($dependent=='Trainer\TrainerLicence'){
+                 $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
+            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.issuedate'))
+                    ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
+            
+            $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
+            $qb[$dependent]->where('ditto.issuedate=('.$qb[$dependent.'sub']->getDQL().')')
+                    ->andWhere('ditto.issuedate<=:adminyear')
+                    ->setParameter('adminyear',$adminyear.'-12-31');
+            }else
+            {
+            
             $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
             $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
                     ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
@@ -48,7 +60,8 @@ class TrainerController extends Controller
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
             $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
                     ->andWhere('ditto.validfrom<=:adminyear')
-                    ->setParameter('adminyear',$adminyear.'-12-31');
+                    ->setParameter('adminyear',$adminyear);
+            }
      
     }
         
@@ -221,7 +234,7 @@ class TrainerController extends Controller
 //-------------------------------------------------------------------------------------------------   
     
     /**
-     * @Route("/trainer/bearbeiten/{adminyear}/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"letter": "[A-Z]"}, name="edittrainer")
+     * @Route("/trainer/bearbeiten/{adminyear}/{letter}/{ID}", defaults={"letter": "alle"}, requirements={"letter": "[A-Z]|alle"}, name="edittrainer")
      * 
      */   
     public function edittrainerAction(Request $request, $adminyear, $ID, $letter)
@@ -232,7 +245,22 @@ class TrainerController extends Controller
 
         $qb= [];
         foreach($dependencies as $dependent => $idprefix){
-      
+            
+      if ($dependent=='Trainer\TrainerLicence'){
+          
+            $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
+            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.issuedate'))
+                                ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
+
+
+            $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
+            $qb[$dependent]->where('ditto.issuedate=('.$qb[$dependent.'sub']->getDQL().')')
+                            ->andWhere('ditto.trainerid=:ID')
+                            ->andWhere('ditto.issuedate<=:adminyear')
+                            ->setParameter('ID',$ID)
+                            ->setParameter('adminyear',$adminyear.'-12-31');
+      }else
+      {
             
             $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
             $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
@@ -245,6 +273,7 @@ class TrainerController extends Controller
                             ->andWhere('ditto.validfrom<=:adminyear')
                             ->setParameter('ID',$ID)
                             ->setParameter('adminyear',$adminyear.'-12-31');
+      }
         }
         
         $trainer=$qb['Trainer\Trainer']->getQuery()->getSingleResult();
