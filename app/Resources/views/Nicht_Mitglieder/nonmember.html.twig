@@ -152,7 +152,7 @@
             
             <td>{% for RC in expiredrehab %}                  
                         
-                    {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>
+                    {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("Y") }}</strong>-{{RC.rehabunits }}<br>
                         
                          {% else %}
                          {{ "-" }}

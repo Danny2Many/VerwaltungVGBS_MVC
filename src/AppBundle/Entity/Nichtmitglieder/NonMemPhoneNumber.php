@@ -43,12 +43,9 @@ class NonMemPhoneNumber {
     /**
     * @ORM\Column(type="string")
     */
-    protected $recorded;
+    protected $validfrom;
 
-    /**
-    * @ORM\Column(type="string")
-    */
-    protected $deleted;
+  
 
 
 
@@ -178,4 +175,28 @@ class NonMemPhoneNumber {
     {
         return $this->pnid;
     }
+
+     /**
+    * @ORM\PrePersist
+    */
+    public function setValidfrom($validfrom)
+    {
+         $now= new \DateTime();
+        
+        $this->validfrom = $now->format('Y-m-d');
+
+        return $this;
+    }
+
+    /**
+     * Get validfrom
+     *
+     * @return \DateTime
+     */
+    public function getValidfrom()
+    {
+        return $this->validfrom;
+    }
+
+ 
 }

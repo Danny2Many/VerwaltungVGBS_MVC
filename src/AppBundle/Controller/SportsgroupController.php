@@ -30,16 +30,16 @@ class SportsgroupController extends Controller {
     $qb=[];
        foreach($dependencies as $dependent => $idprefix){
    
-        //building the subquery: SELECT max(recorded) FROM % AS dittosub WHERE dittosub.type = ditto.type
+        //building the subquery: SELECT max(validfrom) FROM % AS dittosub WHERE dittosub.type = ditto.type
      $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-     $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.recorded'))
+     $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
                           ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
                           
         
-     //building the query: SELECT ditto FROM % AS ditto WHERE ditto.recorded=( subquery ) AND ditto.recorded<=$adminyear 
+     //building the query: SELECT ditto FROM % AS ditto WHERE ditto.validfrom=( subquery ) AND ditto.validfrom<=$adminyear 
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-     $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
-                    ->andWhere('ditto.recorded<=:adminyear')
+     $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
+                    ->andWhere('ditto.validfrom<=:adminyear')
                     ->setParameter('adminyear',$now);
     }
     $choices=array('Sportgruppennr.' => 'sgid',
@@ -90,8 +90,14 @@ class SportsgroupController extends Controller {
     
     $sportsgroupdependentlist=[];
     foreach ($bssacertlist as $bs){
-        $sportsgroupdependentlist[$bs->getBssaid()]['terminationdate'][]=$bs;        
+        $sportsgroupdependentlist[$bs->getBssaid()]['terminationdate'][]=$bs;  
+        $sportsgroupdependentlist[$bs->getBssaid()]['startdate'][]=$bs; 
+        $sportsgroupdependentlist[$bs->getBssaid()]['validfrom'][]=$bs; 
+        $sportsgroupdependentlist[$bs->getBssaid()]['groupnr'][]=$bs; 
+        $sportsgroupdependentlist[$bs->getBssaid()]['bssacertnr'][]=$bs; 
     }
+    
+   
      
      
     return $this->render(

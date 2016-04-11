@@ -33,6 +33,9 @@
     <th>Uhrzeit</th>
     <th>Räumlichkeit</th>
     <th>Gruppenbezeichnung</th>
+    <th>Voranmeldungen</th>
+    <th>Name ÜL</th>
+    <th>Vetretungsmöglichkeit</th>
     <th  class="overhead1"><font color=""> Mitglieder/Kurs-TN</font></th>
     <th class="overhead1">gesamt</th>
     <th class="overhead1">weiblich</th>
@@ -40,9 +43,7 @@
     <th class="overhead2"> <font color="">Kapazität</font></th>
     <th class="overhead2">gesamt</th>
     <th class="overhead2">offen</th>
-    <th>Voranmeldungen</th>
-    <th>Name ÜL</th>
-    <th>Vetretungsmöglichkeit</th>
+    
     <th class="overhead1">BSSA_Zertifizierung</th>
     <th class="overhead1">Laufzeit bis</th>
     <th class="overhead1">Erstanmeldung</th>
@@ -67,14 +68,7 @@
         <td>{{ data.info|striptags }}</td> 
         <td>{{ data.time|date("h:i") }}</td>
         <td>{{ data.roomid|striptags }}</td> 
-        <td>{{ data.token|striptags }}</td> 
-        <td bgcolor="#00cc99"></td>
-        <td>{{ data.sgid|striptags }}</td>
-        <td>{{ data.sgid|striptags }}</td> 
-        <td>{{ data.sgid|striptags }}</td>         
-        <td bgcolor="#e69900"></td>        
-        <td>{{ data.sgid|striptags }}</td> 
-        <td>{{ data.sgid|striptags }}</td>        
+        <td>{{ data.token|striptags }}</td>
         <td>{{ data.sgid|striptags }}</td>
         <td>{% if data.trainerid is empty %}
             {{ "-" }}
@@ -84,13 +78,76 @@
             {% endfor %}
             {% endif %}</td>
         <td></td>
-        <td bgcolor="#00cc99"></td>
-        <td>{{ data.sgid|striptags }}</td> 
-        <td>{{ data.sgid|striptags }}</td> 
-        <td>{{ data.sgid|striptags }}</td> 
+        <td bgcolor="#5fa8ec"></td>
         <td>{{ data.sgid|striptags }}</td>
         <td>{{ data.sgid|striptags }}</td> 
-        <td bgcolor="#e69900"></td>
+        <td>{{ data.sgid|striptags }}</td>         
+        <td bgcolor="#A9D0F5"></td>        
+        <td>{{ data.sgid|striptags }}</td> 
+        <td>{{ data.sgid|striptags }}</td>        
+        
+        <td bgcolor="#5fa8ec"></td>
+        {% if sportsgroupdependentlist[data.sgid]['terminationdate'] is defined %}
+        {% set terminationdate =sportsgroupdependentlist[data.sgid]['terminationdate'] %}
+        {% else %}
+          {% set terminationdate ='' %}  
+        {% endif %}
+        <td>{% for TD in terminationdate if date(TD.terminationdate) > date() %}                     
+                {{'TD'}}{{loop.index}}-<strong>{{TD.terminationdate|date("d.m.Y") }}</strong>-{{TD.terminationdate }}<br>
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %} 
+           
+        {% if sportsgroupdependentlist[data.sgid]['startdate'] is defined %}
+            {% set startdate =sportsgroupdependentlist[data.sgid]['startdate'] %}
+        {% else %}
+          {% set startdate ='' %}  
+        {% endif %}
+        <td>{% for SD in startdate if date(SD.startdate) > date() %}                     
+                {{'TD'}}{{loop.index}}-<strong>{{SD.startdate|date("d.m.Y") }}</strong>-{{SD.startdate }}<br>
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %} 
+           
+        {% if sportsgroupdependentlist[data.sgid]['recorded'] is defined %}
+            {% set recorded =sportsgroupdependentlist[data.sgid]['recorded'] %}
+        {% else %}
+          {% set recorded ='' %}  
+        {% endif %}
+        <td>{% for RE in recorded if date(RE.recorded) > date() %}                     
+                {{'TD'}}{{loop.index}}-<strong>{{RE.recorded|date("d.m.Y") }}</strong>-{{RE.recorded }}<br>
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %}  
+           
+        {% if sportsgroupdependentlist[data.sgid]['groupnr'] is defined %}
+            {% set groupnr =sportsgroupdependentlist[data.sgid]['groupnr'] %}
+        {% else %}
+          {% set groupnr ='' %}  
+        {% endif %}
+        <td>{% for GN in groupnr if date(TD.groupnr) > date() %}                     
+                {{'TD'}}{{loop.index}}-<strong>{{TD.groupnr }}</strong>-{{TD.groupnr }}<br>
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %}  
+            
+        {% if sportsgroupdependentlist[data.sgid]['bssacertnr'] is defined %}
+            {% set bssacertnr =sportsgroupdependentlist[data.sgid]['bssacertnr'] %}
+        {% else %}
+          {% set bssacertnr ='' %}  
+        {% endif %}
+        <td>{% for TD in bssacertnr if date(TD.bssacertnr) > date() %}                     
+                {{'TD'}}{{loop.index}}-<strong>{{TD.bssacertnr }}</strong>-{{TD.bssacertnr }}<br>
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %} 
+        {#<td>{{ data.bssaid.StartDate|striptags }}</td> 
+        <td>{{ data.bssaid.Recorded|striptags }}</td> 
+        <td>{{ data.bssaid.GroupNr|striptags }}</td>
+        <td>{{ data.bssaid.BSSACertNr|striptags }}</td> #}
+        
+            
+        <td bgcolor="#A9D0F5"></td>
         <td>{{ data.sgid|striptags }}</td> 
         <td>{{ data.sgid|striptags }}</td> 
         <td>{{ data.sgid|striptags }}</td>

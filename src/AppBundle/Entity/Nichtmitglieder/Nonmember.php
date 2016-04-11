@@ -1,7 +1,7 @@
 <?php
 
 namespace AppBundle\Entity\Nichtmitglieder;
-
+use Doctrine\DBAL\Types\StringType;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\HealthData;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -37,12 +37,13 @@ protected $sportsgroup;
 
 /**
 * @ORM\Id
-* @ORM\Column(type="string")  
+* @ORM\Column(type="integer")  
 */
 protected $nmemid;    
 
 public function __toString(){
     return (string) $this->nmemid;
+   
 }
     
 /**
@@ -76,12 +77,12 @@ protected $additionalinfo;
 * @ORM\Id
 * @ORM\Column(type="string")
 */
-protected $recorded;
+protected $validfrom;
 
 /**
 * @ORM\Column(type="date")
 */
-protected $deleted;
+protected $validto;
 
 /**
 * @ORM\Column(type="binary")
@@ -102,7 +103,7 @@ protected $deleted;
     /**
      * Get nmemid
      *
-     * @return string
+     * @return integer
      */
     public function getNMemID()
     {
@@ -112,7 +113,7 @@ protected $deleted;
      /**
      * Set nmemid
      *
-     * @param string $nmemid
+     * @param integer $nmemid
      *
      * @return Nonmember
      */
@@ -409,53 +410,53 @@ public function setPhonenumber($phonenumber)
 
 
   
-
-    /**
-     * Get recorded
-     *
-     * @return string
-     */
-    public function getRecorded()
-    {
-        return $this->recorded;
-    }
-
-    /**
-     * Set deleted
-     *
-     * @param \DateTime $deleted
-     *
-     * @return Nonmember
-     */
-    public function setDeleted($deleted)
-    {
-        $this->deleted = $deleted;
-
-        return $this;
-    }
-
-    /**
-     * Get deleted
-     *
-     * @return \DateTime
-     */
-    public function getDeleted()
-    {
-        return $this->deleted;
-    }
-
- 
-
-     /**
-    * @ORM\PrePersist
-    */
-    public function setRecorded($recorded)
-    {   
-        $now= new \DateTime();
-        $this->recorded = $now->format('Y-m-d');
-
-        return $this;
-    }
+//
+//    /**
+//     * Get recorded
+//     *
+//     * @return string
+//     */
+//    public function getRecorded()
+//    {
+//        return $this->recorded;
+//    }
+//
+//    /**
+//     * Set deleted
+//     *
+//     * @param \DateTime $deleted
+//     *
+//     * @return Nonmember
+//     */
+//    public function setDeleted($deleted)
+//    {
+//        $this->deleted = $deleted;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get deleted
+//     *
+//     * @return \DateTime
+//     */
+//    public function getDeleted()
+//    {
+//        return $this->deleted;
+//    }
+//
+// 
+//
+//     /**
+//    * @ORM\PrePersist
+//    */
+//    public function setRecorded($recorded)
+//    {   
+//        $now= new \DateTime();
+//        $this->recorded = $now->format('Y-m-d');
+//
+//        return $this;
+//    }
 
     /**
      * Set newsletter
@@ -482,4 +483,48 @@ public function setPhonenumber($phonenumber)
     }
     
     
+/**
+   * @ORM\PrePersist
+     */
+    public function setValidfrom($validfrom)
+    {
+        $now= new \DateTime();
+        $this->validfrom = $now->format('Y');
+
+        return $this;
+    }
+
+    /**
+     * Get validfrom
+     *
+     * @return string
+     */
+    public function getValidfrom()
+    {
+        return $this->validfrom;
+    }
+
+    /**
+     * Set validto
+     *
+     * @param \DateTime $validto
+     *
+     * @return Nonmember
+     */
+    public function setValidto($validto)
+    {
+        $this->validto = $validto;
+
+        return $this;
+    }
+
+    /**
+     * Get validto
+     *
+     * @return \DateTime
+     */
+    public function getValidto()
+    {
+        return $this->validto;
+    }
 }

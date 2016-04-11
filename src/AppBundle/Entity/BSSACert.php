@@ -7,11 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks()
  */
 class BSSACert {
- 
-/**
+ /**
 * @ORM\Id
-* @ORM\Column(type="string")  
-*/    
+* @ORM\Column(name="bssaid", type="integer")
+* @ORM\OneToOne(targetEntity="NonMemSportsgroup", mappedBy="BSSACert")
+*/
 protected $bssaid;
 
 /**
@@ -53,7 +53,7 @@ protected $deleted;
     /**
      * Set bssaid
      *
-     * @param string $bssaid
+     * @param integer $bssaid
      *
      * @return BSSACert
      */
@@ -67,7 +67,7 @@ protected $deleted;
     /**
      * Get bssaid
      *
-     * @return string
+     * @return integer
      */
     public function getBssaid()
     {
