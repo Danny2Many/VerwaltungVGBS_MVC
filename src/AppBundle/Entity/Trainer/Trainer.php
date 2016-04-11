@@ -59,7 +59,7 @@ class Trainer extends PersonalData {
     protected $state;
     
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="string")
      */
     protected $validto;
     
@@ -345,7 +345,7 @@ class Trainer extends PersonalData {
     /**
      * Set validto
      *
-     * @param \DateTime $validto
+     * @param string $validto
      *
      * @return Trainer
      */
@@ -359,9 +359,9 @@ class Trainer extends PersonalData {
     /**
      * Get validto
      *
-     * @return \DateTime
+     * @return string
      */
-    public function getDeleted()
+    public function getValidto()
     {
         return $this->validto;
     }

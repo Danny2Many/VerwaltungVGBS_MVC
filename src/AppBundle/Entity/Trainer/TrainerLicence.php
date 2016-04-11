@@ -47,15 +47,15 @@ class TrainerLicence {
      */
     protected $expirationdate;
     
-    /**
-     * @ORM\Column(type="date")
-     */
-    protected $deleted;
-    
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $recorded;
+//    /**
+//     * @ORM\Column(type="date")
+//     */
+//    protected $deleted;
+//    
+//    /**
+//     * @ORM\Column(type="string")
+//     */
+//    protected $recorded;
 
     /**
      * Get liid
@@ -225,48 +225,48 @@ class TrainerLicence {
         return $this;
     }
 
-    /**
-     * Set deleted
-     *
-     * @param \DateTime $deleted
-     *
-     * @return TrainerLicence
-     */
-    public function setDeleted($deleted)
-    {
-        $this->deleted = $deleted;
-
-        return $this;
-    }
-
-    /**
-     * Get deleted
-     *
-     * @return \DateTime
-     */
-    public function getDeleted()
-    {
-        return $this->deleted;
-    }
-
-    /**
-     * @ORM\PrePersist
-     */
-    public function setRecorded()
-    {
-        $now= new \DateTime();
-        $this->recorded = $now->format('Y-m-d');
-
-        return $this;
-    }
-
-    /**
-     * Get recorded
-     *
-     * @return \DateTime
-     */
-    public function getRecorded()
-    {
-        return $this->recorded;
-    }
+//    /**
+//     * Set deleted
+//     *
+//     * @param \DateTime $deleted
+//     *
+//     * @return TrainerLicence
+//     */
+//    public function setDeleted($deleted)
+//    {
+//        $this->deleted = $deleted;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get deleted
+//     *
+//     * @return \DateTime
+//     */
+//    public function getDeleted()
+//    {
+//        return $this->deleted;
+//    }
+//
+//    /**
+//     * @ORM\PrePersist
+//     */
+//    public function setRecorded()
+//    {
+//        $now= new \DateTime();
+//        $this->recorded = $now->format('Y-m-d');
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get recorded
+//     *
+//     * @return \DateTime
+//     */
+//    public function getRecorded()
+//    {
+//        return $this->recorded;
+//    }
 }
