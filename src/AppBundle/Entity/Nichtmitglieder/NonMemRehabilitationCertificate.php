@@ -226,7 +226,7 @@ class NonMemRehabilitationCertificate {
      /**
     * @ORM\PrePersist
     */
-    public function setValidfrom($validfrom)
+    public function setValidfrom()
     {
         $now= new \DateTime();
         $this->validfrom = $now->format('Y');
@@ -237,7 +237,7 @@ class NonMemRehabilitationCertificate {
     /**
      * Get validfrom
      *
-     * @return \DateTime
+     * @return string
      */
     public function getValidfrom()
     {
