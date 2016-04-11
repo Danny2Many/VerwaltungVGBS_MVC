@@ -223,12 +223,12 @@ class NonMemberController extends Controller {
     foreach($dependencies as $dependent => $idprefix){
     
     $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-    $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.issuedate'))
+    $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
                                 ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');  
     
     $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
     $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
-                ->where('ditto.validfrom <= :adminyear')
+                ->andWhere('ditto.validfrom <= :adminyear')
                 ->andWhere('ditto.nmemid = :nmemid')     
                 ->setParameter('nmemid', $ID)
                 ->setParameter('adminyear',$adminyear.'-12-31');
@@ -300,10 +300,18 @@ class NonMemberController extends Controller {
             }
         }     
 
-        foreach ($originalphonenr as $phonenr) {
-            if (false === in_array($phonenr, $nonmember->getPhonenumber())) {         
-                $manager->remove($phonenr);
-            }
+        foreach($nonmember->getRehabilitationcertificate() as $rc){
+                if (false == $originalrehabs->contains($rc)) {
+                     $rc->setRcid(uniqid('rc'));
+                     $manager->persist($rc);              
+                }            
+        }
+        
+        foreach($nonmember->getPhonenumber() as $pn){
+                if (false == $originalphonenr->contains($pn)) {
+                     $pn->setPnid(uniqid('pn'));
+                     $manager->persist($pn);              
+                }            
         }
             $manager->persist($nonmember);          
             $manager->flush();     
