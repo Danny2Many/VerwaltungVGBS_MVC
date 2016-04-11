@@ -26,13 +26,13 @@ protected $phonenumber;
 //*/
 //protected $section;    
 //    
-    
-/**
-* @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup")
-* @ORM\JoinTable(name="NonMember_Sportsgroup",
-* joinColumns={@ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")},
-* inverseJoinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")})
-*/ 
+//    
+///**
+//* @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup")
+//* @ORM\JoinTable(name="NonMember_Sportsgroup",
+//* joinColumns={@ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")},
+//* inverseJoinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")})
+//*/ 
 protected $sportsgroup; 
 
 /**
@@ -80,7 +80,7 @@ protected $additionalinfo;
 protected $validfrom;
 
 /**
-* @ORM\Column(type="date")
+* @ORM\Column(type="string")
 */
 protected $validto;
 
@@ -486,7 +486,7 @@ public function setPhonenumber($phonenumber)
 /**
    * @ORM\PrePersist
      */
-    public function setValidfrom($validfrom)
+    public function setValidfrom()
     {
         $now= new \DateTime();
         $this->validfrom = $now->format('Y');
@@ -507,7 +507,7 @@ public function setPhonenumber($phonenumber)
     /**
      * Set validto
      *
-     * @param \DateTime $validto
+     * @param string $validto
      *
      * @return Nonmember
      */
@@ -521,7 +521,7 @@ public function setPhonenumber($phonenumber)
     /**
      * Get validto
      *
-     * @return \DateTime
+     * @return string
      */
     public function getValidto()
     {

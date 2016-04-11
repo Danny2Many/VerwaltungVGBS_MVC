@@ -82,12 +82,12 @@ class NonMemSportsgroup {
     protected $bssaid;
     /**
      * @ORM\Id
-    * @ORM\Column(type="date")
+    * @ORM\Column(type="string")
     */
     protected $validfrom;
 
     /**
-    * @ORM\Column(type="date")
+    * @ORM\Column(type="string")
     */
     protected $validto;
 
@@ -467,18 +467,14 @@ class NonMemSportsgroup {
     {
         return $this->bssaid;
     }
-
+  
     /**
-     * Set validfrom
-     *
-     * @param \DateTime $validfrom
-     *
-     * @return NonMemSportsgroup
-     */
-    public function setValidfrom($validfrom)
+    * @ORM\PrePersist
+    */
+    public function setValidfrom()
     {
         $now= new \DateTime();
-        $this->validform = $now->format('Y');
+        $this->validfrom = $now->format('Y');
 
         return $this;
     }
@@ -486,7 +482,7 @@ class NonMemSportsgroup {
     /**
      * Get validfrom
      *
-     * @return \DateTime
+     * @return string
      */
     public function getValidfrom()
     {
@@ -496,7 +492,7 @@ class NonMemSportsgroup {
     /**
      * Set validto
      *
-     * @param \DateTime $validto
+     * @param  string $validto
      *
      * @return NonMemSportsgroup
      */
@@ -510,7 +506,7 @@ class NonMemSportsgroup {
     /**
      * Get validto
      *
-     * @return \DateTime
+     * @return string
      */
     public function getValidto()
     {
