@@ -280,7 +280,7 @@ class Trainer extends PersonalData {
     */
     public function removePhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
     {
-        $this->phonenumber->removeElement($phonenumber);
+        $this->getPhonenumber()->removeElement($phonenumber);
     }
 
     /**

@@ -338,6 +338,27 @@ class TrainerController extends Controller
                 $manager->remove($theme);
             }
         }
+        
+            foreach($trainer->getPhonenumber() as $pn){
+                if (false == $originalphonenr->contains($pn)) {
+                     $pn->setTpnid(uniqid('pn'));
+                     $manager->persist($pn);              
+                    }            
+                }
+            
+            foreach($trainer->getLicence() as $lc){
+                if (false == $originallicences->contains($lc)) {
+                    $lc->setLiid(uniqid('lc'));
+                    $manager->persist($lc); 
+                    }
+                }
+          
+            foreach($trainer->getTheme() as $th){
+                if (false == $originalphonenr->contains($pn)) {
+                    $th->setTfid(uniqid('th'));
+                    $manager->persist($th);     
+                    }
+                }
            
             $manager->persist($trainer);          
             $manager->flush();
