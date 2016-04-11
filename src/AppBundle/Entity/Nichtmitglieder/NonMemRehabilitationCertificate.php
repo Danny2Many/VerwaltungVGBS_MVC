@@ -50,7 +50,7 @@ class NonMemRehabilitationCertificate {
 
     /**
      * 
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="string")
      * 
      */
     protected $validfrom;
@@ -223,17 +223,13 @@ class NonMemRehabilitationCertificate {
         return $this->deleted;
     }
 
-    /**
-     * Set validfrom
-     *
-     * @param \DateTime $validfrom
-     *
-     * @return NonMemRehabilitationCertificate
-     */
+     /**
+    * @ORM\PrePersist
+    */
     public function setValidfrom($validfrom)
     {
         $now= new \DateTime();
-        $this->validform = $now->format('Y');
+        $this->validfrom = $now->format('Y');
 
         return $this;
     }

@@ -1,7 +1,7 @@
 <?php
 
 namespace AppBundle\Entity\Nichtmitglieder;
-
+use Doctrine\DBAL\Types\StringType;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\HealthData;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -37,12 +37,13 @@ protected $sportsgroup;
 
 /**
 * @ORM\Id
-* @ORM\Column(type="string")  
+* @ORM\Column(type="integer")  
 */
 protected $nmemid;    
 
 public function __toString(){
     return (string) $this->nmemid;
+   
 }
     
 /**
@@ -74,7 +75,7 @@ protected $additionalinfo;
 
 /**
 * @ORM\Id
-* @ORM\Column(type="date")
+* @ORM\Column(type="string")
 */
 protected $validfrom;
 
@@ -102,7 +103,7 @@ protected $validto;
     /**
      * Get nmemid
      *
-     * @return string
+     * @return integer
      */
     public function getNMemID()
     {
@@ -112,7 +113,7 @@ protected $validto;
      /**
      * Set nmemid
      *
-     * @param string $nmemid
+     * @param integer $nmemid
      *
      * @return Nonmember
      */
@@ -482,18 +483,13 @@ public function setPhonenumber($phonenumber)
     }
     
     
-
-    /**
-     * Set validfrom
-     *
-     * @param \DateTime $validfrom
-     *
-     * @return Nonmember
+/**
+   * @ORM\PrePersist
      */
     public function setValidfrom($validfrom)
     {
         $now= new \DateTime();
-        $this->validform = $now->format('Y');
+        $this->validfrom = $now->format('Y');
 
         return $this;
     }
@@ -501,7 +497,7 @@ public function setPhonenumber($phonenumber)
     /**
      * Get validfrom
      *
-     * @return \DateTime
+     * @return string
      */
     public function getValidfrom()
     {

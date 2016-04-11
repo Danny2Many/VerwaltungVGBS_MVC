@@ -128,7 +128,7 @@ class NonMemberController extends Controller {
 
 
      foreach ($rehabcertlist as $rc){
-        if($rc->getTerminationdate()->format("Y-m-d") > $now){
+        if($rc->getTerminationdate()->format("Y") > $now){
          $nonmemberdependentlist[$rc->getNMemid()]['validrehabcerts'][]=$rc;
         }else{
           $nonmemberdependentlist[$rc->getNMemid()]['expiredrehabcerts'][]=$rc;  
