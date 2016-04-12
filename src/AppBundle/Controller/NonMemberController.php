@@ -25,18 +25,18 @@ class NonMemberController extends Controller {
 
     */    
     public function indexAction (Request $request, $letter, $adminyear ) {   
-  
-    //if $adminyear is the current year
-     if($adminyear == date('Y')){
-     
-     $now=date("Y-m-d");
-     
-     }
-     //else take the last day of the choosen year
-     else{
-         $now=$adminyear.'-12-31';
-     }
-     
+//  
+//    //if $adminyear is the current year
+//     if($adminyear == date('Y')){
+//     
+//     $now=date("Y-m-d");
+//     
+//     }
+//     //else take the last day of the choosen year
+//     else{
+//         $now=$adminyear.'-12-31';
+//     }
+//     
     $doctrine = $this->getDoctrine();
     $dependencies=array('Nichtmitglieder\Nonmember' => 'nmem', 'Nichtmitglieder\NonMemPhoneNumber' => 'pn', 'Nichtmitglieder\NonMemRehabilitationCertificate' => 'rc');
     $qb=[];
@@ -52,7 +52,7 @@ class NonMemberController extends Controller {
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
      $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
                     ->andWhere('ditto.validfrom<=:adminyear')
-                    ->setParameter('adminyear',$now);
+                    ->setParameter('adminyear',$adminyear);
     }
     
     
@@ -128,7 +128,7 @@ class NonMemberController extends Controller {
 
 
      foreach ($rehabcertlist as $rc){
-        if($rc->getTerminationdate()->format("Y") > $now){
+        if($rc->getTerminationdate()->format("Y") > $adminyear){
          $nonmemberdependentlist[$rc->getNMemid()]['validrehabcerts'][]=$rc;
         }else{
           $nonmemberdependentlist[$rc->getNMemid()]['expiredrehabcerts'][]=$rc;  
@@ -229,8 +229,8 @@ class NonMemberController extends Controller {
     $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
     $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
                 ->andWhere('ditto.validfrom <= :adminyear')
-                ->andWhere('ditto.nmemid = :nmemid')     
-                ->setParameter('nmemid', $ID)
+                ->andWhere('ditto.nmemid = :ID')     
+                ->setParameter('ID', $ID)
                 ->setParameter('adminyear',$adminyear.'-12-31');
      
     }
@@ -270,8 +270,8 @@ class NonMemberController extends Controller {
         if($editnonmemform->get('delete')->isClicked()){
             $manager->remove($nonmember);
             $manager->flush();
-            $this->addflash('notice', 'Dieser Nichtmitgliedw urde erfolgreich gelöscht!');            
-            return $this->redirectToRoute('nonmember_home', array('letter' => $letter, 'info' => 'entfernt'));
+            $this->addflash('notice', 'Dieser Nichtmitglied wurde erfolgreich gelöscht!');            
+            return $this->redirectToRoute('nonmember_home', array('letter' => $letter));
         
         }
         //if the form is valid -> persist it to the database
@@ -306,6 +306,11 @@ class NonMemberController extends Controller {
                      $manager->persist($rc);              
                 }            
         }
+         foreach ($originalphonenr as $phonenr) {
+            if (false === in_array($phonenr, $nonmember->getPhonenumber())) {         
+                $manager->remove($phonenr);
+            }
+        }
         
         foreach($nonmember->getPhonenumber() as $pn){
                 if (false == $originalphonenr->contains($pn)) {
@@ -316,7 +321,7 @@ class NonMemberController extends Controller {
             $manager->persist($nonmember);          
             $manager->flush();     
             $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');
-            return $this->redirectToRoute('nonmember_home', array('letter' => $letter, 'info' => 'gespeichert'));    
+            return $this->redirectToRoute('nonmember_home', array('letter' => $letter));    
        
         
             
