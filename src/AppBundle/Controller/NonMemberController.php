@@ -210,7 +210,7 @@ class NonMemberController extends Controller {
         
     }
      /**
-     * @Route("/nichtmitglieder/bearbeiten/{adminyear}/{letter}/{ID}", defaults={"letter": "[A-Z]", "alle"},requirements={"letter": "[A-Z]|alle"}, name="editnonmem")
+     * @Route("/nichtmitglieder/bearbeiten/{adminyear}/{letter}/{ID}", defaults={"letter": "A"}, requirements={"letter": "[A-Z]"}, name="editnonmem")
      * 
      */
     public function editnonmeberAction (Request $request, $adminyear, $ID, $letter){
