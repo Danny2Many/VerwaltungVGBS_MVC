@@ -41,16 +41,16 @@ class TrainerController extends Controller
         $qb= [];
         foreach($dependencies as $dependent => $idprefix){
      
-            if ($dependent=='Trainer\TrainerLicence'){
-                 $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.issuedate'))
-                    ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
-            
-            $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-            $qb[$dependent]->where('ditto.issuedate=('.$qb[$dependent.'sub']->getDQL().')')
-                    ->andWhere('ditto.issuedate<=:adminyear')
-                    ->setParameter('adminyear',$adminyear.'-12-31');
-            }else
+//            if ($dependent=='Trainer\TrainerLicence'){
+//                 $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
+//            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.issuedate'))
+//                    ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
+//            
+//            $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
+//            $qb[$dependent]->where('ditto.issuedate=('.$qb[$dependent.'sub']->getDQL().')')
+//                    ->andWhere('ditto.issuedate<=:adminyear')
+//                    ->setParameter('adminyear',$adminyear.'-12-31');
+//            }else
             {
             
             $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
@@ -246,20 +246,20 @@ class TrainerController extends Controller
         $qb= [];
         foreach($dependencies as $dependent => $idprefix){
             
-      if ($dependent=='Trainer\TrainerLicence'){
-          
-            $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.issuedate'))
-                                ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
-
-
-            $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-            $qb[$dependent]->where('ditto.issuedate=('.$qb[$dependent.'sub']->getDQL().')')
-                            ->andWhere('ditto.trainerid=:ID')
-                            ->andWhere('ditto.issuedate<=:adminyear')
-                            ->setParameter('ID',$ID)
-                            ->setParameter('adminyear',$adminyear.'-12-31');
-      }else
+//      if ($dependent=='Trainer\TrainerLicence'){
+//          
+//            $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
+//            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.issuedate'))
+//                                ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
+//
+//
+//            $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
+//            $qb[$dependent]->where('ditto.issuedate=('.$qb[$dependent.'sub']->getDQL().')')
+//                            ->andWhere('ditto.trainerid=:ID')
+//                            ->andWhere('ditto.issuedate<=:adminyear')
+//                            ->setParameter('ID',$ID)
+//                            ->setParameter('adminyear',$adminyear.'-12-31');
+//      }else
       {
             
             $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');

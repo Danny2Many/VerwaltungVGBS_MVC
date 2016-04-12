@@ -44,6 +44,7 @@ class TrainerPhoneNumber {
     protected $validto;
     
     /**
+     * @ORM\Id 
      * @ORM\Column(type="string")
      */
     protected $validfrom;
