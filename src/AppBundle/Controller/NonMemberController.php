@@ -38,7 +38,7 @@ class NonMemberController extends Controller {
 //     }
 //     
     $doctrine = $this->getDoctrine();
-    $dependencies=array('Nichtmitglieder\Nonmember' => 'nmem', 'Nichtmitglieder\NonMemPhoneNumber' => 'pn', 'Nichtmitglieder\NonMemRehabilitationCertificate' => 'rc');
+    $dependencies=['Nichtmitglieder\Nonmember' => 'nmem', 'Nichtmitglieder\NonMemPhoneNumber' => 'pn', 'Nichtmitglieder\NonMemRehabilitationCertificate' => 'rc'];
     $qb=[];
       foreach($dependencies as $dependent => $idprefix){
    
@@ -227,9 +227,9 @@ class NonMemberController extends Controller {
                                 ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');  
     
     $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-    $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
-                ->andWhere('ditto.validfrom <= :adminyear')
+    $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')                
                 ->andWhere('ditto.nmemid = :ID')     
+                ->andWhere('ditto.validfrom <= :adminyear')
                 ->setParameter('ID', $ID)
                 ->setParameter('adminyear',$adminyear.'-12-31');
      
@@ -299,17 +299,17 @@ class NonMemberController extends Controller {
                 $manager->remove($rehab);
             }
         }     
-
+         foreach ($originalphonenr as $phonenr) {
+            if (false === in_array($phonenr, $nonmember->getPhonenumber())) {         
+                $manager->remove($phonenr);
+            }
+        }
+        
         foreach($nonmember->getRehabilitationcertificate() as $rc){
                 if (false == $originalrehabs->contains($rc)) {
                      $rc->setRcid(uniqid('rc'));
                      $manager->persist($rc);              
                 }            
-        }
-         foreach ($originalphonenr as $phonenr) {
-            if (false === in_array($phonenr, $nonmember->getPhonenumber())) {         
-                $manager->remove($phonenr);
-            }
         }
         
         foreach($nonmember->getPhonenumber() as $pn){
