@@ -123,7 +123,7 @@ class TrainerFocus {
     /**
      * Set validto
      *
-     * @param \DateTime $deleted
+     * @param \DateTime $validto
      *
      * @return TrainerFocus
      */

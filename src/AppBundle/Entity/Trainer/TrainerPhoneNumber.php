@@ -105,13 +105,13 @@ class TrainerPhoneNumber {
     /**
      * Set validto
      *
-     * @param \DateTime $validto
+     * @param string $validto
      *
      * @return TrainerPhoneNumber
      */
     public function setValidto($validto)
     {
-        $this->deleted = $validto;
+        $this->validto = $validto;
 
         return $this;
     }
@@ -119,7 +119,7 @@ class TrainerPhoneNumber {
     /**
      * Get validto
      *
-     * @return \DateTime
+     * @return string
      */
     public function getValidto()
     {

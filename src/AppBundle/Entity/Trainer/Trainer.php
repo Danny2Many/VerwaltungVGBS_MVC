@@ -68,16 +68,13 @@ class Trainer extends PersonalData {
 
 
 
-    /**
-     * Constructor
-     */
+    /** @ORM\PostLoad */
     public function __construct()
     {
 //        $this->section = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->licence = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->phonenumber = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->theme = new \Doctrine\Common\Collections\ArrayCollection();
-
+        $this->licence = new ArrayCollection();
+        $this->phonenumber = new ArrayCollection();
+        $this->theme = new ArrayCollection();
         }
 
     /**
@@ -155,7 +152,7 @@ class Trainer extends PersonalData {
     {
         $licence->setTrainerid($this);
 
-        $this->licence[] = $licence;
+        $this->licence->add($licence);
 
         return $this;
     }
@@ -199,7 +196,7 @@ class Trainer extends PersonalData {
     {
         $theme->setTrainerid($this);
 
-        $this->theme[] = $theme;
+        $this->theme->add($theme);
 
         return $this;
     }
@@ -269,7 +266,7 @@ class Trainer extends PersonalData {
     {               
         $phonenumber->setTrainerid($this);
         
-        $this->phonenumber[] = $phonenumber;
+        $this->phonenumber->add($phonenumber);
 
         return $this;
     }

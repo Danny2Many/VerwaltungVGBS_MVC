@@ -35,6 +35,20 @@ class TrainerController extends Controller
     public function indexAction (Request $request, $letter, $adminyear)
     {
         
+             
+        //if $adminyear is the current year
+         if($adminyear == date('Y')){
+
+         $now=date("Y");
+
+         }
+         //else take the last day of the choosen year
+         else{
+             $now=$adminyear;
+         }
+     
+     
+        
         $doctrine=$this->getDoctrine();
         $dependencies=['Trainer\Trainer' => 'trainer', 'Trainer\TrainerPhoneNumber' =>'tpn', 'Trainer\TrainerFocus'=>'tf','Trainer\TrainerLicence'=>'li'];
     
@@ -51,8 +65,12 @@ class TrainerController extends Controller
 //                    ->andWhere('ditto.issuedate<=:adminyear')
 //                    ->setParameter('adminyear',$adminyear.'-12-31');
 //            }else
+<<<<<<< HEAD
             {
                 
+=======
+            
+>>>>>>> refs/remotes/origin/Peer_branch
             
             $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
             $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
@@ -61,8 +79,9 @@ class TrainerController extends Controller
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
             $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
                     ->andWhere('ditto.validfrom<=:adminyear')
-                    ->setParameter('adminyear',$adminyear);
-            }
+                    ->andWhere('ditto.validto>:adminyear')
+                    ->setParameter('adminyear',$now);
+            
      
     }
         
@@ -194,19 +213,27 @@ class TrainerController extends Controller
             
             
             $manager= $this->getDoctrine()->getManager();
+            
+            $trainer->setValidfrom($adminyear)->setValidto('2155');
                         
             foreach($trainer->getPhonenumber() as $pn){
-                 $pn->setTpnid(uniqid('pn'));
+                 $pn->setTpnid(uniqid('pn'))
+                    ->setValidfrom($adminyear)
+                    ->setValidto('2155');
                  $manager->persist($pn);              
             }
             
             foreach($trainer->getLicence() as $lc){
-                $lc->setLiid(uniqid('lc'));
+                $lc->setLiid(uniqid('lc'))    
+                    ->setValidfrom($adminyear)
+                    ->setValidto('2155');
                 $manager->persist($lc);              
             }
           
             foreach($trainer->getTheme() as $th){
-                $th->setTfid(uniqid('th'));
+                $th->setTfid(uniqid('th'))                        
+                    ->setValidfrom($adminyear)
+                    ->setValidto('2155');
                 $manager->persist($th);              
             }
           
@@ -228,7 +255,8 @@ class TrainerController extends Controller
                 array(
                     'form'=>$addtrainerform->createView(),                    
                     'cletter'=>$letter,
-                    'title'=>'Übungsleiter anlegen'));        
+                    'title'=>'Übungsleiter anlegen',
+                    'adminyear' => $adminyear));        
     }
     
     
@@ -242,7 +270,10 @@ class TrainerController extends Controller
     {
         $doctrine= $this->getDoctrine();
         $manager= $doctrine->getManager();
-        $dependencies=['Trainer\Trainer' => 'trainer', 'Trainer\TrainerPhoneNumber'=>'tpn', 'Trainer\TrainerFocus'=>'tf','Trainer\TrainerLicence'=>'li'];
+        
+        $validfrom=$request->query->get('validfrom');
+        
+        $dependencies=['Trainer\TrainerPhoneNumber'=>'tpn', 'Trainer\TrainerFocus'=>'tf','Trainer\TrainerLicence'=>'li'];
 
         $qb= [];
         foreach($dependencies as $dependent => $idprefix){
@@ -272,12 +303,12 @@ class TrainerController extends Controller
             $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
                             ->andWhere('ditto.trainerid=:ID')
                             ->andWhere('ditto.validfrom<=:adminyear')
+                            ->andWhere('ditto.validto>:adminyear')
                             ->setParameter('ID',$ID)
-                            ->setParameter('adminyear',$adminyear.'-12-31');
+                            ->setParameter('adminyear',$adminyear);
       }
         }
-        
-        $trainer=$qb['Trainer\Trainer']->getQuery()->getSingleResult();
+        $trainer=$doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy(array('trainerid' => $ID, 'validfrom'=>$validfrom));
         
         
         
@@ -298,12 +329,12 @@ class TrainerController extends Controller
         foreach ($licences as $licence) {
             $trainer->addLicence($licence);
             $originallicences->add($licence);
-        }
-
+        }   
+        
         foreach ($phonenumbers as $phonenr) {
             $trainer->addPhonenumber($phonenr);
             $originalphonenr->add($phonenr);
-        }
+        }       
         
         foreach ($focuses as $theme) {
             $trainer->addTheme($theme);
@@ -323,40 +354,46 @@ class TrainerController extends Controller
         if($edittrainerform->isSubmitted() && $edittrainerform->isValid()){
   
           foreach ($originallicences as $licence) {
-            if (false === in_array($licence, $trainer->getLicence())) {   
+            if (false === $trainer->getLicence()->contains($licence)) {   
                 $manager->remove($licence);
             }
         }
             
             foreach ($originalphonenr as $phonenr) {
-            if (false === in_array($phonenr, $trainer->getPhonenumber())) {         
+            if (false === $trainer->getPhonenumber()->contains($phonenr)) {         
                 $manager->remove($phonenr);
             }
         }
         
             foreach ($originalthemes as $theme) {
-            if (false === in_array($theme, $trainer->getTheme())) {         
+            if (false === $trainer->getTheme()->contains($theme)) {         
                 $manager->remove($theme);
             }
         }
         
             foreach($trainer->getPhonenumber() as $pn){
                 if (false == $originalphonenr->contains($pn)) {
-                     $pn->setTpnid(uniqid('pn'));
+                     $pn->setTpnid(uniqid('pn'))
+                            ->setValidfrom($adminyear)
+                            ->setValidto('2155');
                      $manager->persist($pn);              
                     }            
                 }
             
             foreach($trainer->getLicence() as $lc){
                 if (false == $originallicences->contains($lc)) {
-                    $lc->setLiid(uniqid('lc'));
+                    $lc->setLiid(uniqid('lc'))
+                            ->setValidfrom($adminyear)
+                            ->setValidto('2155');
                     $manager->persist($lc); 
                     }
                 }
           
             foreach($trainer->getTheme() as $th){
                 if (false == $originalphonenr->contains($pn)) {
-                    $th->setTfid(uniqid('th'));
+                    $th->setTfid(uniqid('th'))
+                        ->setValidfrom($adminyear)
+                        ->setValidto('2155');
                     $manager->persist($th);     
                     }
                 }
@@ -372,7 +409,9 @@ class TrainerController extends Controller
         array(            
             'form' => $edittrainerform->createView(),
             'cletter' => $letter,
-            'title' => 'Trainer bearbeiten'
+            'title' => 'Trainer bearbeiten',
+            'adminyear' => $adminyear
+
             ));
     }
 }

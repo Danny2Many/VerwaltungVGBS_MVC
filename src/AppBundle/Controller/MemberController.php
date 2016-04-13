@@ -96,7 +96,30 @@ class MemberController extends Controller
      //getting the values of the field and column
     $searchval=$request->query->get('search')['searchfield'];
     $searchcol=$request->query->get('search')['column'];
+<<<<<<< HEAD
  
+=======
+    
+
+
+    if($searchcol=='terminationdate'){
+        $qb['MemRehabilitationCertificate']->andWhere($qb['MemRehabilitationCertificate']->expr()->like('ditto.'.$searchcol,':type'))
+            ->setParameter('type','%'.$searchval.'%');
+
+            $rehacelist=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
+
+            if($rehacelist){          
+                foreach ($rehacelist as $rc){         
+                $idarray[]=$rc->getMemid();     
+            }
+
+            $qb['Member']->andWhere($qb['MemRehabilitationCertificate']->expr()->in('ditto.memid', $idarray));
+            $qb['MemRehabilitationCertificate']->orWhere($qb['Member']->expr()->in('ditto.memid', $idarray));
+        }
+
+        }else{    
+
+>>>>>>> refs/remotes/origin/Peer_branch
     //building the query
 
     $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.'.$searchcol, ':member'))
@@ -335,16 +358,16 @@ class MemberController extends Controller
         $phonenumbers=$qb['MemPhoneNumber']->getQuery()->getResult();
         $rehabcerts=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
         
-       echo '<pre>'; 
-        print_r($rehabcerts);
-        echo '</pre>';
+       
         
          $originalrehabs = new ArrayCollection();
          $originalphonenr = new ArrayCollection();
         
 
          
-         
+         echo '<pre>'; 
+        print_r($originalrehabs);
+        echo '</pre>';
          
          
          
