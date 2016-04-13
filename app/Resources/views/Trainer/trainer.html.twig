@@ -18,7 +18,7 @@
 
 {% block add %}
     <div class="inline">
-    <a href="{{ path('addtrainer', {'letter': cletter }) }}"><button    class="add btn btn-default">
+    <a href="{{ path('addtrainer', {'letter': cletter , 'adminyear': adminyear}) }}"><button    class="add btn btn-default">
     <span class="glyphicon glyphicon-plus"></span> neuen Übungsleiter anlegen </button></a>  
     </div>  
 {% endblock %}
@@ -176,19 +176,19 @@
             <div class="col-md-12">
                 <ul class="pagination">
                     
-                <li {% if cletter == null %}class="active"{% endif %}><a href="{{ path(path, {'all': 'alle'}) }}">ALLE</a></li>   
+                <li {% if cletter == null %}class="active"{% endif %}><a href="{{ path(path, {'all': 'alle', 'adminyear': adminyear}) }}">ALLE</a></li>   
                 
                 {% for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'] %}
                     
                     {% if letter == cletter %}     
-                    <li class="active"><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>      
+                    <li class="active"><a href="{{ path(path, {'letter': letter, 'adminyear': adminyear}) }}">{{ letter }}</a></li>      
                     {% else %}
-                    <li><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>                    
+                    <li><a href="{{ path(path, {'letter': letter,'adminyear': adminyear}) }}">{{ letter }}</a></li>                    
                     {% endif %}
                     
                 {% endfor %}
                 
-                <li class="active"><a href="{{ path(path, {'letter': cletter}) }}">{{ tabledata|length }} Personen wurden gefunden</a></li>
+                <li class="active"><a href="{{ path(path, {'letter': cletter,'adminyear': adminyear}) }}">{{ tabledata|length }} Personen wurden gefunden</a></li>
                 </ul>         
             </div>           
         </div>        
