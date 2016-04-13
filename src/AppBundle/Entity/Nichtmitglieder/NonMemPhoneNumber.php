@@ -207,11 +207,10 @@ class NonMemPhoneNumber {
      /**
     * @ORM\PrePersist
     */
-    public function setValidfrom()
+    public function setValidfrom($validfrom)
     {
-         $now= new \DateTime();
         
-        $this->validfrom = $now->format('Y-m-d');
+        $this->validfrom = $validfrom;
 
         return $this;
     }

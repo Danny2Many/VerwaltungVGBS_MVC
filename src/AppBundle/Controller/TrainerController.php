@@ -65,12 +65,7 @@ class TrainerController extends Controller
 //                    ->andWhere('ditto.issuedate<=:adminyear')
 //                    ->setParameter('adminyear',$adminyear.'-12-31');
 //            }else
-<<<<<<< HEAD
-            {
-                
-=======
-            
->>>>>>> refs/remotes/origin/Peer_branch
+
             
             $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
             $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))

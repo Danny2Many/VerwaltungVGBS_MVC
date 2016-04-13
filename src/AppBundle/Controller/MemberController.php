@@ -96,9 +96,7 @@ class MemberController extends Controller
      //getting the values of the field and column
     $searchval=$request->query->get('search')['searchfield'];
     $searchcol=$request->query->get('search')['column'];
-<<<<<<< HEAD
- 
-=======
+
     
 
 
@@ -119,13 +117,13 @@ class MemberController extends Controller
 
         }else{    
 
->>>>>>> refs/remotes/origin/Peer_branch
+
     //building the query
 
     $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.'.$searchcol, ':member'))
                    ->setParameter('member','%'.$searchval.'%');
     
-     
+        }
      
     }else{
         

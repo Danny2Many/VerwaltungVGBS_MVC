@@ -233,10 +233,10 @@ class NonMemRehabilitationCertificate {
      /**
     * @ORM\PrePersist
     */
-    public function setValidfrom()
+    public function setValidfrom($validfrom)
     {
-        $now= new \DateTime();
-        $this->validfrom = $now->format('Y');
+       
+        $this->validfrom = $validfrom;
 
         return $this;
     }

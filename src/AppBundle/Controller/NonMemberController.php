@@ -70,25 +70,27 @@ class NonMemberController extends Controller {
     $searchform->handleRequest($request);
     
     if($searchform->isSubmitted() && $searchform->isValid()){
+        //setting the letter to null for the pagination not to show any letter
         $letter=null;   
+        //getting the values of the field and column
         $searchval=$request->query->get('search')['searchfield'];
         $searchcol=$request->query->get('search')['column'];
     
-//    if($searchcol=='terminationdate'){
-//        $qb['Nichtmitglieder\NonMemRehabilitationCertificate']->andWhere($qb['Nichtmitglieder\NonMemRehabilitationCertificate']->expr()->like('ditto.'.$searchcol,':type'))
-//            ->setParameter('type','%'.$searchval.'%');
-//
-//            $rehacelist=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
-//
-//            if($rehacelist){          
-//                foreach ($rehacelist as $rc){         
-//                $idarray[]=$rc->getNmemid();     
-//            }
-//
-//            $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\NonMemRehabilitationCertificate']->expr()->in('ditto.nmemid', $idarray));
-//            $qb['Nichtmitglieder\NonMemRehabilitationCertificate']->orWhere($qb['Nichtmitglieder\Nonmember']->expr()->in('ditto.nmemid', $idarray));
-//            
-//            }
+    if($searchcol=='terminationdate'){
+        $qb['Nichtmitglieder\NonMemRehabilitationCertificate']->andWhere($qb['Nichtmitglieder\NonMemRehabilitationCertificate']->expr()->like('ditto.'.$searchcol,':type'))
+            ->setParameter('type','%'.$searchval.'%');
+
+            $rehacelist=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
+
+            if($rehacelist){          
+                foreach ($rehacelist as $rc){         
+                $idarray[]=$rc->getNmemid();     
+            }
+
+            $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\NonMemRehabilitationCertificate']->expr()->in('ditto.nmemid', $idarray));
+            $qb['Nichtmitglieder\NonMemRehabilitationCertificate']->orWhere($qb['Nichtmitglieder\Nonmember']->expr()->in('ditto.nmemid', $idarray));
+            
+            }
 //        }else  if($searchcol=='terminationdate'){
 //        $qb['Nichtmitglieder\NonMemRehabilitationCertificate']->andWhere($qb['Nichtmitglieder\NonMemRehabilitationCertificate']->expr()->like('ditto.'.$searchcol,':type'))
 //            ->setParameter('type','%'.$searchval.'%');
@@ -103,7 +105,7 @@ class NonMemberController extends Controller {
 //        else{   
     $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.'.$searchcol, ':nonmember'))
                ->setParameter('nonmember','%'.$searchval.'%');
-        
+    } 
         
     }else{        
         
@@ -175,7 +177,7 @@ class NonMemberController extends Controller {
 
                    ->setEntityName('NonMember');
 
-    
+    echo $adminyear;
     $nmemid=$im->getCurrentIndex();
     $nonmember->setNMemID($nmemid);
     
@@ -186,8 +188,7 @@ class NonMemberController extends Controller {
         
         //if the form is valid -> persist it to the database
         if($addnonmemform->isSubmitted() && $addnonmemform->isValid()){
-        
-            
+                    
             
             $manager= $this->getDoctrine()->getManager();
             
@@ -321,26 +322,30 @@ class NonMemberController extends Controller {
 //            $nonmember->getSection()->clear();
 //        }
         foreach ($originalrehabs as $rehab) {
-            if (false === in_array($rehab, $nonmember->getRehabilitationcertificate())) {
+            if (false === $nonmember->getRehabilitationcertificate()->contains($rehab)) {
                 $manager->remove($rehab);
             }
         }     
          foreach ($originalphonenr as $phonenr) {
-            if (false === in_array($phonenr, $nonmember->getPhonenumber())) {         
+            if (false === $nonmember->getPhonenumber()->contains($phonenr)) {         
                 $manager->remove($phonenr);
             }
         }
         
         foreach($nonmember->getRehabilitationcertificate() as $rc){
                 if (false == $originalrehabs->contains($rc)) {
-                     $rc->setRcid(uniqid('rc'));
+                     $rc->setRcid(uniqid('rc'))
+                        ->setValidfrom($adminyear)
+                        ->setValidto('2155');
                      $manager->persist($rc);              
                 }            
         }
         
         foreach($nonmember->getPhonenumber() as $pn){
                 if (false == $originalphonenr->contains($pn)) {
-                     $pn->setPnid(uniqid('pn'));
+                     $pn->setPnid(uniqid('pn'))
+                        ->setValidfrom($adminyear)
+                        ->setValidto('2155');
                      $manager->persist($pn);              
                 }            
         }
