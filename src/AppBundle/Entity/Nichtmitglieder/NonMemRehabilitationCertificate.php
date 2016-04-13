@@ -230,9 +230,13 @@ class NonMemRehabilitationCertificate {
         return $this->deleted;
     }
 
-     /**
-    * @ORM\PrePersist
-    */
+    /**
+     * Set validfrom
+     *
+     * @param string $validfrom
+     *
+     * @return MemRehabilitationCertificate
+     */
     public function setValidfrom($validfrom)
     {
        

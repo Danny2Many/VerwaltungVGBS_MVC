@@ -204,9 +204,13 @@ class NonMemPhoneNumber {
         return $this->validto;
     }
 
-     /**
-    * @ORM\PrePersist
-    */
+    /**
+     * Set validfrom
+     *
+     * @param string $validfrom
+     *
+     * @return MemPhoneNumber
+     */
     public function setValidfrom($validfrom)
     {
         
