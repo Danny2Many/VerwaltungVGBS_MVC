@@ -55,18 +55,7 @@ class TrainerController extends Controller
         $qb= [];
         foreach($dependencies as $dependent => $idprefix){
      
-//            if ($dependent=='Trainer\TrainerLicence'){
-//                 $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-//            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.issuedate'))
-//                    ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
-//            
-//            $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-//            $qb[$dependent]->where('ditto.issuedate=('.$qb[$dependent.'sub']->getDQL().')')
-//                    ->andWhere('ditto.issuedate<=:adminyear')
-//                    ->setParameter('adminyear',$adminyear.'-12-31');
-//            }else
 
-            
             $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
             $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
                     ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
@@ -184,7 +173,6 @@ class TrainerController extends Controller
      * @Route("/trainer/anlegen/{adminyear}/{letter}", defaults={"letter": "alle", "adminyear": 2016}, name="addtrainer", requirements={"letter": "[A-Z]|alle","adminyear": "[1-9][0-9]{3}"})
      */    
     public function addtrainerAction(Request $request, $letter, $adminyear) {        
-        
         $trainer = new Trainer();
         $phonenumber = new TrainerPhoneNumber();
         $licence = new TrainerLicence();  
@@ -210,7 +198,7 @@ class TrainerController extends Controller
             $manager= $this->getDoctrine()->getManager();
             
             $trainer->setValidfrom($adminyear)->setValidto('2155');
-                        
+     
             foreach($trainer->getPhonenumber() as $pn){
                  $pn->setTpnid(uniqid('pn'))
                     ->setValidfrom($adminyear)
