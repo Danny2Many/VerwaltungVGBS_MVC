@@ -98,13 +98,14 @@ class TrainerController extends Controller
     
         $qb['Trainer\Trainer']->andWhere($qb['Trainer\TrainerLicence']->expr()->in('ditto.trainerid', $idarray));
         $qb['Trainer\TrainerLicence']->orWhere($qb['Trainer\Trainer']->expr()->in('ditto.trainerid', $idarray));
-    }
+        }else{
+            $qb['Trainer\Trainer']->andWhere('ditto.trainerid<=:abort')->setParameter('abort',-1);
+        }
     
     }else{  
         
     $qb['Trainer\Trainer']->andWhere($qb['Trainer\Trainer']->expr()->like('ditto.'.$searchcol, ':trainer'))
-        ->setParameter('trainer','%'.$searchval.'%');
-  
+        ->setParameter('trainer','%'.$searchval.'%');  
     }
          
     }else if($letter != 'alle'){
@@ -132,9 +133,9 @@ class TrainerController extends Controller
     $licencelist=$qb['Trainer\TrainerLicence']->getQuery()->getResult();
     $focuslist=$qb['Trainer\TrainerFocus']->getQuery()->getResult();
     
-        if(!$licencelist){  
-        $trainerlist=$licencelist;            
-        }
+//        if(!$licencelist){  
+//        $trainerlist=$licencelist;            
+//        }
     
     $trainerdependentlist=[];
      foreach ($phonenumberlist as $pn){
