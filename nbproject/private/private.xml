@@ -3,12 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Nichtmitglieder/NonMemSportsgroup.php</file>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Controller/NonMemberController.php</file>
+            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Form/Type/Trainer/EditTrainerType.php</file>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Nichtmitglieder/NonMemRehabilitationCertificate.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/app/Resources/views/Nicht_Mitglieder/nonmember.html.twig</file>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Form/Type/Nichtmitglieder/EditNonMemberType.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Nichtmitglieder/Nonmember.php</file>
         </group>
     </open-files>
 </project-private>
