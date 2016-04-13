@@ -161,9 +161,10 @@ class MemberController extends Controller
      $rehabcertlist=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
      
      
-//     if(!$rehabcertlist){  
-//        $memberlist=$rehabcertlist;            
-//        }
+     if(!$rehabcertlist){  
+        $memberlist=$rehabcertlist;            
+        }
+     
 
      
      $memberdependentlist=[];
