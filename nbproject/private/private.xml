@@ -4,7 +4,6 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Controller/NonMemberController.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Form/Type/Trainer/EditTrainerType.php</file>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Nichtmitglieder/NonMemRehabilitationCertificate.php</file>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Form/Type/Nichtmitglieder/EditNonMemberType.php</file>
         </group>

@@ -15,7 +15,7 @@
 
 
 {% block add %}
-    <a href="{{ path('addnonmem', {'letter': cletter }) }}"><button    class="add btn btn-default">
+    <a href="{{ path('addnonmem', {'letter': cletter, 'adminyear': adminyear }) }}"><button    class="add btn btn-default">
       <span class="glyphicon glyphicon-plus"></span> neues Nichtmitglied anlegen
         </button></a>  
 {% endblock %}

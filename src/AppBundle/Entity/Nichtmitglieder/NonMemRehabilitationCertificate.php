@@ -55,6 +55,13 @@ class NonMemRehabilitationCertificate {
      */
     protected $validfrom;
     
+       
+    /**
+     * 
+     * @ORM\Column(type="string")
+     * 
+     */
+    protected $validto;
     
   
     
@@ -243,6 +250,28 @@ class NonMemRehabilitationCertificate {
     {
         return $this->validfrom;
     }
+ /**
+     * Set validto
+     *
+     * @param string $validto
+     *
+     * @return MemRehabilitationCertificate
+     */
+    public function setValidto($validto)
+    {
+        $this->validto = $validto;
 
+        return $this;
+    }
+
+    /**
+     * Get validto
+     *
+     * @return string
+     */
+    public function getValidto()
+    {
+        return $this->validto;
+    }
    
 }

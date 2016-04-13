@@ -52,6 +52,7 @@ class TrainerController extends Controller
 //                    ->setParameter('adminyear',$adminyear.'-12-31');
 //            }else
             {
+                
             
             $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
             $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))

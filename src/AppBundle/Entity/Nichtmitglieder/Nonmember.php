@@ -10,7 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="NonMember")
- * @ORM\HasLifecycleCallbacks()
  */
 class Nonmember extends HealthData {
 
