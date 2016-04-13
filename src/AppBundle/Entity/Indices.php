@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="Indices")
  */
+
 class Indices{
     
     
@@ -20,12 +21,16 @@ class Indices{
     
     
     
+
    /** 
+
     * @ORM\Column(type="integer", name="CurrentIndex") 
     */
     protected $currentindex;
     
+
     
+
     
     /**
      * Get tablename
@@ -52,6 +57,7 @@ class Indices{
         return $this;
     }
 
+
     
     
     /**
@@ -61,7 +67,10 @@ class Indices{
      */
     public function getCurrentindex()
     {
+
+
         return $this->currentindex;
+
     }
    
 
@@ -78,6 +87,4 @@ class Indices{
 
         return $this;
     }
-    
-    
 }

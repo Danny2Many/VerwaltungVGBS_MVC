@@ -41,7 +41,7 @@
 {#<th>Sportgruppe</th>#}
 <th>Trainingsbeginn</th>
 <th>Teilnahmebeginnbest.</th>
-<th>RS-Nr.-Ablaufd.-Einheiten</th>
+<th>Rehaschein/e<br> (RSNr.-Ablaufd.-Einheiten)</th>
 <th>abgelaufene Rehaschein/e</th>
 <th>Krankenkasse</th>
 <th>Zusatzinfo</th> 
@@ -120,21 +120,39 @@
             <td>{{ data.trainingconfirmation is empty ? "-" : data.trainingconfirmation|date("d.m.Y")}}</td>
              
 
-                {% if nonmemberdependentlist[data.nmemid]['rehabcerts'] is defined %}
-                {% set rehab =nonmemberdependentlist[data.nmemid]['rehabcerts'] %}
+                {% if nonmemberdependentlist[data.nmemid]['validrehabcerts'] is defined %}
+                {% set validrehab =nonmemberdependentlist[data.nmemid]['validrehabcerts'] %}
 
                 {% else %}
-                  {% set rehab ='' %}  
-                {% endif %}                      
-            <td>{% for RC in rehab if date(RC.terminationdate) > date() %}
-                {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>
-                        {% else %}
+                  {% set validrehab ='' %}  
+                {% endif %}   
+                
+                
+                {% if nonmemberdependentlist[data.nmemid]['expiredrehabcerts'] is defined %}
+                {% set expiredrehab =nonmemberdependentlist[data.nmemid]['expiredrehabcerts'] %}
+                {% else %}
+                  {% set expiredrehab ='' %}  
+                {% endif %}
+                
+                {% if adminyear == "now"|date("Y") %}
+                    {% set now = "now"|date("Y-m-d") %}
+                    {% else %}
+                   {% set now = date(adminyear~'-12-31')  %}     
+                {% endif %}            
+                
+            <td>{% for RC in validrehab  %}
+            <div class="{% if date(RC.terminationdate)|date("Y-m-d") < now|date_modify("+2 months")|date("Y-m-d") %}red {% endif %}
+                   {% if (now|date("Y") == RC.terminationdate|date("Y") and now|date("Y-m-d") < RC.terminationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
+                  {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}</div>        
+                         {% else %}
                          {{ "-" }}
                     {% endfor %}
-            </td>
-            <td>{% for RC in rehab if date(RC.terminationdate) < date() %}                  
+                   </td>
+                      
+            
+            <td>{% for RC in expiredrehab %}                  
                         
-                    {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>
+                    {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("Y") }}</strong>-{{RC.rehabunits }}<br>
                         
                          {% else %}
                          {{ "-" }}

@@ -16,21 +16,21 @@ class Trainer extends PersonalData {
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="integer")
      */
     
     protected $trainerid;
     
     public function __toString()
     {
-        return $this->trainerid;
+        return (string) $this->trainerid;
     }
     
     /**
      * @ORM\Id
      * @ORM\Column(type="string")
      */
-    private $recorded;
+    private $validfrom;
     
     /**
      * @ORM\Column(type="string")
@@ -59,9 +59,9 @@ class Trainer extends PersonalData {
     protected $state;
     
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="string")
      */
-    protected $deleted;
+    protected $validto;
     
     
 
@@ -280,7 +280,7 @@ class Trainer extends PersonalData {
     */
     public function removePhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
     {
-        $this->phonenumber->removeElement($phonenumber);
+        $this->getPhonenumber()->removeElement($phonenumber);
     }
 
     /**
@@ -324,45 +324,45 @@ class Trainer extends PersonalData {
    /**
     * @ORM\PrePersist
     */
-    public function setRecorded()
+    public function setValidfrom()
     {
         $now= new \DateTime();
-        $this->recorded = $now->format('Y-m-d');
+        $this->validfrom = $now->format('Y');
 
         return $this;
     }
 
     /**
-     * Get recorded
+     * Get validfrom
      *
      * @return string
      */
-    public function getRecorded()
+    public function getValidfrom()
     {
-        return $this->recorded;
+        return $this->validfrom;
     }
 
     /**
-     * Set deleted
+     * Set validto
      *
-     * @param \DateTime $deleted
+     * @param string $validto
      *
      * @return Trainer
      */
-    public function setDeleted( $deleted)
+    public function setValidto( $validto)
     {
-        $this->deleted = $deleted;
+        $this->validto = $validto;
 
         return $this;
     }
 
     /**
-     * Get deleted
+     * Get validto
      *
-     * @return \DateTime
+     * @return string
      */
-    public function getDeleted()
+    public function getValidto()
     {
-        return $this->deleted;
+        return $this->validto;
     }
 }

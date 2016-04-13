@@ -3,29 +3,23 @@
 namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
+
+
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="Indices")
  */
-class Indices{
-    
-    
-    
-   /* 
+class Indices {
+   /** 
     * @ORM\Id
-    * @ORM\Column(type="string", name="TableName") 
+    * @ORM\Column(type="string") 
     */
-    protected $tablename;
-    
-    
-    
-   /* 
-    * @ORM\Column(type="integer", name="Index") 
+   protected $tablename;
+   /** 
+    * @ORM\Column(type="integer") 
     */
-    protected $index;
-    
-    
-    
+   protected $index;
     
    
 

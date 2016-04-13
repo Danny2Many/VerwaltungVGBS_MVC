@@ -10,26 +10,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="NonMemRehabilitationCertificate")
+ * @ORM\HasLifecycleCallbacks()
  */
 class NonMemRehabilitationCertificate {
-    /**
-     * @ORM\ManyToOne(targetEntity="NonMember", inversedBy="rehabilitationcertificate")
-     * @ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")
-     */
-    private $nonmember;
-    
-       
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="string") 
      */
     protected $rcid;
     
      /**
      * 
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
      * 
      */
     protected $nmemid;
@@ -57,18 +50,18 @@ class NonMemRehabilitationCertificate {
 
     /**
      * 
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="date")
      * 
      */
-    protected $recorded;
+    protected $validfrom;
     
     
     /**
      * 
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="date")
      * 
      */
-    protected $deleted;
+    protected $validto;
     
     
     
@@ -83,13 +76,27 @@ class NonMemRehabilitationCertificate {
     }
 
     /**
-     * Set nmemid
+     * Set rcid
      *
-     * @param integer $nmemid
+     * @param string $rcid
      *
      * @return NonMemRehabilitationCertificate
      */
-    public function setNMemid($nmemid)
+    public function setRcid($rcid)
+    {
+        $this->rcid = $rcid;
+
+        return $this;
+    }
+    
+    /**
+     * Set nmemid
+     *
+     * @param string $nmemid
+     *
+     * @return NonMemRehabilitationCertificate
+     */
+    public function setNMemID($nmemid)
     {
         $this->nmemid = $nmemid;
 
@@ -99,9 +106,9 @@ class NonMemRehabilitationCertificate {
     /**
      * Get nmemid
      *
-     * @return integer
+     * @return string
      */
-    public function getNMemid()
+    public function getNMemID()
     {
         return $this->nmemid;
     }
@@ -130,30 +137,30 @@ class NonMemRehabilitationCertificate {
         return $this->terminationdate;
     }
 
-    /**
-     * Set nonmember
-     *
-     * @param \AppBundle\Entity\Nichtmitglieder\Nonmember $nonmember
-     *
-     * @return NonMemRehabilitationCertificate
-     */
-    public function setNonmember(\AppBundle\Entity\Nichtmitglieder\Nonmember $nonmember = null)
-    {
-        $this->nonmember = $nonmember;
-
-        return $this;
-    }
-
-    /**
-     * Get nonmember
-     *
-     * @return \AppBundle\Entity\Nichtmitglieder\Nonmember
-     */
-    public function getNonmember()
-    {
-        return $this->nonmember;
-        
-    }
+//    /**
+//     * Set nonmember
+//     *
+//     * @param \AppBundle\Entity\Nichtmitglieder\Nonmember $nonmember
+//     *
+//     * @return NonMemRehabilitationCertificate
+//     */
+//    public function setNonmember(\AppBundle\Entity\Nichtmitglieder\Nonmember $nonmember = null)
+//    {
+//        $this->nonmember = $nonmember;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get nonmember
+//     *
+//     * @return \AppBundle\Entity\Nichtmitglieder\Nonmember
+//     */
+//    public function getNonmember()
+//    {
+//        return $this->nonmember;
+//        
+//    }
     /**
      * Set rehabunits
      *
@@ -176,5 +183,50 @@ class NonMemRehabilitationCertificate {
     public function getRehabunits()
     {
         return $this->rehabunits;
+    }
+
+    /**
+    * @ORM\PrePersist
+    */
+    public function setRecorded()
+    {
+        $now= new \DateTime();
+        $this->recorded = $now->format('Y-m-d');
+
+        return $this;
+    }
+
+    /**
+     * Get recorded
+     *
+     * @return string
+     */
+    public function getRecorded()
+    {
+        return $this->recorded;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param string $deleted
+     *
+     * @return NonMemRehabilitationCertificate
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return string
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
     }
 }

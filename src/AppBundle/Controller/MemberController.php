@@ -97,13 +97,34 @@ class MemberController extends Controller
     $searchval=$request->query->get('search')['searchfield'];
     $searchcol=$request->query->get('search')['column'];
     
-  
+
+
+    if($searchcol=='terminationdate'){
+        $qb['MemRehabilitationCertificate']->andWhere($qb['MemRehabilitationCertificate']->expr()->like('ditto.'.$searchcol,':type'))
+            ->setParameter('type','%'.$searchval.'%');
+
+            $rehacelist=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
+
+            if($rehacelist){          
+                foreach ($rehacelist as $rc){         
+                $idarray[]=$rc->getMemid();     
+            }
+
+            $qb['Member']->andWhere($qb['MemRehabilitationCertificate']->expr()->in('ditto.memid', $idarray));
+            $qb['MemRehabilitationCertificate']->orWhere($qb['Member']->expr()->in('ditto.memid', $idarray));
+        }
+
+        }else{
+
+    
+    
+
     //building the query
 
     $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.'.$searchcol, ':member'))
                    ->setParameter('member','%'.$searchval.'%');
     
-     
+     }
      
     }else{
         
@@ -141,7 +162,9 @@ class MemberController extends Controller
      $rehabcertlist=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
      
      
-     
+     if(!$rehabcertlist){  
+        $memberlist=$rehabcertlist;            
+        }
      
      
      $memberdependentlist=[];
@@ -195,31 +218,31 @@ class MemberController extends Controller
         $member = new Member();
         $phonenumber = new MemPhoneNumber();
         
+
         $im=  $this->get('app.index_manager')
+
                    ->setEntityName('Member');
-                   
+
+
         $memid=$im->getCurrentIndex();
         $member->setMemid($memid);
     
         
         
-       
-            
-        $member->addPhonenumber($phonenumber);
-               
+                   
+        $member->addPhonenumber($phonenumber);               
       
         $addmemform = $this->createForm(AddMemberType::class, $member);
-        
-        
-     
         $addmemform->handleRequest($request);
-        
+     
         
 
         //if the form is valid -> persist it to the database
         if($addmemform->isSubmitted() && $addmemform->isValid()){
-        
+
+
             
+
         
 
             

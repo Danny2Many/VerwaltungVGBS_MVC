@@ -59,7 +59,6 @@ class NonMemSportsgroup {
     
     /**
      * @ORM\Column(type="string")
-        * @Assert\NotBlank()
      * 
      */
     protected $info;
@@ -69,9 +68,7 @@ class NonMemSportsgroup {
      */
     protected $roomid;
     
-    /**
-     * @ORM\Column(type="integer")
-     */
+   
     protected $trainerid;
     
     /**
@@ -81,16 +78,18 @@ class NonMemSportsgroup {
      */
     protected $token;
     
+     
+    protected $bssaid;
     /**
      * @ORM\Id
     * @ORM\Column(type="string")
     */
-    protected $recorded;
+    protected $validfrom;
 
     /**
-    * @ORM\Column(type="date")
+    * @ORM\Column(type="string")
     */
-    protected $deleted;
+    protected $validto;
 
 
     /**
@@ -419,5 +418,98 @@ class NonMemSportsgroup {
         $this->sgid = $sgid;
 
         return $this;
+    }
+
+    /**
+     * Add trainerid
+     *
+     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
+     *
+     * @return NonMemSportsgroup
+     */
+    public function addTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
+    {
+        $this->trainerid[] = $trainerid;
+
+        return $this;
+    }
+
+    /**
+     * Remove trainerid
+     *
+     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
+     */
+    public function removeTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
+    {
+        $this->trainerid->removeElement($trainerid);
+    }
+
+    /**
+     * Set bssaid
+     *
+     * @param integer $bssaid
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setBssaid($bssaid)
+    {
+        $this->bssaid = $bssaid;
+
+        return $this;
+    }
+
+    /**
+     * Get bssaid
+     *
+     * @return integer
+     */
+    public function getBssaid()
+    {
+        return $this->bssaid;
+    }
+  
+    /**
+    * @ORM\PrePersist
+    */
+    public function setValidfrom()
+    {
+        $now= new \DateTime();
+        $this->validfrom = $now->format('Y');
+
+        return $this;
+    }
+
+    /**
+     * Get validfrom
+     *
+     * @return string
+     */
+    public function getValidfrom()
+    {
+        return $this->validfrom;
+    }
+
+    /**
+     * Set validto
+     *
+     * @param  string $validto
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setValidto($validto)
+    {
+        $this->validto = $validto;
+
+        return $this;
+    }
+
+    /**
+     * Get validto
+     *
+     * @return string
+     */
+    public function getValidto()
+    {
+        return $this->validto;
     }
 }

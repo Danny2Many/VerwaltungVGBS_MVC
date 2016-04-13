@@ -15,6 +15,7 @@ use AppBundle\Entity\Trainer\TrainerFocus;
 use AppBundle\Entity\Trainer\TrainerLicence;
 use \DateTime;
 use AppBundle\Form\Type\Member\EditMemberType;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -40,14 +41,27 @@ class TrainerController extends Controller
         $qb= [];
         foreach($dependencies as $dependent => $idprefix){
      
-            $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.recorded'))
+            if ($dependent=='Trainer\TrainerLicence'){
+                 $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
+            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.issuedate'))
                     ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
             
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-            $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
-                    ->andWhere('ditto.recorded<=:adminyear')
+            $qb[$dependent]->where('ditto.issuedate=('.$qb[$dependent.'sub']->getDQL().')')
+                    ->andWhere('ditto.issuedate<=:adminyear')
                     ->setParameter('adminyear',$adminyear.'-12-31');
+            }else
+            {
+            
+            $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
+            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
+                    ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
+            
+            $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
+            $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
+                    ->andWhere('ditto.validfrom<=:adminyear')
+                    ->setParameter('adminyear',$adminyear);
+            }
      
     }
         
@@ -68,22 +82,27 @@ class TrainerController extends Controller
     $searchcol=$request->query->get('search')['column'];   
     
     
+     if($searchcol=='licencetype'){
+    $qb['Trainer\TrainerLicence']->andWhere($qb['Trainer\TrainerLicence']->expr()->like('ditto.'.$searchcol,':type'))
+        ->setParameter('type','%'.$searchval.'%');
+       
+        $licencelist=$qb['Trainer\TrainerLicence']->getQuery()->getResult();
+     
+        if($licencelist){          
+            foreach ($licencelist as $lc){         
+            $idarray[]=$lc->getTrainerid();     
+        }
     
-//    $qb['Trainer\Trainer']->where($qb['Trainer\Trainer']->expr()->like('ditto.'.$searchcol, ':trainer'))
-//        ->setParameter('trainer','%'.$searchval.'%')
-//        ->getQuery();
+        $qb['Trainer\Trainer']->andWhere($qb['Trainer\TrainerLicence']->expr()->in('ditto.trainerid', $idarray));
+        $qb['Trainer\TrainerLicence']->orWhere($qb['Trainer\Trainer']->expr()->in('ditto.trainerid', $idarray));
+    }
     
-//     if($searchcol=='licencetype'){
-//    $qb['Trainer\TrainerLicence']
-////            ->Join('ditto.licence', 'i')           
-//        ->where($qb['Trainer\TrainerLicence']->expr()->like('ditto.'.$searchcol,':type'))
-//        ->setParameter('type','%'.$searchval.'%')
-//        
-//    }else{
+    }else{  
+        
     $qb['Trainer\Trainer']->andWhere($qb['Trainer\Trainer']->expr()->like('ditto.'.$searchcol, ':trainer'))
         ->setParameter('trainer','%'.$searchval.'%');
   
-//    }
+    }
          
     }else if($letter != 'alle'){
           
@@ -109,6 +128,10 @@ class TrainerController extends Controller
     $phonenumberlist=$qb['Trainer\TrainerPhoneNumber']->getQuery()->getResult();
     $licencelist=$qb['Trainer\TrainerLicence']->getQuery()->getResult();
     $focuslist=$qb['Trainer\TrainerFocus']->getQuery()->getResult();
+    
+        if(!$licencelist){  
+        $trainerlist=$licencelist;            
+        }
     
     $trainerdependentlist=[];
      foreach ($phonenumberlist as $pn){
@@ -149,7 +172,13 @@ class TrainerController extends Controller
         
         $trainer = new Trainer();
         $phonenumber = new TrainerPhoneNumber();
-        $licence = new TrainerLicence();     
+        $licence = new TrainerLicence();  
+        
+        $im=  $this->get('app.index_manager')
+                   ->setEntityName('Trainer');
+
+        $trainerid=$im->getCurrentIndex();
+        $trainer->setTrainerid($trainerid);
         
         
         $trainer->addPhonenumber($phonenumber);
@@ -162,9 +191,7 @@ class TrainerController extends Controller
         
         if ($addtrainerform->isSubmitted() && $addtrainerform->isValid()){
             
-            $trainerid=uniqid('tr'); 
-            $trainer->setTrainerid($trainerid);            
-         
+            
             $manager= $this->getDoctrine()->getManager();
                         
             foreach($trainer->getPhonenumber() as $pn){
@@ -187,9 +214,11 @@ class TrainerController extends Controller
 
             $manager->persist($trainer);
           
-            $manager->flush();           
-            $this->addFlash('notice', 'Dieser Übungsleiter wurde erfolgreich angelegt!');
+            $manager->flush();  
+            $im->add();
             
+            
+            $this->addFlash('notice', 'Dieser Übungsleiter wurde erfolgreich angelegt!');
             return $this->redirectToRoute('trainer_home', array('letter' => $letter));
         }
 
@@ -205,7 +234,7 @@ class TrainerController extends Controller
 //-------------------------------------------------------------------------------------------------   
     
     /**
-     * @Route("/trainer/bearbeiten/{adminyear}/{letter}/{ID}", defaults={"letter": "[A-Z]"}, requirements={"letter": "[A-Z]"}, name="edittrainer")
+     * @Route("/trainer/bearbeiten/{adminyear}/{letter}/{ID}", defaults={"letter": "alle"}, requirements={"letter": "[A-Z]|alle"}, name="edittrainer")
      * 
      */   
     public function edittrainerAction(Request $request, $adminyear, $ID, $letter)
@@ -216,19 +245,35 @@ class TrainerController extends Controller
 
         $qb= [];
         foreach($dependencies as $dependent => $idprefix){
-      
             
+      if ($dependent=='Trainer\TrainerLicence'){
+          
             $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.recorded'))
+            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.issuedate'))
                                 ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
 
 
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-            $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
+            $qb[$dependent]->where('ditto.issuedate=('.$qb[$dependent.'sub']->getDQL().')')
                             ->andWhere('ditto.trainerid=:ID')
-                            ->andWhere('ditto.recorded<=:adminyear')
+                            ->andWhere('ditto.issuedate<=:adminyear')
                             ->setParameter('ID',$ID)
                             ->setParameter('adminyear',$adminyear.'-12-31');
+      }else
+      {
+            
+            $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
+            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
+                                ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
+
+
+            $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
+            $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
+                            ->andWhere('ditto.trainerid=:ID')
+                            ->andWhere('ditto.validfrom<=:adminyear')
+                            ->setParameter('ID',$ID)
+                            ->setParameter('adminyear',$adminyear.'-12-31');
+      }
         }
         
         $trainer=$qb['Trainer\Trainer']->getQuery()->getSingleResult();
@@ -277,22 +322,43 @@ class TrainerController extends Controller
         if($edittrainerform->isSubmitted() && $edittrainerform->isValid()){
   
           foreach ($originallicences as $licence) {
-            if (false === $trainer->getLicence()->contains($licence)) {   
+            if (false === in_array($licence, $trainer->getLicence())) {   
                 $manager->remove($licence);
             }
         }
             
             foreach ($originalphonenr as $phonenr) {
-            if (false === $trainer->getPhonenumber()->contains($phonenr)) {         
+            if (false === in_array($phonenr, $trainer->getPhonenumber())) {         
                 $manager->remove($phonenr);
             }
         }
         
             foreach ($originalthemes as $theme) {
-            if (false === $trainer->getTheme()->contains($theme)) {         
+            if (false === in_array($theme, $trainer->getTheme())) {         
                 $manager->remove($theme);
             }
         }
+        
+            foreach($trainer->getPhonenumber() as $pn){
+                if (false == $originalphonenr->contains($pn)) {
+                     $pn->setTpnid(uniqid('pn'));
+                     $manager->persist($pn);              
+                    }            
+                }
+            
+            foreach($trainer->getLicence() as $lc){
+                if (false == $originallicences->contains($lc)) {
+                    $lc->setLiid(uniqid('lc'));
+                    $manager->persist($lc); 
+                    }
+                }
+          
+            foreach($trainer->getTheme() as $th){
+                if (false == $originalphonenr->contains($pn)) {
+                    $th->setTfid(uniqid('th'));
+                    $manager->persist($th);     
+                    }
+                }
            
             $manager->persist($trainer);          
             $manager->flush();

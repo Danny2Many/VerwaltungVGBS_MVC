@@ -10,14 +10,12 @@ class IndexManager{
     protected $em;
     
     public function __construct($entityManager) {
-      
+
       $this->em=$entityManager;
     }
     
     public function add($number=1){
-        
-        
-        
+                
         $index=$this->getIndexEntity()->setIndex($this->getCurrentIndex()+$number);
         
         $this->em->persist($index);
@@ -27,13 +25,12 @@ class IndexManager{
     }
     
     
-    public function remove($number=1){
+    public function remove($number=1){        
         
-        
-        $index=$this->getIndexEntity()->setIndex($index->getCurrentIndex()-$number);
+        $index=$this->getIndexEntity()->setIndex($this->getCurrentIndex()-$number);
         
         $this->em->persist($index);
-        $this->em->push($index);
+        $this->em->flush($index);
         
         return $this;
     }
@@ -41,6 +38,7 @@ class IndexManager{
     
     public function getCurrentIndex(){
         
+
         return $this->getIndexEntity()->getCurrentindex();
     }
     
@@ -54,10 +52,15 @@ class IndexManager{
     }
 
         
+
     public function getEntityName(){
         
         return $this->entityname;
     }
+    
+   
+    
+     
     
     
     public function getIndexEntity(){
@@ -74,7 +77,7 @@ class IndexManager{
         return $index;
         }
         else{
-            throw new Exception('Existiert nüscht!!!!');
+            throw new Exception('Existiert nüscht!!<(^^<)!!');
         }
     }
 }
