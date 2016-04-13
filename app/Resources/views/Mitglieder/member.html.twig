@@ -3,7 +3,8 @@
 {% form_theme searchform 'bootstrap_3_layout.html.twig' %}
  {% block columnDefs %}
      "columnDefs": [
-    { "width": "11%", "targets": 15 }
+    { "width": "11%", "targets": 15 },
+    { "width": "11%", "targets": 16 }
   ]  
   {% endblock %}
 {% block title %}Mitglieder - Stammdaten{% endblock %}
@@ -17,7 +18,7 @@
 
 {% block add %}
     <div class="inline">
-    <a href="{{ path('addmem', {'letter': cletter }) }}"><button    class="add btn btn-default">
+    <a href="{{ path('addmem', {'letter': cletter, 'adminyear': adminyear }) }}"><button    class="add btn btn-default">
       <span class="glyphicon glyphicon-plus"></span> neues Mitglied anlegen
         </button></a> 
     </div>

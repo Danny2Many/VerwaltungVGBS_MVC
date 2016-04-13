@@ -12,7 +12,7 @@ use AppBundle\Entity\HealthData;
 /**
  * @ORM\Entity
  * @ORM\Table(name="Member")
- * @ORM\HasLifecycleCallbacks()
+ * 
  */
 class Member extends HealthData
 {
@@ -51,14 +51,14 @@ class Member extends HealthData
      * @ORM\Column(type="string")
      * 
      */
-    protected $recorded;
+    protected $validfrom;
     
     
     /**
      * @ORM\Column(type="string")
      * 
      */
-    protected $deleted;
+    protected $validto;
    
       /**
      * @ORM\Column(type="date")
@@ -462,49 +462,47 @@ class Member extends HealthData
 
  
 
-    /**
- * @ORM\PrePersist
- */
-    public function setRecorded()
+   
+    public function setValidfrom($validfrom)
     {
-        $now= new \DateTime();
-        $this->recorded = $now->format('Y-m-d');
+        
+        $this->validfrom = $validfrom;
 
         return $this;
     }
 
     /**
-     * Get recorded
+     * Get validfrom
      *
      * @return string
      */
-    public function getRecorded()
+    public function getValidfrom()
     {
-        return $this->recorded;
+        return $this->validfrom;
     }
 
     /**
-     * Set deleted
+     * Set validto
      *
-     * @param string $deleted
+     * @param string $validto
      *
      * @return Member
      */
-    public function setDeleted($deleted)
+    public function setValidto($validto)
     {
-        $this->deleted = $deleted;
+        $this->validto = $validto;
 
         return $this;
     }
 
     /**
-     * Get deleted
+     * Get validto
      *
      * @return string
      */
-    public function getDeleted()
+    public function getValidto()
     {
-        return $this->deleted;
+        return $this->validto;
     }
 
    

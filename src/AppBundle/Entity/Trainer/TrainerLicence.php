@@ -19,7 +19,7 @@ class TrainerLicence {
     protected $liid;
     
     /**
-     * @ORM\Column(type="string") 
+     * @ORM\Column(type="integer") 
      */
     protected $trainerid;
     
@@ -63,7 +63,7 @@ class TrainerLicence {
     /**
      * Set validto
      *
-     * @param \DateTime $deleted
+     * @param \DateTime $validto
      *
      * @return TrainerLicence
      */

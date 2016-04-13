@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="MemPhoneNumber")
- * @ORM\HasLifecycleCallbacks()
+ * 
  */
 class MemPhoneNumber {
     
@@ -46,7 +46,7 @@ class MemPhoneNumber {
      * @ORM\Column(type="string")
      * 
      */
-    protected $recorded;
+    protected $validfrom;
     
     
     /**
@@ -54,7 +54,7 @@ class MemPhoneNumber {
      * @ORM\Column(type="string")
      * 
      */
-    protected $deleted;
+    protected $validto;
     
 
     /**
@@ -117,51 +117,7 @@ class MemPhoneNumber {
 
 
 
-   /**
- * @ORM\PrePersist
- */
-    public function setRecorded()
-    {
-        $now= new \DateTime();
-        
-        $this->recorded = $now->format('Y-m-d');
-
-        return $this;
-    }
-
-    /**
-     * Get recorded
-     *
-     * @return string
-     */
-    public function getRecorded()
-    {
-        return $this->recorded;
-    }
-
-    /**
-     * Set deleted
-     *
-     * @param string $deleted
-     *
-     * @return MemPhoneNumber
-     */
-    public function setDeleted($deleted)
-    {
-        $this->deleted = $deleted;
-
-        return $this;
-    }
-
-    /**
-     * Get deleted
-     *
-     * @return string
-     */
-    public function getDeleted()
-    {
-        return $this->deleted;
-    }
+   
 
    
 
@@ -187,5 +143,53 @@ class MemPhoneNumber {
     public function getPnid()
     {
         return $this->pnid;
+    }
+
+    /**
+     * Set validfrom
+     *
+     * @param string $validfrom
+     *
+     * @return MemPhoneNumber
+     */
+    public function setValidfrom($validfrom)
+    {
+        $this->validfrom = $validfrom;
+
+        return $this;
+    }
+
+    /**
+     * Get validfrom
+     *
+     * @return string
+     */
+    public function getValidfrom()
+    {
+        return $this->validfrom;
+    }
+
+    /**
+     * Set validto
+     *
+     * @param string $validto
+     *
+     * @return MemPhoneNumber
+     */
+    public function setValidto($validto)
+    {
+        $this->validto = $validto;
+
+        return $this;
+    }
+
+    /**
+     * Get validto
+     *
+     * @return string
+     */
+    public function getValidto()
+    {
+        return $this->validto;
     }
 }
