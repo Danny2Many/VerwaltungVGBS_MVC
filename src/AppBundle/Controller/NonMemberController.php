@@ -320,51 +320,51 @@ class NonMemberController extends Controller {
 //        }else{
 //            $nonmember->getSection()->clear();
 //        }
-//        foreach ($originalrehabs as $rehab) {
-//            if (false === in_array($rehab, $nonmember->getRehabilitationcertificate())) {
-//                $manager->remove($rehab);
-//            }
-//        }     
-//         foreach ($originalphonenr as $phonenr) {
-//            if (false === in_array($phonenr, $nonmember->getPhonenumber())) {         
-//                $manager->remove($phonenr);
-//            }
-//        }
-//        
-//        foreach($nonmember->getRehabilitationcertificate() as $rc){
-//                if (false == $originalrehabs->contains($rc)) {
-//                     $rc->setRcid(uniqid('rc'));
-//                     $manager->persist($rc);              
-//                }            
-//        }
-//        
-//        foreach($nonmember->getPhonenumber() as $pn){
-//                if (false == $originalphonenr->contains($pn)) {
-//                     $pn->setPnid(uniqid('pn'));
-//                     $manager->persist($pn);              
-//                }            
-//        }
+        foreach ($originalrehabs as $rehab) {
+            if (false === in_array($rehab, $nonmember->getRehabilitationcertificate())) {
+                $manager->remove($rehab);
+            }
+        }     
+         foreach ($originalphonenr as $phonenr) {
+            if (false === in_array($phonenr, $nonmember->getPhonenumber())) {         
+                $manager->remove($phonenr);
+            }
+        }
+        
+        foreach($nonmember->getRehabilitationcertificate() as $rc){
+                if (false == $originalrehabs->contains($rc)) {
+                     $rc->setRcid(uniqid('rc'));
+                     $manager->persist($rc);              
+                }            
+        }
+        
+        foreach($nonmember->getPhonenumber() as $pn){
+                if (false == $originalphonenr->contains($pn)) {
+                     $pn->setPnid(uniqid('pn'));
+                     $manager->persist($pn);              
+                }            
+        }
            
             //if the form is valid -> persist it to the database
-       
-   
-          foreach ($originalrehabs as $rehab) {
-            if (false === $nonmember->getRehabilitationcertificate()->contains($rehab)) {
-                
-
-                $manager->remove($rehab);
-
-            }
-        }
-            
-            foreach ($originalphonenr as $phonenr) {
-            if (false === $nonmember->getPhonenumber()->contains($phonenr)) {
-                
-
-                $manager->remove($phonenr);
-
-            }
-        }
+//       
+//   
+//          foreach ($originalrehabs as $rehab) {
+//            if (false === $nonmember->getRehabilitationcertificate()->contains($rehab)) {
+//                
+//
+//                $manager->remove($rehab);
+//
+//            }
+//        }
+//            
+//            foreach ($originalphonenr as $phonenr) {
+//            if (false === $nonmember->getPhonenumber()->contains($phonenr)) {
+//                
+//
+//                $manager->remove($phonenr);
+//
+//            }
+//        }
            
             $manager->persist($nonmember);          
             $manager->flush();     

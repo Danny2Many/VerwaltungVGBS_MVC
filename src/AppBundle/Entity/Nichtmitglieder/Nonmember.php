@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="NonMember")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Nonmember extends HealthData {
 
@@ -90,7 +91,7 @@ protected $validto;
     
 
     /**
-     * Constructor
+     * @ORM\PostLoad
      */
     public function __construct()
     {
@@ -240,7 +241,7 @@ protected $validto;
     public function addRehabilitationcertificate(\AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate $rehabilitationcertificate)
     {
         $rehabilitationcertificate->setNMemID($this->nmemid);
-        $this->rehabilitationcertificate[] = $rehabilitationcertificate;
+        $this->rehabilitationcertificate->add($rehabilitationcertificate);
 
         return $this;
         
@@ -285,7 +286,7 @@ protected $validto;
      */
     public function addSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup)
     {
-        $this->sportsgroup[] = $sportsgroup;
+        $this->sportsgroup($sportsgroup);
 
         return $this;
     }
@@ -392,7 +393,7 @@ public function setPhonenumber($phonenumber)
  public function addPhonenumber(\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber)
     {               
         $phonenumber->setNMemID($this);
-        $this->phonenumber[] = $phonenumber;
+        $this->phonenumber->add($phonenumber);
 
         return $this;
     }
@@ -478,7 +479,7 @@ public function setPhonenumber($phonenumber)
      */
     public function getNewsletter()
     {
-        return $this->newsletter;
+        return array($this->newsletter);
     }
     
     
