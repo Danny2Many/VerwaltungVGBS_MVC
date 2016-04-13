@@ -97,7 +97,7 @@ class MemberController extends Controller
     $searchval=$request->query->get('search')['searchfield'];
     $searchcol=$request->query->get('search')['column'];
     
-<<<<<<< HEAD
+
 
     if($searchcol=='terminationdate'){
         $qb['MemRehabilitationCertificate']->andWhere($qb['MemRehabilitationCertificate']->expr()->like('ditto.'.$searchcol,':type'))
@@ -114,13 +114,8 @@ class MemberController extends Controller
             $qb['MemRehabilitationCertificate']->orWhere($qb['Member']->expr()->in('ditto.memid', $idarray));
         }
 
-        }else{
+        }else{    
 
-    
-    
-=======
-  
->>>>>>> refs/remotes/origin/Danny_System
     //building the query
 
     $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.'.$searchcol, ':member'))
@@ -359,16 +354,16 @@ class MemberController extends Controller
         $phonenumbers=$qb['MemPhoneNumber']->getQuery()->getResult();
         $rehabcerts=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
         
-       echo '<pre>'; 
-        print_r($rehabcerts);
-        echo '</pre>';
+       
         
          $originalrehabs = new ArrayCollection();
          $originalphonenr = new ArrayCollection();
         
 
          
-         
+         echo '<pre>'; 
+        print_r($originalrehabs);
+        echo '</pre>';
          
          
          
