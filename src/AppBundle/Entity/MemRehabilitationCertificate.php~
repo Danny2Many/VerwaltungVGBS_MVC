@@ -38,7 +38,7 @@ class MemRehabilitationCertificate {
      * @ORM\Column(type="string")
      * 
      */
-    protected $recorded;
+    protected $validfrom;
     
     
     /**
@@ -46,7 +46,7 @@ class MemRehabilitationCertificate {
      * @ORM\Column(type="string")
      * 
      */
-    protected $deleted;
+    protected $validto;
     
     
     
@@ -158,48 +158,19 @@ class MemRehabilitationCertificate {
         return $this->rehabunits;
     }
 
-    /**
- * @ORM\PrePersist
- */
-    public function setRecorded()
-    {
-        $now= new \DateTime();
-        $this->recorded = $now->format('Y-m-d');
 
-        return $this;
-    }
 
     /**
-     * Get recorded
+     * Set rcid
      *
-     * @return string
-     */
-    public function getRecorded()
-    {
-        return $this->recorded;
-    }
-
-    /**
-     * Set deleted
-     *
-     * @param string $deleted
+     * @param string $rcid
      *
      * @return MemRehabilitationCertificate
      */
-    public function setDeleted($deleted)
+    public function setRcid($rcid)
     {
-        $this->deleted = $deleted;
+        $this->rcid = $rcid;
 
         return $this;
-    }
-
-    /**
-     * Get deleted
-     *
-     * @return string
-     */
-    public function getDeleted()
-    {
-        return $this->deleted;
     }
 }
