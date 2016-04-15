@@ -49,16 +49,18 @@ class TrainerController extends Controller
     
         $qb= [];
         foreach($dependencies as $dependent => $idprefix){
-                 $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
 
             $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
             $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
-                    ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id')
-                    ->andWhere('ditto.validfrom<='.$now)
-                    ->andWhere('ditto.validto>'.$now)
+                    ->where('dittosub.'.$idprefix.'id=dittosub.'.$idprefix.'id')
+                    ->andWhere('dittosub.validfrom<='.$now)
+                    ->andWhere('dittosub.validto>'.$now)
+                    
                     ;
             
+            $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
             $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
+                    
        
                     ;   
     }
