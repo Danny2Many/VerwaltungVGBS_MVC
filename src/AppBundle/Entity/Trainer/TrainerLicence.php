@@ -14,12 +14,12 @@ class TrainerLicence {
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
      */
     protected $liid;
     
     /**
-     * @ORM\Column(type="string") 
+     * @ORM\Column(type="integer") 
      */
     protected $trainerid;
     
@@ -48,19 +48,64 @@ class TrainerLicence {
     protected $expirationdate;
     
     /**
-     * @ORM\Column(type="date")
-     */
-    protected $deleted;
-    
-    /**
      * @ORM\Column(type="string")
      */
-    protected $recorded;
+    protected $validto;
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="string")
+     */
+    protected $validfrom;  
+    
+    
+
+    /**
+     * Set validto
+     *
+     * @param string $validto
+     *
+     * @return TrainerLicence
+     */
+    public function setValidto($validto)
+    {
+        $this->validto = $validto;
+
+        return $this;
+    }
+
+    /**
+     * Get Validto
+     *
+     * @return string
+     */
+    public function getValidto()
+    {
+        return $this->validto;
+    }
+
+    public function setValidfrom($validfrom)
+    {
+        
+        $this->validfrom = $validfrom;
+
+        return $this;
+    }
+
+    /**
+     * Get validfrom
+     *
+     * @return string
+     */
+    public function getValidfrom()
+    {
+        return $this->validfrom;
+    }
 
     /**
      * Get liid
      *
-     * @return integer
+     * @return string
      */
     public function getLiid()
     {
@@ -70,7 +115,7 @@ class TrainerLicence {
     /**
      * Set trainerid
      *
-     * @param string $trainerid
+     * @param integer $trainerid
      *
      * @return TrainerLicence
      */
@@ -84,7 +129,7 @@ class TrainerLicence {
     /**
      * Get trainerid
      *
-     * @return string
+     * @return integer
      */
     public function getTrainerid()
     {
@@ -225,48 +270,48 @@ class TrainerLicence {
         return $this;
     }
 
-    /**
-     * Set deleted
-     *
-     * @param \DateTime $deleted
-     *
-     * @return TrainerLicence
-     */
-    public function setDeleted($deleted)
-    {
-        $this->deleted = $deleted;
-
-        return $this;
-    }
-
-    /**
-     * Get deleted
-     *
-     * @return \DateTime
-     */
-    public function getDeleted()
-    {
-        return $this->deleted;
-    }
-
-    /**
-     * @ORM\PrePersist
-     */
-    public function setRecorded()
-    {
-        $now= new \DateTime();
-        $this->recorded = $now->format('Y-m-d');
-
-        return $this;
-    }
-
-    /**
-     * Get recorded
-     *
-     * @return \DateTime
-     */
-    public function getRecorded()
-    {
-        return $this->recorded;
-    }
+//    /**
+//     * Set deleted
+//     *
+//     * @param \DateTime $deleted
+//     *
+//     * @return TrainerLicence
+//     */
+//    public function setDeleted($deleted)
+//    {
+//        $this->deleted = $deleted;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get deleted
+//     *
+//     * @return \DateTime
+//     */
+//    public function getDeleted()
+//    {
+//        return $this->deleted;
+//    }
+//
+//    /**
+//     * @ORM\PrePersist
+//     */
+//    public function setRecorded()
+//    {
+//        $now= new \DateTime();
+//        $this->recorded = $now->format('Y-m-d');
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get recorded
+//     *
+//     * @return \DateTime
+//     */
+//    public function getRecorded()
+//    {
+//        return $this->recorded;
+//    }
 }

@@ -33,12 +33,12 @@ class MemberController extends Controller
     //if $adminyear is the current year
      if($adminyear == date('Y')){
      
-     $now=date("Y-m-d");
+     $now=date("Y");
      
      }
      //else take the last day of the choosen year
      else{
-         $now=$adminyear.'-12-31';
+         $now=$adminyear;
      }
      
      
@@ -53,18 +53,20 @@ class MemberController extends Controller
    
         //building the subquery: SELECT max(recorded) FROM % AS dittosub WHERE dittosub.id = ditto.id
      $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-     $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.recorded'))
+     $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
                           ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
                           
         
      //building the query: SELECT ditto FROM % AS ditto WHERE ditto.recorded=( subquery ) AND ditto.recorded<=$now 
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-     $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
-                    ->andWhere('ditto.recorded<=:adminyear')
+     $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
+                    ->andWhere('ditto.validfrom<=:adminyear')
+                    ->andWhere('ditto.validto>:adminyear')
                     ->setParameter('adminyear',$now);
     }
     
-    
+    $qb['Member']->andWhere($qb['Member']->expr()->isNull('ditto.quitdate'));
+                
 
     
     
@@ -96,6 +98,7 @@ class MemberController extends Controller
     $searchcol=$request->query->get('search')['column'];
     
 
+
     if($searchcol=='terminationdate'){
         $qb['MemRehabilitationCertificate']->andWhere($qb['MemRehabilitationCertificate']->expr()->like('ditto.'.$searchcol,':type'))
             ->setParameter('type','%'.$searchval.'%');
@@ -111,10 +114,8 @@ class MemberController extends Controller
             $qb['MemRehabilitationCertificate']->orWhere($qb['Member']->expr()->in('ditto.memid', $idarray));
         }
 
-        }else{
+        }else{    
 
-    
-    
     //building the query
 
     $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.'.$searchcol, ':member'))
@@ -245,14 +246,23 @@ class MemberController extends Controller
          
             $manager= $this->getDoctrine()->getManager();
             
+            
+            
+            $member->setValidfrom($adminyear)
+                    ->setValidto('2155');
+            
             foreach($member->getRehabilitationcertificate() as $rc){
-              $rc->setRcid(uniqid('rc'));
+              $rc->setRcid(uniqid('rc'))
+                 ->setValidfrom($adminyear)
+                 ->setValidto('2155');
               $manager->persist($rc);
               
           }
             
             foreach($member->getPhonenumber() as $pn){
-              $pn->setPnid(uniqid('pn'));
+              $pn->setPnid(uniqid('pn'))
+                 ->setValidfrom($adminyear)
+                 ->setValidto('2155');
               $manager->persist($pn);
               
           }
@@ -271,7 +281,7 @@ class MemberController extends Controller
             
             
            $this->addFlash('notice', 'Diese Person wurde erfolgreich angelegt!'); 
-          return $this->redirectToRoute('member_home', array('letter' => $letter));
+          return $this->redirectToRoute('member_home', array('letter' => $letter, 'adminyear' => $adminyear));
           
           
 
@@ -284,7 +294,8 @@ class MemberController extends Controller
             
             'form' => $addmemform->createView(),
             'cletter' => $letter,
-            'title' => 'Mitglied anlegen'
+            'title' => 'Mitglied anlegen',
+            'adminyear' => $adminyear
             
             ));
     }
@@ -307,20 +318,22 @@ class MemberController extends Controller
     $dependencies=array('Member' => 'mem', 'MemPhoneNumber'=> 'pn', 'MemRehabilitationCertificate'=> 'rc');
     
     $qb=[];
+    
     foreach($dependencies as $dependent => $idprefix){
         //building the subquery: SELECT max(recorded) FROM % AS dittosub WHERE dittosub.type = ditto.type 
      $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-     $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.recorded'))
+     $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
                           ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
                           
         
      //building the query: SELECT ditto FROM % AS ditto WHERE ditto.recorded=( subquery ) AND ditto.recorded<=$adminyear AND ditto.memid=§ID
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-     $qb[$dependent]->where('ditto.recorded=('.$qb[$dependent.'sub']->getDQL().')')
+     $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
                     ->andWhere('ditto.memid=:ID')
-                    ->andWhere('ditto.recorded<=:adminyear')
+                    ->andWhere('ditto.validfrom<=:adminyear')
+                    ->andWhere('ditto.validto>:adminyear')
                     ->setParameter('ID',$ID)
-                    ->setParameter('adminyear',$adminyear.'-12-31');
+                    ->setParameter('adminyear',$adminyear);
      
 
         
@@ -341,16 +354,16 @@ class MemberController extends Controller
         $phonenumbers=$qb['MemPhoneNumber']->getQuery()->getResult();
         $rehabcerts=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
         
-       echo '<pre>'; 
-        print_r($rehabcerts);
-        echo '</pre>';
+       
         
          $originalrehabs = new ArrayCollection();
          $originalphonenr = new ArrayCollection();
         
 
          
-         
+         echo '<pre>'; 
+        print_r($originalrehabs);
+        echo '</pre>';
          
          
          
@@ -435,7 +448,8 @@ class MemberController extends Controller
             
             'form' => $editmemform->createView(),
             'cletter' => $letter,
-            'title' => 'Mitglied bearbeiten'
+            'title' => 'Mitglied bearbeiten',
+            'adminyear' => $adminyear
             ));
     }
     

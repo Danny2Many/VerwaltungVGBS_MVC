@@ -43,12 +43,13 @@ class NonMemPhoneNumber {
     /**
     * @ORM\Column(type="string")
     */
-    protected $recorded;
+    protected $validfrom;
 
-    /**
-    * @ORM\Column(type="string")
-    */
-    protected $deleted;
+  /**
+     * @ORM\Column(type="string")
+     */
+    protected $validto;
+    
 
 
 
@@ -178,4 +179,52 @@ class NonMemPhoneNumber {
     {
         return $this->pnid;
     }
+
+    /**
+     * Set validto
+     *
+     * @param string $validto
+     *
+     * @return TrainerPhoneNumber
+     */
+    public function setValidto($validto)
+    {
+        $this->deleted = $validto;
+
+        return $this;
+    }
+
+    /**
+     * Get validto
+     *
+     * @return string
+     */
+    public function getValidto()
+    {
+        return $this->validto;
+    }
+
+     /**
+    * @ORM\PrePersist
+    */
+    public function setValidfrom()
+    {
+         $now= new \DateTime();
+        
+        $this->validfrom = $now->format('Y-m-d');
+
+        return $this;
+    }
+
+    /**
+     * Get validfrom
+     *
+     * @return string
+     */
+    public function getValidfrom()
+    {
+        return $this->validfrom;
+    }
+
+ 
 }

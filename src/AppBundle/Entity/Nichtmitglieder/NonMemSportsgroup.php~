@@ -8,35 +8,36 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="NonMemSportsgroup")
+ * @ORM\HasLifecycleCallbacks()
  */
 class NonMemSportsgroup {
-    
-    /**
-    * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
-    * @ORM\JoinTable(name="NonMemSportsgroup_Section",
-    * joinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")},
-    * inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
-    */ 
-    protected $section; 
+//    
+//    /**
+//    * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
+//    * @ORM\JoinTable(name="NonMemSportsgroup_Section",
+//    * joinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")},
+//    * inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
+//    */ 
+//    protected $section; 
 
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
      */
     protected $sgid;
-    
-    /**
-     * @ORM\Column(type="string")
-        * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"Mitglieder", "Nichtmitglieder"}, message = "Bitte wählen Sie eine gültige Kategorie.")
-     */
-    protected $category;
-    
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $type;
-    
+//    
+//    /**
+//     * @ORM\Column(type="string")
+//        * @Assert\NotBlank()
+//     * @Assert\Choice(choices = {"Mitglieder", "Nichtmitglieder"}, message = "Bitte wählen Sie eine gültige Kategorie.")
+//     */
+//    protected $category;
+//    
+//    /**
+//     * @ORM\Column(type="string")
+//     */
+//    protected $type;
+//    
     /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank()
@@ -58,7 +59,6 @@ class NonMemSportsgroup {
     
     /**
      * @ORM\Column(type="string")
-        * @Assert\NotBlank()
      * 
      */
     protected $info;
@@ -68,9 +68,7 @@ class NonMemSportsgroup {
      */
     protected $roomid;
     
-    /**
-     * @ORM\Column(type="integer")
-     */
+   
     protected $trainerid;
     
     /**
@@ -80,15 +78,18 @@ class NonMemSportsgroup {
      */
     protected $token;
     
-        /**
+     
+    protected $bssaid;
+    /**
+     * @ORM\Id
     * @ORM\Column(type="date")
     */
-    protected $recorded;
+    protected $validfrom;
 
     /**
     * @ORM\Column(type="date")
     */
-    protected $deleted;
+    protected $validto;
 
 
     /**
@@ -100,54 +101,54 @@ class NonMemSportsgroup {
     {
         return $this->sgid;
     }
-
-    /**
-     * Set category
-     *
-     * @param string $category
-     *
-     * @return NonMemSportsgroup
-     */
-    public function setCategory($category)
-    {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    /**
-     * Get category
-     *
-     * @return string
-     */
-    public function getCategory()
-    {
-        return $this->category;
-    }
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     *
-     * @return NonMemSportsgroup
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
+//
+//    /**
+//     * Set category
+//     *
+//     * @param string $category
+//     *
+//     * @return NonMemSportsgroup
+//     */
+//    public function setCategory($category)
+//    {
+//        $this->category = $category;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get category
+//     *
+//     * @return string
+//     */
+//    public function getCategory()
+//    {
+//        return $this->category;
+//    }
+//
+//    /**
+//     * Set type
+//     *
+//     * @param string $type
+//     *
+//     * @return NonMemSportsgroup
+//     */
+//    public function setType($type)
+//    {
+//        $this->type = $type;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get type
+//     *
+//     * @return string
+//     */
+//    public function getType()
+//    {
+//        return $this->type;
+//    }
 
     /**
      * Set name
@@ -358,13 +359,10 @@ class NonMemSportsgroup {
         return $this->section;
     }
 
-    /**
-     * Set recorded
-     *
-     * @param \DateTime $recorded
-     *
-     * @return NonMemSportsgroup
-     */
+    
+  /**
+ * @ORM\PrePersist
+ */
     public function setRecorded($recorded)
     {
         $this->recorded = $recorded;
@@ -406,5 +404,67 @@ class NonMemSportsgroup {
     public function getDeleted()
     {
         return $this->deleted;
+    }
+
+    /**
+     * Set sgid
+     *
+     * @param integer $sgid
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setSgid($sgid)
+    {
+        $this->sgid = $sgid;
+
+        return $this;
+    }
+
+    /**
+     * Add trainerid
+     *
+     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
+     *
+     * @return NonMemSportsgroup
+     */
+    public function addTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
+    {
+        $this->trainerid[] = $trainerid;
+
+        return $this;
+    }
+
+    /**
+     * Remove trainerid
+     *
+     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
+     */
+    public function removeTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
+    {
+        $this->trainerid->removeElement($trainerid);
+    }
+
+    /**
+     * Set bssaid
+     *
+     * @param integer $bssaid
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setBssaid($bssaid)
+    {
+        $this->bssaid = $bssaid;
+
+        return $this;
+    }
+
+    /**
+     * Get bssaid
+     *
+     * @return integer
+     */
+    public function getBssaid()
+    {
+        return $this->bssaid;
     }
 }

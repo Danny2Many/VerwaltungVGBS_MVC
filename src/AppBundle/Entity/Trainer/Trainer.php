@@ -30,7 +30,7 @@ class Trainer extends PersonalData {
      * @ORM\Id
      * @ORM\Column(type="string")
      */
-    private $recorded;
+    private $validfrom;
     
     /**
      * @ORM\Column(type="string")
@@ -59,25 +59,22 @@ class Trainer extends PersonalData {
     protected $state;
     
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="string")
      */
-    protected $deleted;
+    protected $validto;
     
     
 
 
 
 
-    /**
-     * Constructor
-     */
+    /** @ORM\PostLoad */
     public function __construct()
     {
 //        $this->section = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->licence = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->phonenumber = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->theme = new \Doctrine\Common\Collections\ArrayCollection();
-
+        $this->licence = new ArrayCollection();
+        $this->phonenumber = new ArrayCollection();
+        $this->theme = new ArrayCollection();
         }
 
     /**
@@ -155,7 +152,7 @@ class Trainer extends PersonalData {
     {
         $licence->setTrainerid($this);
 
-        $this->licence[] = $licence;
+        $this->licence->add($licence);
 
         return $this;
     }
@@ -199,7 +196,7 @@ class Trainer extends PersonalData {
     {
         $theme->setTrainerid($this);
 
-        $this->theme[] = $theme;
+        $this->theme->add($theme);
 
         return $this;
     }
@@ -268,7 +265,8 @@ class Trainer extends PersonalData {
     public function addPhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
     {               
         $phonenumber->setTrainerid($this);
-        $this->phonenumber[] = $phonenumber;
+        
+        $this->phonenumber->add($phonenumber);
 
         return $this;
     }
@@ -278,9 +276,11 @@ class Trainer extends PersonalData {
      *
      * @param \AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber
     */
-    public function removePhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
+    public function removePhonenumber($phonenumber)
     {
         $this->phonenumber->removeElement($phonenumber);
+        
+        return $this;
     }
 
     /**
@@ -321,48 +321,45 @@ class Trainer extends PersonalData {
         return $this;
     }
 
-   /**
-    * @ORM\PrePersist
-    */
-    public function setRecorded()
+    public function setValidfrom($validfrom)
     {
-        $now= new \DateTime();
-        $this->recorded = $now->format('Y-m-d');
+        
+        $this->validfrom = $validfrom;
 
         return $this;
     }
 
     /**
-     * Get recorded
+     * Get validfrom
      *
      * @return string
      */
-    public function getRecorded()
+    public function getValidfrom()
     {
-        return $this->recorded;
+        return $this->validfrom;
     }
 
     /**
-     * Set deleted
+     * Set validto
      *
-     * @param \DateTime $deleted
+     * @param string $validto
      *
      * @return Trainer
      */
-    public function setDeleted( $deleted)
+    public function setValidto( $validto)
     {
-        $this->deleted = $deleted;
+        $this->validto = $validto;
 
         return $this;
     }
 
     /**
-     * Get deleted
+     * Get validto
      *
-     * @return \DateTime
+     * @return string
      */
-    public function getDeleted()
+    public function getValidto()
     {
-        return $this->deleted;
+        return $this->validto;
     }
 }

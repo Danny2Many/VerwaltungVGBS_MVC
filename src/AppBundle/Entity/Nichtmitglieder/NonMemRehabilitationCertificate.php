@@ -53,17 +53,10 @@ class NonMemRehabilitationCertificate {
      * @ORM\Column(type="string")
      * 
      */
-    protected $recorded;
+    protected $validfrom;
     
     
-    /**
-     * 
-     * @ORM\Column(type="string")
-     * 
-     */
-    protected $deleted;
-    
-    
+  
     
     /**
      * Get rcid
@@ -229,4 +222,27 @@ class NonMemRehabilitationCertificate {
     {
         return $this->deleted;
     }
+
+     /**
+    * @ORM\PrePersist
+    */
+    public function setValidfrom()
+    {
+        $now= new \DateTime();
+        $this->validfrom = $now->format('Y');
+
+        return $this;
+    }
+
+    /**
+     * Get validfrom
+     *
+     * @return string
+     */
+    public function getValidfrom()
+    {
+        return $this->validfrom;
+    }
+
+   
 }

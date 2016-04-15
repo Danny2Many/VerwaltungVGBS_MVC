@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="MemRehabilitationCertificate")
- * @ORM\HasLifecycleCallbacks()
+ * 
  */
 class MemRehabilitationCertificate {
     
@@ -34,11 +34,11 @@ class MemRehabilitationCertificate {
     
     
     /**
-     * 
+     * @ORM\Id
      * @ORM\Column(type="string")
      * 
      */
-    protected $recorded;
+    protected $validfrom;
     
     
     /**
@@ -46,7 +46,7 @@ class MemRehabilitationCertificate {
      * @ORM\Column(type="string")
      * 
      */
-    protected $deleted;
+    protected $validto;
     
     
     
@@ -158,50 +158,7 @@ class MemRehabilitationCertificate {
         return $this->rehabunits;
     }
 
-    /**
- * @ORM\PrePersist
- */
-    public function setRecorded()
-    {
-        $now= new \DateTime();
-        $this->recorded = $now->format('Y-m-d');
 
-        return $this;
-    }
-
-    /**
-     * Get recorded
-     *
-     * @return string
-     */
-    public function getRecorded()
-    {
-        return $this->recorded;
-    }
-
-    /**
-     * Set deleted
-     *
-     * @param string $deleted
-     *
-     * @return MemRehabilitationCertificate
-     */
-    public function setDeleted($deleted)
-    {
-        $this->deleted = $deleted;
-
-        return $this;
-    }
-
-    /**
-     * Get deleted
-     *
-     * @return string
-     */
-    public function getDeleted()
-    {
-        return $this->deleted;
-    }
 
     /**
      * Set rcid
@@ -215,5 +172,53 @@ class MemRehabilitationCertificate {
         $this->rcid = $rcid;
 
         return $this;
+    }
+
+    /**
+     * Set validfrom
+     *
+     * @param string $validfrom
+     *
+     * @return MemRehabilitationCertificate
+     */
+    public function setValidfrom($validfrom)
+    {
+        $this->validfrom = $validfrom;
+
+        return $this;
+    }
+
+    /**
+     * Get validfrom
+     *
+     * @return string
+     */
+    public function getValidfrom()
+    {
+        return $this->validfrom;
+    }
+
+    /**
+     * Set validto
+     *
+     * @param string $validto
+     *
+     * @return MemRehabilitationCertificate
+     */
+    public function setValidto($validto)
+    {
+        $this->validto = $validto;
+
+        return $this;
+    }
+
+    /**
+     * Get validto
+     *
+     * @return string
+     */
+    public function getValidto()
+    {
+        return $this->validto;
     }
 }

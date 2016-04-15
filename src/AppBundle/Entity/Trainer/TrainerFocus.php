@@ -37,14 +37,15 @@ class TrainerFocus {
     protected $theme;
 
     /**
-     * @ORM\Column(type="date")
-     */
-    protected $deleted;
-    
-    /**
      * @ORM\Column(type="string")
      */
-    protected $recorded;   
+    protected $validto;
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="string")
+     */
+    protected $validfrom;   
 
     /**
      * Set trainerid
@@ -120,48 +121,45 @@ class TrainerFocus {
     }
 
     /**
-     * Set deleted
+     * Set validto
      *
-     * @param \DateTime $deleted
+     * @param \DateTime $validto
      *
      * @return TrainerFocus
      */
-    public function setDeleted($deleted)
+    public function setValidto($validto)
     {
-        $this->deleted = $deleted;
+        $this->validto = $validto;
 
         return $this;
     }
 
     /**
-     * Get deleted
+     * Get Validto
      *
      * @return \DateTime
      */
-    public function getDeleted()
+    public function getValidto()
     {
-        return $this->deleted;
+        return $this->validto;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
-    public function setRecorded()
+    public function setValidfrom($validfrom)
     {
-        $now= new \DateTime();
-        $this->recorded = $now->format('Y-m-d');
+        
+        $this->validfrom = $validfrom;
 
         return $this;
     }
 
     /**
-     * Get recorded
+     * Get validfrom
      *
      * @return \DateTime
      */
-    public function getRecorded()
+    public function getValidfrom()
     {
-        return $this->recorded;
+        return $this->validfrom;
     }
     
     /**
