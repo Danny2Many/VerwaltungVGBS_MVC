@@ -45,15 +45,14 @@ class NonMemberController extends Controller {
         //building the subquery: SELECT max(validfrom) FROM % AS dittosub WHERE dittosub.type = ditto.type
      $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
      $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
-                          ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
-                          
+                          ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id')
+                           ->andWhere('dittosub.validfrom<='.$now)
+                     ->andWhere('dittosub.validto>'.$now);
         
      //building the query: SELECT ditto FROM % AS ditto WHERE ditto.validfrom=( subquery ) AND ditto.validfrom<=$adminyear 
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
      $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
-                    ->andWhere('ditto.validfrom<=:adminyear')
-                    ->andWhere('ditto.validto>:adminyear')
-                    ->setParameter('adminyear',$now);
+                 ;
     }
     
     
