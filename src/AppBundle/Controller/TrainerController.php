@@ -369,9 +369,10 @@ class TrainerController extends Controller
                     }
                 }
                 
-            if($trainer != $trainer_old){    
+            if($trainer != $trainer_old){
+            $trainer->setValidto($trainer_old->getValidto());    
             $trainer_old->setValidto($adminyear);
-            $trainer->setValidfrom($adminyear)->setValidto('2155');
+            $trainer->setValidfrom($adminyear);
             }
              
             $manager->persist($trainer);
