@@ -7,10 +7,13 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks()
  */
 class BSSACert {
+    
+
+
+
  /**
 * @ORM\Id
-* @ORM\Column(name="bssaid", type="integer")
-* @ORM\OneToOne(targetEntity="NonMemSportsgroup", mappedBy="BSSACert")
+* @ORM\Column(name="bssaid")
 */
 protected $bssaid;
 
@@ -37,12 +40,18 @@ protected $bssacertnr;
 * @ORM\Id
 * @ORM\Column(type="string")  
 */
-protected $recorded;
+protected $validfrom;
 
 /**
-* @ORM\Column(type="date")
+* @ORM\Column(type="string")
 */
-protected $deleted;
+protected $validto;
+
+
+/**
+* @ORM\Column(type="integer")
+*/
+protected $sgid;
 
 
 
@@ -216,5 +225,77 @@ protected $deleted;
     public function getDeleted()
     {
         return $this->deleted;
+    }
+
+    /**
+     * Set validfrom
+     *
+     * @param string $validfrom
+     *
+     * @return BSSACert
+     */
+    public function setValidfrom($validfrom)
+    {
+        $this->validfrom = $validfrom;
+
+        return $this;
+    }
+
+    /**
+     * Get validfrom
+     *
+     * @return string
+     */
+    public function getValidfrom()
+    {
+        return $this->validfrom;
+    }
+
+    /**
+     * Set validto
+     *
+     * @param string $validto
+     *
+     * @return BSSACert
+     */
+    public function setValidto($validto)
+    {
+        $this->validto = $validto;
+
+        return $this;
+    }
+
+    /**
+     * Get validto
+     *
+     * @return string
+     */
+    public function getValidto()
+    {
+        return $this->validto;
+    }
+
+    /**
+     * Set sgid
+     *
+     * @param integer $sgid
+     *
+     * @return BSSACert
+     */
+    public function setSgid($sgid)
+    {
+        $this->sgid = $sgid;
+
+        return $this;
+    }
+
+    /**
+     * Get sgid
+     *
+     * @return integer
+     */
+    public function getSgid()
+    {
+        return $this->sgid;
     }
 }

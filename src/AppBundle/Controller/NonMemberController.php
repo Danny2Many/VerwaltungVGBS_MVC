@@ -90,19 +90,10 @@ class NonMemberController extends Controller {
             $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\NonMemRehabilitationCertificate']->expr()->in('ditto.nmemid', $idarray));
             $qb['Nichtmitglieder\NonMemRehabilitationCertificate']->orWhere($qb['Nichtmitglieder\Nonmember']->expr()->in('ditto.nmemid', $idarray));
             
+            }else{
+                $qb['Nichtmitgleider\Nonmember']->andWhere('ditto.nmemid<=:abort')->setParameter('abort',-1);
             }
-//        }else  if($searchcol=='terminationdate'){
-//        $qb['Nichtmitglieder\NonMemRehabilitationCertificate']->andWhere($qb['Nichtmitglieder\NonMemRehabilitationCertificate']->expr()->like('ditto.'.$searchcol,':type'))
-//            ->setParameter('type','%'.$searchval.'%');
-//
-//            $rehacelist=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
-//
-//            if($rehacelist){          
-//                foreach ($rehacelist as $rc){         
-//                $idarray[]=$rc->getNmemid();     
-//            }
-//        }
-//        else{   
+    }else{
     $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.'.$searchcol, ':nonmember'))
                ->setParameter('nonmember','%'.$searchval.'%');
     } 
@@ -131,11 +122,7 @@ class NonMemberController extends Controller {
     $nonmemberlist=$qb['Nichtmitglieder\Nonmember']->getQuery()->getResult();
     $phonenumberlist=$qb['Nichtmitglieder\NonMemPhoneNumber']->getQuery()->getResult();
     $rehabcertlist=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
-
-    if(!$rehabcertlist){  
-        $nonmemberlist=$rehabcertlist;            
-        }
-        
+  
     $nonmemberdependentlist=[];
     foreach ($phonenumberlist as $pn){
 
@@ -144,7 +131,7 @@ class NonMemberController extends Controller {
 
 
      foreach ($rehabcertlist as $rc){
-        if($rc->getTerminationdate()->format("Y-m-d") > $now){
+        if($rc->getTerminationdate()->format("Y") > $now){
          $nonmemberdependentlist[$rc->getNMemid()]['validrehabcerts'][]=$rc;
         }else{
           $nonmemberdependentlist[$rc->getNMemid()]['expiredrehabcerts'][]=$rc;  

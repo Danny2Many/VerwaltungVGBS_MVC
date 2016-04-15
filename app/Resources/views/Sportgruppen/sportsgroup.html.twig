@@ -8,7 +8,7 @@
 {% block fixedcolnum %} 6 {% endblock %}
 
 {% block add %}
-    <a href="{{ path('addsportsgroup', {'letter': cletter }) }}"><button    class="add btn btn-default">
+    <a href="{{ path('addsportsgroup', {'letter': cletter, 'adminyear': adminyear }) }}"><button    class="add btn btn-default">
       <span class="glyphicon glyphicon-plus"></span> neue Sportgruppe anlegen
         </button></a>  
 {% endblock %}
@@ -70,11 +70,17 @@
         <td>{{ data.roomid|striptags }}</td> 
         <td>{{ data.token|striptags }}</td>
         <td>{{ data.sgid|striptags }}</td>
+        
+        {% if sportsgroupdependentlist[data.sgid]['trainers'] is defined %}
+            {% set trainer =sportsgroupdependentlist[data.sgid]['trainers'] %}
+        {% else %}
+          {% set trainer ='' %}  
+        {% endif %}
         <td>{% if data.trainerid is empty %}
             {{ "-" }}
             {% else  %}
                 {% for trainerid in data.trainerid %}
-                {{ trainerid.FirstName }}<br>
+                {{ trainerid.FirstName }}{{ trainerid.LastName }}<br>
             {% endfor %}
             {% endif %}</td>
         <td></td>
@@ -87,57 +93,67 @@
         <td>{{ data.sgid|striptags }}</td>        
         
         <td bgcolor="#5fa8ec"></td>
+        
+        {% if adminyear == "now"|date("Y") %}
+            {% set now = "now"|date("Y-m-d") %}
+            {% else %}
+           {% set now = date(adminyear~'-12-31')  %}     
+        {% endif %}
+        
+        
         {% if sportsgroupdependentlist[data.sgid]['terminationdate'] is defined %}
         {% set terminationdate =sportsgroupdependentlist[data.sgid]['terminationdate'] %}
         {% else %}
           {% set terminationdate ='' %}  
         {% endif %}
-        <td>{% for TD in terminationdate if date(TD.terminationdate) > date() %}                     
-                {{'TD'}}{{loop.index}}-<strong>{{TD.terminationdate|date("d.m.Y") }}</strong>-{{TD.terminationdate }}<br>
-            {% else %}
-                {{ "-" }}</td>
-            {% endfor %} 
-           
+        <td>{% for TD in terminationdate  %}
+        <div class="{% if date(TD.terminationdate)|date("Y-m-d") < now|date_modify("+2 months")|date("Y-m-d") %}red {% endif %}
+                   {% if (now|date("Y") == TD.terminationdate|date("Y") and now|date("Y-m-d") < TD.terminationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
+                 <strong>{{TD.terminationdate|date("d.m.Y") }}</strong></div>
+                  {% else %}
+                         {{ "-" }}
+                    {% endfor %}
+{#/******************************************************** #}          
         {% if sportsgroupdependentlist[data.sgid]['startdate'] is defined %}
             {% set startdate =sportsgroupdependentlist[data.sgid]['startdate'] %}
         {% else %}
           {% set startdate ='' %}  
         {% endif %}
-        <td>{% for SD in startdate if date(SD.startdate) > date() %}                     
-                {{'TD'}}{{loop.index}}-<strong>{{SD.startdate|date("d.m.Y") }}</strong>-{{SD.startdate }}<br>
+        <td>{% for SD in startdate if date(SD.startdate) != NULL %}                     
+               {{SD.startdate|date("d.m.Y") }}<br>
             {% else %}
                 {{ "-" }}</td>
             {% endfor %} 
-           
-        {% if sportsgroupdependentlist[data.sgid]['recorded'] is defined %}
-            {% set recorded =sportsgroupdependentlist[data.sgid]['recorded'] %}
+{#/******************************************************** #}          
+        {% if sportsgroupdependentlist[data.sgid]['validfrom'] is defined %}
+            {% set validfrom =sportsgroupdependentlist[data.sgid]['validfrom'] %}
         {% else %}
-          {% set recorded ='' %}  
+          {% set validfrom ='' %}  
         {% endif %}
-        <td>{% for RE in recorded if date(RE.recorded) > date() %}                     
-                {{'TD'}}{{loop.index}}-<strong>{{RE.recorded|date("d.m.Y") }}</strong>-{{RE.recorded }}<br>
+        <td>{% for VF in validfrom if date(VF.validfrom) != NULL %}                     
+               {{VF.validfrom }}<br>
             {% else %}
                 {{ "-" }}</td>
             {% endfor %}  
-           
+{#/******************************************************** #}          
         {% if sportsgroupdependentlist[data.sgid]['groupnr'] is defined %}
             {% set groupnr =sportsgroupdependentlist[data.sgid]['groupnr'] %}
         {% else %}
           {% set groupnr ='' %}  
         {% endif %}
-        <td>{% for GN in groupnr if date(TD.groupnr) > date() %}                     
-                {{'TD'}}{{loop.index}}-<strong>{{TD.groupnr }}</strong>-{{TD.groupnr }}<br>
+        <td>{% for GN in groupnr if GN.groupnr != NULL  %}                     
+                <strong>{{GN.groupnr }}</strong><br>
             {% else %}
                 {{ "-" }}</td>
             {% endfor %}  
-            
+{#/******************************************************** #}           
         {% if sportsgroupdependentlist[data.sgid]['bssacertnr'] is defined %}
             {% set bssacertnr =sportsgroupdependentlist[data.sgid]['bssacertnr'] %}
         {% else %}
           {% set bssacertnr ='' %}  
         {% endif %}
-        <td>{% for TD in bssacertnr if date(TD.bssacertnr) > date() %}                     
-                {{'TD'}}{{loop.index}}-<strong>{{TD.bssacertnr }}</strong>-{{TD.bssacertnr }}<br>
+        <td>{% for BC in bssacertnr if BC.bssacertnr != NULL %}                     
+                {{'O'}} <strong>{{BC.bssacertnr }}</strong><br>
             {% else %}
                 {{ "-" }}</td>
             {% endfor %} 

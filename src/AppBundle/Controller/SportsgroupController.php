@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup;
+use AppBundle\Entity\Trainer\Trainer;
 use AppBundle\Form\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,11 +19,11 @@ class SportsgroupController extends Controller {
      public function indexAction (Request $request, $letter, $adminyear){
      
     if($adminyear == date('Y')){ 
-        $now=date("Y-m-d");
+        $now=date("Y");
     }
      //else take the last day of the choosen year
     else{
-        $now=$adminyear.'-12-31';
+        $now=$adminyear;
     }     
          
     $doctrine = $this->getDoctrine();
@@ -40,6 +41,7 @@ class SportsgroupController extends Controller {
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
      $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
                     ->andWhere('ditto.validfrom<=:adminyear')
+                    ->andWhere('ditto.validto>:adminyear')
                     ->setParameter('adminyear',$now);
     }
     $choices=array('Sportgruppennr.' => 'sgid',
@@ -84,17 +86,24 @@ class SportsgroupController extends Controller {
                         ->setParameter('umlautletter','Ü%'); 
            break;
        }
-    }
+    }else{ $letter=null; } 
+    $qb['Trainer\Trainer'] = $doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy('trainerid');
     $sportsgrouplist=$qb['Nichtmitglieder\NonMemSportsgroup']->getQuery()->getResult();
     $bssacertlist=$qb['BSSACert']->getQuery()->getResult();
+    $trainerlist=$qb['Trainer\Trainer']->getQuery()->getResult();
     
     $sportsgroupdependentlist=[];
     foreach ($bssacertlist as $bs){
-        $sportsgroupdependentlist[$bs->getBssaid()]['terminationdate'][]=$bs;  
-        $sportsgroupdependentlist[$bs->getBssaid()]['startdate'][]=$bs; 
-        $sportsgroupdependentlist[$bs->getBssaid()]['validfrom'][]=$bs; 
-        $sportsgroupdependentlist[$bs->getBssaid()]['groupnr'][]=$bs; 
-        $sportsgroupdependentlist[$bs->getBssaid()]['bssacertnr'][]=$bs; 
+        $sportsgroupdependentlist[$bs->getSgid()]['terminationdate'][]=$bs;  
+        $sportsgroupdependentlist[$bs->getSgid()]['startdate'][]=$bs; 
+        $sportsgroupdependentlist[$bs->getSgid()]['validfrom'][]=$bs; 
+        $sportsgroupdependentlist[$bs->getSgid()]['groupnr'][]=$bs; 
+        $sportsgroupdependentlist[$bs->getSgid()]['bssacertnr'][]=$bs; 
+    }
+    
+    foreach ($trainerlist as $pn){
+
+        $sportsgroupdependentlist[$pn->getNMemID()]['trainers'][]=$pn;
     }
     
    
