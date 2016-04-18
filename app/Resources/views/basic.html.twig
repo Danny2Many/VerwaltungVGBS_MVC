@@ -120,7 +120,7 @@
                             <button type="submit" class="btn btn-default">
                                 <span class="glyphicon glyphicon-search"></span> suchen
                             </button>
-                            <a href="{{ path(path) }}"><input type="button" class="btn btn-default" value="Suche abbrechen" {% if  searchform.vars.submitted == false %}{{ 'disabled' }}{% endif %} ></a>
+                            <a href="{{ path(path,{'adminyear': adminyear}) }}"><input type="button" class="btn btn-default" value="Suche abbrechen" {% if  searchform.vars.submitted == false %}{{ 'disabled' }}{% endif %} ></a>
                             
                             {{ form_end(searchform) }}
                         {% endblock %}
