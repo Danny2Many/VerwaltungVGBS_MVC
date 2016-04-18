@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Nonmember extends HealthData {
 
- 
+
 protected $rehabilitationcertificate;
 protected $phonenumber; 
 //

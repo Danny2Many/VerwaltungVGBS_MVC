@@ -76,14 +76,22 @@
         {% else %}
           {% set trainer ='' %}  
         {% endif %}
-        <td>{% if data.trainerid is empty %}
-            {{ "-" }}
-            {% else  %}
-                {% for trainerid in data.trainerid %}
-                {{ trainerid.FirstName }}{{ trainerid.LastName }}<br>
-            {% endfor %}
-            {% endif %}</td>
-        <td></td>
+        <td>{% for TR in trainer if TR.sgid != NULL %}                     
+               {{TR.trainerid }}<br>
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %} 
+{#/******************************************************** #}          
+        {% if sportsgroupdependentlist[data.trainerid]['trainers'] is defined %}
+            {% set trainer =sportsgroupdependentlist[data.trainerid]['trainers'] %}
+        {% else %}
+          {% set trainer ='' %}  
+        {% endif %}
+        <td>{% for TR in trainer if TR.trainerid != NULL %}                     
+               {{TR.trainerid }}<br>
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %} 
         <td bgcolor="#5fa8ec"></td>
         <td>{{ data.sgid|striptags }}</td>
         <td>{{ data.sgid|striptags }}</td> 

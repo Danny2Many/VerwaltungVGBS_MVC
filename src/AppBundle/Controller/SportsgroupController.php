@@ -27,7 +27,7 @@ class SportsgroupController extends Controller {
     }     
          
     $doctrine = $this->getDoctrine();
-    $dependencies=array('Nichtmitglieder\NonMemSportsgroup' => 'sg', 'BSSACert' => 'bssa', 'Trainer\Trainer' => 'trainer');
+    $dependencies=array('Nichtmitglieder\NonMemSportsgroup' => 'sg', 'BSSACert' => 'bssa', 'Nichtmitglieder\Trainer_NonMemSportsgroupSub' => 'trainer');
     $qb=[];
        foreach($dependencies as $dependent => $idprefix){
    
@@ -90,7 +90,7 @@ class SportsgroupController extends Controller {
     //$qb['Trainer\Trainer'] = $doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy('trainerid');
     $sportsgrouplist=$qb['Nichtmitglieder\NonMemSportsgroup']->getQuery()->getResult();
     $bssacertlist=$qb['BSSACert']->getQuery()->getResult();
-    $trainerlist=$qb['Trainer\Trainer']->getQuery()->getResult();
+    $trainerlist=$qb['Nichtmitglieder\Trainer_NonMemSportsgroupSub']->getQuery()->getResult();
     
     $sportsgroupdependentlist=[];
     foreach ($bssacertlist as $bs){
