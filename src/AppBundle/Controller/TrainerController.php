@@ -55,14 +55,11 @@ class TrainerController extends Controller
             $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
                     ->where('dittosub.'.$idprefix.'id=dittosub.'.$idprefix.'id')
                     ->andWhere('dittosub.validfrom<='.$now)
-                    ->andWhere('dittosub.validto>'.$now)
-                    
+                    ->andWhere('dittosub.validto>'.$now)                   
                     ;
             
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-            $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
-                    
-       
+            $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')      
                     ;   
     }
     
@@ -276,7 +273,7 @@ class TrainerController extends Controller
       }
         }
         $trainer=$doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy(array('trainerid' => $ID, 'validfrom'=>$validfrom));
-        $trainer_update = clone $trainer;
+        $trainer_old = clone $trainer;
         
        
         
@@ -302,21 +299,21 @@ class TrainerController extends Controller
 
 
         foreach ($licences as $licence) {
-            $trainer_update->addLicence($licence);
+            $trainer->addLicence($licence);
             $originallicences->add($licence);
         }   
         
         foreach ($phonenumbers as $phonenr) {
-            $trainer_update->addPhonenumber($phonenr);
+            $trainer->addPhonenumber($phonenr);
             $originalphonenr->add($phonenr);
         }       
         
         foreach ($focuses as $theme) {
-            $trainer_update->addTheme($theme);
+            $trainer->addTheme($theme);
             $originalthemes->add($theme);
         }
         
-        $edittrainerform = $this->createForm(EditTrainerType::class, $trainer_update);
+        $edittrainerform = $this->createForm(EditTrainerType::class, $trainer);
         $edittrainerform -> handleRequest($request);
         
         if($edittrainerform->get('delete')->isClicked()){
@@ -346,7 +343,7 @@ class TrainerController extends Controller
             }
         }
         
-            foreach($trainer_update->getPhonenumber() as $pn){
+            foreach($trainer->getPhonenumber() as $pn){
                 if (false == $originalphonenr->contains($pn)) {
                      $pn->setTpnid(uniqid('pn'))
                             ->setValidfrom($adminyear)
@@ -355,7 +352,7 @@ class TrainerController extends Controller
                     }            
                 }
             
-            foreach($trainer_update->getLicence() as $lc){
+            foreach($trainer->getLicence() as $lc){
                 if (false == $originallicences->contains($lc)) {
                     $lc->setLiid(uniqid('lc'))
                             ->setValidfrom($adminyear)
@@ -364,7 +361,7 @@ class TrainerController extends Controller
                     }
                 }
           
-            foreach($trainer_update->getTheme() as $th){
+            foreach($trainer->getTheme() as $th){
                 if (false == $originalphonenr->contains($pn)) {
                     $th->setTfid(uniqid('th'))
                         ->setValidfrom($adminyear)
@@ -373,15 +370,20 @@ class TrainerController extends Controller
                     }
                 }
                 
-            $trainer->setValidto($adminyear);
-            $trainer_update->setValidfrom($adminyear)->setValidto('2155');
-
+            if($trainer != $trainer_old){
+            $trainer->setValidto($trainer_old->getValidto());    
+            $trainer_old->setValidto($adminyear);
+            $trainer->setValidfrom($adminyear);
+            }
              
-            $manager->persist($trainer_update);
             $manager->persist($trainer);
-            
-            
             $manager->flush();
+
+            if($trainer != $trainer_old){    
+            $manager->persist($trainer_old);            
+            $manager->flush();
+            }
+            
             $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');
            
           return $this->redirectToRoute('trainer_home', array('letter' => $letter));  
