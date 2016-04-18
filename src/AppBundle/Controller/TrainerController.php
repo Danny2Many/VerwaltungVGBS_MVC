@@ -34,34 +34,17 @@ class TrainerController extends Controller
      */
     public function indexAction (Request $request, $letter, $adminyear)
     {       
-             
-        //if $adminyear is the current year
-         if($adminyear == date('Y')){
-         $now=date("Y");
-         }
-         //else take the last day of the choosen year
-         else{
-             $now=$adminyear;
-         }   
         
         $doctrine=$this->getDoctrine();
         $dependencies=['Trainer\Trainer' => 'trainer', 'Trainer\TrainerPhoneNumber' =>'tpn', 'Trainer\TrainerFocus'=>'tf','Trainer\TrainerLicence'=>'li'];
     
         $qb= [];
         foreach($dependencies as $dependent => $idprefix){
-
-            $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
-                    ->where('dittosub.'.$idprefix.'id=dittosub.'.$idprefix.'id')
-                    ->andWhere('dittosub.validfrom<='.$now)
-                    ->andWhere('dittosub.validto>'.$now)                   
-                    ;
             
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-            $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')      
-                    ;   
-    }
-    
+            $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
+                    ->andWhere('ditto.validto>'.$adminyear);   
+    }    
         
         $choices=array('Trainernr.' => 'trainerid',
         'Name' => 'lastname',
@@ -74,7 +57,7 @@ class TrainerController extends Controller
 //        print_r($qb['Trainer\Trainer']->getQuery()->getResult());
 //        echo '</pre>';
         
-    $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('trainer_home')));    
+    $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('trainer_home'),array('adminyear' => $adminyear)));    
         
     $searchform->handleRequest($request);    
   
@@ -378,11 +361,12 @@ class TrainerController extends Controller
             $manager->persist($trainer);
             $manager->flush();
 
-            if($trainer != $trainer_old){    
-            $manager->persist($trainer_old);            
+            if($trainer != $trainer_old && $adminyear != $trainer_old->getValidfrom()){    
+            $manager->persist($trainer_old);   
             $manager->flush();
             }
             
+
             $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');
            
           return $this->redirectToRoute('trainer_home', array('letter' => $letter));  
