@@ -39,7 +39,7 @@ class TrainerController extends Controller
         $dependencies=['Trainer\Trainer' => 'trainer', 'Trainer\TrainerPhoneNumber' =>'tpn', 'Trainer\TrainerFocus'=>'tf','Trainer\TrainerLicence'=>'li'];
     
         $qb= [];
-        foreach($dependencies as $dependent => $idprefix){
+        foreach($dependencies as $dependent){
             
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
             $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
@@ -57,7 +57,7 @@ class TrainerController extends Controller
 //        print_r($qb['Trainer\Trainer']->getQuery()->getResult());
 //        echo '</pre>';
         
-    $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('trainer_home'),array('adminyear' => $adminyear)));    
+    $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('trainer_home',array('adminyear' => $adminyear))));    
         
     $searchform->handleRequest($request);    
   
@@ -236,24 +236,15 @@ class TrainerController extends Controller
         $dependencies=['Trainer\TrainerPhoneNumber'=>'tpn', 'Trainer\TrainerFocus'=>'tf','Trainer\TrainerLicence'=>'li'];
 
         $qb= [];
-        foreach($dependencies as $dependent => $idprefix){
-            
-      {
-            
-            $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-            $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
-                                ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
-
-
+        foreach($dependencies as $dependent){          
+            {            
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-            $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
-                            ->andWhere('ditto.trainerid=:ID')
-                            ->andWhere('ditto.validfrom<=:adminyear')
-                            ->andWhere('ditto.validto>:adminyear')
-                            ->setParameter('ID',$ID)
-                            ->setParameter('adminyear',$adminyear);
-      }
+            $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
+                            ->andWhere('ditto.validto>'.$adminyear) 
+                            ->andWhere('ditto.trainerid='.$ID);
+            }
         }
+        
         $trainer=$doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy(array('trainerid' => $ID, 'validfrom'=>$validfrom));
         $trainer_old = clone $trainer;
         
@@ -344,7 +335,7 @@ class TrainerController extends Controller
                 }
           
             foreach($trainer->getTheme() as $th){
-                if (false == $originalphonenr->contains($pn)) {
+                if (false == $originalphonenr->contains($th)) {
                     $th->setTfid(uniqid('th'))
                         ->setValidfrom($adminyear)
                         ->setValidto('2155');
