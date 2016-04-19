@@ -58,7 +58,7 @@
                     {% else %}
                     {% set first = data.lastname|first %}   
                 {% endif %}
-                <td><center><a href="{{ path('editmem', {'letter': first|capitalize, 'ID': data.memid, 'adminyear': adminyear }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
+                <td><center><a href="{{ path('editmem', {'letter': first|capitalize, 'ID': data.memid, 'adminyear': adminyear, 'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
                 <td>{{ data.memid }}</td>
                
                 <td>{{ data.state|striptags }}</td>

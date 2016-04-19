@@ -25,34 +25,19 @@ class NonMemberController extends Controller {
 
     */    
     public function indexAction (Request $request, $letter, $adminyear ) {   
-  
-    //if $adminyear is the current year
-     if($adminyear == date('Y')){
-     
-     $now=date("Y");
-     
-     }
-     //else take the last day of the choosen year
-     else{
-         $now=$adminyear;
-     }
+
      
     $doctrine = $this->getDoctrine();
     $dependencies=array('Nichtmitglieder\Nonmember' => 'nmem', 'Nichtmitglieder\NonMemPhoneNumber' => 'pn', 'Nichtmitglieder\NonMemRehabilitationCertificate' => 'rc');
     $qb=[];
       foreach($dependencies as $dependent => $idprefix){
    
-        //building the subquery: SELECT max(validfrom) FROM % AS dittosub WHERE dittosub.type = ditto.type
-     $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-     $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
-                          ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id')
-                           ->andWhere('dittosub.validfrom<='.$now)
-                     ->andWhere('dittosub.validto>'.$now);
+       
+     $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
+     $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
+                    ->andWhere('ditto.validto>'.$adminyear);
         
-     //building the query: SELECT ditto FROM % AS ditto WHERE ditto.validfrom=( subquery ) AND ditto.validfrom<=$adminyear 
-     $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-     $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
-                 ;
+     
     }
     
     
@@ -245,7 +230,8 @@ class NonMemberController extends Controller {
     }
         
         
-        $nonmember=$qb['Nichtmitglieder\Nonmember']->getQuery()->getSingleResult();
+        $nonmember=$doctrine->getRepository('Nichtmitglieder\Nonmember')->findOneBy(array('nmemid' => $ID, 'validfrom'=>$validfrom));
+        $nonmember_old = clone $nonmember;
         
         if (!$nonmember){
             throw $this->createNotFoundForm('Es konnte kein Nichtmitglied mit der Nichtmitgliedsnr.: '.$ID.' gefunden werden');
@@ -356,11 +342,20 @@ class NonMemberController extends Controller {
 //
 //            }
 //        }
-           
+            if($nonmember != $nonmember_old){
+                $nonmember->setValidto($nonmember_old->getValidto());
+                $nonmember_old->Validto($adminyear);
+                $nonmember->setValidfrom($adminyear);
+            }
             $manager->persist($nonmember);          
             $manager->flush();     
+            
+            if($nonmember != nonmember_old && $adminyear != $nonmember_old->getValidfrom()){
+            $manager->persist($nonmember_old);
+            $manager->flush();
+            }
             $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');
-            return $this->redirectToRoute('nonmember_home', array('letter' => $letter, 'info' => 'gespeichert'));    
+            return $this->redirectToRoute('nonmember_home', array('letter' => $letter));    
        
         
             
