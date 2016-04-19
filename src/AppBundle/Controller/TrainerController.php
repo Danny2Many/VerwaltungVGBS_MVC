@@ -36,7 +36,7 @@ class TrainerController extends Controller
     {       
         
         $doctrine=$this->getDoctrine();
-        $dependencies=['Trainer\Trainer' => 'trainer', 'Trainer\TrainerPhoneNumber' =>'tpn', 'Trainer\TrainerFocus'=>'tf','Trainer\TrainerLicence'=>'li'];
+        $dependencies=['Trainer\Trainer', 'Trainer\TrainerPhoneNumber', 'Trainer\TrainerFocus','Trainer\TrainerLicence'];
     
         $qb= [];
         foreach($dependencies as $dependent){
@@ -53,9 +53,7 @@ class TrainerController extends Controller
         'E-Mail' => 'email',
         'Lizenz' => 'licencetype');     
  
-//        echo '<pre>'; 
-//        print_r($qb['Trainer\Trainer']->getQuery()->getResult());
-//        echo '</pre>';
+
         
     $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('trainer_home',array('adminyear' => $adminyear))));    
         
@@ -233,7 +231,7 @@ class TrainerController extends Controller
         
         $validfrom=$request->query->get('validfrom');
         
-        $dependencies=['Trainer\TrainerPhoneNumber'=>'tpn', 'Trainer\TrainerFocus'=>'tf','Trainer\TrainerLicence'=>'li'];
+        $dependencies=['Trainer\TrainerPhoneNumber', 'Trainer\TrainerFocus','Trainer\TrainerLicence'];
 
         $qb= [];
         foreach($dependencies as $dependent){          
@@ -279,7 +277,11 @@ class TrainerController extends Controller
         foreach ($phonenumbers as $phonenr) {
             $trainer->addPhonenumber($phonenr);
             $originalphonenr->add($phonenr);
-        }       
+        } 
+        
+        echo '<pre>'; 
+        print_r($originalphonenr->get(0)->getPhonenumber());
+        echo '</pre>';
         
         foreach ($focuses as $theme) {
             $trainer->addTheme($theme);
@@ -322,6 +324,15 @@ class TrainerController extends Controller
                             ->setValidfrom($adminyear)
                             ->setValidto('2155');
                      $manager->persist($pn);              
+                    }else{
+                        $pn_new = clone $pn;
+                        $pn->setPhonenumber($originalphonenr->get(0)->getPhonenumber())
+                            ->setValidto($adminyear);
+                        
+                        $pn_new->setValidfrom($adminyear);
+                        $manager->persist($pn);
+                        $manager->persist($pn_new);
+                         
                     }            
                 }
             
@@ -344,7 +355,6 @@ class TrainerController extends Controller
                 }
                 
             if($trainer != $trainer_old){
-            $trainer->setValidto($trainer_old->getValidto());    
             $trainer_old->setValidto($adminyear);
             $trainer->setValidfrom($adminyear);
             }
