@@ -422,23 +422,23 @@ class MemberController extends Controller
             }
             
             
-         foreach ($member->getgetRehabilitationcertificate() as $rehab) {
-            if ($originalrehabs->contains($rehab) === false) {
-                
-                $rehab->setValidfrom($adminyear)
-                      ->setValidto('2155');
-                $manager->persist($rehab);
-          }else{
-              $originalrehab=$originalrehabs->get($rehab);
-             if($rehab != $originalrehab){
-                 $rehab->setValidfrom($adminyear);
-                 $originalrehab->setValidto($adminyear);
-                 $originalrehabs->removeElement($originalrehab);
-                 $manager->persist($rehab);
-                 $manager->persist($originalrehab);
-             } 
-          }
-        }
+//         foreach ($member->getRehabilitationcertificate() as $rehab) {
+//            if ($originalrehabs->contains($rehab) === false) {
+//                
+//                $rehab->setValidfrom($adminyear)
+//                      ->setValidto('2155');
+//                $manager->persist($rehab);
+//          }else{
+//              $originalrehab=$originalrehabs->get($rehab);
+//             if($rehab != $originalrehab){
+//                 $rehab->setValidfrom($adminyear);
+//                 $originalrehab->setValidto($adminyear);
+//                 $originalrehabs->removeElement($originalrehab);
+//                 $manager->persist($rehab);
+//                 $manager->persist($originalrehab);
+//             } 
+//          }
+//        }
             
             foreach ($originalphonenr as $phonenr) {
             if (false === $member->getPhonenumber()->contains($phonenr)) {

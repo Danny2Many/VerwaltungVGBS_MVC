@@ -65,10 +65,22 @@
             <td><center><a href="{{ path('edittrainer', {'letter': first|capitalize, 'ID': data.trainerid, 'adminyear': adminyear, 'validfrom': data.validfrom }) }}">
                 <button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></a></center></td>
             <td>{{ data.trainerid }}</td>
-            <td>{{ data.title|striptags }}</td>
+            
+            {% if data.title == '1' %}
+                <td>Herr</td>
+            {% else %}
+                <td>Frau</td>
+            {% endif %}
+            
             <td>{{ data.lastname|striptags }}</td>
             <td>{{ data.firstname|striptags }}</td>
-            <td>{{ data.state|striptags }}</td>
+            
+            {% if data.state == '1' %}
+                <td>Aktiv</td>
+            {% else %}
+                <td>Inaktiv</td>
+            {% endif %}
+            
             <td>{{ data.birthday|date("d.m.Y") }}</td>
             <td>{{ data.location|striptags }}</td>
             <td>{{ data.streetaddress|striptags }}</td>

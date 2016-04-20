@@ -244,15 +244,7 @@ class TrainerController extends Controller
         }
         
         $trainer=$doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy(array('trainerid' => $ID, 'validfrom'=>$validfrom));
-        $trainer_old = clone $trainer;
-        
-       
-        
-        
-        
-               
-                
-      
+        $trainer_old = clone $trainer;    
         
         
         if(!$trainer){
@@ -279,9 +271,9 @@ class TrainerController extends Controller
             $originalphonenr->add($phonenr);
         } 
         
-        echo '<pre>'; 
-        print_r($originalphonenr->get(0)->getPhonenumber());
-        echo '</pre>';
+//        echo '<pre>'; 
+//        print_r($originalphonenr->get(0)->getPhonenumber());
+//        echo '</pre>';
         
         foreach ($focuses as $theme) {
             $trainer->addTheme($theme);
