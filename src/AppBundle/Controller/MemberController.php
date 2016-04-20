@@ -106,6 +106,7 @@ class MemberController extends Controller
         else{
 
 
+
     //building the query
 
     $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.'.$searchcol, ':member'))
@@ -344,10 +345,6 @@ class MemberController extends Controller
         $rehabcerts=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
         
 
-//       echo '<pre>'; 
-//        print_r($rehabcerts);
-//        echo '</pre>';
-
         
          $originalrehabs = new ArrayCollection();
          $originalphonenr = new ArrayCollection();
@@ -429,7 +426,7 @@ class MemberController extends Controller
             
             }
             
-            
+
          foreach ($member->getRehabilitationcertificate() as $rehab) {
 
             if (false === $originalrehabs->contains($rehab)) {

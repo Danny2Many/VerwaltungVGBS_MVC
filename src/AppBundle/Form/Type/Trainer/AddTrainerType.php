@@ -39,7 +39,7 @@ class AddTrainerType extends AbstractType{
         'label' => 'Art:',))
                 
         ->add('state', ChoiceType::class, array('choices'  => array(
-        'Aktiv' => 'Aktiv', 'Inaktiv' => 'Inaktiv'),
+        'Inaktiv' => '0','Aktiv' => '1'),
         // *this line is important*
         'choices_as_values' => true,
         'label' => 'Status:',))
