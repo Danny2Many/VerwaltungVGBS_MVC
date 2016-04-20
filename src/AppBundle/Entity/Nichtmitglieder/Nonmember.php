@@ -47,7 +47,7 @@ public function __toString(){
 }
     
 /**
-* @ORM\Column(type="string")
+* @ORM\Column(type="integer")
 * @Assert\NotBlank()
 * @Assert\Choice(choices = {"aktiv", "inaktiv"}, message = "Bitte wählen Sie einen gültigen Status.")
 */
@@ -85,7 +85,7 @@ protected $validfrom;
 protected $validto;
 
 /**
-* @ORM\Column(type="binary")
+* @ORM\Column(type="integer")
 * 
 */protected $newsletter; 
     
@@ -254,9 +254,9 @@ protected $validto;
     }
 
     /**
-     * Set state
+     * Set integer
      *
-     * @param string $state
+     * @param integer $state
      *
      * @return Nonmember
      */
@@ -268,9 +268,9 @@ protected $validto;
     }
 
     /**
-     * Get state
+     * Get integer
      *
-     * @return string
+     * @return integer
      */
     public function getState()
     {
@@ -461,7 +461,7 @@ public function setPhonenumber($phonenumber)
     /**
      * Set newsletter
      *
-     * @param binary $newsletter
+     * @param boolean $newsletter
      *
      * @return Nonmember
      */
@@ -475,7 +475,7 @@ public function setPhonenumber($phonenumber)
     /**
      * Get newsletter
      *
-     * @return binary
+     * @return boolean
      */
     public function getNewsletter()
     {

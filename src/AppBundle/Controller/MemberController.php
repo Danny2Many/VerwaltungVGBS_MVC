@@ -105,11 +105,6 @@ class MemberController extends Controller
         
         else{
 
-<<<<<<< HEAD
-        }else{    
-
-=======
->>>>>>> refs/remotes/origin/Danny_System
 
     //building the query
 
@@ -332,7 +327,7 @@ class MemberController extends Controller
         
 
           $member=$manager->getRepository('AppBundle:Member')->findOneBy(array('memid'=>$ID, 'validfrom'=>$validfrom));
-    
+          
     
          
         
@@ -428,7 +423,7 @@ class MemberController extends Controller
             }
             
             
-         foreach ($member->getgetRehabilitationcertificate() as $rehab) {
+         foreach ($member->getRehabilitationcertificate() as $rehab) {
             if ($originalrehabs->contains($rehab) === false) {
                 
                 $rehab->setValidfrom($adminyear)
