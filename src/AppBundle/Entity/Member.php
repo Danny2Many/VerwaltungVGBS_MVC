@@ -12,7 +12,7 @@ use AppBundle\Entity\HealthData;
 /**
  * @ORM\Entity
  * @ORM\Table(name="Member")
- * 
+ * @ORM\HasLifecycleCallbacks
  */
 class Member extends HealthData
 {
@@ -23,7 +23,7 @@ class Member extends HealthData
     
 
     
-   
+   /** @ORM\PostLoad */
     public function __construct() {
         
 //        $this->sportsgroup = new ArrayCollection();
@@ -65,23 +65,23 @@ class Member extends HealthData
        * @Assert\NotBlank()
      * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
      */
-    protected $admissiondate;
+    public $admissiondate;
     
     /**
      * @ORM\Column(type="date")
        * 
      * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
      */
-    protected $quitdate;
+    public $quitdate;
     
     
   
       /**
      * @ORM\Column(type="string")
        * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"aktiv", "inaktiv"}, message = "Bitte wählen Sie einen gültigen Status.")
+     * @Assert\Choice(choices = {1, 0}, message = "Bitte wählen Sie einen gültigen Status.")
      */
-    protected $state;
+    public $state;
     
       
     
@@ -89,30 +89,30 @@ class Member extends HealthData
      * @ORM\Column(type="date")
         * @Assert\Date(message ="Bitte wählen Sie ein gültiges Datum.")
      */
-    protected $admissionconfirmation;
+    public $admissionconfirmation;
     
     
       
     
        /**
-     * @ORM\Column(type="binary")
-        * @Assert\NotBlank()
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
      * 
      */
-    protected $decreaseddues;
+    public $decreaseddues;
     
     /**
      * @ORM\Column(type="binary")
         * 
      * 
      */
-    protected $newsletter; 
+    public $newsletter; 
     
     
       /**
      * @ORM\Column(type="string")
      */
-    protected $additionalinfo;
+    public $additionalinfo;
 
       /**
      * @ORM\Column(type="string")
@@ -172,14 +172,10 @@ class Member extends HealthData
         return $this;
     }
 
-    /**
-     * Get admissiondate
-     *
-     * @return \DateTime
-     */
+    
     public function getAdmissiondate()
     {
-        return $this->admissiondate;
+        return $this->admissiondate->format('Y-m-d');
     }
 
     /**
@@ -223,11 +219,11 @@ class Member extends HealthData
     /**
      * Get admissionconfirmation
      *
-     * @return \DateTime
+     * @return string
      */
     public function getAdmissionconfirmation()
     {
-        return $this->admissionconfirmation;
+        return $this->admissionconfirmation->format('Y-m-d');
     }
 
     /**
@@ -514,7 +510,7 @@ class Member extends HealthData
     {
   
         $rehabilitationcertificate->setMemid($this->memid);
-        $this->rehabilitationcertificate[] = $rehabilitationcertificate;
+        $this->rehabilitationcertificate->add($rehabilitationcertificate);
 
         return $this;
         
@@ -545,7 +541,7 @@ class Member extends HealthData
  public function addPhonenumber(\AppBundle\Entity\MemPhoneNumber $phonenumber)
     {               
         $phonenumber->setMemid($this->memid);
-        $this->phonenumber[] = $phonenumber;
+        $this->phonenumber->add($phonenumber);
 
         return $this;
     }

@@ -61,9 +61,9 @@
                 <td><center><a href="{{ path('editmem', {'letter': first|capitalize, 'ID': data.memid, 'adminyear': adminyear, 'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
                 <td>{{ data.memid }}</td>
                
-                <td>{{ data.state|striptags }}</td>
+                <td>{{ data.state == 1 ? "aktiv" : "inaktiv" }}</td>
                
-                <td>{{ data.title|striptags }}</td>
+                <td>{{ data.title == 1 ? "Frau" : "Herr" }}</td>
                 <td>{{ data.lastname|striptags }}</td>
                 <td>{{ data.firstname|striptags }}</td>                
                 <td>{{ data.birthday|date("d.m.Y") }}</td>
@@ -147,7 +147,7 @@
                     
           
                     
-                <td>{{ data.decreaseddues == 0 ? "kein" : 'vermindert' }}</td>
+                <td>{{ data.decreaseddues == 0 ? "kein" : "vermindert" }}</td>
                 <td>{{ data.healthinsurance is empty ? "-" : data.healthinsurance|striptags}}</td>
                 <td>{{ data.additionalinfo is empty ? "-" : data.additionalinfo|striptags }}</td>
                 <td>{{ data.tribute is empty ? "-" : data.Tribute|striptags }}</td>
