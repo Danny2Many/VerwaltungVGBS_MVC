@@ -15,7 +15,7 @@
 
 
 {% block add %}
-    <a href="{{ path('addnonmem', {'letter': cletter }) }}"><button    class="add btn btn-default">
+    <a href="{{ path('addnonmem', {'letter': cletter, 'adminyear': adminyear }) }}"><button    class="add btn btn-default">
       <span class="glyphicon glyphicon-plus"></span> neues Nichtmitglied anlegen
         </button></a>  
 {% endblock %}
@@ -81,15 +81,15 @@
                     {% else %}
                     {% set first = data.lastname|first %}   
                 {% endif %}
-            <td><center><a href="{{ path('editnonmem', {'letter': first|capitalize, 'ID': data.nmemid, 'adminyear': adminyear }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
+            <td><center><a href="{{ path('editnonmem', {'letter': first|capitalize, 'ID': data.nmemid, 'adminyear': adminyear,  'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
             <td>{{ data.nmemid }}</td>
             {#<td>{% for Sec in data.section %}
                         {{ Sec.sectionname }}<br>
                         {% else  %}
                         {{ "-" }}
                     {% endfor %}</td>#}
-            <td>{{ data.state|striptags }}</td>
-            <td>{{ data.title|striptags }}</td>
+            <td>{{ data.state }}</td>
+            <td>{{ data.title }}</td>
             <td>{{ data.lastname|striptags }}</td>
             <td>{{ data.firstname|striptags }}</td>
             <td>{{ data.birthday|date("d.m.Y") }}</td>

@@ -150,6 +150,24 @@ class NonMemSportsgroup {
 //        return $this->type;
 //    }
 
+    public function addBssacert(\AppBundle\Entity\BSSACert $bssacertnr)
+    {               
+        $bssacertnr->setSgid($this);
+        $this->bssacert->add($bssacertnr);
+
+        return $this;
+    }
+    
+    
+        public function addTrainers(\AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $trainers)
+    {               
+        $trainers->setSgid($this);
+        $this->trainers->add($trainers);
+
+        return $this;
+    }
+    
+    
     /**
      * Set name
      *
@@ -468,13 +486,11 @@ class NonMemSportsgroup {
         return $this->bssaid;
     }
   
-    /**
-    * @ORM\PrePersist
-    */
-    public function setValidfrom()
+ 
+    public function setValidfrom($validfrom)
     {
-        $now= new \DateTime();
-        $this->validfrom = $now->format('Y');
+        
+        $this->validfrom = $validfrom;
 
         return $this;
     }

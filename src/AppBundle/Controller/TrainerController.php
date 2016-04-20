@@ -39,8 +39,9 @@ class TrainerController extends Controller
         $dependencies=['Trainer\Trainer', 'Trainer\TrainerPhoneNumber', 'Trainer\TrainerFocus','Trainer\TrainerLicence'];
     
         $qb= [];
-        foreach($dependencies as $dependent){
-            
+        
+        foreach($dependencies as $dependent){ 
+
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
             $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
                     ->andWhere('ditto.validto>'.$adminyear);   

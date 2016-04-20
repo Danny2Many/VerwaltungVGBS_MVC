@@ -204,14 +204,17 @@ class NonMemPhoneNumber {
         return $this->validto;
     }
 
-     /**
-    * @ORM\PrePersist
-    */
-    public function setValidfrom()
+    /**
+     * Set validfrom
+     *
+     * @param string $validfrom
+     *
+     * @return MemPhoneNumber
+     */
+    public function setValidfrom($validfrom)
     {
-         $now= new \DateTime();
         
-        $this->validfrom = $now->format('Y-m-d');
+        $this->validfrom = $validfrom;
 
         return $this;
     }

@@ -6,7 +6,8 @@ use AppBundle\Form\Type\Trainer\AddTrainerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use AppBundle\Form\SanitizedTextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+
 
 
 
@@ -19,7 +20,7 @@ class EditTrainerType extends AddTrainerType{
         
         $builder  
                 
-        ->add('trainerid', SanitizedTextType::class, array('label' => 'Trainernummer:', 'required' => false, 'disabled' => true))
+        ->add('trainerid', IntegerType::class, array('label' => 'Trainernummer:', 'required' => false, 'disabled' => true))
         ->add('delete', SubmitType::class, array('attr' => array('class' => 'btn btn-danger'), 'label' => 'löschen'));
               
     }

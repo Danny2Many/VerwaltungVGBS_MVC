@@ -35,7 +35,7 @@ class PersonalData {
     
     
      /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="integer")
       * @Assert\NotBlank()
      * @Assert\Choice(choices = {"Herr", "Frau"}, message = "Bitte wählen Sie eine gültige Anrede.")
      */
