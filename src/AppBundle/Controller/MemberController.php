@@ -85,9 +85,9 @@ class MemberController extends Controller
 
             $rehacelist=$rehabsearchqb->getQuery()->getResult();
             
-            echo '<pre>';
-            print_r($rehacelist);
-            echo '</pre>';
+//            echo '<pre>';
+//            print_r($rehacelist);
+//            echo '</pre>';
             
                 
                 if($rehacelist){
@@ -336,7 +336,7 @@ class MemberController extends Controller
         if (!$member) {
         throw $this->createNotFoundException('Es konnte kein Mitglied mit der Mitgliedsnr.: '.$ID.' gefunden werden');
     }
-    
+   
     
     
         
@@ -344,7 +344,6 @@ class MemberController extends Controller
         $phonenumbers=$qb['MemPhoneNumber']->getQuery()->getResult();
         $rehabcerts=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
         
-       
         
          $originalrehabs = new ArrayCollection();
          $originalphonenr = new ArrayCollection();
@@ -360,15 +359,17 @@ class MemberController extends Controller
          
     // Create an ArrayCollection of the current Rehab objects in the database
     foreach ($rehabcerts as $rehab) {
-        
+        $origininalrehab= clone $rehab;
         $member->addRehabilitationcertificate($rehab);
-        $originalrehabs->add($rehab);
+        $originalrehabs->add($origininalrehab);
     }
      
     // Create an ArrayCollection of the current Phonenr objects in the database
     foreach ($phonenumbers as $phonenr) {
+        
+        $origininalphonenr= clone $phonenr;
         $member->addPhonenumber($phonenr);
-        $originalphonenr->add($phonenr);
+        $originalphonenr->add($origininalphonenr);
     }
     
     
@@ -395,14 +396,15 @@ class MemberController extends Controller
         //if the form is valid -> persist it to the database
         if($editmemform->isSubmitted() && $editmemform->isValid()){
        
-   
-}
+          $FM = new \AppBundle\Services\FunctionManager;
+         
+         
            
-            if($member != $memberoriginal){
+            if($FM->CompareEntities($member, $memberoriginal)){
                 
               if($adminyear != $member->getValidfrom()){ 
               
-                  
+                return 'sexy';   
                   
              
              $memberoriginal->setValidto($adminyear);
@@ -417,40 +419,41 @@ class MemberController extends Controller
             }
             
             else{
-                
+                return 'smexy';
               $manager->persist($member);  
             }
             
             }
             
-            
 
          foreach ($member->getRehabilitationcertificate() as $rehab) {
-            if ($originalrehabs->contains($rehab) === false) {
-                
+            if (false === $originalrehabs->contains($rehab)) {
+                return 'hi';
                 $rehab->setValidfrom($adminyear)
                       ->setValidto('2155');
                 $manager->persist($rehab);
           }else{
               $originalrehab=$originalrehabs->get($rehab);
              if($rehab != $originalrehab){
+                 return 'ho';
                  $rehab->setValidfrom($adminyear);
                  $originalrehab->setValidto($adminyear);
-                 $originalrehabs->removeElement($originalrehab);
                  $manager->persist($rehab);
                  $manager->persist($originalrehab);
+                 $originalrehabs->removeElement($originalrehab);
+                 
              } 
           }
         }
             
-            foreach ($originalphonenr as $phonenr) {
-            if (false === $member->getPhonenumber()->contains($phonenr)) {
-                
-
-                $manager->remove($phonenr);
-
-            }
-        
+//            foreach ($originalphonenr as $phonenr) {
+//            if (false === $member->getPhonenumber()->contains($phonenr)) {
+//                
+//
+//                $manager->remove($phonenr);
+//
+//            }
+//            }
             
             
             

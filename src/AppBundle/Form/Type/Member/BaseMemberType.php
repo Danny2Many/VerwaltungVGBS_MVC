@@ -45,8 +45,8 @@ public function buildForm(FormBuilderInterface $builder, array $options)
    
                 ->add('state', ChoiceType::class, array(
     'choices'  => array(
-        'aktiv' => 'aktiv',
-        'inaktiv' => 'inaktiv',
+        'aktiv' => 1,
+        'inaktiv' => 0,
         
     ),
    
