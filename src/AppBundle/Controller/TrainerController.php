@@ -256,9 +256,9 @@ class TrainerController extends Controller
         $licences=$qb['Trainer\TrainerLicence']->getQuery()->getResult();        
         $focuses=$qb['Trainer\TrainerFocus']->getQuery()->getResult();        
 
-        echo '<pre>'; 
-        print_r($phonenumbers);
-        echo '</pre>';
+//        echo '<pre>'; 
+//        print_r($phonenumbers);
+//        echo '</pre>';
         
         $originallicences = new ArrayCollection();
         $originalphonenr = new ArrayCollection();
@@ -268,7 +268,8 @@ class TrainerController extends Controller
         
         foreach ($licences as $licence) {
             $trainer->addLicence($licence);
-            $originallicences->add($licence);
+            $licenceoriginal= clone $licence;
+            $originallicences->add($licenceoriginal);
         }   
         
         foreach ($phonenumbers as $phonenr) {
@@ -277,13 +278,14 @@ class TrainerController extends Controller
             $originalphonenr->add($phonenroriginal);
         } 
         
-        echo '<pre>'; 
-        print_r($originalphonenr);
-        echo '</pre>';
+//        echo '<pre>'; 
+//        print_r($originalphonenr);
+//        echo '</pre>';
         
         foreach ($focuses as $theme) {
             $trainer->addTheme($theme);
-            $originalthemes->add($theme);
+            $focuseoriginal = clone $theme;
+            $originalthemes->add($focuseoriginal);
         }
         
         $edittrainerform = $this->createForm(EditTrainerType::class, $trainer);
@@ -298,7 +300,7 @@ class TrainerController extends Controller
         
         if($edittrainerform->isSubmitted() && $edittrainerform->isValid()){
   
-          foreach ($originallicences as $licence) {
+          foreach ($licences as $licence) {
             if (false === $trainer->getLicence()->contains($licence)) {   
                 $manager->remove($licence);
             }
@@ -310,7 +312,7 @@ class TrainerController extends Controller
             }
         }
         
-            foreach ($originalthemes as $theme) {
+            foreach ($focuses as $theme) {
             if (false === $trainer->getTheme()->contains($theme)) {         
                 $manager->remove($theme);
             }
@@ -321,7 +323,8 @@ class TrainerController extends Controller
                      $pn->setTpnid(uniqid('pn'))
                             ->setValidfrom($adminyear)
                             ->setValidto('2155');
-                    }else if($originalphonenr->get($originalphonenr->indexOf($pn->getTpnid()))->getPhonenumber()==$pn->getPhonenumber()){
+                    }else if($originalphonenr->get($originalphonenr->indexOf($pn->getTpnid()))->getPhonenumber()!=$pn->getPhonenumber()&&
+                            $originalphonenr->get($originalphonenr->indexOf($pn->getTpnid()))->getValidfrom()!=$pn->getValidfrom()){
                         $pn_new = clone $pn;
                         $pn->setPhonenumber($originalphonenr->get($originalphonenr->indexOf($pn->getTpnid()))->getPhonenumber())
                             ->setValidto($adminyear);                        
