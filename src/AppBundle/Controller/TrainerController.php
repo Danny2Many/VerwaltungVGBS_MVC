@@ -256,12 +256,16 @@ class TrainerController extends Controller
         $licences=$qb['Trainer\TrainerLicence']->getQuery()->getResult();        
         $focuses=$qb['Trainer\TrainerFocus']->getQuery()->getResult();        
 
+        echo '<pre>'; 
+        print_r($phonenumbers);
+        echo '</pre>';
         
         $originallicences = new ArrayCollection();
         $originalphonenr = new ArrayCollection();
         $originalthemes = new ArrayCollection();
 
-
+        
+        
         foreach ($licences as $licence) {
             $trainer->addLicence($licence);
             $originallicences->add($licence);
@@ -269,12 +273,13 @@ class TrainerController extends Controller
         
         foreach ($phonenumbers as $phonenr) {
             $trainer->addPhonenumber($phonenr);
-            $originalphonenr->add($phonenr);
+            $phonenroriginal = clone $phonenr;
+            $originalphonenr->add($phonenroriginal);
         } 
         
-//        echo '<pre>'; 
-//        print_r($originalphonenr->get(0)->getPhonenumber());
-//        echo '</pre>';
+        echo '<pre>'; 
+        print_r($originalphonenr);
+        echo '</pre>';
         
         foreach ($focuses as $theme) {
             $trainer->addTheme($theme);
@@ -299,7 +304,7 @@ class TrainerController extends Controller
             }
         }
             
-            foreach ($originalphonenr as $phonenr) {
+            foreach ($phonenumbers as $phonenr) {
             if (false === $trainer->getPhonenumber()->contains($phonenr)) {         
                 $manager->remove($phonenr);
             }
@@ -310,23 +315,20 @@ class TrainerController extends Controller
                 $manager->remove($theme);
             }
         }
-        
+
             foreach($trainer->getPhonenumber() as $pn){
-                if (false == $originalphonenr->contains($pn)) {
+                if (false == in_array($pn, $phonenumbers)) {
                      $pn->setTpnid(uniqid('pn'))
                             ->setValidfrom($adminyear)
                             ->setValidto('2155');
-                     $manager->persist($pn);              
-                    }else{
+                    }else if($originalphonenr->get($originalphonenr->indexOf($pn->getTpnid()))->getPhonenumber()==$pn->getPhonenumber()){
                         $pn_new = clone $pn;
-                        $pn->setPhonenumber($originalphonenr->get(0)->getPhonenumber())
-                            ->setValidto($adminyear);
-                        
-                        $pn_new->setValidfrom($adminyear);
-                        $manager->persist($pn);
-                        $manager->persist($pn_new);
-                         
-                    }            
+                        $pn->setPhonenumber($originalphonenr->get($originalphonenr->indexOf($pn->getTpnid()))->getPhonenumber())
+                            ->setValidto($adminyear);                        
+                        $pn_new->setValidfrom($adminyear);                        
+                        $manager->persist($pn_new);                         
+                    }  
+                    $manager->persist($pn); 
                 }
             
             foreach($trainer->getLicence() as $lc){
@@ -350,6 +352,7 @@ class TrainerController extends Controller
             if($trainer != $trainer_old){
             $trainer_old->setValidto($adminyear);
             $trainer->setValidfrom($adminyear);
+            return 'derp';
             }
              
             $manager->persist($trainer);

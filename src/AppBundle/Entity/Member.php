@@ -175,7 +175,7 @@ class Member extends HealthData
     
     public function getAdmissiondate()
     {
-        return $this->admissiondate->format('Y-m-d');
+        return $this->admissiondate;
     }
 
     /**
@@ -223,7 +223,7 @@ class Member extends HealthData
      */
     public function getAdmissionconfirmation()
     {
-        return $this->admissionconfirmation->format('Y-m-d');
+        return $this->admissionconfirmation;
     }
 
     /**
