@@ -67,21 +67,22 @@ class TrainerController extends Controller
     
     
      if($searchcol=='licencetype'){
-    $lqb = clone $qb['Trainer\TrainerLicence'];
-    $lqb->andWhere($lqb->expr()->like('ditto.'.$searchcol,':type'))
+    $qb['Trainer\TrainerLicence']->andWhere($qb['Trainer\TrainerLicence']->expr()->like('ditto.'.$searchcol,':type'))
         ->setParameter('type','%'.$searchval.'%');
        
-        $licencelist=$lqb->getQuery()->getResult();
+        $licencelist=$qb['Trainer\TrainerLicence']->getQuery()->getResult();
      
         if($licencelist){          
             foreach ($licencelist as $lc){         
             $idarray[]=$lc->getTrainerid();     
-            }    
-        }else{
-            $idarray=array(null);
         }
-        $qb['Trainer\Trainer']->andWhere($qb['Trainer\Trainer']->expr()->in('ditto.trainerid', $idarray));
-
+    
+        $qb['Trainer\Trainer']->andWhere($qb['Trainer\TrainerLicence']->expr()->in('ditto.trainerid', $idarray));
+        $qb['Trainer\TrainerLicence']->orWhere($qb['Trainer\Trainer']->expr()->in('ditto.trainerid', $idarray));
+        }else{
+            $qb['Trainer\Trainer']->andWhere('ditto.trainerid<=:abort')->setParameter('abort',-1);
+        }
+    
     }else{  
         
     $qb['Trainer\Trainer']->andWhere($qb['Trainer\Trainer']->expr()->like('ditto.'.$searchcol, ':trainer'))
@@ -260,6 +261,7 @@ class TrainerController extends Controller
         $originalthemes = new ArrayCollection();
 
         
+        
         foreach ($licences as $licence) {
             $trainer->addLicence($licence);
             $licenceoriginal = clone $licence;
@@ -272,11 +274,14 @@ class TrainerController extends Controller
             $originalphonenr->add($phonenroriginal);
         } 
         
+
+        
         foreach ($focuses as $theme) {
             $trainer->addTheme($theme);
             $originalfocus = clone $theme;
             $originalthemes->add($originalfocus);
         }
+        
     
         
         $edittrainerform = $this->createForm(EditTrainerType::class, $trainer);
@@ -311,6 +316,32 @@ class TrainerController extends Controller
 //            }
 //        }
 
+          
+            
+//                foreach($trainer->getPhonenumber() as $pn){
+//                $phoneoriginal=$originalphonenr->get($trainer->getPhonenumber()->indexOf($pn));
+//                
+//                if (false == in_array($pn, $phonenumbers)) {                    
+//                    $pn->setTpnid(uniqid('pn'))
+//                            ->setValidfrom($adminyear)
+//                            ->setValidto('2155');
+//                    $manager->persist($pn); 
+//
+//                    }else if($phoneoriginal !=$pn){
+//                        if($adminyear!=$pn->getValidfrom()){                       
+//                            
+//                            try{  
+//                                $phoneoriginal ->setValidto($adminyear); 
+//                                $pn ->setValidfrom($adminyear); 
+//                                $manager->persist($pn);
+//                                $manager->flush();
+//                                $manager->persist($phoneoriginal);      
+//                                $manager->flush();                                
+//                            }catch(Exception $em){ $em->getConnection()->rollback(); }
+//                            
+//                        }else{ $manager->persist($pn); }  
+//                    }
+//                }
         
         $FM = new \AppBundle\Services\FunctionManager;
         
