@@ -36,8 +36,8 @@ public function buildForm(FormBuilderInterface $builder, array $options){
         ->add('trainingconfirmation', DateType::class, array( 'label' => 'Teilnahmebeginnbest.:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag'), 'required' => false))       
         ->add('state', ChoiceType::class, array(
                 'choices'  => array(
-                    'aktiv' => '0',
-                    'inaktiv' => '1',
+                    'Aktiv' => 0,
+                    'Inaktiv' => 1,
                 ),
                 'choices_as_values' => true,
                 'label' => 'Status:'

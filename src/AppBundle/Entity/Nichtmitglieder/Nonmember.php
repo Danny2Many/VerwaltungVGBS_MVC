@@ -49,7 +49,7 @@ public function __toString(){
 /**
 * @ORM\Column(type="integer")
 * @Assert\NotBlank()
-* @Assert\Choice(choices = {"aktiv", "inaktiv"}, message = "Bitte wählen Sie einen gültigen Status.")
+* @Assert\Choice(choices = {"0", "1"}, message = "Bitte wählen Sie einen gültigen Status.")
 */
 protected $state;
 

@@ -345,6 +345,7 @@ class MemberController extends Controller
         $phonenumbers=$qb['MemPhoneNumber']->getQuery()->getResult();
         $rehabcerts=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
         
+
         
          $originalrehabs = new ArrayCollection();
          $originalphonenr = new ArrayCollection();
@@ -457,6 +458,7 @@ class MemberController extends Controller
             
             }
             
+
             
             $manager->flush();
     

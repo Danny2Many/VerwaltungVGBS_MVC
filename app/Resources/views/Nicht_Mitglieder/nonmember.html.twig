@@ -88,8 +88,18 @@
                         {% else  %}
                         {{ "-" }}
                     {% endfor %}</td>#}
-            <td>{{ data.state }}</td>
-            <td>{{ data.title }}</td>
+            {% if data.state == 0 %}
+                <td>{{ 'Aktiv' }}</td>
+            {% else %}   
+                <td>{{ 'Inaktiv' }}</td>
+            {%endif%}
+            
+            {% if data.title == 0 %}
+                <td>{{ 'Frau' }}</td>
+            {% else %}   
+                <td>{{ 'Herr' }}</td>
+            {%endif%}
+            
             <td>{{ data.lastname|striptags }}</td>
             <td>{{ data.firstname|striptags }}</td>
             <td>{{ data.birthday|date("d.m.Y") }}</td>
