@@ -402,25 +402,25 @@ class MemberController extends Controller
            
          
 
-         foreach ($member->getRehabilitationcertificate() as $rehab) {
-            if (false === $originalrehabs->contains($rehab)) {
-                return 'hi';
-                $rehab->setValidfrom($adminyear)
-                      ->setValidto('2155');
-                $manager->persist($rehab);
-          }else{
-              $originalrehab=$originalrehabs->get($rehab);
-             if($rehab != $originalrehab){
-                 return 'ho';
-                 $rehab->setValidfrom($adminyear);
-                 $originalrehab->setValidto($adminyear);
-                 $manager->persist($rehab);
-                 $manager->persist($originalrehab);
-                 $originalrehabs->removeElement($originalrehab);
-                 
-             } 
-          }
-        }
+//         foreach ($member->getRehabilitationcertificate() as $rehab) {
+//            if (false === $originalrehabs->contains($rehab)) {
+//                return 'hi';
+//                $rehab->setValidfrom($adminyear)
+//                      ->setValidto('2155');
+//                $manager->persist($rehab);
+//          }else{
+//              $originalrehab=$originalrehabs->get($rehab);
+//             if($rehab != $originalrehab){
+//                 return 'ho';
+//                 $rehab->setValidfrom($adminyear);
+//                 $originalrehab->setValidto($adminyear);
+//                 $manager->persist($rehab);
+//                 $manager->persist($originalrehab);
+//                 $originalrehabs->removeElement($originalrehab);
+//                 
+//             } 
+//          }
+//        }
             
 //            foreach ($originalphonenr as $phonenr) {
 //            if (false === $member->getPhonenumber()->contains($phonenr)) {
