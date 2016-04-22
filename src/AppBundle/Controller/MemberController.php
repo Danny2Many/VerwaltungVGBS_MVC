@@ -328,7 +328,8 @@ class MemberController extends Controller
         
 
           $member=$manager->getRepository('AppBundle:Member')->findOneBy(array('memid'=>$ID, 'validfrom'=>$validfrom));
-          
+                $memberoriginal= clone $member;
+
     
          
         
@@ -374,7 +375,6 @@ class MemberController extends Controller
     }
     
     
-      $memberoriginal= clone $member;
       $editmemform = $this->createForm(EditMemberType::class, $member);
         
         
@@ -401,31 +401,7 @@ class MemberController extends Controller
          
          
            
-            if($FM->CompareEntities($member, $memberoriginal)){
-                
-              if($adminyear != $member->getValidfrom()){ 
-              
-                return 'sexy';   
-                  
-             
-             $memberoriginal->setValidto($adminyear);
-             $member->setValidfrom($adminyear);
-             
-             
-             $manager->persist($member);
-             $manager->flush();
-             $manager->persist($memberoriginal);
-             
-                
-            }
-            
-            else{
-                return 'smexy';
-              $manager->persist($member);  
-            }
-            
-            }
-            
+         
 
          foreach ($member->getRehabilitationcertificate() as $rehab) {
 
@@ -458,6 +434,31 @@ class MemberController extends Controller
 //            }
 //            }
             
+            
+           if($member!=$memberoriginal){
+                
+              if($adminyear != $member->getValidfrom()){ 
+              
+                return 'sexy';   
+                  
+             
+             $memberoriginal->setValidto($adminyear);
+             $member->setValidfrom($adminyear);
+             
+             
+             $manager->persist($member);
+             $manager->flush();
+             $manager->persist($memberoriginal);
+             
+                
+            }
+            
+            else{
+                return 'smexy';
+              $manager->persist($member);  
+            }
+            
+            }
             
             
             $manager->flush();
