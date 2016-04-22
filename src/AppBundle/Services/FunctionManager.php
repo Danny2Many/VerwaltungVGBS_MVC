@@ -7,6 +7,12 @@ namespace AppBundle\Services;
 
 class FunctionManager {
     
+//    protected $manager;
+//
+//    public function __contruct($manager) {
+//        $this->manager=$manager;        
+//    }
+    
     //compares 2 entities in my own way
     public function CompareEntities($entityone, $entitytwo) {
       $entityoneattr=  get_object_vars($entityone);

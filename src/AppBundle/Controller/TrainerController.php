@@ -264,7 +264,8 @@ class TrainerController extends Controller
         
         foreach ($licences as $licence) {
             $trainer->addLicence($licence);
-            $originallicences->add($licence);
+            $licenceoriginal = clone $licence;
+            $originallicences->add($licenceoriginal);
         }   
         
         foreach ($phonenumbers as $phonenr) {
@@ -277,7 +278,8 @@ class TrainerController extends Controller
         
         foreach ($focuses as $theme) {
             $trainer->addTheme($theme);
-            $originalthemes->add($theme);
+            $originalfocus = clone $theme;
+            $originalthemes->add($originalfocus);
         }
         
     
@@ -296,23 +298,23 @@ class TrainerController extends Controller
                 
         if($edittrainerform->isSubmitted() && $edittrainerform->isValid()){
   
-          foreach ($originallicences as $licence) {
-            if (false === $trainer->getLicence()->contains($licence)) {   
-                $manager->remove($licence);
-            }
-        }
-            
-            foreach ($phonenumbers as $phonenr) {
-            if (false === $trainer->getPhonenumber()->contains($phonenr)) {         
-                $manager->remove($phonenr);
-            }
-        }
-        
-            foreach ($originalthemes as $theme) {
-            if (false === $trainer->getTheme()->contains($theme)) {         
-                $manager->remove($theme);
-            }
-        }
+//          foreach ($originallicences as $licence) {
+//            if (false === $trainer->getLicence()->contains($licence)) {   
+//                $manager->remove($licence);
+//            }
+//        }
+//            
+//            foreach ($phonenumbers as $phonenr) {
+//            if (false === $trainer->getPhonenumber()->contains($phonenr)) {         
+//                $manager->remove($phonenr);
+//            }
+//        }
+//        
+//            foreach ($originalthemes as $theme) {
+//            if (false === $trainer->getTheme()->contains($theme)) {         
+//                $manager->remove($theme);
+//            }
+//        }
 
           
             
@@ -344,24 +346,11 @@ class TrainerController extends Controller
         $FM = new \AppBundle\Services\FunctionManager;
         
         $FM->AddObjects($trainer, $phonenumbers, $originalphonenr, 'Tpn', $adminyear, $manager, 'getPhonenumber');
-                
-            foreach($trainer->getLicence() as $lc){
-                if (false == $originallicences->contains($lc)) {
-                    $lc->setLiid(uniqid('lc'))
-                            ->setValidfrom($adminyear)
-                            ->setValidto('2155');
-                    $manager->persist($lc); 
-                    }
-                }
-          
-            foreach($trainer->getTheme() as $th){
-                if (false == $originalphonenr->contains($th)) {
-                    $th->setTfid(uniqid('th'))
-                        ->setValidfrom($adminyear)
-                        ->setValidto('2155');
-                    $manager->persist($th);     
-                    }
-                }
+               
+        $FM->AddObjects($trainer, $focuses, $originalthemes, 'Tf', $adminyear, $manager, 'getTheme');
+
+        $FM->AddObjects($trainer, $licences, $originallicences, 'Li', $adminyear, $manager, 'getLicence');
+
                 
             if($trainer != $trainer_old){
             $trainer_old->setValidto($adminyear);
