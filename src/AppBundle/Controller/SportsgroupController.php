@@ -7,10 +7,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup;
 use AppBundle\Entity\Trainer\Trainer;
 use AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub;
+use AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup;
 use AppBundle\Form\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\BSSACert;
+use Doctrine\ORM\EntityManager;
 
 
 class SportsgroupController extends Controller {
@@ -28,23 +30,25 @@ class SportsgroupController extends Controller {
     }     
          
     $doctrine = $this->getDoctrine();
-    $dependencies=array('Nichtmitglieder\NonMemSportsgroup' => 'sg', 'BSSACert' => 'bssa', 'Nichtmitglieder\Trainer_NonMemSportsgroupSub' => 'trainer');
+    $dependencies=array('Nichtmitglieder\NonMemSportsgroup', 'BSSACert', 'Nichtmitglieder\Nonmember', 'Nichtmitglieder\Trainer_NonMemSportsgroupSub' , 'Trainer\Trainer', 'Nichtmitglieder\NonMember_Sportsgroup');
     $qb=[];
-       foreach($dependencies as $dependent => $idprefix){
-   
-        //building the subquery: SELECT max(validfrom) FROM % AS dittosub WHERE dittosub.type = ditto.type
-     $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-     $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
-                          ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
-                          
-        
-     //building the query: SELECT ditto FROM % AS ditto WHERE ditto.validfrom=( subquery ) AND ditto.validfrom<=$adminyear 
-     $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-     $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
-                    ->andWhere('ditto.validfrom<=:adminyear')
-                    ->andWhere('ditto.validto>:adminyear')
-                    ->setParameter('adminyear',$now);
-    }
+       foreach($dependencies as $dependent){
+  
+           $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
+            $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
+                    ->andWhere('ditto.validto>'.$adminyear);   
+    } 
+   $entityManager= $this->getDoctrine();
+    $sb = $entityManager->createQueryBuilder();
+    $sb->select('count(account.nmemid)');
+    $sb->from('Appbundle:Nichtmitglieder\Nonmember','account');
+
+$count = $sb->getQuery()->getSingleScalarResult();
+    
+    echo '<pre>';
+     print_r($count);
+     echo '</pre>';
+    
     $choices=array('Sportgruppennr.' => 'sgid',
                    'Gruppenbezeichnung' => 'token',
                    'Sportgruppe/Info' => 'name'
@@ -91,7 +95,10 @@ class SportsgroupController extends Controller {
     //$qb['Trainer\Trainer'] = $doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy('trainerid');
     $sportsgrouplist=$qb['Nichtmitglieder\NonMemSportsgroup']->getQuery()->getResult();
     $bssacertlist=$qb['BSSACert']->getQuery()->getResult();
-    $trainerlist=$qb['Nichtmitglieder\Trainer_NonMemSportsgroupSub']->getQuery()->getResult();
+    $sportgrouptrainerlist=$qb['Nichtmitglieder\Trainer_NonMemSportsgroupSub']->getQuery()->getResult();
+    $trainerlist=$qb['Trainer\Trainer']->getQuery()->getResult();
+    $nonmemberlist=$qb['Nichtmitglieder\Nonmember']->getQuery()->getResult();
+    $sportsgroupnonmemberlist=$qb['Nichtmitglieder\NonMember_Sportsgroup']->getQuery()->getResult();
     
     $sportsgroupdependentlist=[];
     foreach ($bssacertlist as $bs){
@@ -102,12 +109,37 @@ class SportsgroupController extends Controller {
         $sportsgroupdependentlist[$bs->getSgid()]['bssacertnr'][]=$bs; 
     }
     
-    foreach ($trainerlist as $pn){
+    foreach ($sportsgroupnonmemberlist as $sn){
+        $sportsgroupdependentlist[$sn->getSgid()]['nonmembers'][$sn->getNmemid()]=$sn->getNmemid();
+    }
+    $t=0;
+    foreach ($sportsgrouplist as $sg){
+           foreach ($nonmemberlist as $nm){
+         $sportsgroupdependentlist[$sg->getSgid()]['nonmembers'][$nm->getNmemid()]=$nm;
+        $t=count($nm->getNmemid());
+    }
+//    echo '<pre>';
+//     print_r($t);
+//     echo '</pre>';
+//    
+    }
+    foreach ($sportgrouptrainerlist as $pn){
 
-        $sportsgroupdependentlist[$pn->getSgid()]['trainers'][]=$pn;
+        $sportsgroupdependentlist[$pn->getSgid()]['trainers'][$pn->getTrainerid()]=$pn->getTrainerid();
     }
     
+   foreach ($sportsgrouplist as $sg){
+           foreach ($trainerlist as $tr){
+         $sportsgroupdependentlist[$sg->getSgid()]['trainers'][$tr->getTrainerid()]=$tr;
+         
+    }
+   }
    
+   
+//     echo '<pre>';
+//     print_r($sportsgroupdependentlist);
+//     echo '</pre>';
+     
      
      
     return $this->render(

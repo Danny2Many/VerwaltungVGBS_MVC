@@ -60,11 +60,12 @@ class NonMemberController extends Controller {
         $searchcol=$request->query->get('search')['column'];
     
     if($searchcol=='terminationdate'){
-        $rehabsearchqb= clone $qb['MemRehabilitationCertificate'];
-        $rehabsearchqb->andWhere($rehabsearchqb->epxr()->like('ditto.'.$searchcol,':type'))
-            ->setParameter('type','%'.$searchval.'%');
+        //$rehabsearchqb= clone $qb['MemRehabilitationCertificate'];
+       // $rehabsearchqb->andWhere($rehabsearchqb->epxr()->like('ditto.'.$searchcol,':type'))
+        $qb['Nichtmitglieder\NonMemRehabilitationCertificate']->andWhere($qb['Nichtmitglieder\NonMemRehabilitationCertificate']->expr()->in('ditto.'.$searchcol,':type'))
+        ->setParameter('type','%'.$searchval.'%');
 
-            $rehacelist=$rehabsearchqb->getQuery()->getResult();
+            $rehacelist=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
 
             echo '<pre>';
             print_r($rehacelist);
@@ -223,7 +224,7 @@ class NonMemberController extends Controller {
     $doctrine=$this->getDoctrine();   
     $manager= $doctrine->getManager();
     
-    $validfrom=$request->query->get('validfrom');
+    $validfrom=$request->query->get('version');
     $dependencies=array('Nichtmitglieder\Nonmember', 'Nichtmitglieder\NonMemPhoneNumber', 'Nichtmitglieder\NonMemRehabilitationCertificate');
     
     $qb=[];
@@ -239,10 +240,12 @@ class NonMemberController extends Controller {
         
         
         $nonmember=$doctrine->getRepository('AppBundle:Nichtmitglieder\Nonmember')->findOneBy(array('nmemid' => $ID, 'validfrom'=>$validfrom));
-        echo 'Vape Nation'; 
+       $nonmember_old = clone $nonmember;
+        echo '</pre>'; 
+        print_r ($nonmember); 
+         echo '</pre>';
 //        print_r($nonmember);
 //        echo '</pre>';
-        $nonmember_old = clone $nonmember;
         
         if (!$nonmember){
             throw $this->createNotFoundException('Es konnte kein Nichtmitglied mit der Nichtmitgliedsnr.: '.$ID.' gefunden werden');

@@ -21,10 +21,10 @@ class Trainer extends PersonalData {
     
     protected $trainerid;
     
-    public function __toString()
-    {
-        return (string) $this->trainerid;
-    }
+//    public function __toString()
+//    {
+//        return (string) $this->trainerid;
+//    }
     
     /**
      * @ORM\Id

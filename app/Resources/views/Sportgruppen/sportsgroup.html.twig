@@ -70,20 +70,20 @@
         <td>{{ data.roomid|striptags }}</td> 
         <td>{{ data.token|striptags }}</td>
         <td>{{ data.sgid|striptags }}</td>
-        
+        <td></td>
         {% if sportsgroupdependentlist[data.sgid]['trainers'] is defined %}
             {% set trainer =sportsgroupdependentlist[data.sgid]['trainers'] %}
         {% else %}
           {% set trainer ='' %}  
         {% endif %}
-        <td>{% for TR in trainer if TR.sgid != NULL %}                     
-               {{TR.trainerid }}<br>
+        <td>{% for TR in trainer %}                     
+               {{TR.firstname }} {{TR.lastname }}<br>
             {% else %}
                 {{ "-" }}</td>
             {% endfor %} 
 {#/******************************************************** #}          
-        {% if sportsgroupdependentlist[data.trainerid]['trainers'] is defined %}
-            {% set trainer =sportsgroupdependentlist[data.trainerid]['trainers'] %}
+       {# {% if sportsgroupdependentlist[data.trainerid]['sportgrouptrainer'] is defined %}
+            {% set trainer =sportsgroupdependentlist[data.trainerid]['ssportgrouptrainer'] %}
         {% else %}
           {% set trainer ='' %}  
         {% endif %}
@@ -91,9 +91,21 @@
                {{TR.trainerid }}<br>
             {% else %}
                 {{ "-" }}</td>
+            {% endfor %}#} 
+            
+            <td bgcolor="#5fa8ec"></td>
+{#/******************************************************** #}            
+       {% if sportsgroupdependentlist[data.sgid]['nonmembers'] is defined %}
+            {% set nonmember =sportsgroupdependentlist[data.sgid]['nonmembers'] %}
+        {% else %}
+          {% set nonmember ='' %}  
+        {% endif %}
+        <td>{% for NM in nonmember %}                     
+               {{NM.firstname }} {{NM.lastname }}<br>
+            {% else %}
+                {{ "-" }}</td>
             {% endfor %} 
-        <td bgcolor="#5fa8ec"></td>
-        <td>{{ data.sgid|striptags }}</td>
+{#/******************************************************** #}            
         <td>{{ data.sgid|striptags }}</td> 
         <td>{{ data.sgid|striptags }}</td>         
         <td bgcolor="#A9D0F5"></td>        

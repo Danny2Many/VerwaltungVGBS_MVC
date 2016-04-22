@@ -1,0 +1,33 @@
+<?php
+
+namespace AppBundle\Entity\Nichtmitglieder;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="NonMember_Sportsgroup")
+ * @ORM\HasLifecycleCallbacks()
+ */
+class NonMember_Sportsgroup {
+
+    /**
+* @ORM\Id
+* @ORM\Column(type="integer")  
+*/
+protected $sgid;
+/**
+* @ORM\Id
+* @ORM\Column(type="integer")  
+*/ 
+protected $nmemid;
+/**
+* @ORM\Id
+* @ORM\Column(type="string")
+*/
+protected $validfrom;
+/**
+* @ORM\Column(type="string")
+*/
+protected $validto;
+        
+}
