@@ -54,7 +54,7 @@ class Trainer extends PersonalData {
     protected $phonenumber;
     
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="integer")
      */
     protected $state;
     
@@ -286,7 +286,7 @@ class Trainer extends PersonalData {
     /**
      * Set state
      *
-     * @param string $state
+     * @param integer $state
      *
      * @return Trainer
      */
@@ -300,7 +300,7 @@ class Trainer extends PersonalData {
     /**
      * Get state
      *
-     * @return string
+     * @return integer
      */
     public function getState()
     {

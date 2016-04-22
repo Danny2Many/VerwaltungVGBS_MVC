@@ -5,6 +5,8 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup;
+use AppBundle\Entity\Trainer\Trainer;
+use AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub;
 use AppBundle\Form\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,15 +20,15 @@ class SportsgroupController extends Controller {
      public function indexAction (Request $request, $letter, $adminyear){
      
     if($adminyear == date('Y')){ 
-        $now=date("Y-m-d");
+        $now=date("Y");
     }
      //else take the last day of the choosen year
     else{
-        $now=$adminyear.'-12-31';
+        $now=$adminyear;
     }     
          
     $doctrine = $this->getDoctrine();
-    $dependencies=array('Nichtmitglieder\NonMemSportsgroup' => 'sg', 'BSSACert' => 'bssa');
+    $dependencies=array('Nichtmitglieder\NonMemSportsgroup' => 'sg', 'BSSACert' => 'bssa', 'Nichtmitglieder\Trainer_NonMemSportsgroupSub' => 'trainer');
     $qb=[];
        foreach($dependencies as $dependent => $idprefix){
    
@@ -40,6 +42,7 @@ class SportsgroupController extends Controller {
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
      $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
                     ->andWhere('ditto.validfrom<=:adminyear')
+                    ->andWhere('ditto.validto>:adminyear')
                     ->setParameter('adminyear',$now);
     }
     $choices=array('Sportgruppennr.' => 'sgid',
@@ -84,17 +87,24 @@ class SportsgroupController extends Controller {
                         ->setParameter('umlautletter','Ü%'); 
            break;
        }
-    }
+    }else{ $letter=null; } 
+    //$qb['Trainer\Trainer'] = $doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy('trainerid');
     $sportsgrouplist=$qb['Nichtmitglieder\NonMemSportsgroup']->getQuery()->getResult();
     $bssacertlist=$qb['BSSACert']->getQuery()->getResult();
+    $trainerlist=$qb['Nichtmitglieder\Trainer_NonMemSportsgroupSub']->getQuery()->getResult();
     
     $sportsgroupdependentlist=[];
     foreach ($bssacertlist as $bs){
-        $sportsgroupdependentlist[$bs->getBssaid()]['terminationdate'][]=$bs;  
-        $sportsgroupdependentlist[$bs->getBssaid()]['startdate'][]=$bs; 
-        $sportsgroupdependentlist[$bs->getBssaid()]['validfrom'][]=$bs; 
-        $sportsgroupdependentlist[$bs->getBssaid()]['groupnr'][]=$bs; 
-        $sportsgroupdependentlist[$bs->getBssaid()]['bssacertnr'][]=$bs; 
+        $sportsgroupdependentlist[$bs->getSgid()]['terminationdate'][]=$bs;  
+        $sportsgroupdependentlist[$bs->getSgid()]['startdate'][]=$bs; 
+        $sportsgroupdependentlist[$bs->getSgid()]['validfrom'][]=$bs; 
+        $sportsgroupdependentlist[$bs->getSgid()]['groupnr'][]=$bs; 
+        $sportsgroupdependentlist[$bs->getSgid()]['bssacertnr'][]=$bs; 
+    }
+    
+    foreach ($trainerlist as $pn){
+
+        $sportsgroupdependentlist[$pn->getSgid()]['trainers'][]=$pn;
     }
     
    
@@ -116,7 +126,54 @@ class SportsgroupController extends Controller {
      * @Route("/sportgruppen/anlegen/{adminyear}/{letter}", defaults={"letter": "alle", "adminyear": 2016}, name="addsportsgroup", requirements={"letter": "[A-Z]|alle" ,"adminyear": "[1-9][0-9]{3}"})
      * 
      */
-     public function addsportsgroupAction (Request $request, $letter){
+     public function addsportsgroupAction (Request $request, $letter, $adminyear){
+     
+     $nonmemsportsgroup = new NonMemSportsgroup();
+     $bssacertnr = new BSSACert();
+     $trainers = new Trainer_NonMemSportsgroupSub();
+     $im=  $this->get('app.index_manager')
+
+                   ->setEntityName('Sportsgroup');
+     $sgid=$im->getCurrentIndex();
+     $nonmemsportsgroup->setSgid($sgid);
+     $nonmemsportsgroup->addBssacert($bssacertnr);
+     $nonmemsportsgroup->addTrainers($trainers);
+     
+     $addnonmemsportsgroupform = $this->createForm(AddSportsgroupType::class, $nonmemsportsgroup); 
+     $addnonmemsportsgroupform->handleRequest($request);
+     
+     if($nonmemsportsgroup->isSubmitted() && $nonmemsportsgroup->isValid()){
+         
+        $manager= $this->getDoctrine()->getManager();
+        $nonmemsportsgroup->setValidfrom($adminyear)
+                    ->setValidto('2155');  
+
+        $bs->setbssacertnr(uniqid($bs))
+           ->Validfrom($adminyear)
+           ->Validto('2155');       
+        $manager->persist($bs);
+        
+        $manager->persist($nonmemsportsgroup);
+        $manager->flush();
+        
+        $im->add();
+        $this->addflash('notice', 'Diese Nichtmitglieder-Sportgruppe wurde erfolgreich angelegt');
+         
+        return $this->redirectRoute('sportsgroup_home', array('letter'=>$letter));
      }
+     
+    return $this->render(
+      'Sportgruppen/sportsgroupform.html.twig',
+      array(            
+          'form' => $addnonmemsportsgroupform->createView(),
+          'cletter' => $letter,
+          'title' => 'Sportgruppe anlegen',
+          'adminyear' => $adminyear
+          ));
+     }
+     
+     
+     
+     
      
 }
