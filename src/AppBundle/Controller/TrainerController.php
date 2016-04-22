@@ -67,22 +67,21 @@ class TrainerController extends Controller
     
     
      if($searchcol=='licencetype'){
-    $qb['Trainer\TrainerLicence']->andWhere($qb['Trainer\TrainerLicence']->expr()->like('ditto.'.$searchcol,':type'))
+    $lqb = clone $qb['Trainer\TrainerLicence'];
+    $lqb->andWhere($lqb->expr()->like('ditto.'.$searchcol,':type'))
         ->setParameter('type','%'.$searchval.'%');
        
-        $licencelist=$qb['Trainer\TrainerLicence']->getQuery()->getResult();
+        $licencelist=$lqb->getQuery()->getResult();
      
         if($licencelist){          
             foreach ($licencelist as $lc){         
             $idarray[]=$lc->getTrainerid();     
-        }
-    
-        $qb['Trainer\Trainer']->andWhere($qb['Trainer\TrainerLicence']->expr()->in('ditto.trainerid', $idarray));
-        $qb['Trainer\TrainerLicence']->orWhere($qb['Trainer\Trainer']->expr()->in('ditto.trainerid', $idarray));
+            }    
         }else{
-            $qb['Trainer\Trainer']->andWhere('ditto.trainerid<=:abort')->setParameter('abort',-1);
+            $idarray=array(null);
         }
-    
+        $qb['Trainer\Trainer']->andWhere($qb['Trainer\Trainer']->expr()->in('ditto.trainerid', $idarray));
+
     }else{  
         
     $qb['Trainer\Trainer']->andWhere($qb['Trainer\Trainer']->expr()->like('ditto.'.$searchcol, ':trainer'))
@@ -256,19 +255,15 @@ class TrainerController extends Controller
         $licences=$qb['Trainer\TrainerLicence']->getQuery()->getResult();        
         $focuses=$qb['Trainer\TrainerFocus']->getQuery()->getResult();        
 
-//        echo '<pre>'; 
-//        print_r($phonenumbers);
-//        echo '</pre>';
-        
         $originallicences = new ArrayCollection();
         $originalphonenr = new ArrayCollection();
         $originalthemes = new ArrayCollection();
 
         
-        
         foreach ($licences as $licence) {
             $trainer->addLicence($licence);
-            $originallicences->add($licence);
+            $licenceoriginal = clone $licence;
+            $originallicences->add($licenceoriginal);
         }   
         
         foreach ($phonenumbers as $phonenr) {
@@ -277,14 +272,12 @@ class TrainerController extends Controller
             $originalphonenr->add($phonenroriginal);
         } 
         
-//        echo '<pre>'; 
-//        print_r($originalphonenr);
-//        echo '</pre>';
-        
         foreach ($focuses as $theme) {
             $trainer->addTheme($theme);
-            $originalthemes->add($theme);
+            $originalfocus = clone $theme;
+            $originalthemes->add($originalfocus);
         }
+    
         
         $edittrainerform = $this->createForm(EditTrainerType::class, $trainer);
         $edittrainerform -> handleRequest($request);
@@ -296,60 +289,37 @@ class TrainerController extends Controller
             return $this->redirectToRoute('trainer_home', array('letter' => $letter));
         }        
         
+        
+                
         if($edittrainerform->isSubmitted() && $edittrainerform->isValid()){
   
-          foreach ($originallicences as $licence) {
-            if (false === $trainer->getLicence()->contains($licence)) {   
-                $manager->remove($licence);
-            }
-        }
-            
-            foreach ($phonenumbers as $phonenr) {
-            if (false === $trainer->getPhonenumber()->contains($phonenr)) {         
-                $manager->remove($phonenr);
-            }
-        }
-        
-            foreach ($originalthemes as $theme) {
-            if (false === $trainer->getTheme()->contains($theme)) {         
-                $manager->remove($theme);
-            }
-        }
+//          foreach ($originallicences as $licence) {
+//            if (false === $trainer->getLicence()->contains($licence)) {   
+//                $manager->remove($licence);
+//            }
+//        }
+//            
+//            foreach ($phonenumbers as $phonenr) {
+//            if (false === $trainer->getPhonenumber()->contains($phonenr)) {         
+//                $manager->remove($phonenr);
+//            }
+//        }
+//        
+//            foreach ($originalthemes as $theme) {
+//            if (false === $trainer->getTheme()->contains($theme)) {         
+//                $manager->remove($theme);
+//            }
+//        }
 
-            foreach($trainer->getPhonenumber() as $pn){
-                $phoneoriginal=$originalphonenr->get($originalphonenr->indexOf($pn->getTpnid()));
-                if (false == in_array($pn, $phonenumbers)) {
-                     $pn->setTpnid(uniqid('pn'))
-                            ->setValidfrom($adminyear)
-                            ->setValidto('2155');
-                    }else if($phoneoriginal->getPhonenumber()!=$pn->getPhonenumber() && $adminyear!=$pn->getValidfrom())
-                        {
-                        $pn_new = clone $pn;
-                        $pn->setPhonenumber($originalphonenr->get($originalphonenr->indexOf($pn->getTpnid()))->getPhonenumber())
-                            ->setValidto($adminyear);                        
-                        $pn_new->setValidfrom($adminyear);                        
-                        $manager->persist($pn_new);                         
-                    }  
-                    $manager->persist($pn); 
-                }
-            
-            foreach($trainer->getLicence() as $lc){
-                if (false == $originallicences->contains($lc)) {
-                    $lc->setLiid(uniqid('lc'))
-                            ->setValidfrom($adminyear)
-                            ->setValidto('2155');
-                    $manager->persist($lc); 
-                    }
-                }
-          
-            foreach($trainer->getTheme() as $th){
-                if (false == $originalphonenr->contains($th)) {
-                    $th->setTfid(uniqid('th'))
-                        ->setValidfrom($adminyear)
-                        ->setValidto('2155');
-                    $manager->persist($th);     
-                    }
-                }
+        
+        $FM = new \AppBundle\Services\FunctionManager;
+        
+        $FM->AddObjects($trainer, $phonenumbers, $originalphonenr, 'Tpn', $adminyear, $manager, 'getPhonenumber');
+               
+        $FM->AddObjects($trainer, $focuses, $originalthemes, 'Tf', $adminyear, $manager, 'getTheme');
+
+        $FM->AddObjects($trainer, $licences, $originallicences, 'Li', $adminyear, $manager, 'getLicence');
+
                 
             if($trainer != $trainer_old){
             $trainer_old->setValidto($adminyear);
