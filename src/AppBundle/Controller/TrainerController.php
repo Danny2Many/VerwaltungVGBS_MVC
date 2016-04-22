@@ -256,10 +256,6 @@ class TrainerController extends Controller
         $licences=$qb['Trainer\TrainerLicence']->getQuery()->getResult();        
         $focuses=$qb['Trainer\TrainerFocus']->getQuery()->getResult();        
 
-//        echo '<pre>'; 
-//        print_r($phonenumbers);
-//        echo '</pre>';
-        
         $originallicences = new ArrayCollection();
         $originalphonenr = new ArrayCollection();
         $originalthemes = new ArrayCollection();
@@ -277,14 +273,14 @@ class TrainerController extends Controller
             $originalphonenr->add($phonenroriginal);
         } 
         
-//        echo '<pre>'; 
-//        print_r($originalphonenr);
-//        echo '</pre>';
+
         
         foreach ($focuses as $theme) {
             $trainer->addTheme($theme);
             $originalthemes->add($theme);
         }
+        
+    
         
         $edittrainerform = $this->createForm(EditTrainerType::class, $trainer);
         $edittrainerform -> handleRequest($request);
@@ -296,6 +292,8 @@ class TrainerController extends Controller
             return $this->redirectToRoute('trainer_home', array('letter' => $letter));
         }        
         
+        
+                
         if($edittrainerform->isSubmitted() && $edittrainerform->isValid()){
   
           foreach ($originallicences as $licence) {
@@ -316,23 +314,37 @@ class TrainerController extends Controller
             }
         }
 
-            foreach($trainer->getPhonenumber() as $pn){
-                $phoneoriginal=$originalphonenr->get($originalphonenr->indexOf($pn->getTpnid()));
-                if (false == in_array($pn, $phonenumbers)) {
-                     $pn->setTpnid(uniqid('pn'))
-                            ->setValidfrom($adminyear)
-                            ->setValidto('2155');
-                    }else if($phoneoriginal->getPhonenumber()!=$pn->getPhonenumber() && $adminyear!=$pn->getValidfrom())
-                        {
-                        $pn_new = clone $pn;
-                        $pn->setPhonenumber($originalphonenr->get($originalphonenr->indexOf($pn->getTpnid()))->getPhonenumber())
-                            ->setValidto($adminyear);                        
-                        $pn_new->setValidfrom($adminyear);                        
-                        $manager->persist($pn_new);                         
-                    }  
-                    $manager->persist($pn); 
-                }
+          
             
+//                foreach($trainer->getPhonenumber() as $pn){
+//                $phoneoriginal=$originalphonenr->get($trainer->getPhonenumber()->indexOf($pn));
+//                
+//                if (false == in_array($pn, $phonenumbers)) {                    
+//                    $pn->setTpnid(uniqid('pn'))
+//                            ->setValidfrom($adminyear)
+//                            ->setValidto('2155');
+//                    $manager->persist($pn); 
+//
+//                    }else if($phoneoriginal !=$pn){
+//                        if($adminyear!=$pn->getValidfrom()){                       
+//                            
+//                            try{  
+//                                $phoneoriginal ->setValidto($adminyear); 
+//                                $pn ->setValidfrom($adminyear); 
+//                                $manager->persist($pn);
+//                                $manager->flush();
+//                                $manager->persist($phoneoriginal);      
+//                                $manager->flush();                                
+//                            }catch(Exception $em){ $em->getConnection()->rollback(); }
+//                            
+//                        }else{ $manager->persist($pn); }  
+//                    }
+//                }
+        
+        $FM = new \AppBundle\Services\FunctionManager;
+        
+        $FM->AddObjects($trainer, $phonenumbers, $originalphonenr, 'Tpn', $adminyear, $manager, 'getPhonenumber');
+                
             foreach($trainer->getLicence() as $lc){
                 if (false == $originallicences->contains($lc)) {
                     $lc->setLiid(uniqid('lc'))
