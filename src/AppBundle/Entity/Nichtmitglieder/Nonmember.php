@@ -408,56 +408,6 @@ public function setPhonenumber($phonenumber)
         $this->getPhonenumber()->removeElement($phonenumber);
     }
 
-
-  
-//
-//    /**
-//     * Get recorded
-//     *
-//     * @return string
-//     */
-//    public function getRecorded()
-//    {
-//        return $this->recorded;
-//    }
-//
-//    /**
-//     * Set deleted
-//     *
-//     * @param \DateTime $deleted
-//     *
-//     * @return Nonmember
-//     */
-//    public function setDeleted($deleted)
-//    {
-//        $this->deleted = $deleted;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get deleted
-//     *
-//     * @return \DateTime
-//     */
-//    public function getDeleted()
-//    {
-//        return $this->deleted;
-//    }
-//
-// 
-//
-//     /**
-//    * @ORM\PrePersist
-//    */
-//    public function setRecorded($recorded)
-//    {   
-//        $now= new \DateTime();
-//        $this->recorded = $now->format('Y-m-d');
-//
-//        return $this;
-//    }
-
     /**
      * Set newsletter
      *

@@ -28,7 +28,7 @@ class NonMemberController extends Controller {
 
      
     $doctrine = $this->getDoctrine();
-    $dependencies=['Nichtmitglieder\Nonmember', 'Nichtmitglieder\NonMemPhoneNumber', 'Nichtmitglieder\NonMemRehabilitationCertificate'];
+    $dependencies=['Nichtmitglieder\Nonmember', 'Nichtmitglieder\NonMemPhoneNumber', 'Nichtmitglieder\NonMemSportsgroup','Nichtmitglieder\NonMemRehabilitationCertificate', 'Nichtmitglieder\NonMember_Sportsgroup'];
     $qb=[];
       foreach($dependencies as $dependent){
    
@@ -111,13 +111,26 @@ class NonMemberController extends Controller {
     $nonmemberlist=$qb['Nichtmitglieder\Nonmember']->getQuery()->getResult();
     $phonenumberlist=$qb['Nichtmitglieder\NonMemPhoneNumber']->getQuery()->getResult();
     $rehabcertlist=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
-  
+    $sportsgroupnonmemberlist=$qb['Nichtmitglieder\NonMember_Sportsgroup']->getQuery()->getResult();
+    $sportsgrouplist=$qb['Nichtmitglieder\NonMemSportsgroup']->getQuery()->getResult();
     if($adminyear == date('Y')){
          $now=date('Y-m-d');
      }
      else{
          $now=$adminyear.'-12-31';
      }
+     
+    foreach ($sportsgroupnonmemberlist as $sn){
+
+        $sportsgroupdependentlist[$sn->getNmemid()]['sportsgroups'][$sn->getSgid()]=$sn->getSgid();
+    }
+    
+    foreach ($nonmemberlist as $nm){
+        foreach ($sportsgrouplist as $sg){
+         $sportsgroupdependentlist[$nm->getNmemid()]['sportsgroups'][$sg->getTrainerid()]=$sg;
+         
+        }
+    }
      
     $nonmemberdependentlist=[];
     foreach ($phonenumberlist as $pn){

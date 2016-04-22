@@ -38,7 +38,7 @@
 <th>Postfach</th>
 <th>Telefon</th>
 <th>E-Mail</th>
-{#<th>Sportgruppe</th>#}
+<th>Sportgruppe</th>
 <th>Trainingsbeginn</th>
 <th>Teilnahmebeginnbest.</th>
 <th>Rehaschein/e<br> (RSNr.-Ablaufd.-Einheiten)</th>
@@ -119,13 +119,16 @@
                     {% endfor %}</td>
     
             <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>   
-           {# <td>{% if data.sportsgroup is empty %}
-                    {{ "-" }}
-                    {% else  %}
-                        {% for sportsgroup in data.sportsgroup %}
-                       {{ sportsgroup.Token }}<br>
-                    {% endfor %}
-                    {% endif %}</td>#} 
+            {% if sportsgroupdependentlist[data.nmemid]['sportsgroups'] is defined %}
+                {% set sportsgroup =sportsgroupdependentlist[data.nmemid]['sportsgroups'] %}
+            {% else %}
+                {% set sportsgroup ='' %}  
+            {% endif %}
+             <td>{% for SG in sportsgroup %}                     
+               {{SG.token }}<br>
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %} 
             <td>{{ data.trainingstartdate|date("d.m.Y") }}</td>
             <td>{{ data.trainingconfirmation is empty ? "-" : data.trainingconfirmation|date("d.m.Y")}}</td>
              

@@ -38,15 +38,24 @@ class SportsgroupController extends Controller {
             $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
                     ->andWhere('ditto.validto>'.$adminyear);   
     } 
-   $entityManager= $this->getDoctrine();
-    $sb = $entityManager->createQueryBuilder();
-    $sb->select('count(account.nmemid)');
-    $sb->from('Appbundle:Nichtmitglieder\Nonmember','account');
+//   $entityManager= $this->getDoctrine();
+//    $sb = $entityManager->createQueryBuilder();
+//    $sb->select('count(account.nmemid)');
+//    $sb->from('Appbundle:Nichtmitglieder\Nonmember','account');
+//
+//$count = $sb->getQuery()->getSingleScalarResult();
+//    
+$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Nichtmitglieder\Nonmember');
+$title =0;
+$sb = $repository->createQueryBuilder('t');
+$sb->select('count(t.nmemid)');
+$sb->where('t.nmemid <=:name');
+$sb->setParameter('title', $title);
+$nombre = $sb->getQuery()->getSingleScalarResult();
 
-$count = $sb->getQuery()->getSingleScalarResult();
-    
+
     echo '<pre>';
-     print_r($count);
+     print_r($nombre);
      echo '</pre>';
     
     $choices=array('Sportgruppennr.' => 'sgid',
@@ -109,20 +118,20 @@ $count = $sb->getQuery()->getSingleScalarResult();
         $sportsgroupdependentlist[$bs->getSgid()]['bssacertnr'][]=$bs; 
     }
     
-    foreach ($sportsgroupnonmemberlist as $sn){
-        $sportsgroupdependentlist[$sn->getSgid()]['nonmembers'][$sn->getNmemid()]=$sn->getNmemid();
-    }
-    $t=0;
-    foreach ($sportsgrouplist as $sg){
-           foreach ($nonmemberlist as $nm){
-         $sportsgroupdependentlist[$sg->getSgid()]['nonmembers'][$nm->getNmemid()]=$nm;
-        $t=count($nm->getNmemid());
-    }
+//    foreach ($sportsgroupnonmemberlist as $sn){
+//        $sportsgroupdependentlist[$sn->getSgid()]['nonmembers'][$sn->getNmemid()]=$sn->getNmemid();
+//    }
+//    $t=0;
+//    foreach ($sportsgrouplist as $sg){
+//           foreach ($nonmemberlist as $nm){
+//         $sportsgroupdependentlist[$sg->getSgid()]['nonmembers'][$nm->getNmemid()]=$nm;
+//        $t=count($nm->getNmemid());
+//    }
 //    echo '<pre>';
 //     print_r($t);
 //     echo '</pre>';
 //    
-    }
+//    }
     foreach ($sportgrouptrainerlist as $pn){
 
         $sportsgroupdependentlist[$pn->getSgid()]['trainers'][$pn->getTrainerid()]=$pn->getTrainerid();
