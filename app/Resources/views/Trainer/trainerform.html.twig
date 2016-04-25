@@ -74,7 +74,9 @@
             <div class="col-md-12"> 
                 <div class="form-group">
                     <div class="col-sm-10 col-sm-push-2">
+                        <a href="{{ path('trainer_home', {'letter': cletter, 'adminyear': adminyear}) }}">
                         {{ form_widget(form.save, {'attr': {'onclick': 'confirmaction(event, "Sie befinden sich im Verwaltungsjahr '~adminyear~'. Die zu speichernden Daten sind nur für dieses Jahr gültig. Wollen Sie diese Daten dennoch speichern?")'}}) }}
+                        </a> 
                         {{ form_widget(form.reset, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie dieses Formular zurücksetzen möchten?.")'}}) }}
 
                         {% if (attribute(form, 'delete') is defined) %}

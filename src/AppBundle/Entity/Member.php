@@ -102,7 +102,7 @@ class Member extends HealthData
     public $decreaseddues;
     
     /**
-     * @ORM\Column(type="binary")
+     * @ORM\Column(type="integer")
         * 
      * 
      */
@@ -433,7 +433,7 @@ class Member extends HealthData
     /**
      * Set newsletter
      *
-     * @param binary $newsletter
+     * @param integer $newsletter
      *
      * @return Member
      */
@@ -447,7 +447,7 @@ class Member extends HealthData
     /**
      * Get newsletter
      *
-     * @return binary
+     * @return integer
      */
     public function getNewsletter()
     {

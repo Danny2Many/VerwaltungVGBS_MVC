@@ -43,10 +43,11 @@ class MemberController extends Controller
        
     }
     
-    $qb['Member']->andWhere($qb['Member']->expr()->isNull('ditto.quitdate'));
+//    $qb['Member']->andWhere($qb['Member']->expr()->isNull('ditto.quitdate'));
                
 
-    
+       
+     
     
     
     $choices=array('Mitgliedsnr.' => 'memid',
@@ -117,29 +118,26 @@ class MemberController extends Controller
     }
     
     else{
-        
+      
         
         $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.lastname',':letter' ))
                     ->setParameter('letter',$letter.'%');
                    
-         
+           
         
           switch($letter){
-            case 'A': $qb['Member']->orWhere($qb['Member']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'A': $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.lastname', ':umlautletter'))
                                   ->setParameter('umlautletter','Ä%');
             break;
         
-            case 'O': $qb['Member']->orWhere($qb['Member']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'O': $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.lastname', ':umlautletter'))
                                     ->setParameter('umlautletter','Ö%');
             break;
         
-            case 'U': $qb['Member']->orWhere($qb['Member']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'U': $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.lastname', ':umlautletter'))
                                     ->setParameter('umlautletter','Ü%');
             break;
-        }
-        
-       
-        
+        } 
         
         
     }
@@ -151,6 +149,7 @@ class MemberController extends Controller
      $phonenumberlist=$qb['MemPhoneNumber']->getQuery()->getResult();
      $rehabcertlist=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
      
+    
      
      if($adminyear == date('Y')){
          $now=date('Y-m-d');
@@ -308,27 +307,30 @@ class MemberController extends Controller
     {
       
     
-    $validfrom=$request->query->get('version');
     
     $doctrine=$this->getDoctrine(); 
     $manager= $doctrine->getManager();
-    $dependencies=array('MemPhoneNumber', 'MemRehabilitationCertificate');
+        $validfrom=$request->query->get('version');
+
+    $dependencies=['MemPhoneNumber', 'MemRehabilitationCertificate'];
     
     $qb=[];
+    
+  
     
     foreach($dependencies as $dependent){
        
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-     $qb[$dependent]->where('ditto.validfrom<=:adminyear')
-                    ->andWhere('ditto.validto>:adminyear')
-                    ->andWhere('ditto.memid=:ID')
-                    ->setParameter('adminyear', $adminyear)
-                    ->setParameter('ID',$ID);  
+     $qb[$dependent]->where('ditto.validfrom<='.$adminyear)
+                    ->andWhere('ditto.validto>'.$adminyear)
+                    ->andWhere('ditto.memid='.$ID);
     }
-        
+    
+     
 
-          $member=$manager->getRepository('AppBundle:Member')->findOneBy(array('memid'=>$ID, 'validfrom'=>$validfrom));
-                $memberoriginal= clone $member;
+            $member=$doctrine->getRepository('AppBundle:Member')->findOneBy(array('memid'=>$ID, 'validfrom'=>$validfrom));
+         
+            $memberoriginal= clone $member;
 
     
          
@@ -352,9 +354,7 @@ class MemberController extends Controller
         
 
          
-         echo '<pre>'; 
-        print_r($originalrehabs);
-        echo '</pre>';
+         
          
          
          
@@ -397,9 +397,12 @@ class MemberController extends Controller
         //if the form is valid -> persist it to the database
         if($editmemform->isSubmitted() && $editmemform->isValid()){
        
-          $FM = new \AppBundle\Services\FunctionManager;
-         
-         
+            $FM = new \AppBundle\Services\FunctionManager;  
+            
+            $FM->AddObjects($member, $phonenumbers, $originalphonenr, 'Pn', $adminyear, $manager, 'getPhonenumber');
+            
+            $FM->AddObjects($member, $rehabcerts, $origininalrehab, 'Rc', $adminyear, $manager, 'getRehabilitationcertificate');
+
            
          
 
@@ -433,12 +436,18 @@ class MemberController extends Controller
 //            }
             
             
+//               echo '<pre>'; 
+//        print_r($member);
+//        echo '</pre>'; 
+//        
+//           echo '<pre>'; 
+//        print_r($memberoriginal);
+//        echo '</pre>';  
+            
            if($member!=$memberoriginal){
                 
               if($adminyear != $member->getValidfrom()){ 
-              
-                return 'sexy';   
-                  
+                                
              
              $memberoriginal->setValidto($adminyear);
              $member->setValidfrom($adminyear);
@@ -452,7 +461,6 @@ class MemberController extends Controller
             }
             
             else{
-                return 'smexy';
               $manager->persist($member);  
             }
             

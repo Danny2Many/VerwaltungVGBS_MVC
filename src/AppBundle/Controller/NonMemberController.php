@@ -34,7 +34,7 @@ class NonMemberController extends Controller {
    
        
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-     $qb[$dependent]->where('ditto.validfrom<='.$adminyear)
+     $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
                     ->andWhere('ditto.validto>'.$adminyear);
 //                    ->setParameter('adminyear', $adminyear);
     }
@@ -96,15 +96,15 @@ class NonMemberController extends Controller {
         
         
           switch($letter){
-            case 'A': $qb['Nichtmitglieder\Nonmember']->orWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'A': $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ä%'); 
             break;
         
-            case 'O': $qb['Nichtmitglieder\Nonmember']->orWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'O': $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ö%'); 
             break;
         
-            case 'U': $qb['Nichtmitglieder\Nonmember']->orWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'U': $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ü%'); 
             break;
         }    

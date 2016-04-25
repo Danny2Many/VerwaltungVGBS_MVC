@@ -43,8 +43,8 @@ class TrainerController extends Controller
         foreach($dependencies as $dependent){ 
 
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-            $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
-                    ->andWhere('ditto.validto>'.$adminyear);   
+            $qb[$dependent] ->andWhere('ditto.validfrom<='.$adminyear)
+                            ->andWhere('ditto.validto>'.$adminyear);   
     }    
         
         $choices=array('Trainernr.' => 'trainerid',
@@ -52,8 +52,7 @@ class TrainerController extends Controller
         'Vorname' => 'firstname',
         'Strasse' => 'streetaddress',
         'E-Mail' => 'email',
-        'Lizenz' => 'licencetype');     
- 
+        'Lizenz' => 'licencetype');      
 
         
     $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('trainer_home',array('adminyear' => $adminyear))));    
@@ -94,15 +93,15 @@ class TrainerController extends Controller
                    ->setParameter('letter',$letter.'%');
         
         switch($letter){
-            case 'A': $qb['Trainer\Trainer']->orWhere($qb['Trainer\Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'A': $qb['Trainer\Trainer']->andWhere($qb['Trainer\Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ä%'); 
             break;
         
-            case 'O': $qb['Trainer\Trainer']->orWhere($qb['Trainer\Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'O': $qb['Trainer\Trainer']->andWhere($qb['Trainer\Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ö%'); 
             break;
         
-            case 'U': $qb['Trainer\Trainer']->orWhere($qb['Trainer\Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'U': $qb['Trainer\Trainer']->andWhere($qb['Trainer\Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ü%'); 
             break;
         }        
@@ -205,7 +204,7 @@ class TrainerController extends Controller
             
             
             $this->addFlash('notice', 'Dieser Übungsleiter wurde erfolgreich angelegt!');
-            return $this->redirectToRoute('trainer_home', array('letter' => $letter));
+            return $this->redirectToRoute('trainer_home', array('letter' => $letter, 'adminyear' => $adminyear));
         }
 
         
@@ -234,16 +233,18 @@ class TrainerController extends Controller
         $dependencies=['Trainer\TrainerPhoneNumber', 'Trainer\TrainerFocus','Trainer\TrainerLicence'];
 
         $qb= [];
+        
         foreach($dependencies as $dependent){          
-            {            
+                      
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
             $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
                             ->andWhere('ditto.validto>'.$adminyear) 
                             ->andWhere('ditto.trainerid='.$ID);
-            }
+            
         }
         
         $trainer=$doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy(array('trainerid' => $ID, 'validfrom'=>$validfrom));
+       
         $trainer_old = clone $trainer;    
         
         
@@ -337,7 +338,7 @@ class TrainerController extends Controller
 
             $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');
            
-          return $this->redirectToRoute('trainer_home', array('letter' => $letter));  
+          return $this->redirectToRoute('trainer_home', array('letter' => $letter, 'adminyear' => $adminyear));  
         }
         
         return $this->render('Trainer/trainerform.html.twig',
