@@ -284,10 +284,31 @@ class TrainerController extends Controller
         $edittrainerform -> handleRequest($request);
         
         if($edittrainerform->get('delete')->isClicked()){
-            $manager->remove($trainer);
+            if($trainer->getValidto()== '2155'){
+                $trainer->setValidto($adminyear);
+                $manager->persist($trainer);
+            }else{
+                
+                if($trainer->getValidfrom()== $adminyear){
+                    $manager->remove($trainer);
+                }else{
+                    $trainer->setValidto($adminyear);
+                    $manager->persist($trainer); 
+                }                
+                
+                $qb=$doctrine->getRepository('AppBundle:Trainer\Trainer')->createQueryBuilder('ditto');                
+                $qb->where('ditto.validfrom>='.$adminyear)
+                    ->andWhere('ditto.trainerid='.$ID);
+                
+                $trainerdelete=$qb->getQuery()->getResult();
+                
+                foreach ($trainerdelete as $del){
+                    $manager->remove($del);
+                }
+            }
             $manager->flush();
             $this->addflash('notice', 'Dieser Übungsleiter wurde erfolgreich gelöscht!');
-            return $this->redirectToRoute('trainer_home', array('letter' => $letter));
+            return $this->redirectToRoute('trainer_home', array('letter' => $letter,'adminyear' => $adminyear));
         }        
         
         
