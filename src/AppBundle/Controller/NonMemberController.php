@@ -39,6 +39,9 @@ class NonMemberController extends Controller {
 //                    ->setParameter('adminyear', $adminyear);
     }
         
+                echo '<pre>';
+            print_r($qb['Nichtmitglieder\NonMemPhoneNumber']->getQuery()->getResult());
+            echo '</pre>';
     
     $choices=array('Nichtmitgliedsnr.' => 'nmemid',
         'Name' => 'lastname',
@@ -66,9 +69,7 @@ class NonMemberController extends Controller {
 
             $rehacelist=$rehabsearchqb->getQuery()->getResult();
 
-            echo '<pre>';
-            print_r($rehacelist);
-            echo '</pre>';
+
             
             if($rehacelist){          
                 foreach ($rehacelist as $rc){         
@@ -114,6 +115,8 @@ class NonMemberController extends Controller {
     $phonenumberlist=$qb['Nichtmitglieder\NonMemPhoneNumber']->getQuery()->getResult();
     $rehabcertlist=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
   
+    
+    
     if($adminyear == date('Y')){
          $now=date('Y-m-d');
      }
@@ -226,6 +229,7 @@ class NonMemberController extends Controller {
     $doctrine=$this->getDoctrine();   
     $manager= $doctrine->getManager();
     $dependencies=array('Nichtmitglieder\Nonmember', 'Nichtmitglieder\NonMemPhoneNumber', 'Nichtmitglieder\NonMemRehabilitationCertificate');
+
     
     $qb=[];
     foreach($dependencies as $dependent){
@@ -250,25 +254,26 @@ class NonMemberController extends Controller {
         $phonenumbers=$qb['Nichtmitglieder\NonMemPhoneNumber']->getQuery()->getResult();
         $rehabcerts=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
         
-        echo '<pre>'; 
-        print_r($rehabcerts);
-        echo '</pre>';
+       
         
         $originalrehabs = new ArrayCollection();
         $originalphonenr = new ArrayCollection();
 //        $originalsections = new ArrayCollection();
         
-        // Create an ArrayCollection of the current Rehab objects in the database
+            // Create an ArrayCollection of the current Rehab objects in the database
          foreach ($rehabcerts as $rehab) {
-            $nonmember->addRehabilitationcertificate($rehab);
-            $originalrehabs->add($rehab);
-        }
-     
-        // Create an ArrayCollection of the current Phonenr objects in the database
-        foreach ($phonenumbers as $phonenr) {
-            $nonmember->addPhonenumber($phonenr);
-            $originalphonenr->add($phonenr);
-        }
+             $origininalrehab= clone $rehab;
+             $nonmember->addRehabilitationcertificate($rehab);
+             $originalrehabs->add($origininalrehab);
+         }
+
+         // Create an ArrayCollection of the current Phonenr objects in the database
+         foreach ($phonenumbers as $phonenr) {
+
+             $origininalphonenr= clone $phonenr;
+             $nonmember->addPhonenumber($phonenr);
+             $originalphonenr->add($origininalphonenr);
+         }
         // Create an ArrayCollection of the current Rehab objects in the database
         //    foreach ($member->getSection() as $section) {
         //        
@@ -304,8 +309,16 @@ class NonMemberController extends Controller {
 //
 //        }else{
 //            $nonmember->getSection()->clear();
-        }
+        
            
+        $FM = new \AppBundle\Services\FunctionManager;  
+            
+            $FM->AddObjects($nonmember, $phonenumbers, $originalphonenr, 'Pn', $adminyear, $manager, 'getPhonenumber');
+            
+            $FM->AddObjects($nonmember, $rehabcerts, $originalrehabs, 'Rc', $adminyear, $manager, 'getRehabilitationcertificate');
+
+        
+        
         if($nonmember != $nonmemberoriginal){
             if($adminyear != $nonmember->getValidfrom()){
                 
@@ -321,28 +334,28 @@ class NonMemberController extends Controller {
             }
         }   
            
-       foreach ($nonmember->getRehabilitationcertificate() as $rehab) {
-            if ($originalrehabs->contains($rehab) === false) {
-                
-                $rehab->setValidfrom($adminyear)
-                      ->setValidto('2155');
-                $manager->persist($rehab);
-          }else{
-              $originalrehab=$originalrehabs->get($rehab);
-             if($rehab != $originalrehab){
-                 $rehab->setValidfrom($adminyear);
-                 $originalrehab->setValidto($adminyear);
-                 $originalrehabs->removeElement($originalrehab);
-                 $manager->persist($rehab);
-                 $manager->persist($originalrehab);
-             } 
-          }
-        } 
+//       foreach ($nonmember->getRehabilitationcertificate() as $rehab) {
+//            if ($originalrehabs->contains($rehab) === false) {
+//                
+//                $rehab->setValidfrom($adminyear)
+//                      ->setValidto('2155');
+//                $manager->persist($rehab);
+//          }else{
+//              $originalrehab=$originalrehabs->get($rehab);
+//             if($rehab != $originalrehab){
+//                 $rehab->setValidfrom($adminyear);
+//                 $originalrehab->setValidto($adminyear);
+//                 $originalrehabs->removeElement($originalrehab);
+//                 $manager->persist($rehab);
+//                 $manager->persist($originalrehab);
+//             } 
+//          }
+//        } 
             
-         foreach ($originalphonenr as $phonenr) {
-            if (false === $nonmember->getPhonenumber()->contains($phonenr)) {         
-                $manager->remove($phonenr);
-            }
+//         foreach ($originalphonenr as $phonenr) {
+//            if (false === $nonmember->getPhonenumber()->contains($phonenr)) {         
+//                $manager->remove($phonenr);
+//            }
        
         
 //        foreach($nonmember->getPhonenumber() as $pn){
@@ -360,7 +373,7 @@ class NonMemberController extends Controller {
             $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');
             return $this->redirectToRoute('nonmember_home', array('letter' => $letter, 'adminyear' => $adminyear));    
        
-    }
+       }
 
         
         return $this->render(

@@ -46,7 +46,9 @@ class MemberController extends Controller
 //    $qb['Member']->andWhere($qb['Member']->expr()->isNull('ditto.quitdate'));
                
 
-       
+        echo '<pre>';
+            print_r($qb['MemPhoneNumber']->getQuery()->getResult());
+            echo '</pre>';
      
     
     
@@ -86,9 +88,7 @@ class MemberController extends Controller
 
             $rehacelist=$rehabsearchqb->getQuery()->getResult();
             
-//            echo '<pre>';
-//            print_r($rehacelist);
-//            echo '</pre>';
+
             
                 
                 if($rehacelist){
@@ -312,6 +312,7 @@ class MemberController extends Controller
     $manager= $doctrine->getManager();
         $validfrom=$request->query->get('version');
 
+        
     $dependencies=['MemPhoneNumber', 'MemRehabilitationCertificate'];
     
     $qb=[];
@@ -401,7 +402,7 @@ class MemberController extends Controller
             
             $FM->AddObjects($member, $phonenumbers, $originalphonenr, 'Pn', $adminyear, $manager, 'getPhonenumber');
             
-            $FM->AddObjects($member, $rehabcerts, $origininalrehab, 'Rc', $adminyear, $manager, 'getRehabilitationcertificate');
+            $FM->AddObjects($member, $rehabcerts, $originalrehabs, 'Rc', $adminyear, $manager, 'getRehabilitationcertificate');
 
            
          
