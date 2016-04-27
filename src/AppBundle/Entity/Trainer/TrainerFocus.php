@@ -45,7 +45,12 @@ class TrainerFocus {
      * @ORM\Id
      * @ORM\Column(type="string")
      */
-    protected $validfrom;   
+    protected $validfrom;
+    
+    
+    public function __toString() {
+        return $this->tfid.'/tf/Trainer\TrainerFocus'; 
+    }
 
     /**
      * Set trainerid

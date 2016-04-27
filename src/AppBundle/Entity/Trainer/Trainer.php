@@ -23,7 +23,7 @@ class Trainer extends PersonalData {
     
     public function __toString()
     {
-        return (string) $this->trainerid;
+        return (string) $this->trainerid.'/trainer/Trainer\Trainer';
     }
     
     /**

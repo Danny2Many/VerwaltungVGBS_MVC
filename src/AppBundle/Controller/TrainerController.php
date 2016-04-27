@@ -283,29 +283,17 @@ class TrainerController extends Controller
         $edittrainerform = $this->createForm(EditTrainerType::class, $trainer);
         $edittrainerform -> handleRequest($request);
         
+        $FM = new \AppBundle\Services\FunctionManager;
+
+        
         if($edittrainerform->get('delete')->isClicked()){
-            if($trainer->getValidto()== '2155'){
-                $trainer->setValidto($adminyear);
-                $manager->persist($trainer);
-            }else{
-                
-                if($trainer->getValidfrom()== $adminyear){
-                    $manager->remove($trainer);
-                }else{
-                    $trainer->setValidto($adminyear);
-                    $manager->persist($trainer); 
-                }                
-                
-                $qb=$doctrine->getRepository('AppBundle:Trainer\Trainer')->createQueryBuilder('ditto');                
-                $qb->where('ditto.validfrom>='.$adminyear)
-                    ->andWhere('ditto.trainerid='.$ID);
-                
-                $trainerdelete=$qb->getQuery()->getResult();
-                
-                foreach ($trainerdelete as $del){
-                    $manager->remove($del);
-                }
-            }
+            
+             $FM->RemoveObjects($trainer, $adminyear, $doctrine,array($trainer->getTheme()));
+            
+            
+//            $FM->RemoveObjects($trainer->getTheme(), $adminyear, $manager, 'Trainer\Trainer', $doctrine, 'trainer');
+
+            
             $manager->flush();
             $this->addflash('notice', 'Dieser Übungsleiter wurde erfolgreich gelöscht!');
             return $this->redirectToRoute('trainer_home', array('letter' => $letter,'adminyear' => $adminyear));
@@ -327,14 +315,14 @@ class TrainerController extends Controller
 //            }
 //        }
 //        
-//            foreach ($originalthemes as $theme) {
-//            if (false === $trainer->getTheme()->contains($theme)) {         
-//                $manager->remove($theme);
-//            }
-//        }
+            foreach ($focuses as $theme) {
+            if (false === $trainer->getTheme()->contains($theme)) {
+                echo ($theme->getTfid());
+                $FM->RemoveObjects($theme, $adminyear, $manager, 'Trainer\Trainer', $doctrine, 'tf');
+            }
+        }
 
         
-        $FM = new \AppBundle\Services\FunctionManager;
         
         $FM->AddObjects($trainer, $phonenumbers, $originalphonenr, 'Tpn', $adminyear, $manager, 'getPhonenumber');
                
