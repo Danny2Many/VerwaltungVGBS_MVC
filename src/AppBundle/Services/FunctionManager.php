@@ -11,34 +11,40 @@ class FunctionManager {
     
     protected $doctrine;
     protected $adminyear;
+    
     public function __construct($doctrine, $adminyear) {
         $this->doctrine=$doctrine;
         $this->adminyear=$adminyear;
     } 
     
+    //analizes the __toString return value of an object
+    public function ObjectMetaDataParser($object) {
+        $metadata=explode('/', $object);
+        return array('id'=>$metadata[0], 'idprefix'=>$metadata[1], 'namespace'=>$metadata[2]);
+    }
     
     
-    
+    //handles the comparison of the dependencies after saving
     public function HandleDependencyDiff($saveddependencies, $originaldependencies){
         $manager=$this->doctrine->getManager();
         
         
-       
-        
-        
-        foreach($saveddependencies  as $ob){
-                     $explode=explode('/', $ob);
-                     $idprefix=$explode[1]; 
+         foreach($saveddependencies  as $ob){
+                     $metadata=  $this->ObjectMetaDataParser($ob);
+                     
+                     //get the original object version
                      $clone=$originaldependencies->get($saveddependencies->indexOf($ob));
-
+                     
+                     //if an new referencing object was created
                     if ($clone == NULL) {                    
-                        call_user_func(array($ob, 'set'.$idprefix.'id' ), uniqid($idprefix));
+                        call_user_func(array($ob, 'set'.$metadata['idprefix'].'id' ), uniqid($metadata['idprefix']));
                         call_user_func(array($ob, 'setValidfrom' ), $this->adminyear);
                         call_user_func(array($ob, 'setValidto' ), '2155');
                        
                         $manager->persist($ob); 
 
                         }else {
+                            $originaldependencies->removeElement($clone);
                             $this->HandleObjectDiff($ob, $clone);  
                         }
                     }
@@ -48,16 +54,13 @@ class FunctionManager {
             $clone=$saveddependencies->get($originaldependencies->indexOf($oridep));
             
             if ($clone == NULL) {
-         
-                $explode=explode('/', $oridep);
-                $id=$explode[0];
-                $idprefix=$explode[1];
-                $namespace=$explode[2];
+                $depmetadata=  $this->ObjectMetaDataParser($oridep);
+                
                 $validfrom=$oridep->getValidfrom();
                 
                 //you cannot call 'remove' on cloned objects
                 //thats why we query for them again
-                $objecttobedeleted=$manager->find('AppBundle:'.$namespace, array($idprefix.'id'=>$id, 'validfrom'=>$validfrom));
+                $objecttobedeleted=$manager->find('AppBundle:'.$depmetadata['namespace'], array($depmetadata['idprefix'].'id'=>$depmetadata['id'], 'validfrom'=>$validfrom));
                
                 $this->RemoveObjects($objecttobedeleted);
             }
@@ -65,7 +68,7 @@ class FunctionManager {
     }
     
     
-    //compares 2 objects
+    //handles the comparison of an object after saving
     public function HandleObjectDiff($savedobject, $originalobject) {
         $manager=  $this->doctrine->getManager();
         
@@ -96,13 +99,10 @@ class FunctionManager {
     
     
     
-    
+    //'removes' an object
     public function RemoveObjects($object,$dependencies=null) {
-        
-        $explode=explode('/', $object);
-    $namespace=$explode[2];
-    $idprefix=$explode[1]; 
-    $id=$explode[0];
+    $metadata=  $this->ObjectMetaDataParser($object); 
+       
     $manager=$this->doctrine->getManager();
   
  
@@ -132,10 +132,10 @@ class FunctionManager {
             $object->setValidto($this->adminyear);
             $manager->persist($object);                                
 
-            $qb=$this->doctrine->getRepository('AppBundle:'.$namespace)->createQueryBuilder('ditto');                
+            $qb=$this->doctrine->getRepository('AppBundle:'.$metadata['namespace'])->createQueryBuilder('ditto');                
             $qb->where('ditto.validfrom>='.$this->adminyear)
-                ->andWhere('ditto.'.$idprefix.'id=:id')
-                ->setParameter('id', $id);
+                ->andWhere('ditto.'.$metadata['idprefix'].'id=:id')
+                ->setParameter('id', $metadata['id']);
             $delete=$qb->getQuery()->getResult();
 
             foreach ($delete as $del){

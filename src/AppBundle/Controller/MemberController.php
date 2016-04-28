@@ -386,9 +386,10 @@ class MemberController extends Controller
         
         if($editmemform->get('delete')->isClicked()){
 
-            $fm->RemoveObjects($member, $adminyear, $doctrine,array($member->getRehabilitationcertificate(),$member->getPhonenumber()));;
+            $fm->RemoveObjects($member,array($member->getRehabilitationcertificate(),$member->getPhonenumber()));;
             $manager->flush();
-            return $this->redirectToRoute('member_home', array('letter' => $letter, 'info' => 'entfernt'));
+            $this->addFlash('notice', 'Dieses Mitglied wurde erfolgreich gelöscht!');
+            return $this->redirectToRoute('member_home', array('letter' => $letter, 'adminyear' => $adminyear));
         }
 
         
@@ -397,47 +398,13 @@ class MemberController extends Controller
         //if the form is valid -> persist it to the database
         if($editmemform->isSubmitted() && $editmemform->isValid()){
        
-            
-            
                 $fm->HandleDependencyDiff($member->getRehabilitationcertificate(), $originalrehabs, $adminyear);
                 $fm->HandleDependencyDiff($member->getPhonenumber(), $originalphonenrs, $adminyear);
                 $fm->HandleObjectDiff($member, $memberoriginal);
-         
 
-            
-//           if($member!=$memberoriginal){
-//                
-//              if($adminyear != $member->getValidfrom()){ 
-//                                
-//             
-//             $memberoriginal->setValidto($adminyear);
-//             $member->setValidfrom($adminyear);
-//             
-//             
-//             $manager->persist($member);
-//             $manager->flush();
-//             $manager->persist($memberoriginal);
-//             
-//                
-//            }
-//            
-//            else{
-//              $manager->persist($member);  
-//            }
-//            
-//            }
-            
-
-            
-            $manager->flush();
+                $manager->flush();
     
-           
-            
-            
-          
-            
-            
-          $this->addFlash('notice', 'Die Daten wurden erfolgreich gespeichert!');   
+      $this->addFlash('notice', 'Die Daten wurden erfolgreich gespeichert!');   
           return $this->redirectToRoute('member_home', array('letter' => $letter, 'adminyear' => $adminyear));  
         }
         
