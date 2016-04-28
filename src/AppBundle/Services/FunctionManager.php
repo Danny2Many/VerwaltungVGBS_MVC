@@ -90,6 +90,8 @@ class FunctionManager {
                         } 
     }
     
+    //primarytype=objects with database-indices
+    //secondarytype=objects with timestamp-indices
     public function AddObject($object, $type='primary') {
         $manager=  $this->doctrine->getManager();
         $metadata= $this->ObjectMetaDataParser($object);
@@ -103,7 +105,7 @@ class FunctionManager {
             $im= new IndexManager($manager, $entityname);
             $id=$im->getCurrentIndex();
             
-        }else{
+        }elseif($type=='secondary'){
           
           $id=uniqid($metadata['idprefix']);  
         }
