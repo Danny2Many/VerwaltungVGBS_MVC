@@ -49,7 +49,9 @@ class TrainerPhoneNumber {
      */
     protected $validfrom;
     
-
+    public function __toString() {
+            return $this->tpnid.'/tpn/Trainer\TrainerPhoneNumber'; 
+        }
   
     /**
      * Set trainerid
@@ -105,13 +107,13 @@ class TrainerPhoneNumber {
     /**
      * Set validto
      *
-     * @param \DateTime $validto
+     * @param string $validto
      *
      * @return TrainerPhoneNumber
      */
     public function setValidto($validto)
     {
-        $this->deleted = $validto;
+        $this->validto = $validto;
 
         return $this;
     }
@@ -119,21 +121,17 @@ class TrainerPhoneNumber {
     /**
      * Get validto
      *
-     * @return \DateTime
+     * @return string
      */
     public function getValidto()
     {
         return $this->validto;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
-    public function setValidfrom()
+    public function setValidfrom($validfrom)
     {
-        $now= new \DateTime();
         
-        $this->validfrom = $now->format('Y');
+        $this->validfrom = $validfrom;
 
         return $this;
     }

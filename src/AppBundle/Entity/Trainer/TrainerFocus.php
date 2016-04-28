@@ -45,7 +45,12 @@ class TrainerFocus {
      * @ORM\Id
      * @ORM\Column(type="string")
      */
-    protected $validfrom;   
+    protected $validfrom;
+    
+    
+    public function __toString() {
+        return $this->tfid.'/tf/Trainer\TrainerFocus'; 
+    }
 
     /**
      * Set trainerid
@@ -123,7 +128,7 @@ class TrainerFocus {
     /**
      * Set validto
      *
-     * @param \DateTime $deleted
+     * @param \DateTime $validto
      *
      * @return TrainerFocus
      */
@@ -144,13 +149,10 @@ class TrainerFocus {
         return $this->validto;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
-    public function setValidfrom()
+    public function setValidfrom($validfrom)
     {
-        $now= new \DateTime();
-        $this->validfrom = $now->format('Y');
+        
+        $this->validfrom = $validfrom;
 
         return $this;
     }

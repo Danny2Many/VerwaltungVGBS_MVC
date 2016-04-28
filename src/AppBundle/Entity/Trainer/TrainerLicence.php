@@ -14,12 +14,12 @@ class TrainerLicence {
     
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
      */
     protected $liid;
     
     /**
-     * @ORM\Column(type="string") 
+     * @ORM\Column(type="integer") 
      */
     protected $trainerid;
     
@@ -58,12 +58,14 @@ class TrainerLicence {
      */
     protected $validfrom;  
     
-    
+    public function __toString() {
+        return $this->liid.'/li/Trainer\TrainerLicence'; 
+    }
 
     /**
      * Set validto
      *
-     * @param \DateTime $deleted
+     * @param string $validto
      *
      * @return TrainerLicence
      */
@@ -77,20 +79,17 @@ class TrainerLicence {
     /**
      * Get Validto
      *
-     * @return \DateTime
+     * @return string
      */
     public function getValidto()
     {
         return $this->validto;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
-    public function setValidfrom()
+    public function setValidfrom($validfrom)
     {
-        $now= new \DateTime();
-        $this->validfrom = $now->format('Y');
+        
+        $this->validfrom = $validfrom;
 
         return $this;
     }
@@ -98,7 +97,7 @@ class TrainerLicence {
     /**
      * Get validfrom
      *
-     * @return \DateTime
+     * @return string
      */
     public function getValidfrom()
     {
@@ -108,7 +107,7 @@ class TrainerLicence {
     /**
      * Get liid
      *
-     * @return integer
+     * @return string
      */
     public function getLiid()
     {
@@ -118,7 +117,7 @@ class TrainerLicence {
     /**
      * Set trainerid
      *
-     * @param string $trainerid
+     * @param integer $trainerid
      *
      * @return TrainerLicence
      */
@@ -132,7 +131,7 @@ class TrainerLicence {
     /**
      * Get trainerid
      *
-     * @return string
+     * @return integer
      */
     public function getTrainerid()
     {

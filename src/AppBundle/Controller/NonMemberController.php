@@ -25,36 +25,23 @@ class NonMemberController extends Controller {
 
     */    
     public function indexAction (Request $request, $letter, $adminyear ) {   
-//  
-//    //if $adminyear is the current year
-//     if($adminyear == date('Y')){
-//     
-//     $now=date("Y-m-d");
-//     
-//     }
-//     //else take the last day of the choosen year
-//     else{
-//         $now=$adminyear.'-12-31';
-//     }
-//     
+
+     
     $doctrine = $this->getDoctrine();
-    $dependencies=array('Nichtmitglieder\Nonmember' => 'nmem', 'Nichtmitglieder\NonMemPhoneNumber' => 'pn', 'Nichtmitglieder\NonMemRehabilitationCertificate' => 'rc');
+    $dependencies=array('Nichtmitglieder\Nonmember', 'Nichtmitglieder\NonMemPhoneNumber', 'Nichtmitglieder\NonMemRehabilitationCertificate');
     $qb=[];
-      foreach($dependencies as $dependent => $idprefix){
+      foreach($dependencies as $dependent){
    
-        //building the subquery: SELECT max(validfrom) FROM % AS dittosub WHERE dittosub.type = ditto.type
-     $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-     $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
-                          ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');
-                          
-        
-     //building the query: SELECT ditto FROM % AS ditto WHERE ditto.validfrom=( subquery ) AND ditto.validfrom<=$adminyear 
+       
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-     $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
-                    ->andWhere('ditto.validfrom<=:adminyear')
-                    ->setParameter('adminyear',$adminyear);
+     $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
+                    ->andWhere('ditto.validto>'.$adminyear);
+//                    ->setParameter('adminyear', $adminyear);
     }
-    
+        
+                echo '<pre>';
+            print_r($qb['Nichtmitglieder\NonMemPhoneNumber']->getQuery()->getResult());
+            echo '</pre>';
     
     $choices=array('Nichtmitgliedsnr.' => 'nmemid',
         'Name' => 'lastname',
@@ -62,37 +49,46 @@ class NonMemberController extends Controller {
         'Straße' => 'streetaddress',
         'E-Mail' => 'email',
         'Sportgruppe' => 'token',
-        'RS-Ablaufd.' => 'terminationdate',
+        'RS-Ablaufdatum' => 'terminationdate',
         'Krankenkasse' => 'healthinsurance');
     
-    $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('nonmember_home')));
+    $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('nonmember_home',array('adminyear' => $adminyear))));
     $searchform->handleRequest($request);
     
     if($searchform->isSubmitted() && $searchform->isValid()){
+        //setting the letter to null for the pagination not to show any letter
         $letter=null;   
+        //getting the values of the field and column
         $searchval=$request->query->get('search')['searchfield'];
         $searchcol=$request->query->get('search')['column'];
     
     if($searchcol=='terminationdate'){
-        $qb['Nichtmitglieder\NonMemRehabilitationCertificate']->andWhere($qb['Nichtmitglieder\NonMemRehabilitationCertificate']->expr()->like('ditto.'.$searchcol,':type'))
+        $rehabsearchqb= clone $qb['MemRehabilitationCertificate'];
+        $rehabsearchqb->andWhere($rehabsearchqb->epxr()->like('ditto.'.$searchcol,':type'))
             ->setParameter('type','%'.$searchval.'%');
 
-            $rehacelist=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
+            $rehacelist=$rehabsearchqb->getQuery()->getResult();
 
+
+            
             if($rehacelist){          
                 foreach ($rehacelist as $rc){         
                 $idarray[]=$rc->getNmemid();     
+                }
+            }else{
+                $idarray=array(null);  
+                }
+
+            $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->in('ditto.nmemid', $idarray));
+            
             }
-
-            $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\NonMemRehabilitationCertificate']->expr()->in('ditto.nmemid', $idarray));
-            $qb['Nichtmitglieder\NonMemRehabilitationCertificate']->orWhere($qb['Nichtmitglieder\Nonmember']->expr()->in('ditto.nmemid', $idarray));
-        }
-
-        }else{
-        
-    $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.'.$searchcol, ':nonmember'))
+//            else{
+//                $qb['Nichtmitgleider\Nonmember']->andWhere('ditto.nmemid<=:abort')->setParameter('abort',-1);
+//            }
+            else{
+            $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.'.$searchcol, ':nonmember'))
                ->setParameter('nonmember','%'.$searchval.'%');
-        }
+    } 
         
     }else{        
         
@@ -101,25 +97,33 @@ class NonMemberController extends Controller {
         
         
           switch($letter){
-            case 'A': $qb['Nichtmitglieder\Nonmember']->orWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'A': $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ä%'); 
             break;
         
-            case 'O': $qb['Nichtmitglieder\Nonmember']->orWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'O': $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ö%'); 
             break;
         
-            case 'U': $qb['Nichtmitglieder\Nonmember']->orWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'U': $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ü%'); 
             break;
         }    
     }    
-  
+    //get the builded queries
     $nonmemberlist=$qb['Nichtmitglieder\Nonmember']->getQuery()->getResult();
     $phonenumberlist=$qb['Nichtmitglieder\NonMemPhoneNumber']->getQuery()->getResult();
     $rehabcertlist=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
-
-
+  
+    
+    
+    if($adminyear == date('Y')){
+         $now=date('Y-m-d');
+     }
+     else{
+         $now=$adminyear.'-12-31';
+     }
+     
     $nonmemberdependentlist=[];
     foreach ($phonenumberlist as $pn){
 
@@ -128,7 +132,7 @@ class NonMemberController extends Controller {
 
 
      foreach ($rehabcertlist as $rc){
-        if($rc->getTerminationdate()->format("Y") > $adminyear){
+        if($rc->getTerminationdate()->format("Y-m-d") > $now){
          $nonmemberdependentlist[$rc->getNMemid()]['validrehabcerts'][]=$rc;
         }else{
           $nonmemberdependentlist[$rc->getNMemid()]['expiredrehabcerts'][]=$rc;  
@@ -149,12 +153,10 @@ class NonMemberController extends Controller {
             'path' => 'nonmember_home'
             ));
     }     
-      /**
+     /**
      * @Route("/nichtmitglieder/anlegen/{adminyear}/{letter}", defaults={"letter": "A" , "adminyear": 2016}, name="addnonmem", requirements={"letter": "[A-Z]", "adminyear": "[1-9][0-9]{3}"})
-
-     * 
      */
-    public function addnonmeberAction (Request $request, $letter, $adminyear){
+    public function addnonmeberAction(Request $request, $letter, $adminyear){
       
 
     $nonmember = new Nonmember ();
@@ -174,18 +176,24 @@ class NonMemberController extends Controller {
         
         //if the form is valid -> persist it to the database
         if($addnonmemform->isSubmitted() && $addnonmemform->isValid()){
-        
-            
+                    
             
             $manager= $this->getDoctrine()->getManager();
             
+            $nonmember->setValidfrom($adminyear)
+                    ->setValidto('2155');
+            
             foreach($nonmember->getPhonenumber() as $pn){
-                $pn->setPnid(uniqid('pn'));
+                $pn->setPnid(uniqid('pn'))
+                ->setValidfrom($adminyear)
+                 ->setValidto('2155');
                 $manager->persist($pn);
             }
             
             foreach($nonmember->getRehabilitationcertificate() as $rc){
-                $rc->setRcid(uniqid('rc'));
+                $rc->setRcid(uniqid('rc'))
+                ->setValidfrom($adminyear)
+                 ->setValidto('2155');
                 $manager->persist($rc);
             }
             
@@ -205,7 +213,8 @@ class NonMemberController extends Controller {
         array(            
             'form' => $addnonmemform->createView(),
             'cletter' => $letter,
-            'title' => 'Nichtmitglied anlegen'
+            'title' => 'Nichtmitglied anlegen',
+            'adminyear' => $adminyear
             ));
         
     }
@@ -215,63 +224,70 @@ class NonMemberController extends Controller {
      */
     public function editnonmeberAction (Request $request, $adminyear, $ID, $letter){
         
+    $validfrom=$request->query->get('version');
+    
     $doctrine=$this->getDoctrine();   
     $manager= $doctrine->getManager();
-    $dependencies=['Nichtmitglieder\Nonmember' => 'nmem', 'Nichtmitglieder\NonMemPhoneNumber'=> 'pn', 'Nichtmitglieder\NonMemRehabilitationCertificate'=> 'rc'];
+    $dependencies=array('Nichtmitglieder\Nonmember', 'Nichtmitglieder\NonMemPhoneNumber', 'Nichtmitglieder\NonMemRehabilitationCertificate');
+
     
     $qb=[];
-    foreach($dependencies as $dependent => $idprefix){
-    
-    $qb[$dependent.'sub'] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('dittosub');
-    $qb[$dependent.'sub']->select($qb[$dependent.'sub']->expr()->max('dittosub.validfrom'))
-                                ->where('dittosub.'.$idprefix.'id=ditto.'.$idprefix.'id');  
-    
+    foreach($dependencies as $dependent){
+   
+    //building the query: SELECT ditto FROM % AS ditto WHERE ditto.recorded=( subquery ) AND ditto.recorded<=$adminyear AND ditto.memid=§ID
     $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-    $qb[$dependent]->where('ditto.validfrom=('.$qb[$dependent.'sub']->getDQL().')')
-                ->andWhere('ditto.validfrom <= :adminyear')
-                ->andWhere('ditto.nmemid = :ID')     
-                ->setParameter('ID', $ID)
-                ->setParameter('adminyear',$adminyear.'-12-31');
+    $qb[$dependent]->where('ditto.validfrom<=:adminyear')
+                   ->andWhere('ditto.validto>:adminyear')
+                    ->andWhere('ditto.nmemid=:ID')
+                   ->setParameter('ID', $ID)
+                   ->setParameter('adminyear',$adminyear);
      
     }
         
         
-        $nonmember=$qb['Nichtmitglieder\Nonmember']->getQuery()->getSingleResult();
+        $nonmember=$manager->getRepository('AppBundle:Nichtmitglieder\Nonmember')->findOneBy(array('nmemid' => $ID, 'validfrom'=>$validfrom));
+//        $nonmember_old = clone $nonmember;
         
-        if (!$nonmember){
-            throw $this->createNotFoundForm('Es konnte kein Nichtmitglied mit der Nichtmitgliedsnr.: '.$ID.' gefunden werden');
-        }
+//        if (!$nonmember){
+//            throw $this->createNotFoundForm('Es konnte kein Nichtmitglied mit der Nichtmitgliedsnr.: '.$ID.' gefunden werden');
+//        }
         $phonenumbers=$qb['Nichtmitglieder\NonMemPhoneNumber']->getQuery()->getResult();
         $rehabcerts=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
+        
+       
         
         $originalrehabs = new ArrayCollection();
         $originalphonenr = new ArrayCollection();
 //        $originalsections = new ArrayCollection();
         
-        // Create an ArrayCollection of the current Rehab objects in the database
+            // Create an ArrayCollection of the current Rehab objects in the database
          foreach ($rehabcerts as $rehab) {
-            $nonmember->addRehabilitationcertificate($rehab);
-            $originalrehabs->add($rehab);
-        }
-     
-        // Create an ArrayCollection of the current Phonenr objects in the database
-        foreach ($phonenumbers as $phonenr) {
-            $nonmember->addPhonenumber($phonenr);
-            $originalphonenr->add($phonenr);
-        }
+             $origininalrehab= clone $rehab;
+             $nonmember->addRehabilitationcertificate($rehab);
+             $originalrehabs->add($origininalrehab);
+         }
+
+         // Create an ArrayCollection of the current Phonenr objects in the database
+         foreach ($phonenumbers as $phonenr) {
+
+             $origininalphonenr= clone $phonenr;
+             $nonmember->addPhonenumber($phonenr);
+             $originalphonenr->add($origininalphonenr);
+         }
         // Create an ArrayCollection of the current Rehab objects in the database
         //    foreach ($member->getSection() as $section) {
         //        
         //        $originalsections->add($section);
         //    }
+        
+        $nonmemberoriginal = clone $nonmember;
         $editnonmemform = $this->createForm(EditNonMemberType::class, $nonmember);
         $editnonmemform->handleRequest($request);
          
         if($editnonmemform->get('delete')->isClicked()){
             $manager->remove($nonmember);
             $manager->flush();
-            $this->addflash('notice', 'Dieser Nichtmitglied wurde erfolgreich gelöscht!');            
-            return $this->redirectToRoute('nonmember_home', array('letter' => $letter));
+            return $this->redirectToRoute('nonmember_home', array('letter' => $letter, 'info' => 'entfernt'));
         
         }
         //if the form is valid -> persist it to the database
@@ -293,41 +309,72 @@ class NonMemberController extends Controller {
 //
 //        }else{
 //            $nonmember->getSection()->clear();
-//        }
-        foreach ($originalrehabs as $rehab) {
-            if (false === in_array($rehab, $nonmember->getRehabilitationcertificate())) {
-                $manager->remove($rehab);
-            }
-        }     
-
-        foreach($nonmember->getRehabilitationcertificate() as $rc){
-                if (false == $originalrehabs->contains($rc)) {
-                     $rc->setRcid(uniqid('rc'));
-                     $manager->persist($rc);              
-                }            
-        }
-         foreach ($originalphonenr as $phonenr) {
-            if (false === in_array($phonenr, $nonmember->getPhonenumber())) {         
-                $manager->remove($phonenr);
-            }
-        }
         
-        foreach($nonmember->getPhonenumber() as $pn){
-                if (false == $originalphonenr->contains($pn)) {
-                     $pn->setPnid(uniqid('pn'));
-                     $manager->persist($pn);              
-                }            
-        }
-            $manager->persist($nonmember);          
-            $manager->flush();     
-            $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');
-            return $this->redirectToRoute('nonmember_home', array('letter' => $letter));    
+           
+        $FM = new \AppBundle\Services\FunctionManager;  
+            
+            $FM->AddObjects($nonmember, $phonenumbers, $originalphonenr, 'Pn', $adminyear, $manager, 'getPhonenumber');
+            
+            $FM->AddObjects($nonmember, $rehabcerts, $originalrehabs, 'Rc', $adminyear, $manager, 'getRehabilitationcertificate');
+
+        
+        
+        if($nonmember != $nonmemberoriginal){
+            if($adminyear != $nonmember->getValidfrom()){
+                
+                $nonmemberoriginal->setValidto($adminyear);
+                $nonmember->setValidfrom($adminyear);
+                
+                $manager->persist($nonmember);
+                $manager->flush();
+                $manager->persist($nonmemberoriginal);
+            }
+            else{
+                $manager->persist($nonmember);
+            }
+        }   
+           
+//       foreach ($nonmember->getRehabilitationcertificate() as $rehab) {
+//            if ($originalrehabs->contains($rehab) === false) {
+//                
+//                $rehab->setValidfrom($adminyear)
+//                      ->setValidto('2155');
+//                $manager->persist($rehab);
+//          }else{
+//              $originalrehab=$originalrehabs->get($rehab);
+//             if($rehab != $originalrehab){
+//                 $rehab->setValidfrom($adminyear);
+//                 $originalrehab->setValidto($adminyear);
+//                 $originalrehabs->removeElement($originalrehab);
+//                 $manager->persist($rehab);
+//                 $manager->persist($originalrehab);
+//             } 
+//          }
+//        } 
+            
+//         foreach ($originalphonenr as $phonenr) {
+//            if (false === $nonmember->getPhonenumber()->contains($phonenr)) {         
+//                $manager->remove($phonenr);
+//            }
        
         
+//        foreach($nonmember->getPhonenumber() as $pn){
+//                if (false == $originalphonenr->contains($pn)) {
+//                     $pn->setPnid(uniqid('pn'))
+//                        ->setValidfrom($adminyear)
+//                        ->setValidto('2155');
+//                     $manager->persist($pn);              
+//                }            
+//        }
             
-        } 
-        
-        
+            
+            $manager->flush();   
+            
+            $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');
+            return $this->redirectToRoute('nonmember_home', array('letter' => $letter, 'adminyear' => $adminyear));    
+       
+       }
+
         
         return $this->render(
                 'Nicht_Mitglieder/nonmemberform.html.twig',
@@ -335,7 +382,8 @@ class NonMemberController extends Controller {
             
             'form' => $editnonmemform->createView(),
             'cletter' => $letter,
-            'title' => 'Nichtmitglied bearbeiten'
+            'title' => 'Nichtmitglied bearbeiten',
+                     'adminyear' => $adminyear
             ));
     }
 }

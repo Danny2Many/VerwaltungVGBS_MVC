@@ -20,3 +20,6 @@ services:
     app.index_manager:
         class: AppBundle\Services\IndexManager
         arguments: ['@doctrine.orm.entity_manager']
+    app.function_manager:
+        class: AppBundle\Services\FunctionManager
+        arguments: ['@doctrine.orm.entity_manager']

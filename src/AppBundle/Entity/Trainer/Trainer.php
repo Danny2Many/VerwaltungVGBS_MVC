@@ -23,7 +23,7 @@ class Trainer extends PersonalData {
     
     public function __toString()
     {
-        return (string) $this->trainerid;
+        return (string) $this->trainerid.'/trainer/Trainer\Trainer';
     }
     
     /**
@@ -54,7 +54,7 @@ class Trainer extends PersonalData {
     protected $phonenumber;
     
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="integer")
      */
     protected $state;
     
@@ -68,16 +68,13 @@ class Trainer extends PersonalData {
 
 
 
-    /**
-     * Constructor
-     */
+    /** @ORM\PostLoad */
     public function __construct()
     {
 //        $this->section = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->licence = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->phonenumber = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->theme = new \Doctrine\Common\Collections\ArrayCollection();
-
+        $this->licence = new ArrayCollection();
+        $this->phonenumber = new ArrayCollection();
+        $this->theme = new ArrayCollection();
         }
 
     /**
@@ -155,7 +152,7 @@ class Trainer extends PersonalData {
     {
         $licence->setTrainerid($this);
 
-        $this->licence[] = $licence;
+        $this->licence->add($licence);
 
         return $this;
     }
@@ -199,7 +196,7 @@ class Trainer extends PersonalData {
     {
         $theme->setTrainerid($this);
 
-        $this->theme[] = $theme;
+        $this->theme->add($theme);
 
         return $this;
     }
@@ -269,7 +266,7 @@ class Trainer extends PersonalData {
     {               
         $phonenumber->setTrainerid($this);
         
-        $this->phonenumber[] = $phonenumber;
+        $this->phonenumber->add($phonenumber);
 
         return $this;
     }
@@ -289,7 +286,7 @@ class Trainer extends PersonalData {
     /**
      * Set state
      *
-     * @param string $state
+     * @param integer $state
      *
      * @return Trainer
      */
@@ -303,7 +300,7 @@ class Trainer extends PersonalData {
     /**
      * Get state
      *
-     * @return string
+     * @return integer
      */
     public function getState()
     {
@@ -324,13 +321,10 @@ class Trainer extends PersonalData {
         return $this;
     }
 
-   /**
-    * @ORM\PrePersist
-    */
-    public function setValidfrom()
+    public function setValidfrom($validfrom)
     {
-        $now= new \DateTime();
-        $this->validfrom = $now->format('Y');
+        
+        $this->validfrom = $validfrom;
 
         return $this;
     }

@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Nonmember extends HealthData {
 
- 
+
 protected $rehabilitationcertificate;
 protected $phonenumber; 
 //
@@ -47,9 +47,9 @@ public function __toString(){
 }
     
 /**
-* @ORM\Column(type="string")
+* @ORM\Column(type="integer")
 * @Assert\NotBlank()
-* @Assert\Choice(choices = {"aktiv", "inaktiv"}, message = "Bitte wählen Sie einen gültigen Status.")
+* @Assert\Choice(choices = {"0", "1"}, message = "Bitte wählen Sie einen gültigen Status.")
 */
 protected $state;
 
@@ -85,13 +85,13 @@ protected $validfrom;
 protected $validto;
 
 /**
-* @ORM\Column(type="binary")
+* @ORM\Column(type="integer")
 * 
 */protected $newsletter; 
     
 
     /**
-     * Constructor
+     * @ORM\PostLoad
      */
     public function __construct()
     {
@@ -241,7 +241,7 @@ protected $validto;
     public function addRehabilitationcertificate(\AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate $rehabilitationcertificate)
     {
         $rehabilitationcertificate->setNMemID($this->nmemid);
-        $this->rehabilitationcertificate[] = $rehabilitationcertificate;
+        $this->rehabilitationcertificate->add($rehabilitationcertificate);
 
         return $this;
         
@@ -254,9 +254,9 @@ protected $validto;
     }
 
     /**
-     * Set state
+     * Set integer
      *
-     * @param string $state
+     * @param integer $state
      *
      * @return Nonmember
      */
@@ -268,9 +268,9 @@ protected $validto;
     }
 
     /**
-     * Get state
+     * Get integer
      *
-     * @return string
+     * @return integer
      */
     public function getState()
     {
@@ -286,7 +286,7 @@ protected $validto;
      */
     public function addSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup)
     {
-        $this->sportsgroup[] = $sportsgroup;
+        $this->sportsgroup($sportsgroup);
 
         return $this;
     }
@@ -393,7 +393,7 @@ public function setPhonenumber($phonenumber)
  public function addPhonenumber(\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber)
     {               
         $phonenumber->setNMemID($this);
-        $this->phonenumber[] = $phonenumber;
+        $this->phonenumber->add($phonenumber);
 
         return $this;
     }
@@ -461,7 +461,7 @@ public function setPhonenumber($phonenumber)
     /**
      * Set newsletter
      *
-     * @param binary $newsletter
+     * @param boolean $newsletter
      *
      * @return Nonmember
      */
@@ -475,21 +475,19 @@ public function setPhonenumber($phonenumber)
     /**
      * Get newsletter
      *
-     * @return binary
+     * @return boolean
      */
     public function getNewsletter()
     {
-        return $this->newsletter;
+        return array($this->newsletter);
     }
     
     
-/**
-   * @ORM\PrePersist
-     */
-    public function setValidfrom()
+
+    public function setValidfrom($validfrom)
     {
-        $now= new \DateTime();
-        $this->validfrom = $now->format('Y');
+        
+        $this->validfrom  = $validfrom;
 
         return $this;
     }

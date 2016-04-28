@@ -24,8 +24,9 @@ class PersonalDataType extends AbstractType{
             
             ->add('title', ChoiceType::class, array(
     'choices'  => array(
-        'Frau' => 1,
-        'Herr' => 0,
+
+        'Frau' => '0',
+        'Herr' => '1',
         
     ),
     // *this line is important*

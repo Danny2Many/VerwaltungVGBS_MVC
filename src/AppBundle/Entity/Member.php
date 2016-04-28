@@ -102,7 +102,7 @@ class Member extends HealthData
     public $decreaseddues;
     
     /**
-     * @ORM\Column(type="binary")
+     * @ORM\Column(type="integer")
         * 
      * 
      */
@@ -175,7 +175,7 @@ class Member extends HealthData
     
     public function getAdmissiondate()
     {
-        return $this->admissiondate->format('Y-m-d');
+        return $this->admissiondate;
     }
 
     /**
@@ -223,7 +223,7 @@ class Member extends HealthData
      */
     public function getAdmissionconfirmation()
     {
-        return $this->admissionconfirmation->format('Y-m-d');
+        return $this->admissionconfirmation;
     }
 
     /**
@@ -433,7 +433,7 @@ class Member extends HealthData
     /**
      * Set newsletter
      *
-     * @param binary $newsletter
+     * @param integer $newsletter
      *
      * @return Member
      */
@@ -447,7 +447,7 @@ class Member extends HealthData
     /**
      * Get newsletter
      *
-     * @return binary
+     * @return integer
      */
     public function getNewsletter()
     {
