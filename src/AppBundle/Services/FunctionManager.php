@@ -90,6 +90,7 @@ class FunctionManager {
                         } 
     }
     
+    //sets Validfrom and Validto dates and persists an object
     //primarytype=objects with database-indices
     //secondarytype=objects with timestamp-indices
     public function AddObject($object, $type='primary') {
@@ -126,7 +127,7 @@ class FunctionManager {
        
     $manager=$this->doctrine->getManager();
   
- 
+    //if the object has dependencies
     if($dependencies!=null){
         
         foreach($dependencies as $depend){
@@ -138,7 +139,7 @@ class FunctionManager {
         }
         
     }    
-        
+        // if its still valid
         if($object->getValidto()== '2155'){
             
             if($object->getValidfrom()== $this->adminyear){
