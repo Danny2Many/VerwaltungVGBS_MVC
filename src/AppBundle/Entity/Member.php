@@ -41,10 +41,10 @@ class Member extends HealthData
     protected $memid;
 
    
-    public function __toString()
- {
-  return $this->memid;
- }
+   public function __toString()
+    {
+        return (string) $this->memid.'/mem/Member';
+    }
     
     /**
      * @ORM\Id

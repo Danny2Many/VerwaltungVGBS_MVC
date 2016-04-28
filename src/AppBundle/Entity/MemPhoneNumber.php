@@ -42,7 +42,7 @@ class MemPhoneNumber {
 
     
      /**
-     * 
+     * @ORM\Id
      * @ORM\Column(type="string")
      * 
      */
@@ -56,6 +56,11 @@ class MemPhoneNumber {
      */
     protected $validto;
     
+    
+     public function __toString()
+    {
+        return (string) $this->pnid.'/pn/MemPhoneNumber';
+    }
 
     /**
      * Get phid
