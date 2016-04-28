@@ -33,6 +33,8 @@ class FunctionManager {
       }
     }
     
+    
+    
     public function AddObjects($object, $objectquerry, $querryclone, $idprefix, $adminyear, $manager, $getmethod){
         foreach( call_user_func(array($object, $getmethod)) as $ob){
                     $clone=$querryclone->get(call_user_func(array($object, $getmethod))->indexOf($ob));
@@ -59,6 +61,8 @@ class FunctionManager {
                         }
                     }
     }
+    
+    
     
     public function RemoveObjects($object,$adminyear,$doctrine,$dependencies=null) {
     $explode=explode('/', $object);
