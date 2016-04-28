@@ -47,15 +47,63 @@ class TrainerLicence {
      */
     protected $expirationdate;
     
-//    /**
-//     * @ORM\Column(type="date")
-//     */
-//    protected $deleted;
-//    
-//    /**
-//     * @ORM\Column(type="string")
-//     */
-//    protected $recorded;
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $validto;
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="string")
+     */
+    protected $validfrom;  
+    
+    
+
+    /**
+     * Set validto
+     *
+     * @param \DateTime $deleted
+     *
+     * @return TrainerLicence
+     */
+    public function setValidto($validto)
+    {
+        $this->validto = $validto;
+
+        return $this;
+    }
+
+    /**
+     * Get Validto
+     *
+     * @return \DateTime
+     */
+    public function getValidto()
+    {
+        return $this->validto;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setValidfrom()
+    {
+        $now= new \DateTime();
+        $this->validfrom = $now->format('Y');
+
+        return $this;
+    }
+
+    /**
+     * Get validfrom
+     *
+     * @return \DateTime
+     */
+    public function getValidfrom()
+    {
+        return $this->validfrom;
+    }
 
     /**
      * Get liid

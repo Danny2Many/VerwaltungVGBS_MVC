@@ -405,7 +405,7 @@ public function setPhonenumber($phonenumber)
     */
     public function removePhonenumber(\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber)
     {
-        $this->phonenumber->removeElement($phonenumber);
+        $this->getPhonenumber()->removeElement($phonenumber);
     }
 
 

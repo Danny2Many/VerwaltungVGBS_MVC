@@ -42,6 +42,7 @@ class TrainerFocus {
     protected $validto;
     
     /**
+     * @ORM\Id
      * @ORM\Column(type="string")
      */
     protected $validfrom;   

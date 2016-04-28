@@ -268,6 +268,7 @@ class Trainer extends PersonalData {
     public function addPhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
     {               
         $phonenumber->setTrainerid($this);
+        
         $this->phonenumber[] = $phonenumber;
 
         return $this;
@@ -278,9 +279,11 @@ class Trainer extends PersonalData {
      *
      * @param \AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber
     */
-    public function removePhonenumber(\AppBundle\Entity\Trainer\TrainerPhoneNumber $phonenumber)
+    public function removePhonenumber($phonenumber)
     {
-        $this->getPhonenumber()->removeElement($phonenumber);
+        $this->phonenumber->removeElement($phonenumber);
+        
+        return $this;
     }
 
     /**
