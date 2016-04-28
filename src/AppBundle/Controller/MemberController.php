@@ -20,6 +20,9 @@ use AppBundle\Entity\MemMonthlyDues;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormError;
 use AppBundle\Services\FunctionManager;
+use AppBundle\Services\IndexManager;
+
+
 
 class MemberController extends Controller
 {
@@ -208,14 +211,15 @@ class MemberController extends Controller
      */
     public function addmemberAction(Request $request, $letter, $adminyear)
     {
-        
+        $manager= $this->getDoctrine()->getManager();
         $member = new Member();
         $phonenumber = new MemPhoneNumber();
         
 
-        $im=  $this->get('app.index_manager')
-
-                   ->setEntityName('Member');
+//        $im=  $this->get('app.index_manager')
+//
+//                   ->setEntityName('Member');
+        $im= new IndexManager($manager, 'Member');
         
 
         $memid=$im->getCurrentIndex();
@@ -241,7 +245,7 @@ class MemberController extends Controller
 
             
          
-            $manager= $this->getDoctrine()->getManager();
+            
             
             
             
@@ -386,7 +390,7 @@ class MemberController extends Controller
         
         if($editmemform->get('delete')->isClicked()){
 
-            $fm->RemoveObjects($member,array($member->getRehabilitationcertificate(),$member->getPhonenumber()));;
+            $fm->RemoveObject($member,array($member->getRehabilitationcertificate(),$member->getPhonenumber()));;
             $manager->flush();
             $this->addFlash('notice', 'Dieses Mitglied wurde erfolgreich gelöscht!');
             return $this->redirectToRoute('member_home', array('letter' => $letter, 'adminyear' => $adminyear));

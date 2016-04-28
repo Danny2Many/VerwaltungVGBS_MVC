@@ -1,7 +1,6 @@
 <?php
 
-
-
+use AppBundle\Services\IndexManager;
 namespace AppBundle\Services;
 
 
@@ -28,20 +27,16 @@ class FunctionManager {
     public function HandleDependencyDiff($saveddependencies, $originaldependencies){
         $manager=$this->doctrine->getManager();
         
-        
-         foreach($saveddependencies  as $ob){
-                     $metadata=  $this->ObjectMetaDataParser($ob);
+        foreach($saveddependencies  as $ob){
+                     
                      
                      //get the original object version
                      $clone=$originaldependencies->get($saveddependencies->indexOf($ob));
                      
                      //if an new referencing object was created
-                    if ($clone == NULL) {                    
-                        call_user_func(array($ob, 'set'.$metadata['idprefix'].'id' ), uniqid($metadata['idprefix']));
-                        call_user_func(array($ob, 'setValidfrom' ), $this->adminyear);
-                        call_user_func(array($ob, 'setValidto' ), '2155');
-                       
-                        $manager->persist($ob); 
+                    if ($clone == NULL) { 
+                        
+                        $this->AddObject($ob, 'secondary');
 
                         }else {
                             $originaldependencies->removeElement($clone);
@@ -62,7 +57,7 @@ class FunctionManager {
                 //thats why we query for them again
                 $objecttobedeleted=$manager->find('AppBundle:'.$depmetadata['namespace'], array($depmetadata['idprefix'].'id'=>$depmetadata['id'], 'validfrom'=>$validfrom));
                
-                $this->RemoveObjects($objecttobedeleted);
+                $this->RemoveObject($objecttobedeleted);
             }
         }
     }
@@ -95,12 +90,36 @@ class FunctionManager {
                         } 
     }
     
-    
+    public function AddObject($object, $type='primary') {
+        $manager=  $this->doctrine->getManager();
+        $metadata= $this->ObjectMetaDataParser($object);
+     
+            
+        if($type=='primary'){
+            
+            $explode=explode('\\', get_class($object));
+            $entityname=  end($explode);
+            
+            $im= new IndexManager($manager, $entityname);
+            $id=$im->getCurrentIndex();
+            
+        }else{
+          
+          $id=uniqid($metadata['idprefix']);  
+        }
+            
+            call_user_func(array($object, 'set'.$metadata['idprefix'].'id' ), $id);
+            call_user_func(array($object, 'setValidfrom' ), $this->adminyear);
+            call_user_func(array($object, 'setValidto' ), '2155');
+                       
+            $manager->persist($object);
+        
+    }
     
     
     
     //'removes' an object
-    public function RemoveObjects($object,$dependencies=null) {
+    public function RemoveObject($object,$dependencies=null) {
     $metadata=  $this->ObjectMetaDataParser($object); 
        
     $manager=$this->doctrine->getManager();
@@ -112,7 +131,7 @@ class FunctionManager {
             foreach($depend as $dep){
 
 
-                $this->RemoveObjects($dep);
+                $this->RemoveObject($dep);
             }
         }
         
