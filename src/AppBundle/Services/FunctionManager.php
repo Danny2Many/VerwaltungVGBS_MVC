@@ -66,34 +66,36 @@ class FunctionManager {
     $idprefix=$explode[1]; 
     $id1=$explode[0];
     $manager=$doctrine->getManager();
-    
+  
 
-
+    if($dependencies!=null){
+        
         foreach($dependencies as $depend){
-        foreach($depend as $dep){
+            foreach($depend as $dep){
 
+            
             $explode=explode('/', $dep);
             $namespace=$explode[2];
             $idprefix=$explode[1]; 
             $id=$explode[0];
             
-
+            $dep->setValidto($adminyear);
             
             $qb=$doctrine->getRepository('AppBundle:'.$namespace)->createQueryBuilder('ditto');                
                 $qb->where('ditto.validfrom>='.$adminyear)
-                    ->andWhere('ditto.'.$idprefix.'id=:id')
-                    ->setParameter('id', $id);
+                    ->andWhere('ditto.trainerid=:id')
+                    ->setParameter('id', $id1);
                 $deletedep[''.$dep.'']=$qb->getQuery()->getResult();
-        }
+            }
         }
         
         foreach($deletedep as $dep){
             foreach($dep as $objecttobedeleted){
-$manager->remove($objecttobedeleted);
+                $manager->remove($objecttobedeleted);
 //              $this->RemoveObjects($dep, $adminyear, $doctrine);
-//            }
+            }
         }
-        }
+    }    
         
         if($object->getValidto()== '2155'){
             

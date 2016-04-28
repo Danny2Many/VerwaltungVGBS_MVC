@@ -288,7 +288,7 @@ class TrainerController extends Controller
         
         if($edittrainerform->get('delete')->isClicked()){
             
-             $FM->RemoveObjects($trainer, $adminyear, $doctrine,array($trainer->getTheme()));
+            $FM->RemoveObjects($trainer, $adminyear, $doctrine,array($trainer->getTheme(),$trainer->getPhonenumber(),$trainer->getLicence()));
             
             
 //            $FM->RemoveObjects($trainer->getTheme(), $adminyear, $manager, 'Trainer\Trainer', $doctrine, 'trainer');
@@ -318,7 +318,7 @@ class TrainerController extends Controller
             foreach ($focuses as $theme) {
             if (false === $trainer->getTheme()->contains($theme)) {
                 echo ($theme->getTfid());
-                $FM->RemoveObjects($theme, $adminyear, $manager, 'Trainer\Trainer', $doctrine, 'tf');
+                $FM->RemoveObjects($theme, $adminyear, $doctrine);
             }
         }
 
