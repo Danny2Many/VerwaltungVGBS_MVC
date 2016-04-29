@@ -13,7 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\BSSACert;
 use Doctrine\ORM\EntityManager;
-
+use AppBundle\Form\Type\Sportsgroup\AddSportsgroupType;
+use AppBundle\Form\Type\Sportsgroup\BaseSportsgroupType;
 
 class SportsgroupController extends Controller {
     /**
@@ -38,25 +39,19 @@ class SportsgroupController extends Controller {
             $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
                     ->andWhere('ditto.validto>'.$adminyear);   
     } 
-//   $entityManager= $this->getDoctrine();
-//    $sb = $entityManager->createQueryBuilder();
-//    $sb->select('count(account.nmemid)');
-//    $sb->from('Appbundle:Nichtmitglieder\Nonmember','account');
+// 
+//$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Nichtmitglieder\Nonmember');
+//$title='0';
+//$sb = $repository->createQueryBuilder('t')
+//->select('count(t)')
+//->where('t.title =:title')
+//->setParameter('title', $title);
+//$nombre = $sb->getQuery()->getSingleScalarResult();
 //
-//$count = $sb->getQuery()->getSingleScalarResult();
-//    
-$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Nichtmitglieder\Nonmember');
-$title =0;
-$sb = $repository->createQueryBuilder('t');
-$sb->select('count(t.nmemid)');
-$sb->where('t.nmemid <=:name');
-$sb->setParameter('title', $title);
-$nombre = $sb->getQuery()->getSingleScalarResult();
-
-
-    echo '<pre>';
-     print_r($nombre);
-     echo '</pre>';
+//
+//    echo '<pre>';
+//     print_r($nombre);
+//     echo '</pre>';
     
     $choices=array('Sportgruppennr.' => 'sgid',
                    'Gruppenbezeichnung' => 'token',
@@ -101,7 +96,6 @@ $nombre = $sb->getQuery()->getSingleScalarResult();
            break;
        }
     }else{ $letter=null; } 
-    //$qb['Trainer\Trainer'] = $doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy('trainerid');
     $sportsgrouplist=$qb['Nichtmitglieder\NonMemSportsgroup']->getQuery()->getResult();
     $bssacertlist=$qb['BSSACert']->getQuery()->getResult();
     $sportgrouptrainerlist=$qb['Nichtmitglieder\Trainer_NonMemSportsgroupSub']->getQuery()->getResult();
@@ -118,29 +112,57 @@ $nombre = $sb->getQuery()->getSingleScalarResult();
         $sportsgroupdependentlist[$bs->getSgid()]['bssacertnr'][]=$bs; 
     }
     
-//    foreach ($sportsgroupnonmemberlist as $sn){
-//        $sportsgroupdependentlist[$sn->getSgid()]['nonmembers'][$sn->getNmemid()]=$sn->getNmemid();
-//    }
-//    $t=0;
-//    foreach ($sportsgrouplist as $sg){
-//           foreach ($nonmemberlist as $nm){
-//         $sportsgroupdependentlist[$sg->getSgid()]['nonmembers'][$nm->getNmemid()]=$nm;
-//        $t=count($nm->getNmemid());
-//    }
-//    echo '<pre>';
-//     print_r($t);
+    foreach ($trainerlist as $tr){
+        
+        $sportsgroupdependentlist[$tr->getTrainerid()]['trainers'][]=$tr; 
+        
+    }
+//     echo '<pre>';
+//     print_r($sportsgroupdependentlist);
 //     echo '</pre>';
-//    
-//    }
+    
+    //Total Number of Nonmembers per Sportsgroup
+    //by Adding a string 'Danny' to an Array.
+    //Count the number of entries in the Array
+    foreach ($sportsgroupnonmemberlist as $sn){
+        $sportsgroupdependentlist[$sn->getSgid()]['nonmemberstotal'][$sn->getNmemid()]='Danny';   
+    }
+    
+    //Total Number of Female Nonmembers per Sportsgroup
+    //by Adding a string 'femalenonmembers' to an Array.
+    //Count the number of entries in the Array
+    foreach ($sportsgroupnonmemberlist as $sm){
+    $sportsgroupdependentlist[$sm->getSgid()]['nonmembers'][$sm->getNmemid()]=0;
+    }
+        
+    foreach ($sportsgrouplist as $sg){
+        foreach ($nonmemberlist as $nm){               
+           
+                if(isset($sportsgroupdependentlist[$sg->getSgid()]['nonmembers'][$nm->getNmemid()])){                    
+                     if ($nm->getTitle() === 0 ){
+                     if(!isset($sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['female']))$sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['female']=0;    
+                    $sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['female']+=1;
+                }else if($nm->getTitle() === 1 ) {
+                    if(!isset($sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['male']))$sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['male']=0;    
+                    $sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['male']+=1;       
+                    }
+                }
+        }
+    }
+//         echo '<pre>';
+//     print_r($sportsgroupdependentlist);
+//     echo '</pre>';
+//     
+    //Substitute Teacher per Sportsgroup
     foreach ($sportgrouptrainerlist as $pn){
-
-        $sportsgroupdependentlist[$pn->getSgid()]['trainers'][$pn->getTrainerid()]=$pn->getTrainerid();
+        $sportsgroupdependentlist[$pn->getSgid()]['trainersub'][$pn->getTrainerid()]=$pn->getTrainerid();
     }
     
    foreach ($sportsgrouplist as $sg){
            foreach ($trainerlist as $tr){
-         $sportsgroupdependentlist[$sg->getSgid()]['trainers'][$tr->getTrainerid()]=$tr;
-         
+               if(isset($sportsgroupdependentlist[$sg->getSgid()]['trainersub'][$tr->getTrainerid()])){
+               $sportsgroupdependentlist[$sg->getSgid()]['trainersub'][$tr->getTrainerid()]=$tr; 
+               }
     }
    }
    
@@ -170,15 +192,15 @@ $nombre = $sb->getQuery()->getSingleScalarResult();
      public function addsportsgroupAction (Request $request, $letter, $adminyear){
      
      $nonmemsportsgroup = new NonMemSportsgroup();
-     $bssacertnr = new BSSACert();
-     $trainers = new Trainer_NonMemSportsgroupSub();
+//     $bssacertnr = new BSSACert();
+//     $trainers = new Trainer_NonMemSportsgroupSub();
      $im=  $this->get('app.index_manager')
-
                    ->setEntityName('Sportsgroup');
+     
      $sgid=$im->getCurrentIndex();
      $nonmemsportsgroup->setSgid($sgid);
-     $nonmemsportsgroup->addBssacert($bssacertnr);
-     $nonmemsportsgroup->addTrainers($trainers);
+//     $nonmemsportsgroup->addBssacert($bssacertnr);
+//     $nonmemsportsgroup->addTrainers($trainers);
      
      $addnonmemsportsgroupform = $this->createForm(AddSportsgroupType::class, $nonmemsportsgroup); 
      $addnonmemsportsgroupform->handleRequest($request);
@@ -189,10 +211,11 @@ $nombre = $sb->getQuery()->getSingleScalarResult();
         $nonmemsportsgroup->setValidfrom($adminyear)
                     ->setValidto('2155');  
 
-        $bs->setbssacertnr(uniqid($bs))
-           ->Validfrom($adminyear)
-           ->Validto('2155');       
-        $manager->persist($bs);
+//        foreach($nonmemsportsgroup->getBssacert() as $bs){
+//                $bs->setbssacertnr(uniqid('bs'))
+//           ->Validfrom($adminyear)
+//           ->Validto('2155');       
+//        $manager->persist($bs);}
         
         $manager->persist($nonmemsportsgroup);
         $manager->flush();

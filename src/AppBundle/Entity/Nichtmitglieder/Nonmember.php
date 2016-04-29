@@ -286,7 +286,9 @@ protected $validto;
      */
     public function addSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup)
     {
-        $this->sportsgroup($sportsgroup);
+
+        $sportsgroup->setNmemid($this->nmemid);
+        $this->sportsgroup->add($sportsgroup);
 
         return $this;
     }

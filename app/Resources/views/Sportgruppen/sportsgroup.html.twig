@@ -34,7 +34,7 @@
     <th>Räumlichkeit</th>
     <th>Gruppenbezeichnung</th>
     <th>Voranmeldungen</th>
-    <th>Name ÜL</th>
+    <th>Übungsleiter</th>
     <th>Vetretungsmöglichkeit</th>
     <th  class="overhead1"><font color=""> Mitglieder/Kurs-TN</font></th>
     <th class="overhead1">gesamt</th>
@@ -70,9 +70,20 @@
         <td>{{ data.roomid|striptags }}</td> 
         <td>{{ data.token|striptags }}</td>
         <td>{{ data.sgid|striptags }}</td>
-        <td></td>
-        {% if sportsgroupdependentlist[data.sgid]['trainers'] is defined %}
-            {% set trainer =sportsgroupdependentlist[data.sgid]['trainers'] %}
+        {% if sportsgroupdependentlist[data.trainerid]['trainers'] is defined %}
+            {% set trainer =sportsgroupdependentlist[data.trainerid]['trainers'] %}
+        {% else %}
+          {% set trainer ='' %}  
+        {% endif %}
+        <td>{% for TR in trainer %}                     
+               {{TR.firstname }} {{TR.lastname}}<br>
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %}
+            
+{#/******************************************************** #}              
+        {% if sportsgroupdependentlist[data.sgid]['trainersub'] is defined %}
+            {% set trainer =sportsgroupdependentlist[data.sgid]['trainersub'] %}
         {% else %}
           {% set trainer ='' %}  
         {% endif %}
@@ -95,22 +106,42 @@
             
             <td bgcolor="#5fa8ec"></td>
 {#/******************************************************** #}            
-       {% if sportsgroupdependentlist[data.sgid]['nonmembers'] is defined %}
-            {% set nonmember =sportsgroupdependentlist[data.sgid]['nonmembers'] %}
+       {% if sportsgroupdependentlist[data.sgid]['nonmemberstotal'] is defined %}
+            {% set nonmember =sportsgroupdependentlist[data.sgid]['nonmemberstotal'] %}
         {% else %}
           {% set nonmember ='' %}  
         {% endif %}
-        <td>{% for NM in nonmember %}                     
-               {{NM.firstname }} {{NM.lastname }}<br>
+        {% set foo =0 %}
+        {% for NM in nonmember %}                     
+               {% set foo = foo + 1 %}
+            {% endfor %}
+              <td>  {{ foo }}</td>
+             
+{#/******************************************************** #}            
+        {% if sportsgroupdependentlist[data.sgid]['nonmembers']['female'] is defined %}
+            {% set nonmemberfemale =sportsgroupdependentlist[data.sgid]['nonmembers']['female'] %}
+        {% else %}
+          {% set nonmemberfemale ='' %}  
+        {% endif %}
+    
+              <td>  {{ nonmemberfemale }}</td>
+              {#<td>{% for TR in nonmemberfemale %}                     
+               {{TR}}
             {% else %}
                 {{ "-" }}</td>
-            {% endfor %} 
-{#/******************************************************** #}            
-        <td>{{ data.sgid|striptags }}</td> 
-        <td>{{ data.sgid|striptags }}</td>         
+            {% endfor %}#} 
+{#/******************************************************** #}
+        {% if sportsgroupdependentlist[data.sgid]['nonmembers']['male'] is defined %}
+            {% set nonmembermale =sportsgroupdependentlist[data.sgid]['nonmembers']['male'] %}
+        {% else %}
+            {% set nonmembermale ='' %}  
+        {% endif %}
+        
+              <td>  {{ nonmembermale}}</td>
+{#/******************************************************** #}        
         <td bgcolor="#A9D0F5"></td>        
-        <td>{{ data.sgid|striptags }}</td> 
-        <td>{{ data.sgid|striptags }}</td>        
+        <td>{{ data.capacity|striptags }}</td> 
+        <td>{{ data.capacity - foo  }}</td>        
         
         <td bgcolor="#5fa8ec"></td>
         

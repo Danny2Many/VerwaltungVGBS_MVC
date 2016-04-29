@@ -18,10 +18,7 @@
             </div>
            </div>
         </div>
-    {form_start(form)}}
-    <div class="panel panel-default">
-        <div class="panel-heading"><h1>Verwaltungsjahr {{adminyear}}</h1></div>
-            <div class="panel-body">
+    {{form_start(form)}}
     <div class="row">
            <div class="col-md-12">
                <legend><h2>Stammdaten</h2></legend>
@@ -54,4 +51,5 @@
         </div>
            </div>
          </div>    
+  {{ form_end(form, {'render_rest': false}) }}
 {% endblock %}

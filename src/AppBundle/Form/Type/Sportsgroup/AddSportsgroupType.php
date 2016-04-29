@@ -3,6 +3,7 @@
 
 
 namespace AppBundle\Form\Type\Sportsgroup;
+use AppBundle\Form\Type\Sportsgroup\BaseSportsgroupType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class  AddSportsgroupType extends BaseSportsgroupType {

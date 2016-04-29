@@ -119,20 +119,20 @@ class NonMemberController extends Controller {
      else{
          $now=$adminyear.'-12-31';
      }
-     
+     $nonmemberdependentlist=[];
     foreach ($sportsgroupnonmemberlist as $sn){
 
-        $sportsgroupdependentlist[$sn->getNmemid()]['sportsgroups'][$sn->getSgid()]=$sn->getSgid();
+        $nonmemberdependentlist[$sn->getNMemID()]['sportsgroups'][$sn->getSgid()]=$sn->getSgid();
     }
     
     foreach ($nonmemberlist as $nm){
         foreach ($sportsgrouplist as $sg){
-         $sportsgroupdependentlist[$nm->getNmemid()]['sportsgroups'][$sg->getTrainerid()]=$sg;
+         $nonmemberdependentlist[$nm->getNMemID()]['sportsgroups'][$sg->getSgid()]=$sg;
          
         }
     }
      
-    $nonmemberdependentlist=[];
+   
     foreach ($phonenumberlist as $pn){
 
         $nonmemberdependentlist[$pn->getNMemID()]['phonenumbers'][]=$pn;
@@ -141,9 +141,9 @@ class NonMemberController extends Controller {
 
      foreach ($rehabcertlist as $rc){
         if($rc->getTerminationdate()->format("Y-m-d") > $now){
-         $nonmemberdependentlist[$rc->getNMemid()]['validrehabcerts'][]=$rc;
+         $nonmemberdependentlist[$rc->getNMemID()]['validrehabcerts'][]=$rc;
         }else{
-          $nonmemberdependentlist[$rc->getNMemid()]['expiredrehabcerts'][]=$rc;  
+          $nonmemberdependentlist[$rc->getNMemID()]['expiredrehabcerts'][]=$rc;  
         }
          
      }

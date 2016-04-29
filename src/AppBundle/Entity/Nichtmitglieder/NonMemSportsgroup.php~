@@ -80,16 +80,23 @@ class NonMemSportsgroup {
     
      
     protected $bssaid;
+    
+    /**
+    * @ORM\Column(type="integer")
+    */
+    protected $capacity;
+
     /**
      * @ORM\Id
-    * @ORM\Column(type="date")
+    * @ORM\Column(type="string")
     */
     protected $validfrom;
 
     /**
-    * @ORM\Column(type="date")
+    * @ORM\Column(type="string")
     */
     protected $validto;
+
 
 
     /**
@@ -150,6 +157,24 @@ class NonMemSportsgroup {
 //        return $this->type;
 //    }
 
+    public function addBssacert(\AppBundle\Entity\BSSACert $bssacertnr)
+    {               
+        $bssacertnr->setSgid($this);
+        $this->bssacert->add($bssacertnr);
+
+        return $this;
+    }
+    
+    
+        public function addTrainers(\AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $trainers)
+    {               
+        $trainers->setSgid($this);
+        $this->trainers->add($trainers);
+
+        return $this;
+    }
+    
+    
     /**
      * Set name
      *
@@ -466,5 +491,48 @@ class NonMemSportsgroup {
     public function getBssaid()
     {
         return $this->bssaid;
+    }
+  
+ 
+    public function setValidfrom($validfrom)
+    {
+        
+        $this->validfrom = $validfrom;
+
+        return $this;
+    }
+
+    /**
+     * Get validfrom
+     *
+     * @return string
+     */
+    public function getValidfrom()
+    {
+        return $this->validfrom;
+    }
+
+    /**
+     * Set validto
+     *
+     * @param  string $validto
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setValidto($validto)
+    {
+        $this->validto = $validto;
+
+        return $this;
+    }
+
+    /**
+     * Get validto
+     *
+     * @return string
+     */
+    public function getValidto()
+    {
+        return $this->validto;
     }
 }
