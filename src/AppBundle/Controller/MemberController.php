@@ -19,6 +19,10 @@ use AppBundle\Entity\MemYearInfo;
 use AppBundle\Entity\MemMonthlyDues;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormError;
+use AppBundle\Services\FunctionManager;
+use AppBundle\Services\IndexManager;
+
+
 
 class MemberController extends Controller
 {
@@ -46,9 +50,9 @@ class MemberController extends Controller
 //    $qb['Member']->andWhere($qb['Member']->expr()->isNull('ditto.quitdate'));
                
 
-        echo '<pre>';
-            print_r($qb['MemPhoneNumber']->getQuery()->getResult());
-            echo '</pre>';
+//        echo '<pre>';
+//            print_r($qb['MemPhoneNumber']->getQuery()->getResult());
+//            echo '</pre>';
      
     
     
@@ -207,15 +211,16 @@ class MemberController extends Controller
      */
     public function addmemberAction(Request $request, $letter, $adminyear)
     {
-        
+        $manager= $this->getDoctrine()->getManager();
         $member = new Member();
         $phonenumber = new MemPhoneNumber();
         
 
-        $im=  $this->get('app.index_manager')
-
-                   ->setEntityName('Member');
-
+//        $im=  $this->get('app.index_manager')
+//
+//                   ->setEntityName('Member');
+        $im= new IndexManager($manager, 'Member');
+        
 
         $memid=$im->getCurrentIndex();
         $member->setMemid($memid);
@@ -240,7 +245,7 @@ class MemberController extends Controller
 
             
          
-            $manager= $this->getDoctrine()->getManager();
+            
             
             
             
@@ -310,15 +315,13 @@ class MemberController extends Controller
     
     $doctrine=$this->getDoctrine(); 
     $manager= $doctrine->getManager();
-        $validfrom=$request->query->get('version');
+    $validfrom=$request->query->get('version');
+    $fm= new FunctionManager($doctrine, $adminyear);
 
         
     $dependencies=['MemPhoneNumber', 'MemRehabilitationCertificate'];
     
     $qb=[];
-    
-  
-    
     foreach($dependencies as $dependent){
        
      $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
@@ -351,7 +354,7 @@ class MemberController extends Controller
 
         
          $originalrehabs = new ArrayCollection();
-         $originalphonenr = new ArrayCollection();
+         $originalphonenrs = new ArrayCollection();
         
 
          
@@ -362,17 +365,17 @@ class MemberController extends Controller
          
     // Create an ArrayCollection of the current Rehab objects in the database
     foreach ($rehabcerts as $rehab) {
-        $origininalrehab= clone $rehab;
+        $originalrehab= clone $rehab;
         $member->addRehabilitationcertificate($rehab);
-        $originalrehabs->add($origininalrehab);
+        $originalrehabs->add($originalrehab);
     }
      
     // Create an ArrayCollection of the current Phonenr objects in the database
     foreach ($phonenumbers as $phonenr) {
         
-        $origininalphonenr= clone $phonenr;
+        $originalphonenr= clone $phonenr;
         $member->addPhonenumber($phonenr);
-        $originalphonenr->add($origininalphonenr);
+        $originalphonenrs->add($originalphonenr);
     }
     
     
@@ -387,9 +390,10 @@ class MemberController extends Controller
         
         if($editmemform->get('delete')->isClicked()){
 
-            $manager->remove($member);
+            $fm->RemoveObject($member,array($member->getRehabilitationcertificate(),$member->getPhonenumber()));;
             $manager->flush();
-            return $this->redirectToRoute('member_home', array('letter' => $letter, 'info' => 'entfernt'));
+            $this->addFlash('notice', 'Dieses Mitglied wurde erfolgreich gelöscht!');
+            return $this->redirectToRoute('member_home', array('letter' => $letter, 'adminyear' => $adminyear));
         }
 
         
@@ -398,86 +402,13 @@ class MemberController extends Controller
         //if the form is valid -> persist it to the database
         if($editmemform->isSubmitted() && $editmemform->isValid()){
        
-            $FM = new \AppBundle\Services\FunctionManager;  
-            
-            $FM->AddObjects($member, $phonenumbers, $originalphonenr, 'Pn', $adminyear, $manager, 'getPhonenumber');
-            
-            $FM->AddObjects($member, $rehabcerts, $originalrehabs, 'Rc', $adminyear, $manager, 'getRehabilitationcertificate');
+                $fm->HandleDependencyDiff($member->getRehabilitationcertificate(), $originalrehabs, $adminyear);
+                $fm->HandleDependencyDiff($member->getPhonenumber(), $originalphonenrs, $adminyear);
+                $fm->HandleObjectDiff($member, $memberoriginal);
 
-           
-         
-
-//         foreach ($member->getRehabilitationcertificate() as $rehab) {
-//            if (false === $originalrehabs->contains($rehab)) {
-//                return 'hi';
-//                $rehab->setValidfrom($adminyear)
-//                      ->setValidto('2155');
-//                $manager->persist($rehab);
-//          }else{
-//              $originalrehab=$originalrehabs->get($rehab);
-//             if($rehab != $originalrehab){
-//                 return 'ho';
-//                 $rehab->setValidfrom($adminyear);
-//                 $originalrehab->setValidto($adminyear);
-//                 $manager->persist($rehab);
-//                 $manager->persist($originalrehab);
-//                 $originalrehabs->removeElement($originalrehab);
-//                 
-//             } 
-//          }
-//        }
-            
-//            foreach ($originalphonenr as $phonenr) {
-//            if (false === $member->getPhonenumber()->contains($phonenr)) {
-//                
-//
-//                $manager->remove($phonenr);
-//
-//            }
-//            }
-            
-            
-//               echo '<pre>'; 
-//        print_r($member);
-//        echo '</pre>'; 
-//        
-//           echo '<pre>'; 
-//        print_r($memberoriginal);
-//        echo '</pre>';  
-            
-           if($member!=$memberoriginal){
-                
-              if($adminyear != $member->getValidfrom()){ 
-                                
-             
-             $memberoriginal->setValidto($adminyear);
-             $member->setValidfrom($adminyear);
-             
-             
-             $manager->persist($member);
-             $manager->flush();
-             $manager->persist($memberoriginal);
-             
-                
-            }
-            
-            else{
-              $manager->persist($member);  
-            }
-            
-            }
-            
-
-            
-            $manager->flush();
+                $manager->flush();
     
-           
-            
-            
-          
-            
-            
-          $this->addFlash('notice', 'Die Daten wurden erfolgreich gespeichert!');   
+      $this->addFlash('notice', 'Die Daten wurden erfolgreich gespeichert!');   
           return $this->redirectToRoute('member_home', array('letter' => $letter, 'adminyear' => $adminyear));  
         }
         
