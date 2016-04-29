@@ -25,6 +25,11 @@ class NonMemSportsgroup {
      * @ORM\Column(type="string") 
      */
     protected $sgid;
+    
+    public function __toString() {
+            return $this->sgid; 
+        }
+    
 //    
 //    /**
 //     * @ORM\Column(type="string")
@@ -68,7 +73,9 @@ class NonMemSportsgroup {
      */
     protected $roomid;
     
-   
+    /**
+     * @ORM\Column(type="integer") 
+     */
     protected $trainerid;
     
     /**

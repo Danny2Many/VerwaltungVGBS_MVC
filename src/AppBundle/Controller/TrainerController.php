@@ -36,7 +36,7 @@ class TrainerController extends Controller
     {       
         
         $doctrine=$this->getDoctrine();
-        $dependencies=['Trainer\Trainer', 'Trainer\TrainerPhoneNumber', 'Trainer\TrainerFocus','Trainer\TrainerLicence'];
+        $dependencies=['Trainer\Trainer', 'Trainer\TrainerPhoneNumber', 'Trainer\TrainerFocus','Trainer\TrainerLicence', 'Nichtmitglieder\NonMemSportsgroup'];
     
         $qb= [];
         
@@ -111,7 +111,10 @@ class TrainerController extends Controller
     $phonenumberlist=$qb['Trainer\TrainerPhoneNumber']->getQuery()->getResult();
     $licencelist=$qb['Trainer\TrainerLicence']->getQuery()->getResult();
     $focuslist=$qb['Trainer\TrainerFocus']->getQuery()->getResult();
-    
+    $nmemsportsgrouplist=$qb['Nichtmitglieder\NonMemSportsgroup']->getQuery()->getResult();
+
+
+     
  
     
     $trainerdependentlist=[];
@@ -129,7 +132,14 @@ class TrainerController extends Controller
          
          $trainerdependentlist[$fc->getTrainerid()]['focuses'][]=$fc;
      }
+     
+     foreach ($nmemsportsgrouplist as $sg){
+         
+         $trainerdependentlist[$sg->getTrainerid()]['nmemsportsgroups'][]=$sg;
+     }
 
+     
+  
 
         return $this->render('Trainer/trainer.html.twig',
                 array('tabledata'=>$trainerlist,
@@ -291,9 +301,6 @@ class TrainerController extends Controller
             $FM->RemoveObjects($trainer, $adminyear, $doctrine,array($trainer->getTheme(),$trainer->getPhonenumber(),$trainer->getLicence()));
             
             
-//            $FM->RemoveObjects($trainer->getTheme(), $adminyear, $manager, 'Trainer\Trainer', $doctrine, 'trainer');
-
-            
             $manager->flush();
             $this->addflash('notice', 'Dieser Übungsleiter wurde erfolgreich gelöscht!');
             return $this->redirectToRoute('trainer_home', array('letter' => $letter,'adminyear' => $adminyear));
@@ -305,19 +312,18 @@ class TrainerController extends Controller
   
 //          foreach ($originallicences as $licence) {
 //            if (false === $trainer->getLicence()->contains($licence)) {   
-//                $manager->remove($licence);
+//                $FM->RemoveObjects($licence, $adminyear, $doctrine);
 //            }
 //        }
-//            
-//            foreach ($phonenumbers as $phonenr) {
-//            if (false === $trainer->getPhonenumber()->contains($phonenr)) {         
-//                $manager->remove($phonenr);
-//            }
-//        }
-//        
+            
+            foreach ($phonenumbers as $phonenr) {
+            if (false === $trainer->getPhonenumber()->contains($phonenr)) {         
+                $FM->RemoveObjects($phonenr, $adminyear, $doctrine);
+            }
+        }
+        
             foreach ($focuses as $theme) {
             if (false === $trainer->getTheme()->contains($theme)) {
-                echo ($theme->getTfid());
                 $FM->RemoveObjects($theme, $adminyear, $doctrine);
             }
         }
