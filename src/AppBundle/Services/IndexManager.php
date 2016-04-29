@@ -9,9 +9,10 @@ class IndexManager{
     
     protected $em;
     
-    public function __construct($entityManager) {
+    public function __construct($entityManager, $entityname) {
 
       $this->em=$entityManager;
+      $this->entityname=$entityname;
     }
     
     public function add($number=1){

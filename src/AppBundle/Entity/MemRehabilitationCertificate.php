@@ -72,6 +72,15 @@ class MemRehabilitationCertificate {
      */
     protected $rehabunits;
 
+    
+    
+    
+    public function __toString()
+    {
+        return (string) $this->rcid.'/rc/MemRehabilitationCertificate';
+    }
+    
+    
     /**
      * Set memid
      *

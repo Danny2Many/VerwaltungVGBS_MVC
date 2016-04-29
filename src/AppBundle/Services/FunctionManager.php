@@ -1,124 +1,163 @@
 <?php
 
-
-
+use AppBundle\Services\IndexManager;
 namespace AppBundle\Services;
 
 
 class FunctionManager {
     
-//    protected $manager;
-//
-//    public function __contruct($manager) {
-//        $this->manager=$manager;        
-//    }
+  
     
-    //compares 2 entities in my own way
-    public function CompareEntities($entityone, $entitytwo) {
-      $entityoneattr=  get_object_vars($entityone);
-      $entitytwoattr=  get_object_vars($entitytwo);
-      
-      print_r($entityoneattr);
-      
-      $result=  array_diff($entityoneattr, $entitytwoattr);
-      
-      
-      
-      if($result==''){
-      
-      return true;
-      }
-      else{
-          return false;
-      }
+    protected $doctrine;
+    protected $adminyear;
+    
+    public function __construct($doctrine, $adminyear) {
+        $this->doctrine=$doctrine;
+        $this->adminyear=$adminyear;
+    } 
+    
+    //analizes the __toString return value of an object
+    public function ObjectMetaDataParser($object) {
+        $metadata=explode('/', $object);
+        return array('id'=>$metadata[0], 'idprefix'=>$metadata[1], 'namespace'=>$metadata[2]);
     }
     
     
-    
-    public function AddObjects($object, $objectquerry, $querryclone, $idprefix, $adminyear, $manager, $getmethod){
-        foreach( call_user_func(array($object, $getmethod)) as $ob){
-                    $clone=$querryclone->get(call_user_func(array($object, $getmethod))->indexOf($ob));
+    //handles the comparison of the dependencies after saving
+    public function HandleDependencyDiff($saveddependencies, $originaldependencies){
+        $manager=$this->doctrine->getManager();
+        
+        foreach($saveddependencies  as $ob){
+                     
+                     
+                     //get the original object version
+                     $clone=$originaldependencies->get($saveddependencies->indexOf($ob));
+                     
+                     //if an new referencing object was created
+                    if ($clone == NULL) { 
+                        
+                        $this->AddObject($ob, 'secondary');
 
-                    if (false == in_array($ob, $objectquerry)) {                    
-                        call_user_func(array($ob, 'set'.$idprefix.'id' ), uniqid($idprefix))
-                                ->setValidfrom($adminyear)
-                                ->setValidto('2155');
-                        $manager->persist($ob); 
-
-                        }else if($clone!=$ob){
-                            if($adminyear!=$ob->getValidfrom()){                       
-
-                                try{  
-                                    $clone ->setValidto($adminyear); 
-                                    $ob ->setValidfrom($adminyear); 
-                                    $manager->persist($ob);
-                                    $manager->flush();
-                                    $manager->persist($clone);      
-                                    $manager->flush();                                
-                                }catch(Exception $em){ $em->getConnection()->rollback(); }
-
-                            }else{ $manager->persist($ob); }  
+                        }else {
+                            $originaldependencies->removeElement($clone);
+                            $this->HandleObjectDiff($ob, $clone);  
                         }
                     }
+                    
+                    
+          foreach ($originaldependencies as $oridep) {
+            $clone=$saveddependencies->get($originaldependencies->indexOf($oridep));
+            
+            if ($clone == NULL) {
+                $depmetadata=  $this->ObjectMetaDataParser($oridep);
+                
+                $validfrom=$oridep->getValidfrom();
+                
+                //you cannot call 'remove' on cloned objects
+                //thats why we query for them again
+                $objecttobedeleted=$manager->find('AppBundle:'.$depmetadata['namespace'], array($depmetadata['idprefix'].'id'=>$depmetadata['id'], 'validfrom'=>$validfrom));
+               
+                $this->RemoveObject($objecttobedeleted);
+            }
+        }
+    }
+    
+    
+    //handles the comparison of an object after saving
+    public function HandleObjectDiff($savedobject, $originalobject) {
+        $manager=  $this->doctrine->getManager();
+        
+        
+                    if($originalobject!=$savedobject){
+                            if($this->adminyear != $savedobject->getValidfrom()){                       
+
+                                try{  
+                                    $originalobject ->setValidto($this->adminyear); 
+                                    $savedobject ->setValidfrom($this->adminyear); 
+                                    $manager->persist($savedobject);
+                                    $manager->flush();
+                                    $manager->persist($originalobject);      
+                                    $manager->flush();                                
+                                }catch(Exception $em){ 
+                                    $em->getConnection()->rollback(); 
+                                    
+                                }
+
+                            }else{ 
+                                $manager->persist($savedobject); 
+                                
+                            }  
+                        } 
+    }
+    
+    //sets Validfrom and Validto dates and persists an object
+    //primarytype=objects with database-indices
+    //secondarytype=objects with timestamp-indices
+    public function AddObject($object, $type='primary') {
+        $manager=  $this->doctrine->getManager();
+        $metadata= $this->ObjectMetaDataParser($object);
+     
+            
+        if($type=='primary'){
+            
+            $explode=explode('\\', get_class($object));
+            $entityname=  end($explode);
+            
+            $im= new IndexManager($manager, $entityname);
+            $id=$im->getCurrentIndex();
+            
+        }elseif($type=='secondary'){
+          
+          $id=uniqid($metadata['idprefix']);  
+        }
+            
+            call_user_func(array($object, 'set'.$metadata['idprefix'].'id' ), $id);
+            call_user_func(array($object, 'setValidfrom' ), $this->adminyear);
+            call_user_func(array($object, 'setValidto' ), '2155');
+                       
+            $manager->persist($object);
+        
     }
     
     
     
-    public function RemoveObjects($object,$adminyear,$doctrine,$dependencies=null) {
-    $explode=explode('/', $object);
-    $namespace=$explode[2];
-    $idprefix=$explode[1]; 
-    $id1=$explode[0];
-    $manager=$doctrine->getManager();
+    //'removes' an object
+    public function RemoveObject($object,$dependencies=null) {
+    $metadata=  $this->ObjectMetaDataParser($object); 
+       
+    $manager=$this->doctrine->getManager();
   
-
+    //if the object has dependencies
     if($dependencies!=null){
         
         foreach($dependencies as $depend){
             foreach($depend as $dep){
 
-            
-            $explode=explode('/', $dep);
-            $namespace=$explode[2];
-            $idprefix=$explode[1]; 
-            $id=$explode[0];
-            
-            $dep->setValidto($adminyear);
-            
-            $qb=$doctrine->getRepository('AppBundle:'.$namespace)->createQueryBuilder('ditto');                
-                $qb->where('ditto.validfrom>='.$adminyear)
-                    ->andWhere('ditto.trainerid=:id')
-                    ->setParameter('id', $id1);
-                $deletedep[''.$dep.'']=$qb->getQuery()->getResult();
+
+                $this->RemoveObject($dep);
             }
         }
         
-        foreach($deletedep as $dep){
-            foreach($dep as $objecttobedeleted){
-                $manager->remove($objecttobedeleted);
-//              $this->RemoveObjects($dep, $adminyear, $doctrine);
-            }
-        }
     }    
-        
+        // if its still valid
         if($object->getValidto()== '2155'){
             
-            if($object->getValidfrom()== $adminyear){
+            if($object->getValidfrom()== $this->adminyear){
                 $manager->remove($object);
             }else{    
-                $object->setValidto($adminyear);
+                $object->setValidto($this->adminyear);
                 $manager->persist($object);
             }
             
         }else{                
 
-            $object->setValidto($adminyear);
+            $object->setValidto($this->adminyear);
             $manager->persist($object);                                
 
-            $qb=$doctrine->getRepository('AppBundle:'.$namespace)->createQueryBuilder('ditto');                
-            $qb->where('ditto.validfrom>='.$adminyear)
-                ->andWhere('ditto.'.$idprefix.'id=:id')
-                ->setParameter('id', $id1);
+            $qb=$this->doctrine->getRepository('AppBundle:'.$metadata['namespace'])->createQueryBuilder('ditto');                
+            $qb->where('ditto.validfrom>='.$this->adminyear)
+                ->andWhere('ditto.'.$metadata['idprefix'].'id=:id')
+                ->setParameter('id', $metadata['id']);
             $delete=$qb->getQuery()->getResult();
 
             foreach ($delete as $del){
@@ -127,4 +166,17 @@ class FunctionManager {
         }
     }
     
+    
+    
+   
+    
+    function getAdminyear() {
+        return $this->adminyear;
+    }
+
+    function setAdminyear($adminyear) {
+        $this->adminyear = $adminyear;
+    }
+
+ 
 }
