@@ -58,7 +58,9 @@ class TrainerLicence {
      */
     protected $validfrom;  
     
-    
+    public function __toString() {
+        return $this->liid.'/li/Trainer\TrainerLicence'; 
+    }
 
     /**
      * Set validto

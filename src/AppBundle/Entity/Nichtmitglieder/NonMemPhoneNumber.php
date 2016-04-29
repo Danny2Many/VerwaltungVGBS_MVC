@@ -105,55 +105,55 @@ class NonMemPhoneNumber {
 
 
 
-    /**
-    * @ORM\PrePersist
-    */
-    public function setRecorded($recorded)
-    {
-        $now= new \DateTime();
-        
-        $this->recorded = $now->format('Y-m-d');
-
-        return $this;
-    }
-
-    /**
-     * Get recorded
-     *
-     * @return string
-     */
-    public function getRecorded()
-    {
-        return $this->recorded;
-    }
+//    /**
+//    * @ORM\PrePersist
+//    */
+//    public function setRecorded($recorded)
+//    {
+//        $now= new \DateTime();
+//        
+//        $this->recorded = $now->format('Y-m-d');
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get recorded
+//     *
+//     * @return string
+//     */
+//    public function getRecorded()
+//    {
+//        return $this->recorded;
+//    }
 
  
 
 
-
-    /**
-     * Set deleted
-     *
-     * @param string $deleted
-     *
-     * @return NonMemPhoneNumber
-     */
-    public function setDeleted($deleted)
-    {
-        $this->deleted = $deleted;
-
-        return $this;
-    }
-
-    /**
-     * Get deleted
-     *
-     * @return srtring
-     */
-    public function getDeleted()
-    {
-        return $this->deleted;
-    }
+//
+//    /**
+//     * Set deleted
+//     *
+//     * @param string $deleted
+//     *
+//     * @return NonMemPhoneNumber
+//     */
+//    public function setDeleted($deleted)
+//    {
+//        $this->deleted = $deleted;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get deleted
+//     *
+//     * @return srtring
+//     */
+//    public function getDeleted()
+//    {
+//        return $this->deleted;
+//    }
 
 
     /**
@@ -185,11 +185,11 @@ class NonMemPhoneNumber {
      *
      * @param string $validto
      *
-     * @return TrainerPhoneNumber
+     * @return NonMemberPhoneNumber
      */
     public function setValidto($validto)
     {
-        $this->deleted = $validto;
+        $this->validto = $validto;
 
         return $this;
     }
@@ -209,7 +209,7 @@ class NonMemPhoneNumber {
      *
      * @param string $validfrom
      *
-     * @return MemPhoneNumber
+     * @return NonMemPhoneNumber
      */
     public function setValidfrom($validfrom)
     {
