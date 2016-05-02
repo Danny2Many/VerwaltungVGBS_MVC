@@ -112,7 +112,8 @@ class NonMemberController extends Controller {
     $nonmemberlist=$qb['Nichtmitglieder\Nonmember']->getQuery()->getResult();
     $phonenumberlist=$qb['Nichtmitglieder\NonMemPhoneNumber']->getQuery()->getResult();
     $rehabcertlist=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
-
+    $sportsgroupnonmemberlist=$qb['Nichtmitglieder\NonMember_Sportsgroup']->getQuery()->getResult();
+    $sportsgrouplist=$qb['Nichtmitglieder\NonMemSportsgroup']->getQuery()->getResult();
     if($adminyear == date('Y')){
          $now=date('Y-m-d');
      }
@@ -120,17 +121,18 @@ class NonMemberController extends Controller {
          $now=$adminyear.'-12-31';
      }
      $nonmemberdependentlist=[];
+     
     foreach ($sportsgroupnonmemberlist as $sn){
 
-        $nonmemberdependentlist[$sn->getNMemID()]['sportsgroups'][$sn->getSgid()]=$sn->getSgid();
+        $nonmemberdependentlist[$sn->getNMemID()]['sportsgroups'][]=$sn;
     }
     
-    foreach ($nonmemberlist as $nm){
-        foreach ($sportsgrouplist as $sg){
-         $nonmemberdependentlist[$nm->getNMemID()]['sportsgroups'][$sg->getSgid()]=$sg;
-         
-        }
-    }
+//    foreach ($nonmemberlist as $nm){
+//        foreach ($sportsgrouplist as $sg){
+//         $nonmemberdependentlist[$nm->getNMemID()]['sportsgroups'][$sg->getSgid()]=$sg;
+//         
+//        }
+//    }
      
    
     foreach ($phonenumberlist as $pn){
@@ -255,9 +257,9 @@ class NonMemberController extends Controller {
         
         $nonmember=$doctrine->getRepository('AppBundle:Nichtmitglieder\Nonmember')->findOneBy(array('nmemid' => $ID, 'validfrom'=>$validfrom));
        $nonmember_old = clone $nonmember;
-        echo '</pre>'; 
-        print_r ($nonmember); 
-         echo '</pre>';
+//        echo '</pre>'; 
+//        print_r ($nonmember); 
+//         echo '</pre>';
 //        print_r($nonmember);
 //        echo '</pre>';
         

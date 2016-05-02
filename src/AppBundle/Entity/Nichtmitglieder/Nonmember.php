@@ -27,12 +27,7 @@ protected $phonenumber;
 //protected $section;    
 //    
 //    
-///**
-//* @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup")
-//* @ORM\JoinTable(name="NonMember_Sportsgroup",
-//* joinColumns={@ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")},
-//* inverseJoinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")})
-//*/ 
+
 protected $sportsgroup; 
 
 /**
