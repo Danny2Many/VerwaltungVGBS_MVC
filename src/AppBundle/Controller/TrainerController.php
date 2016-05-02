@@ -205,7 +205,14 @@ class TrainerController extends Controller
                     ->setValidfrom($adminyear)
                     ->setValidto('2155');
                 $manager->persist($th);              
-            }         
+            }
+            
+            foreach($trainer->getNmemsportsgroup() as $sg){
+                $sg->setSgid(uniqid('Nsg'))                        
+                    ->setValidfrom($adminyear)
+                    ->setValidto('2155');
+                $manager->persist($sg);              
+            }     
 
             $manager->persist($trainer);
           
@@ -223,7 +230,7 @@ class TrainerController extends Controller
                     'form'=>$addtrainerform->createView(),                    
                     'cletter'=>$letter,
                     'title'=>'Übungsleiter anlegen',
-                    'adminyear' => $adminyear));        
+                    'adminyear' => $adminyear,));        
     }
     
     
