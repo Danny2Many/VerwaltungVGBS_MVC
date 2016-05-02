@@ -19,20 +19,25 @@
            </div>
         </div>
     {{form_start(form)}}
-    <div class="row">
-           <div class="col-md-12">
-               <legend><h2>Stammdaten</h2></legend>
+<div class="row">
+    <div class="col-md-12">
+    <legend><h2>Stammdaten</h2></legend>
                
-    {% if (attribute(form, 'sgid') is defined) %}
+        {% if (attribute(form, 'sgid') is defined) %}
            {{ form_row(form.nmemid) }}
-       {% endif %}
-    {{ form_row(form.name)}}  
-    {{ form_row(form.day)}}  
-    {{ form_row(form.time)}}  
-    {{ form_row(form.info)}}  
-    {{ form_row(form.token)}}  
-    
-    
+        {% endif %}
+        {{ form_row(form.name)}}  
+        {{ form_row(form.day)}}  
+        {{ form_row(form.time)}}  
+        {{ form_row(form.info)}}  
+        {{ form_row(form.token)}}  
+        {#<div id="bc" data-prototype="{{ forms.bssaCollectionItem(form.bssacertificate.vars.prototype)|e }}">
+        {% for bc in form.bssacertificate %}
+            {{ forms.bssaCollectionItem(bc) }}
+        {% endfor %}
+        </div>#}
+    </div> 
+</div>
 <div class="row vert-offset-top-1">
            <div class="col-md-12"> 
          <div class="form-group">

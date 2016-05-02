@@ -12,8 +12,6 @@ class  AddSportsgroupType extends BaseSportsgroupType {
         {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup',
-
-));
-
-}
+    ));
+    }
 }

@@ -15,6 +15,8 @@ use AppBundle\Entity\BSSACert;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Form\Type\Sportsgroup\AddSportsgroupType;
 use AppBundle\Form\Type\Sportsgroup\BaseSportsgroupType;
+use AppBundle\Services\IndexManager;
+use AppBundle\Services\FunctionManager;
 
 class SportsgroupController extends Controller {
     /**
@@ -191,23 +193,27 @@ class SportsgroupController extends Controller {
      */
      public function addsportsgroupAction (Request $request, $letter, $adminyear){
      
+     $manager=$this->getDoctrine()->getManager();    
      $nonmemsportsgroup = new NonMemSportsgroup();
 //     $bssacertnr = new BSSACert();
 //     $trainers = new Trainer_NonMemSportsgroupSub();
-     $im=  $this->get('app.index_manager')
-                   ->setEntityName('Sportsgroup');
+//     
+//     $im=  $this->get('app.index_manager')
+//                   ->setEntityName('Sportsgroup');
+     
+     $im=new IndexManager($manager, 'Sportsgroup');
      
      $sgid=$im->getCurrentIndex();
      $nonmemsportsgroup->setSgid($sgid);
+     
 //     $nonmemsportsgroup->addBssacert($bssacertnr);
 //     $nonmemsportsgroup->addTrainers($trainers);
      
      $addnonmemsportsgroupform = $this->createForm(AddSportsgroupType::class, $nonmemsportsgroup); 
      $addnonmemsportsgroupform->handleRequest($request);
      
-     if($nonmemsportsgroup->isSubmitted() && $nonmemsportsgroup->isValid()){
-         
-        $manager= $this->getDoctrine()->getManager();
+     if($addnonmemsportsgroupform->isSubmitted() && $addnonmemsportsgroupform->isValid()){
+        
         $nonmemsportsgroup->setValidfrom($adminyear)
                     ->setValidto('2155');  
 
@@ -221,7 +227,7 @@ class SportsgroupController extends Controller {
         $manager->flush();
         
         $im->add();
-        $this->addflash('notice', 'Diese Nichtmitglieder-Sportgruppe wurde erfolgreich angelegt');
+        $this->addFlash('notice', 'Diese Nichtmitglieder-Sportgruppe wurde erfolgreich angelegt');
          
         return $this->redirectRoute('sportsgroup_home', array('letter'=>$letter));
      }
