@@ -55,12 +55,10 @@ class MemberController extends Controller
        
     }
     
-//    $qb['Member']->andWhere($qb['Member']->expr()->isNull('ditto.quitdate'));
+    $qb['Member']->andWhere($qb['Member']->expr()->isNull('ditto.quitdate'));
                
 
-//        echo '<pre>';
-//            print_r($qb['MemPhoneNumber']->getQuery()->getResult());
-//            echo '</pre>';
+
      
     
     
@@ -238,7 +236,7 @@ class MemberController extends Controller
                    
         $member->addPhonenumber($phonenumber);               
       
-        $addmemform = $this->createForm(AddMemberType::class, $member);
+        $addmemform = $this->createForm(AddMemberType::class, $member, array('adyear' => $adminyear));
         $addmemform->handleRequest($request);
      
         

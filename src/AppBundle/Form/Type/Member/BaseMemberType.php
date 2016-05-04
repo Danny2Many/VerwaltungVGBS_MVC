@@ -22,16 +22,18 @@ use AppBundle\Form\SanitizedTextareaType;
 use AppBundle\Form\Type\RehabCertType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Doctrine\ORM\EntityRepository;
 
 class BaseMemberType extends AbstractType{
- 
+ protected $adminyear;
     
    
 public function buildForm(FormBuilderInterface $builder, array $options)
         
     {
     
-    
+    $this->adminyear=$options['adyear'];
     
 
         $builder
@@ -110,6 +112,16 @@ public function buildForm(FormBuilderInterface $builder, array $options)
                 ->add('additionalagilactivities', SanitizedTextareaType::class, array('label' => 'weit. bewegl. Aktivitäten:', 'required' => false))
                         
                 ->add('pulseatrest', NumberType::class, array( 'label' => 'Hf-Ruhe/Min:', 'scale' => 0, 'required' => false))
+                
+                ->add('users', EntityType::class, array(
+                        'class' => 'AppBundle:MemSportsgroup',
+                        'choice_label' => 'token',
+                        'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('s')
+                                  ->where('s.validfrom <='.$this->adminyear)
+                                  ->andWhere('s.validto >'.$this->adminyear);
+                        }
+                    ))
                  
                           
           ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
@@ -119,7 +131,12 @@ public function buildForm(FormBuilderInterface $builder, array $options)
     }
     
      
-
+public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'adyear' => NULL
+        ));
+    }
 
 
     
