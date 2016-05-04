@@ -19,11 +19,8 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-
-
-
-
-
+use AppBundle\Services\FunctionManager;
+use AppBundle\Services\IndexManager;
 
 
 
@@ -160,12 +157,15 @@ class TrainerController extends Controller
      * @Route("/trainer/anlegen/{adminyear}/{letter}", defaults={"letter": "alle", "adminyear": 2016}, name="addtrainer", requirements={"letter": "[A-Z]|alle","adminyear": "[1-9][0-9]{3}"})
      */    
     public function addtrainerAction(Request $request, $letter, $adminyear) {        
+        
+        $manager= $this->getDoctrine()->getManager();
+
+        
         $trainer = new Trainer();
         $phonenumber = new TrainerPhoneNumber();
         $licence = new TrainerLicence();  
         
-        $im=  $this->get('app.index_manager')
-                   ->setEntityName('Trainer');
+        $im= new IndexManager($manager, 'Trainer');
 
         $trainerid=$im->getCurrentIndex();
         $trainer->setTrainerid($trainerid);
@@ -205,7 +205,14 @@ class TrainerController extends Controller
                     ->setValidfrom($adminyear)
                     ->setValidto('2155');
                 $manager->persist($th);              
-            }         
+            }
+            
+            foreach($trainer->getNmemsportsgroup() as $sg){
+                $sg->setSgid(uniqid('Nsg'))                        
+                    ->setValidfrom($adminyear)
+                    ->setValidto('2155');
+                $manager->persist($sg);              
+            }     
 
             $manager->persist($trainer);
           
@@ -223,7 +230,8 @@ class TrainerController extends Controller
                     'form'=>$addtrainerform->createView(),                    
                     'cletter'=>$letter,
                     'title'=>'Übungsleiter anlegen',
-                    'adminyear' => $adminyear));        
+                    'adminyear' => $adminyear,
+                    'path'=>'addtrainer'));        
     }
     
     
@@ -239,6 +247,8 @@ class TrainerController extends Controller
         $manager= $doctrine->getManager();
         
         $validfrom=$request->query->get('validfrom');
+        
+        $fm= new FunctionManager($doctrine, $adminyear);
         
         $dependencies=['Trainer\TrainerPhoneNumber', 'Trainer\TrainerFocus','Trainer\TrainerLicence'];
 
@@ -293,12 +303,13 @@ class TrainerController extends Controller
         $edittrainerform = $this->createForm(EditTrainerType::class, $trainer);
         $edittrainerform -> handleRequest($request);
         
-        $FM = new \AppBundle\Services\FunctionManager;
-
         
         if($edittrainerform->get('delete')->isClicked()){
             
-            $FM->RemoveObjects($trainer, $adminyear, $doctrine,array($trainer->getTheme(),$trainer->getPhonenumber(),$trainer->getLicence()));
+           $fm->RemoveObject($trainer, array('Trainer\TrainerFocus', 'Trainer\TrainerPhonenumber', 'Trainer\TrainerLicence'));
+//         echo ("<pre>");
+//         print_r($i);
+//        echo ("</pre>");
             
             
             $manager->flush();
@@ -310,45 +321,13 @@ class TrainerController extends Controller
                 
         if($edittrainerform->isSubmitted() && $edittrainerform->isValid()){
   
-//          foreach ($originallicences as $licence) {
-//            if (false === $trainer->getLicence()->contains($licence)) {   
-//                $FM->RemoveObjects($licence, $adminyear, $doctrine);
-//            }
-//        }
-            
-            foreach ($phonenumbers as $phonenr) {
-            if (false === $trainer->getPhonenumber()->contains($phonenr)) {         
-                $FM->RemoveObjects($phonenr, $adminyear, $doctrine);
-            }
-        }
-        
-            foreach ($focuses as $theme) {
-            if (false === $trainer->getTheme()->contains($theme)) {
-                $FM->RemoveObjects($theme, $adminyear, $doctrine);
-            }
-        }
+            $fm->HandleDependencyDiff($trainer->getLicence(), $originallicences, $adminyear);
+            $fm->HandleDependencyDiff($trainer->getPhonenumber(), $originalphonenr, $adminyear);
+            $fm->HandleDependencyDiff($trainer->getTheme(), $originalthemes, $adminyear);
 
-        
-        
-        $FM->AddObjects($trainer, $phonenumbers, $originalphonenr, 'Tpn', $adminyear, $manager, 'getPhonenumber');
-               
-        $FM->AddObjects($trainer, $focuses, $originalthemes, 'Tf', $adminyear, $manager, 'getTheme');
+            $fm->HandleObjectDiff($trainer, $trainer_old);
 
-        $FM->AddObjects($trainer, $licences, $originallicences, 'Li', $adminyear, $manager, 'getLicence');
-
-                
-            if($trainer != $trainer_old){
-            $trainer_old->setValidto($adminyear);
-            $trainer->setValidfrom($adminyear);
-            }
-             
-            $manager->persist($trainer);
             $manager->flush();
-
-            if($trainer != $trainer_old && $adminyear != $trainer_old->getValidfrom()){    
-            $manager->persist($trainer_old);   
-            $manager->flush();
-            }
             
 
             $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');
