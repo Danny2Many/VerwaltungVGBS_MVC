@@ -230,7 +230,8 @@ class TrainerController extends Controller
                     'form'=>$addtrainerform->createView(),                    
                     'cletter'=>$letter,
                     'title'=>'Übungsleiter anlegen',
-                    'adminyear' => $adminyear,));        
+                    'adminyear' => $adminyear,
+                    'path'=>'addtrainer'));        
     }
     
     
