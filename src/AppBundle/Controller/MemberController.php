@@ -35,6 +35,14 @@ class MemberController extends Controller
         
    $doctrine=$this->getDoctrine();
    
+   
+   
+//   for($i=1;$i<=1000;$i++){
+//       $smember= new Member();
+//       $smember->setFirstname('Danny');
+//       $smember->setLastname($lastname)
+//   }
+   
     $dependencies=array('Member', 'MemPhoneNumber', 'MemRehabilitationCertificate');
     
     $qb= [];
