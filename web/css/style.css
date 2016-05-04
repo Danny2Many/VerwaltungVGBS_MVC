@@ -139,13 +139,17 @@ td.red, input[type="text"].red {
 
 
 th.overhead1 {
-    background-color: #5fa8ec;
+    background-color: #75a3a3;
+    vertical-align: bottom;
+    text-align: left;
 /*    border-left: 1.5px solid black;*/
 /*    border-right: 2px solid black;*/
 }
 
 th.overhead2 {
     background-color: #A9D0F5;
+    vertical-align: bottom;
+    text-align: left;
 /*    border-left: 1.5px solid black;*/
 /*    border-right: 2px solid black;*/
 }

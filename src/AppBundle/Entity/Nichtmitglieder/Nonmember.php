@@ -27,13 +27,9 @@ protected $phonenumber;
 //protected $section;    
 //    
 //    
-///**
-//* @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup")
-//* @ORM\JoinTable(name="NonMember_Sportsgroup",
-//* joinColumns={@ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")},
-//* inverseJoinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")})
-//*/ 
+
 protected $sportsgroup; 
+
 
 /**
 * @ORM\Id
@@ -88,6 +84,8 @@ protected $validto;
 * @ORM\Column(type="integer")
 * 
 */protected $newsletter; 
+
+
     
 
     /**
@@ -286,7 +284,9 @@ protected $validto;
      */
     public function addSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup)
     {
-        $this->sportsgroup($sportsgroup);
+
+        $sportsgroup->setNmemid($this->nmemid);
+        $this->sportsgroup->add($sportsgroup);
 
         return $this;
     }
@@ -407,56 +407,6 @@ public function setPhonenumber($phonenumber)
     {
         $this->getPhonenumber()->removeElement($phonenumber);
     }
-
-
-  
-//
-//    /**
-//     * Get recorded
-//     *
-//     * @return string
-//     */
-//    public function getRecorded()
-//    {
-//        return $this->recorded;
-//    }
-//
-//    /**
-//     * Set deleted
-//     *
-//     * @param \DateTime $deleted
-//     *
-//     * @return Nonmember
-//     */
-//    public function setDeleted($deleted)
-//    {
-//        $this->deleted = $deleted;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get deleted
-//     *
-//     * @return \DateTime
-//     */
-//    public function getDeleted()
-//    {
-//        return $this->deleted;
-//    }
-//
-// 
-//
-//     /**
-//    * @ORM\PrePersist
-//    */
-//    public function setRecorded($recorded)
-//    {   
-//        $now= new \DateTime();
-//        $this->recorded = $now->format('Y-m-d');
-//
-//        return $this;
-//    }
 
     /**
      * Set newsletter

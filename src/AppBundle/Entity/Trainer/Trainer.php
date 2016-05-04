@@ -21,10 +21,12 @@ class Trainer extends PersonalData {
     
     protected $trainerid;
     
+
     public function __toString()
     {
         return (string) $this->trainerid.'/trainer/Trainer\Trainer';
     }
+
     
     /**
      * @ORM\Id
