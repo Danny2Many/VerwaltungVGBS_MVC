@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks()
  */
 class Trainer_NonMemSportsgroupSub {
+   protected $substitute;
     /**
     * @ORM\Id
     * @ORM\Column(type="integer")  
@@ -99,7 +100,32 @@ class Trainer_NonMemSportsgroupSub {
     {
         return $this->validfrom;
     }
+    
+    public function setSubstitute($substitute)
+    {   $substitute->setTrainerid($this->trainerid);
+        $this->substitute = $substitute;
 
+        return $this;
+    }
+
+    public function getSubstitute()
+    {
+        return $this->substitute;
+    }
+
+    public function addSubstitute(\AppBundle\Entity\Trainer\Trainer $substitute)
+    {
+        $substitute->setTrainerid($this->trainerid);
+        $this->substitute->add($substitute);
+
+        return $this;
+        
+    }
+
+    public function removeSubstitute(\AppBundle\Entity\Trainer\Trainer $substitute)
+    {
+        $this->substitute->removeElement($substitute);
+    }
     /**
      * Set validto
      *

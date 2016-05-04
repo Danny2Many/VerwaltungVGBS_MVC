@@ -10,7 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class NonMember_Sportsgroup {
 
-    /**
+  
+/**
 * @ORM\Id
 * @ORM\Column(type="integer")  
 */
@@ -78,7 +79,8 @@ protected $validto;
     {
         return $this->nmemid;
     }
-
+    
+  
     /**
      * Set validfrom
      *

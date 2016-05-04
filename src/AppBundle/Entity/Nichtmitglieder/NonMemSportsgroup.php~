@@ -25,6 +25,12 @@ class NonMemSportsgroup {
      * @ORM\Column(type="string") 
      */
     protected $sgid;
+    
+    public function __toString() {
+            return $this->sgid; 
+        }
+      protected $bssaid;
+      protected $bssacert;
 //    
 //    /**
 //     * @ORM\Column(type="string")
@@ -68,7 +74,10 @@ class NonMemSportsgroup {
      */
     protected $roomid;
     
-   
+
+    /**
+     * @ORM\Column(type="integer") 
+     */
     protected $trainerid;
     
     /**
@@ -79,7 +88,7 @@ class NonMemSportsgroup {
     protected $token;
     
      
-    protected $bssaid;
+  
     
     /**
     * @ORM\Column(type="integer")
@@ -160,7 +169,7 @@ class NonMemSportsgroup {
     public function addBssacert(\AppBundle\Entity\BSSACert $bssacertnr)
     {               
         $bssacertnr->setSgid($this);
-        $this->bssacert->add($bssacertnr);
+        $this->bssacertnr->add($bssacertnr);
 
         return $this;
     }
@@ -534,5 +543,29 @@ class NonMemSportsgroup {
     public function getValidto()
     {
         return $this->validto;
+    }
+
+    /**
+     * Set capacity
+     *
+     * @param integer $capacity
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setCapacity($capacity)
+    {
+        $this->capacity = $capacity;
+
+        return $this;
+    }
+
+    /**
+     * Get capacity
+     *
+     * @return integer
+     */
+    public function getCapacity()
+    {
+        return $this->capacity;
     }
 }

@@ -29,7 +29,10 @@ class NonMemSportsgroup {
     public function __toString() {
             return $this->sgid; 
         }
-    
+      protected $bssaid;
+      protected $bssacert;
+      protected $trainer;
+      protected $substitute;
 //    
 //    /**
 //     * @ORM\Column(type="string")
@@ -56,7 +59,7 @@ class NonMemSportsgroup {
     protected $day;
     
     /**
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="string")
      * @Assert\NotBlank()
      * 
      */
@@ -87,7 +90,7 @@ class NonMemSportsgroup {
     protected $token;
     
      
-    protected $bssaid;
+  
     
     /**
     * @ORM\Column(type="integer")
@@ -115,6 +118,19 @@ class NonMemSportsgroup {
     public function getSgid()
     {
         return $this->sgid;
+    }
+    /**
+     * Set sgid
+     *
+     * @param integer $sgid
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setSgid($sgid)
+    {
+        $this->sgid = $sgid;
+
+        return $this;
     }
 //
 //    /**
@@ -164,24 +180,6 @@ class NonMemSportsgroup {
 //    {
 //        return $this->type;
 //    }
-
-    public function addBssacert(\AppBundle\Entity\BSSACert $bssacertnr)
-    {               
-        $bssacertnr->setSgid($this);
-        $this->bssacertnr->add($bssacertnr);
-
-        return $this;
-    }
-    
-    
-        public function addTrainers(\AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $trainers)
-    {               
-        $trainers->setSgid($this);
-        $this->trainers->add($trainers);
-
-        return $this;
-    }
-    
     
     /**
      * Set name
@@ -439,19 +437,9 @@ class NonMemSportsgroup {
         return $this->deleted;
     }
 
-    /**
-     * Set sgid
-     *
-     * @param integer $sgid
-     *
-     * @return NonMemSportsgroup
-     */
-    public function setSgid($sgid)
-    {
-        $this->sgid = $sgid;
-
-        return $this;
-    }
+    
+    
+    
 
     /**
      * Add trainerid
@@ -500,16 +488,104 @@ class NonMemSportsgroup {
     {
         return $this->bssaid;
     }
-  
- 
-    public function setValidfrom($validfrom)
-    {
-        
-        $this->validfrom = $validfrom;
+    public function setSubstitute($substitute)
+    {   $substitute->setSgid($this->sgid);
+        $this->substitute = $substitute;
 
         return $this;
     }
 
+   
+    public function getSubstitute()
+    {
+        return $this->substitute;
+    }
+
+
+    public function addSubstitute(\AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $substitute)
+    {
+        $substitute->setSgid($this->sgid);
+        $this->substitute->add($substitute);
+
+        return $this;
+        
+    }
+
+ 
+    public function removeSubstitute(\AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $substitute)
+    {
+        $this->substitute->removeElement($substitute);
+    }
+    public function setTrainer($trainer)
+    {   $trainer->setSgid($this->sgid);
+        $this->trainer = $trainer;
+
+        return $this;
+    }
+
+   
+    public function getTrainer()
+    {
+        return $this->trainer;
+    }
+
+
+    public function addTrainer(\AppBundle\Entity\Trainer\Trainer $trainer)
+    {
+        $trainer->setSgid($this->sgid);
+        $this->trainer->add($trainer);
+
+        return $this;
+        
+    }
+
+ 
+    public function removeTrainer(\AppBundle\Entity\Trainer\Trainer $trainer)
+    {
+        $this->trainer->removeElement($trainer);
+    }
+    
+    public function setBssacert($bssacert)
+    {   $bssacert->setSgid($this->sgid);
+        $this->bssacert = $bssacert;
+
+        return $this;
+    }
+
+   
+    public function getBssacert()
+    {
+        return $this->bssacert;
+    }
+
+
+    public function addBssacert(\AppBundle\Entity\BSSACert $bssacert)
+    {
+        $bssacert->setSgid($this->sgid);
+        $this->bssacert->add($bssacert);
+
+        return $this;
+        
+    }
+
+ 
+    public function removeBssacert(\AppBundle\Entity\BSSACert $bssacert)
+    {
+        $this->bssacert->removeElement($bssacert);
+    }
+ /**
+     * Set validfrom
+     *
+     * @param  string $validfrom
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setValidfrom($validfrom)
+    {
+        $this->validfrom = $validfrom;
+
+        return $this;
+    }
     /**
      * Get validfrom
      *

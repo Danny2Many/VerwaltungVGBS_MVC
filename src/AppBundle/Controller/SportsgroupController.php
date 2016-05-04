@@ -195,18 +195,18 @@ class SportsgroupController extends Controller {
      
      $manager=$this->getDoctrine()->getManager();    
      $nonmemsportsgroup = new NonMemSportsgroup();
-//     $bssacertnr = new BSSACert();
+//     $bssacert = new BSSACert();
 //     $trainers = new Trainer_NonMemSportsgroupSub();
-//     
+     
 //     $im=  $this->get('app.index_manager')
 //                   ->setEntityName('Sportsgroup');
      
-     $im=new IndexManager($manager, 'Sportsgroup');
+     $im=new IndexManager($manager, 'NonMemSportsgroup');
      
      $sgid=$im->getCurrentIndex();
      $nonmemsportsgroup->setSgid($sgid);
      
-//     $nonmemsportsgroup->addBssacert($bssacertnr);
+//     $nonmemsportsgroup->addBssacert($bssacert);
 //     $nonmemsportsgroup->addTrainers($trainers);
      
      $addnonmemsportsgroupform = $this->createForm(AddSportsgroupType::class, $nonmemsportsgroup); 
@@ -218,9 +218,9 @@ class SportsgroupController extends Controller {
                     ->setValidto('2155');  
 
 //        foreach($nonmemsportsgroup->getBssacert() as $bs){
-//                $bs->setbssacertnr(uniqid('bs'))
-//           ->Validfrom($adminyear)
-//           ->Validto('2155');       
+//                $bs->setBssaid(uniqid('bs'))
+//           ->setValidfrom($adminyear)
+//           ->setValidto('2155');       
 //        $manager->persist($bs);}
         
         $manager->persist($nonmemsportsgroup);
@@ -228,8 +228,7 @@ class SportsgroupController extends Controller {
         
         $im->add();
         $this->addFlash('notice', 'Diese Nichtmitglieder-Sportgruppe wurde erfolgreich angelegt');
-         
-        return $this->redirectRoute('sportsgroup_home', array('letter'=>$letter));
+        return $this->redirectToRoute('sportsgroup_home', array('letter'=>$letter, 'adminyear' => $adminyear));
      }
      
     return $this->render(

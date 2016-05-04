@@ -30,6 +30,7 @@ protected $phonenumber;
 
 protected $sportsgroup; 
 
+
 /**
 * @ORM\Id
 * @ORM\Column(type="integer")  
@@ -83,6 +84,8 @@ protected $validto;
 * @ORM\Column(type="integer")
 * 
 */protected $newsletter; 
+
+
     
 
     /**
