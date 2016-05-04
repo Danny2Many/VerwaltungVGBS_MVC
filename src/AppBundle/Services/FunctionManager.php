@@ -128,27 +128,35 @@ class FunctionManager {
     $manager=$this->doctrine->getManager();
   
     //if the object has dependencies
-    if($dependencies!=null){
+    if($dependencies!=null){        
+            foreach($dependencies as $dependi){           
+
+            $qb=$this->doctrine->getRepository('AppBundle:'.$dependi)->createQueryBuilder('ditto');                
+            $qb->where('ditto.validto>='.$this->adminyear)
+                ->andWhere('ditto.'.$metadata['idprefix'].'id=:id')
+                ->setParameter('id', $metadata['id']);
+            $dependencies_[]=$qb->getQuery()->getResult();
         
-        foreach($dependencies as $depend){
+            }
+        foreach($dependencies_ as $depend){           
+
             foreach($depend as $dep){
 
-
                 $this->RemoveObject($dep);
+
             }
-        }
-        
+        }        
     }    
         // if its still valid
         if($object->getValidto()== '2155'){
-            
-            if($object->getValidfrom()== $this->adminyear){
+
+            if($object->getValidfrom()>= $this->adminyear){
                 $manager->remove($object);
             }else{    
+
                 $object->setValidto($this->adminyear);
                 $manager->persist($object);
             }
-            
         }else{                
 
             $object->setValidto($this->adminyear);
@@ -159,7 +167,6 @@ class FunctionManager {
                 ->andWhere('ditto.'.$metadata['idprefix'].'id=:id')
                 ->setParameter('id', $metadata['id']);
             $delete=$qb->getQuery()->getResult();
-
             foreach ($delete as $del){
                 $manager->remove($del);
             }
