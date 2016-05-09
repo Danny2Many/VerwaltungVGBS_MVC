@@ -48,14 +48,6 @@ class AddTrainerType extends AbstractType{
         ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))
         ->add('reset', ResetType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'zurücksetzen'))
                 
-        ->add('nmemsportsgroup', EntityType::class,  array(
-            'class' => 'AppBundle:Nichtmitglieder\NonMemSportsgroup',
-            'choice_label' => 'Name',
-            'multiple' => true,
-            'expanded' => true,
-            'label' => 'Sportgruppe/en:',
-            'required' => false))
-                
         ->add('theme', CollectionType::class, array('entry_type' => TrainerFocusType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\Trainer\TrainerFocus'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
         ->add('licence', CollectionType::class, array('entry_type' => TrainerLicenceType::class,'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
 

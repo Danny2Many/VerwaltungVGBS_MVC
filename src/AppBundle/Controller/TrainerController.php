@@ -340,8 +340,9 @@ class TrainerController extends Controller
             'form' => $edittrainerform->createView(),
             'cletter' => $letter,
             'title' => 'Trainer bearbeiten',
-            'adminyear' => $adminyear
-
+            'adminyear' => $adminyear,
+            'path'=>'edittrainer',
+            'ID'=>$ID,
             ));
     }
 }
