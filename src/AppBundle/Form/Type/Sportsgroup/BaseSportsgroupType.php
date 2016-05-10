@@ -17,14 +17,14 @@ class BaseSportsgroupType extends AbstractType{
         
         ->add('name', SanitizedTextType::class, array ('label' => 'Sportgruppe:'))
         ->add('trainer', EntityType::class, array (
-            'class' => 'AppBundle:Trainer\Trainer',
+            'class' => 'AppBundle:Nichtmitglieder\Trainer_NonMemSportsgroupSub',
             'choice_label' => 'lastname',
             'multiple' => true,
             'required' => false,'label' => 'Übungsleiter:'))
                 
         ->add('substitute', EntityType::class, array(
             'class' => 'AppBundle:Nichtmitglieder\Trainer_NonMemSportsgroupSub',
-            'choice_label' => 'trainderid',
+            'choice_label' => 'trainerid',
             'multiple' => true,
             'required' => false,
             'label' => 'Vertretungsmöglichkeiten:'            

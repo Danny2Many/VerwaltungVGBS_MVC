@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Nichtmitglieder;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
@@ -33,20 +34,7 @@ class NonMemSportsgroup {
       protected $bssacert;
       protected $trainer;
       protected $substitute;
-//    
-//    /**
-//     * @ORM\Column(type="string")
-//        * @Assert\NotBlank()
-//     * @Assert\Choice(choices = {"Mitglieder", "Nichtmitglieder"}, message = "Bitte wählen Sie eine gültige Kategorie.")
-//     */
-//    protected $category;
-//    
-//    /**
-//     * @ORM\Column(type="string")
-//     */
-//    protected $type;
-//    
-    /**
+      /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank()
      */
@@ -89,9 +77,6 @@ class NonMemSportsgroup {
      */
     protected $token;
     
-     
-  
-    
     /**
     * @ORM\Column(type="integer")
     */
@@ -108,7 +93,12 @@ class NonMemSportsgroup {
     */
     protected $validto;
 
-
+    /** @ORM\PostLoad */
+    public function __construct() {
+        
+    //        $this->sportsgroup = new ArrayCollection();
+        $this->bssacert = new ArrayCollection();
+    }
 
     /**
      * Get sgid
@@ -337,13 +327,6 @@ class NonMemSportsgroup {
     {
         return $this->token;
     }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->section = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Add section
@@ -535,12 +518,12 @@ class NonMemSportsgroup {
     }
     
     /**
-* Set Bssacert
-*
-* @param string $bssacert
-*
-* @return NonMemPhoneNumber
-*/
+    * Set Bssacert
+    *
+    * @param integer $bssacert
+    *
+    * @return NonMemPhoneNumber
+    */
     public function setBssacert($bssacert)
     {   
         $this->bssacert = $bssacert;
@@ -561,7 +544,7 @@ class NonMemSportsgroup {
 
     public function addBssacert(\AppBundle\Entity\BSSACert $bssacert)
     {
-        $bssacert->setSgid($this);
+        $bssacert->setSgid($this->sgid);
         $this->bssacert->add($bssacert);
 
         return $this;

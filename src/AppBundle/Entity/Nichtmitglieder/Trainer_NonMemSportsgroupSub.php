@@ -52,7 +52,30 @@ class Trainer_NonMemSportsgroupSub {
     {
         return $this->trainerid;
     }
+    /**
+     * Add trainerid
+     *
+     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
+     *
+     * @return Trainer_NonMemSportsgroupSub
+     */
+    public function addTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
+    {
+        $this->trainerid[] = $trainerid;
 
+        return $this;
+    }
+
+    /**
+     * Remove trainerid
+     *
+     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
+     */
+    public function removeTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
+    {
+        $this->trainerid->removeElement($trainerid);
+    }
+    
     /**
      * Set sgid
      *
