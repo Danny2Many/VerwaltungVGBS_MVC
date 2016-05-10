@@ -42,6 +42,7 @@
     <th>Postfach</th>
     <th>Art</th>
     <th>Nichtmitglieder <br> Sportgruppe/n</th>
+    <th>Vertretung für</th>
     <th>Schwerpunkt</th>
     <th>Lizenz</th>
     <th>Lizenz-Nr.</th>
@@ -105,6 +106,18 @@
             
             {% if trainerdependentlist[data.trainerid]['nmemsportsgroups'] is defined %}
                 {% set nms =trainerdependentlist[data.trainerid]['nmemsportsgroups'] %}
+                {% else %}
+                    {% set nms ='' %}  
+            {% endif %}
+            
+            <td>{% for SG in nms %}
+                        {{ SG.name }}<br>
+                        {% else  %}
+                        {{ "-" }}    
+                    {% endfor %}</td>
+                    
+                    {% if trainerdependentlist[data.trainerid]['nmemsportsgroupssub'] is defined %}
+                {% set nms =trainerdependentlist[data.trainerid]['nmemsportsgroupssub'] %}
                 {% else %}
                     {% set nms ='' %}  
             {% endif %}
