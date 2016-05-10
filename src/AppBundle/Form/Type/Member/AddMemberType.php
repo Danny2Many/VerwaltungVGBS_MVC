@@ -28,6 +28,7 @@ class AddMemberType extends BaseMemberType {
 {
     $resolver->setDefaults(array(
         'data_class' => 'AppBundle\Entity\Member',
+        'adyear' => NULL
         
     ));
 }
