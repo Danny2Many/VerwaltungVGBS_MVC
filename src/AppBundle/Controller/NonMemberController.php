@@ -19,6 +19,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use AppBundle\Form\SanitizedTextType;
 
+use AppBundle\Services\FunctionManager;
+use AppBundle\Services\IndexManager;
+
 class NonMemberController extends Controller {
     /**
      * @Route("/nichtmitglieder/{adminyear}/{letter}", defaults={"letter"="A", "adminyear"=2016}, name="nonmember_home", requirements={"letter": "[A-Z]", "adminyear": "[1-9][0-9]{3}"})
@@ -39,9 +42,9 @@ class NonMemberController extends Controller {
 //                    ->setParameter('adminyear', $adminyear);
     }
         
-                echo '<pre>';
-            print_r($qb['Nichtmitglieder\NonMemPhoneNumber']->getQuery()->getResult());
-            echo '</pre>';
+//                echo '<pre>';
+//            print_r($qb['Nichtmitglieder\NonMemPhoneNumber']->getQuery()->getResult());
+//            echo '</pre>';
     
     $choices=array('Nichtmitgliedsnr.' => 'nmemid',
         'Name' => 'lastname',
@@ -168,12 +171,12 @@ class NonMemberController extends Controller {
      */
     public function addnonmeberAction(Request $request, $letter, $adminyear){
       
+    $manager= $this->getDoctrine()->getManager();
 
     $nonmember = new Nonmember ();
     $phonenumber = new NonMemPhoneNumber();   
-    $im=  $this->get('app.index_manager')
-
-                   ->setEntityName('NonMember');
+    $im=  new IndexManager ($manager,'NonMember');
+            
 
     
     $nmemid=$im->getCurrentIndex();
@@ -239,8 +242,10 @@ class NonMemberController extends Controller {
     $doctrine=$this->getDoctrine();   
     $manager= $doctrine->getManager();
     
+    $fm= new FunctionManager($doctrine, $adminyear);
+    
     $validfrom=$request->query->get('version');
-    $dependencies=array('Nichtmitglieder\Nonmember', 'Nichtmitglieder\NonMemPhoneNumber', 'Nichtmitglieder\NonMemRehabilitationCertificate');
+    $dependencies=array( 'Nichtmitglieder\NonMemPhoneNumber', 'Nichtmitglieder\NonMemRehabilitationCertificate');
 
     
     $qb=[];
@@ -299,109 +304,24 @@ class NonMemberController extends Controller {
         $editnonmemform->handleRequest($request);
          
         if($editnonmemform->get('delete')->isClicked()){
-            $manager->remove($nonmember);
-            $manager->flush();
+           
+            $fm->RemoveObject($nonmember, array('Nichtmitglieder\NonMemPhoneNumber', 'Nichtmitglieder\NonMemRehabilitationCertificate'));
+           
+           $manager->flush();
             $this->addflash('notice', 'Dieses Nichtmitglied wurde erfolgreich gelöscht!');
             return $this->redirectToRoute('nonmember_home', array('letter' => $letter, 'info' => 'entfernt'));
         
         }
         //if the form is valid -> persist it to the database
        if($editnonmemform->isSubmitted() && $editnonmemform->isValid()){ 
-//            if(!$nonmember->getSportsgroup()->isEmpty()){      
-//            foreach ($nonmember->getSportsgroup() as $sportsgroup) {
-//                foreach ($originalsections as $section) {
-//                    if (false === $sportsgroup->getSection()->contains($section)) {
-//                        $nonmember->removeSection($section);
-//                    }
-//                }
-//            }
-//
-//            foreach($nonmember->getSportsgroup() as $sportsgroup){
-//                foreach($sportsgroup->getSection() as $section){
-//                    $nonmember->addSection($section);
-//                }
-//            }
-//
-//        }else{
-//            $nonmember->getSection()->clear();
 
-        
-           
-        $FM = new \AppBundle\Services\FunctionManager;  
-            
-            $FM->AddObjects($nonmember, $phonenumbers, $originalphonenr, 'Pn', $adminyear, $manager, 'getPhonenumber');
-            
-            $FM->AddObjects($nonmember, $rehabcerts, $originalrehabs, 'Rc', $adminyear, $manager, 'getRehabilitationcertificate');
+            $fm->HandleDependencyDiff($nonmember->getRehabilitationcertificate(), $originalrehabs, $adminyear);
+            $fm->HandleDependencyDiff($nonmember->getPhonenumber(), $origininalphonenr, $adminyear);
 
-        
-        
-        if($nonmember != $nonmemberoriginal){
-            if($adminyear != $nonmember->getValidfrom()){
-                
-                $nonmemberoriginal->setValidto($adminyear);
-                $nonmember->setValidfrom($adminyear);
-                
-                $manager->persist($nonmember);
-                $manager->flush();
-                $manager->persist($nonmemberoriginal);
-            }
-            else{
-                $manager->persist($nonmember);
-            }
-        }   
-           
-//       foreach ($nonmember->getRehabilitationcertificate() as $rehab) {
-//            if ($originalrehabs->contains($rehab) === false) {
-//                
-//                $rehab->setValidfrom($adminyear)
-//                      ->setValidto('2155');
-//                $manager->persist($rehab);
-//          }else{
-//              $originalrehab=$originalrehabs->get($rehab);
-//             if($rehab != $originalrehab){
-//                 $rehab->setValidfrom($adminyear);
-//                 $originalrehab->setValidto($adminyear);
-//                 $originalrehabs->removeElement($originalrehab);
-//                 $manager->persist($rehab);
-//                 $manager->persist($originalrehab);
-//             } 
-//          }
-//        } 
-            
-//         foreach ($originalphonenr as $phonenr) {
-//            if (false === $nonmember->getPhonenumber()->contains($phonenr)) {         
-//                $manager->remove($phonenr);
-//            }
-       
+            $fm->HandleObjectDiff($nonmember, $nonmember_old);
 
-        
-        foreach($nonmember->getPhonenumber() as $pn){
-                if (false == $originalphonenr->contains($pn)) {
-                     $pn->setPnid(uniqid('pn'))
-                        ->setValidfrom($adminyear)
-                        ->setValidto('2155');
-                     $manager->persist($pn);              
-                }else{
-                    $pn_new = clone $pn;
-                    $pn->setPhonenumber($originalphonenr->get(0)->getPhonenumber())
-                        ->setValidto($adminyear);
-                    
-                    $pn_new->setValidfrom($adminyear);
-                    $manager->persist($pn);
-                    $manager->persist($pn_new);
-                }            
-        }
-            if($nonmember != $nonmember_old){
-                $nonmember_old->setValidto($adminyear);
-                $nonmember->setValidfrom($adminyear); 
-            }            
-            $manager->persist($nonmember);
-            $manager->flush();   
-            
-            if($nonmember != $nonmember_old && $adminyear != $nonmember_old->getValidfrom()){
-            $manager->persist($nonmember_old);   
             $manager->flush();
-            }
+            
             
             $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');
             return $this->redirectToRoute('nonmember_home', array('letter' => $letter, 'adminyear' => $adminyear));    

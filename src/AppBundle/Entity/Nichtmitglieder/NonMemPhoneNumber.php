@@ -30,6 +30,11 @@ class NonMemPhoneNumber {
      */
     protected $nmemid;   
     
+    public function __toString()
+    {
+        return (string) $this->nmemid.'/pn/Nichtmitglieder\NonMemPhoneNumber';
+    }
+    
     /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank()
@@ -41,6 +46,7 @@ class NonMemPhoneNumber {
     protected $phonenumber;
     
     /**
+     * @ORM\Id 
     * @ORM\Column(type="string")
     */
     protected $validfrom;
