@@ -21,9 +21,10 @@ class BaseSportsgroupType extends AbstractType{
             'choice_label' => 'lastname',
             'multiple' => true,
             'required' => false,'label' => 'Übungsleiter:'))
+                
         ->add('substitute', EntityType::class, array(
             'class' => 'AppBundle:Nichtmitglieder\Trainer_NonMemSportsgroupSub',
-            'choice_label' => 'substitute',
+            'choice_label' => 'trainderid',
             'multiple' => true,
             'required' => false,
             'label' => 'Vertretungsmöglichkeiten:'            
@@ -32,7 +33,7 @@ class BaseSportsgroupType extends AbstractType{
              'choices_as_values' => true,
             'label' => 'Wochentag:'))
         ->add('time', SanitizedTextType::class, array ('label' => 'Uhrzeit:'))
-        ->add('roomid', SanitizedTextType::class, array ('label' => 'Räumlichkeit:'))        
+        ->add('roomid', SanitizedTextType::class, array ('label' => 'Räumlichkeiten:','required' => false))        
         ->add('capacity', SanitizedTextType::class, array ('label' => 'Kapazität:'))        
         ->add('info',SanitizedTextType::class, array ('label' => 'Info:','required' => false))
         ->add('token', SanitizedTextType::class, array ('label' => 'Gruppenbezeichnung:','required' => false))

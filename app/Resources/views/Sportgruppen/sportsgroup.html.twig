@@ -74,7 +74,18 @@
         <td>{{ data.name|striptags }}</td>
         <td>{{ data.info|striptags }}</td> 
         <td>{{ data.time|date("h:i") }}</td>
-        <td>{{ data.roomid|striptags }}</td> 
+        {% if sportsgroupdependentlist[data.roomid]['rooms'] is defined %}
+        {% set rooms =sportsgroupdependentlist[data.roomid]['rooms'] %}
+        {% else %}
+          {% set rooms  ='' %}  
+        {% endif %}
+        <td>{% for RO in rooms %}                     
+               {{RO.roomname }}
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %}
+            
+{#/******************************************************** #} 
         <td>{{ data.token|striptags }}</td>
         <td>{{ data.sgid|striptags }}</td>
         {% if sportsgroupdependentlist[data.trainerid]['trainers'] is defined %}

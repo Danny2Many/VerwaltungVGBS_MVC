@@ -132,54 +132,6 @@ class NonMemSportsgroup {
 
         return $this;
     }
-//
-//    /**
-//     * Set category
-//     *
-//     * @param string $category
-//     *
-//     * @return NonMemSportsgroup
-//     */
-//    public function setCategory($category)
-//    {
-//        $this->category = $category;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get category
-//     *
-//     * @return string
-//     */
-//    public function getCategory()
-//    {
-//        return $this->category;
-//    }
-//
-//    /**
-//     * Set type
-//     *
-//     * @param string $type
-//     *
-//     * @return NonMemSportsgroup
-//     */
-//    public function setType($type)
-//    {
-//        $this->type = $type;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get type
-//     *
-//     * @return string
-//     */
-//    public function getType()
-//    {
-//        return $this->type;
-//    }
     
     /**
      * Set name
@@ -302,6 +254,30 @@ class NonMemSportsgroup {
     }
 
     /**
+     * Add trainerid
+     *
+     * @param \AppBundle\Entity\Rooms $roomid
+     *
+     * @return NonMemSportsgroup
+     */
+    public function addRoomid(\AppBundle\Entity\Rooms $roomid)
+    {
+        $this->roomid[] = $roomid;
+
+        return $this;
+    }
+
+    /**
+     * Remove roomid
+     *
+     * @param \AppBundle\Entity\Rooms $roomid
+     */
+    public function removeRoomid(\AppBundle\Entity\Rooms $roomid)
+    {
+        $this->trainerid->removeElement($roomid);
+    }
+    
+    /**
      * Set trainerid
      *
      * @param integer $trainerid
@@ -314,7 +290,20 @@ class NonMemSportsgroup {
 
         return $this;
     }
+    public function addRoomdid(\AppBundle\Entity\Rooms $rooms)
+    {
+        $rooms->setNMemID($this->nmemid);
+        $this->rehabilitationcertificate->add($rooms);
 
+        return $this;
+        
+    }
+
+ 
+    public function removeRehabilitationcertificate(\AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate $rehabilitationcertificate)
+    {
+        $this->rehabilitationcertificate->removeElement($rehabilitationcertificate);
+    }
     /**
      * Get trainerid
      *
@@ -545,14 +534,25 @@ class NonMemSportsgroup {
         $this->trainer->removeElement($trainer);
     }
     
+    /**
+* Set Bssacert
+*
+* @param string $bssacert
+*
+* @return NonMemPhoneNumber
+*/
     public function setBssacert($bssacert)
-    {   $bssacert->setSgid($this->sgid);
+    {   
         $this->bssacert = $bssacert;
 
         return $this;
     }
 
-   
+   /**
+    * Get Bssacert
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
     public function getBssacert()
     {
         return $this->bssacert;
@@ -561,7 +561,7 @@ class NonMemSportsgroup {
 
     public function addBssacert(\AppBundle\Entity\BSSACert $bssacert)
     {
-        $bssacert->setSgid($this->sgid);
+        $bssacert->setSgid($this);
         $this->bssacert->add($bssacert);
 
         return $this;

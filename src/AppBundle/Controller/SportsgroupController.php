@@ -33,7 +33,7 @@ class SportsgroupController extends Controller {
     }     
          
     $doctrine = $this->getDoctrine();
-    $dependencies=array('Nichtmitglieder\NonMemSportsgroup', 'BSSACert', 'Nichtmitglieder\Nonmember', 'Nichtmitglieder\Trainer_NonMemSportsgroupSub' , 'Trainer\Trainer', 'Nichtmitglieder\NonMember_Sportsgroup');
+    $dependencies=array('Nichtmitglieder\NonMemSportsgroup', 'BSSACert', 'Nichtmitglieder\Nonmember', 'Nichtmitglieder\Trainer_NonMemSportsgroupSub' , 'Trainer\Trainer', 'Nichtmitglieder\NonMember_Sportsgroup', 'Rooms');
     $qb=[];
        foreach($dependencies as $dependent){
   
@@ -104,6 +104,7 @@ class SportsgroupController extends Controller {
     $trainerlist=$qb['Trainer\Trainer']->getQuery()->getResult();
     $nonmemberlist=$qb['Nichtmitglieder\Nonmember']->getQuery()->getResult();
     $sportsgroupnonmemberlist=$qb['Nichtmitglieder\NonMember_Sportsgroup']->getQuery()->getResult();
+    $roomlist=$qb['Rooms']->getQuery()->getResult();
     
     $sportsgroupdependentlist=[];
     foreach ($bssacertlist as $bs){
@@ -112,6 +113,11 @@ class SportsgroupController extends Controller {
         $sportsgroupdependentlist[$bs->getSgid()]['validfrom'][]=$bs; 
         $sportsgroupdependentlist[$bs->getSgid()]['groupnr'][]=$bs; 
         $sportsgroupdependentlist[$bs->getSgid()]['bssacertnr'][]=$bs; 
+    }
+     foreach ($roomlist as $ro){
+        
+        $sportsgroupdependentlist[$ro->getRoomid()]['rooms'][]=$ro; 
+        
     }
     
     foreach ($trainerlist as $tr){
@@ -187,6 +193,8 @@ class SportsgroupController extends Controller {
          'path' => 'sportsgroup_home'
          ));
 }
+//-------------------------------------------------------------------------------------------------   
+
     /**
      * @Route("/sportgruppen/anlegen/{adminyear}/{letter}", defaults={"letter": "alle", "adminyear": 2016}, name="addsportsgroup", requirements={"letter": "[A-Z]|alle" ,"adminyear": "[1-9][0-9]{3}"})
      * 
@@ -195,8 +203,8 @@ class SportsgroupController extends Controller {
      
      $manager=$this->getDoctrine()->getManager();    
      $nonmemsportsgroup = new NonMemSportsgroup();
-//     $bssacert = new BSSACert();
-//     $trainers = new Trainer_NonMemSportsgroupSub();
+     $bssacert = new BSSACert();
+     $trainers = new Trainer_NonMemSportsgroupSub();
      
 //     $im=  $this->get('app.index_manager')
 //                   ->setEntityName('Sportsgroup');
@@ -206,8 +214,8 @@ class SportsgroupController extends Controller {
      $sgid=$im->getCurrentIndex();
      $nonmemsportsgroup->setSgid($sgid);
      
-//     $nonmemsportsgroup->addBssacert($bssacert);
-//     $nonmemsportsgroup->addTrainers($trainers);
+     $nonmemsportsgroup->addBssacert($bssacert);
+     $nonmemsportsgroup->addTrainers($trainers);
      
      $addnonmemsportsgroupform = $this->createForm(AddSportsgroupType::class, $nonmemsportsgroup); 
      $addnonmemsportsgroupform->handleRequest($request);
@@ -217,11 +225,11 @@ class SportsgroupController extends Controller {
         $nonmemsportsgroup->setValidfrom($adminyear)
                     ->setValidto('2155');  
 
-//        foreach($nonmemsportsgroup->getBssacert() as $bs){
-//                $bs->setBssaid(uniqid('bs'))
-//           ->setValidfrom($adminyear)
-//           ->setValidto('2155');       
-//        $manager->persist($bs);}
+        foreach($nonmemsportsgroup->getBssacert() as $bs){
+                $bs->setBssaid(uniqid('bs'))
+           ->setValidfrom($adminyear)
+           ->setValidto('2155');       
+        $manager->persist($bs);}
         
         $manager->persist($nonmemsportsgroup);
         $manager->flush();
@@ -240,9 +248,13 @@ class SportsgroupController extends Controller {
           'adminyear' => $adminyear
           ));
      }
+//-------------------------------------------------------------------------------------------------   
+    /**
+     * @Route{"/sportgruppen/bearbeiten/{adminyear}/{letter}", defaults={"letter": "alle"}, requirements={"letter": "[A-Z]|alle"}, name="editsportsgroup")
+     * 
+     */       
+     public function editsportsgroupAction(Request $request, $adminyear, $ID, $letter){
      
-     
-     
-     
+    }
      
 }
