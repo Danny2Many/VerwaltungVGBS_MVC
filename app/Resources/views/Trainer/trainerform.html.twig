@@ -37,7 +37,9 @@
         
             <div class="row">
                 <div class="col-md-12">   
-                    
+                
+                    {% if ID is not defined %}
+
                     <div class="dropdown">
                         
                         <button class="btn btn-info btn-lg dropdown-toggle" type="button" data-toggle="dropdown">Verwaltungsjahr: {{ adminyear }}
@@ -48,12 +50,22 @@
                             {% set start_year = end_year - 5 %}
                                         
                             {% for year in end_year..start_year %}
-                                <li class="{% if year == adminyear %}active{% endif %}"><a href="{{path(path, {'adminyear': year})}}">{{year}}</a></li>
+                                <li class="{% if year == adminyear %}active{% endif %}"><a href="
+                                                                                           
+                                        {% if ID is defined %}
+                                            {{path(path, {'adminyear': year, 'ID': ID })}}">{{year}}
+                                        {% else %}
+                                            {{path(path, {'adminyear': year })}}">{{year}}
+                                        {% endif %}
+                                        
+                                    </a></li>
                             {% endfor %}
                         
                         </ul>
                     </div>
                     
+                    {% endif %}        
+                            
                 <legend><h2>Stammdaten</h2></legend>
 
                               

@@ -57,6 +57,10 @@ class Trainer extends PersonalData {
     
     
     protected $nmemsportsgroup;
+    
+
+    protected $nmemsportsgroupsub;
+
 
 
     /**
@@ -82,6 +86,7 @@ class Trainer extends PersonalData {
         $this->phonenumber = new ArrayCollection();
         $this->theme = new ArrayCollection();
         $this->nmemsportsgroup = new ArrayCollection();
+        $this->nmemsportsgroupsub = new ArrayCollection();
         }
 
     /**
@@ -331,6 +336,49 @@ class Trainer extends PersonalData {
     public function setNmemsportsgroup($nmemsportsgroup)
     {
         $this->nmemsportsgroup = $nmemsportsgroup;
+
+        return $this;
+    }
+    
+    public function addNmemsportsgroupsub(\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $nmemsportsgroupsub)
+    {
+        $nmemsportsgroupsub->setTrainerid($this);
+
+        $this->nmemsportsgroupsub->add($nmemsportsgroupsub);
+
+        return $this;
+    }
+
+    /**
+     * Remove nmemsportsgroupsub
+     *
+     * @param \AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $nmemsportsgroupsub
+     */
+    public function removeNmemsportsgroupsub(\AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $nmemsportsgroupsub)
+    {
+        $this->nmemsportsgroup->removeElement($nmemsportsgroupsub);
+    }
+
+    /**
+     * Get nmemsportsgroupsub
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNmemsportsgroupsub()
+    {
+        return $this->nmemsportsgroupsub;
+    }
+    
+    /**
+     * Set nmemsportsgroupsub
+     *
+     * @param string $nmemsportsgroupsub
+     *
+     * @return Trainer_NonMemSportsgroupSub
+     */
+    public function setNmemsportsgroupsub($nmemsportsgroupsub)
+    {
+        $this->nmemsportsgroupsub = $nmemsportsgroupsub;
 
         return $this;
     }

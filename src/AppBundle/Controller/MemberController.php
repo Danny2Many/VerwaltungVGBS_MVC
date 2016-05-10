@@ -396,7 +396,7 @@ class MemberController extends Controller
         
         if($editmemform->get('delete')->isClicked()){
 
-            $fm->RemoveObject($member,array($member->getRehabilitationcertificate(),$member->getPhonenumber()));;
+            $fm->RemoveObject($member,array('MemPhoneNumber', 'MemRehabilitationCertificate'));;
             $manager->flush();
             $this->addFlash('notice', 'Dieses Mitglied wurde erfolgreich gelöscht!');
             return $this->redirectToRoute('member_home', array('letter' => $letter, 'adminyear' => $adminyear));
@@ -410,6 +410,7 @@ class MemberController extends Controller
        
                 $fm->HandleDependencyDiff($member->getRehabilitationcertificate(), $originalrehabs, $adminyear);
                 $fm->HandleDependencyDiff($member->getPhonenumber(), $originalphonenrs, $adminyear);
+                
                 $fm->HandleObjectDiff($member, $memberoriginal);
 
                 $manager->flush();

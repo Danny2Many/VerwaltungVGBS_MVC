@@ -33,7 +33,7 @@ class TrainerController extends Controller
     {       
         
         $doctrine=$this->getDoctrine();
-        $dependencies=['Trainer\Trainer', 'Trainer\TrainerPhoneNumber', 'Trainer\TrainerFocus','Trainer\TrainerLicence', 'Nichtmitglieder\NonMemSportsgroup'];
+        $dependencies=['Trainer\Trainer', 'Trainer\TrainerPhoneNumber', 'Trainer\TrainerFocus','Trainer\TrainerLicence', 'Nichtmitglieder\NonMemSportsgroup', 'Nichtmitglieder\Trainer_NonMemSportsgroupSub'];
     
         $qb= [];
         
@@ -109,7 +109,12 @@ class TrainerController extends Controller
     $licencelist=$qb['Trainer\TrainerLicence']->getQuery()->getResult();
     $focuslist=$qb['Trainer\TrainerFocus']->getQuery()->getResult();
     $nmemsportsgrouplist=$qb['Nichtmitglieder\NonMemSportsgroup']->getQuery()->getResult();
+    $nmemsportsgroupsublist=$qb['Nichtmitglieder\Trainer_NonMemSportsgroupSub']->getQuery()->getResult();
 
+    
+//         echo ("<pre>");
+//         print_r($nmemsportsgroupsublist);
+//        echo ("</pre>");
 
      
  
@@ -134,7 +139,19 @@ class TrainerController extends Controller
          
          $trainerdependentlist[$sg->getTrainerid()]['nmemsportsgroups'][]=$sg;
      }
+     
+     foreach ($nmemsportsgroupsublist as $sgs){
+         
+         $trainerdependentlist[$sgs->getTrainerid()]['nmemsportsgroupssub'][$sgs->getSgid()]=$sgs->getSgid();
+     }
 
+        foreach ($trainerlist as $sg){
+           foreach ($nmemsportsgrouplist as $tr){
+               if(isset($trainerdependentlist[$sg->getTrainerid()]['nmemsportsgroupssub'][$tr->getSgid()])){
+               $trainerdependentlist[$sg->getTrainerid()]['nmemsportsgroupssub'][$tr->getSgid()]=$tr; 
+               }
+    }
+        }
      
   
 
@@ -206,13 +223,7 @@ class TrainerController extends Controller
                     ->setValidto('2155');
                 $manager->persist($th);              
             }
-            
-            foreach($trainer->getNmemsportsgroup() as $sg){
-                $sg->setSgid(uniqid('Nsg'))                        
-                    ->setValidfrom($adminyear)
-                    ->setValidto('2155');
-                $manager->persist($sg);              
-            }     
+                 
 
             $manager->persist($trainer);
           
@@ -307,9 +318,7 @@ class TrainerController extends Controller
         if($edittrainerform->get('delete')->isClicked()){
             
            $fm->RemoveObject($trainer, array('Trainer\TrainerFocus', 'Trainer\TrainerPhonenumber', 'Trainer\TrainerLicence'));
-//         echo ("<pre>");
-//         print_r($i);
-//        echo ("</pre>");
+
             
             
             $manager->flush();
