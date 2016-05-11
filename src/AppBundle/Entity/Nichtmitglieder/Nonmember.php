@@ -278,11 +278,11 @@ protected $validto;
     /**
      * Add sportsgroup
      *
-     * @param \AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup
+     * @param \AppBundle\Entity\Nichtmitglieder\onMember_Sportsgroup $sportsgroup
      *
      * @return Nonmember
      */
-    public function addSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup)
+    public function addSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup $sportsgroup)
     {
 
         $sportsgroup->setNmemid($this->nmemid);

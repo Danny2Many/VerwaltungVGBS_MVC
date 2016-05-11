@@ -113,7 +113,7 @@ public function buildForm(FormBuilderInterface $builder, array $options)
                         
                 ->add('pulseatrest', NumberType::class, array( 'label' => 'Hf-Ruhe/Min:', 'scale' => 0, 'required' => false))
                 
-                ->add('users', EntityType::class, array(
+                ->add('sportsgroup', EntityType::class, array(
                         'class' => 'AppBundle:MemSportsgroup',
                         'choice_label' => 'token',
                         'query_builder' => function (EntityRepository $er) {

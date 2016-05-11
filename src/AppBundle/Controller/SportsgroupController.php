@@ -55,8 +55,7 @@ class SportsgroupController extends Controller {
 //     print_r($nombre);
 //     echo '</pre>';
     
-    $choices=array('Sportgruppennr.' => 'sgid',
-                   'Gruppenbezeichnung' => 'token',
+    $choices=array('Gruppenbezeichnung' => 'token',
                    'Sportgruppe/Info' => 'name',
                    'Wochentag' => 'day'
         
@@ -202,7 +201,7 @@ class SportsgroupController extends Controller {
      $manager=$this->getDoctrine()->getManager();    
      $nonmemsportsgroup = new NonMemSportsgroup();
      $bssacert = new BSSACert();
-     $trainer = new Trainer();
+//     $trainer = new Trainer();
      
 //     $im=  $this->get('app.index_manager')
 //                   ->setEntityName('Sportsgroup');
@@ -213,9 +212,9 @@ class SportsgroupController extends Controller {
      $nonmemsportsgroup->setSgid($sgid);
      
      $nonmemsportsgroup->addBssacert($bssacert);
-     $nonmemsportsgroup->addTrainer($trainer);
+//     $nonmemsportsgroup->addTrainer($trainer);
      
-     $addnonmemsportsgroupform = $this->createForm(AddSportsgroupType::class, $nonmemsportsgroup); 
+     $addnonmemsportsgroupform = $this->createForm(BaseSportsgroupType::class, $nonmemsportsgroup, array('adyear' => $adminyear)); 
      $addnonmemsportsgroupform->handleRequest($request);
      
      if($addnonmemsportsgroupform->isSubmitted() && $addnonmemsportsgroupform->isValid()){
@@ -246,9 +245,11 @@ class SportsgroupController extends Controller {
           'adminyear' => $adminyear
           ));
      }
-//-------------------------------------------------------------------------------------------------   
+//------------------------------------------------------------------------------------------------- 
+     
+     
     /**
-     * @Route{"/sportgruppen/bearbeiten/{adminyear}/{letter}/{ID}", defaults={"letter": "alle,[A-Z]"}, name="editsportsgroup")
+     * @Route("/sportgruppen/bearbeiten/{adminyear}/{letter}/{ID}", name="editsportsgroup", defaults={"letter": "alle"})
      * 
      */       
      public function editsportsgroupAction(Request $request, $adminyear, $ID, $letter){
@@ -267,7 +268,7 @@ class SportsgroupController extends Controller {
                     ->andWhere('ditto.validto>'.$adminyear)
                     ->andWhere('ditto.sgid='.$ID);
         }
-        $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemsSportgroup')->findOneBy(array('sgid'=>$ID, 'validfrom'=>$validfrom));
+        $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportgroup')->findOneBy(array('sgid'=>$ID, 'validfrom'=>$validfrom));
         $nmemsportsgrouporiginal= clone $nmemsportsgroup;
         
 //        if (!$nmemsportsgroup) {
