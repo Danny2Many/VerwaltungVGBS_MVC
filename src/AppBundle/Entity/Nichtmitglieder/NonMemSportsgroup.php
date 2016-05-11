@@ -27,7 +27,7 @@ class NonMemSportsgroup {
     protected $sgid;
     
     public function __toString() {
-            return $this->sgid; 
+            return $this->sgid.'/sg/Nichtmitglieder\NonMemSportsgroup'; 
         }
       protected $bssaid;
       protected $bssacert;

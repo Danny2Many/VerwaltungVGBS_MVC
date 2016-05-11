@@ -95,6 +95,8 @@ protected $validto;
     {
         $this->phonenumber = new ArrayCollection();
         $this->rehabilitationcertificate = new ArrayCollection();
+        $this->sportsgroup = new ArrayCollection();
+
         //$this->section = new ArrayCollection();
     }
 
@@ -285,7 +287,6 @@ protected $validto;
     public function addSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup)
     {
 
-        $sportsgroup->setNmemid($this->nmemid);
         $this->sportsgroup->add($sportsgroup);
 
         return $this;
