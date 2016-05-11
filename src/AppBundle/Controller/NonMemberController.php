@@ -171,12 +171,15 @@ class NonMemberController extends Controller {
      */
     public function addnonmeberAction(Request $request, $letter, $adminyear){
       
-    $manager= $this->getDoctrine()->getManager();
+    $doctrine=$this->getDoctrine();   
+    $manager= $doctrine->getManager();
 
+    
     $nonmember = new Nonmember ();
     $phonenumber = new NonMemPhoneNumber();   
     $im=  new IndexManager ($manager,'NonMember');
             
+    $fm= new FunctionManager($doctrine, $adminyear);
 
     
     $nmemid=$im->getCurrentIndex();
@@ -197,17 +200,19 @@ class NonMemberController extends Controller {
                     ->setValidto('2155');
             
             foreach($nonmember->getPhonenumber() as $pn){
-                $pn->setPnid(uniqid('pn'))
-                ->setValidfrom($adminyear)
-                 ->setValidto('2155');
-                $manager->persist($pn);
+//              
+                $fm->AddObject($pn, 'secondary');
+               
             }
             
             foreach($nonmember->getRehabilitationcertificate() as $rc){
-                $rc->setRcid(uniqid('rc'))
-                ->setValidfrom($adminyear)
-                 ->setValidto('2155');
-                $manager->persist($rc);
+//              
+                $fm->AddObject($rc, 'secondary');
+                
+            }
+            
+            foreach ($nonmember->getSportsgroup() as $sg){
+                $fm->AddObject($sg,'secondary', array('entitypath' => 'AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup','idprefixone' => 'nmem','idone' => $nonmember->getNmemid()));
             }
             
             $manager->persist($nonmember);     
@@ -276,7 +281,7 @@ class NonMemberController extends Controller {
         
 
         $originalrehabs = new ArrayCollection();
-        $originalphonenr = new ArrayCollection();
+        $originalphonenrs = new ArrayCollection();
 //        $originalsections = new ArrayCollection();
         
             // Create an ArrayCollection of the current Rehab objects in the database
@@ -291,7 +296,7 @@ class NonMemberController extends Controller {
 
              $origininalphonenr= clone $phonenr;
              $nonmember->addPhonenumber($phonenr);
-             $originalphonenr->add($origininalphonenr);
+             $originalphonenrs->add($origininalphonenr);
          }
         // Create an ArrayCollection of the current Rehab objects in the database
         //    foreach ($member->getSection() as $section) {
@@ -315,9 +320,10 @@ class NonMemberController extends Controller {
         //if the form is valid -> persist it to the database
        if($editnonmemform->isSubmitted() && $editnonmemform->isValid()){ 
 
-            $fm->HandleDependencyDiff($nonmember->getRehabilitationcertificate(), $originalrehabs, $adminyear);
-            $fm->HandleDependencyDiff($nonmember->getPhonenumber(), $origininalphonenr, $adminyear);
-
+            $fm->HandleDependencyDiff($nonmember->getRehabilitationcertificate(), $originalrehabs);
+            echo '!!!';
+            $fm->HandleDependencyDiff($nonmember->getPhonenumber(), $originalphonenrs);
+echo'???';
             $fm->HandleObjectDiff($nonmember, $nonmember_old);
 
             $manager->flush();

@@ -38,7 +38,11 @@
             <div class="row">
                 <div class="col-md-12">   
                 
-                    {% if ID is not defined %}
+                            
+                            
+                <legend><h2>Stammdaten</h2></legend>
+
+                {% if ID is not defined %}
 
                     <div class="dropdown">
                         
@@ -63,11 +67,10 @@
                         
                         </ul>
                     </div>
-                    
-                    {% endif %}        
                             
-                <legend><h2>Stammdaten</h2></legend>
-
+                            <br>
+                    
+                    {% endif %}
                               
                     {% if (attribute(form, 'trainerid') is defined) %}
                         {{ form_row(form.trainerid) }}

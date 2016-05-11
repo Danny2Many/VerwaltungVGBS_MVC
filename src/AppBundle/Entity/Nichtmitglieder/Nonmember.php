@@ -38,7 +38,7 @@ protected $sportsgroup;
 protected $nmemid;    
 
 public function __toString(){
-    return (string) $this->nmemid.'/nmem/Nonmember';
+    return (string) $this->nmemid.'/nmem/Nichtmitglieder\Nonmember';
    
 }
     
@@ -95,6 +95,8 @@ protected $validto;
     {
         $this->phonenumber = new ArrayCollection();
         $this->rehabilitationcertificate = new ArrayCollection();
+        $this->sportsgroup = new ArrayCollection();
+
         //$this->section = new ArrayCollection();
     }
 
@@ -103,7 +105,7 @@ protected $validto;
      *
      * @return integer
      */
-    public function getNMemID()
+    public function getNmemid()
     {
         return $this->nmemid;
     }
@@ -115,7 +117,7 @@ protected $validto;
      *
      * @return Nonmember
      */
-    public function setNMemID($nmemid)
+    public function setNmemid($nmemid)
     {
         $this->nmemid = $nmemid;
 
@@ -285,7 +287,6 @@ protected $validto;
     public function addSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup $sportsgroup)
     {
 
-        $sportsgroup->setNmemid($this->nmemid);
         $this->sportsgroup->add($sportsgroup);
 
         return $this;

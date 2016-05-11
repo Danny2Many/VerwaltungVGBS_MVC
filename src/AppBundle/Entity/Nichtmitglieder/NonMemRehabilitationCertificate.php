@@ -54,7 +54,7 @@ class NonMemRehabilitationCertificate {
     protected $rehabunits;
 
     /**
-     * 
+     *  @ORM\Id
      * @ORM\Column(type="string")
      * 
      */
