@@ -119,8 +119,9 @@
                     {% endfor %}</td>
     
             <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>   
-            {% if sportsgroupdependentlist[data.nmemid]['sportsgroups'] is defined %}
-                {% set sportsgroup =sportsgroupdependentlist[data.nmemid]['sportsgroups'] %}
+            
+            {% if nonmemberdependentlist[data.nmemid]['sportsgroups'] is defined %}
+                {% set sportsgroup =nonmemberdependentlist[data.nmemid]['sportsgroups'] %}
             {% else %}
                 {% set sportsgroup ='' %}  
             {% endif %}
@@ -129,6 +130,7 @@
             {% else %}
                 {{ "-" }}</td>
             {% endfor %} 
+            
             <td>{{ data.trainingstartdate|date("d.m.Y") }}</td>
             <td>{{ data.trainingconfirmation is empty ? "-" : data.trainingconfirmation|date("d.m.Y")}}</td>
              

@@ -127,17 +127,18 @@ class NonMemberController extends Controller {
      
     foreach ($sportsgroupnonmemberlist as $sn){
 
-        $nonmemberdependentlist[$sn->getNMemID()]['sportsgroups'][]=$sn;
+        $nonmemberdependentlist[$sn->getNMemID()]['sportsgroups'][$sn->getSgid()]=$sn->getSgid();
     }
     
-//    foreach ($nonmemberlist as $nm){
-//        foreach ($sportsgrouplist as $sg){
-//         $nonmemberdependentlist[$nm->getNMemID()]['sportsgroups'][$sg->getSgid()]=$sg;
-//         
-//        }
-//    }
+    foreach ($nonmemberlist as $nm){
+        foreach ($sportsgrouplist as $sg){
+            if(isset($nonmemberdependentlist[$nm->getNmemid()]['sportsgroups'][$sg->getSgid()])){
+            $nonmemberdependentlist[$nm->getNmemid()]['sportsgroups'][$sg->getSgid()]=$sg;
+            } 
+        }
+    }
      
-   
+
     foreach ($phonenumberlist as $pn){
 
         $nonmemberdependentlist[$pn->getNMemID()]['phonenumbers'][]=$pn;

@@ -123,6 +123,9 @@ class FunctionManager {
             call_user_func(array($middle, 'set'.$metadata['idprefix'].'id' ), $metadata['id']);
             call_user_func(array($middle, 'setValidfrom' ), $this->adminyear);
             call_user_func(array($middle, 'setValidto' ), '2155');
+            
+            $manager->persist($middle);
+
         }
     }
     
