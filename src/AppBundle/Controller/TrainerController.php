@@ -150,7 +150,7 @@ class TrainerController extends Controller
                if(isset($trainerdependentlist[$sg->getTrainerid()]['nmemsportsgroupssub'][$tr->getSgid()])){
                $trainerdependentlist[$sg->getTrainerid()]['nmemsportsgroupssub'][$tr->getSgid()]=$tr; 
                }
-    }
+            }
         }
      
   
