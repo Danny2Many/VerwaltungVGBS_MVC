@@ -408,8 +408,8 @@ class MemberController extends Controller
         //if the form is valid -> persist it to the database
         if($editmemform->isSubmitted() && $editmemform->isValid()){
        
-                $fm->HandleDependencyDiff($member->getRehabilitationcertificate(), $originalrehabs, $adminyear);
-                $fm->HandleDependencyDiff($member->getPhonenumber(), $originalphonenrs, $adminyear);
+                $fm->HandleDependencyDiff($member->getRehabilitationcertificate(), $originalrehabs);
+                $fm->HandleDependencyDiff($member->getPhonenumber(), $originalphonenrs);
                 
                 $fm->HandleObjectDiff($member, $memberoriginal);
 

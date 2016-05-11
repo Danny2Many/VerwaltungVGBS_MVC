@@ -259,7 +259,7 @@ class TrainerController extends Controller
         
         $validfrom=$request->query->get('validfrom');
         
-        $fm= new FunctionManager($doctrine, $adminyear);
+        $fm= new FunctionManager($doctrine, $adminyear);       
         
         $dependencies=['Trainer\TrainerPhoneNumber', 'Trainer\TrainerFocus','Trainer\TrainerLicence'];
 
@@ -330,9 +330,9 @@ class TrainerController extends Controller
                 
         if($edittrainerform->isSubmitted() && $edittrainerform->isValid()){
   
-            $fm->HandleDependencyDiff($trainer->getLicence(), $originallicences, $adminyear);
-            $fm->HandleDependencyDiff($trainer->getPhonenumber(), $originalphonenr, $adminyear);
-            $fm->HandleDependencyDiff($trainer->getTheme(), $originalthemes, $adminyear);
+            $fm->HandleDependencyDiff($trainer->getLicence(), $originallicences);
+            $fm->HandleDependencyDiff($trainer->getPhonenumber(), $originalphonenr);
+            $fm->HandleDependencyDiff($trainer->getTheme(), $originalthemes);
 
             $fm->HandleObjectDiff($trainer, $trainer_old);
 

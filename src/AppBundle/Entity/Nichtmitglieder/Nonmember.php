@@ -38,7 +38,7 @@ protected $sportsgroup;
 protected $nmemid;    
 
 public function __toString(){
-    return (string) $this->nmemid.'/nmem/Nonmember';
+    return (string) $this->nmemid.'/nmem/Nichtmitglieder\Nonmember';
    
 }
     

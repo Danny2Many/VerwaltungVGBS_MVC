@@ -32,7 +32,7 @@ class NonMemPhoneNumber {
     
     public function __toString()
     {
-        return (string) $this->nmemid.'/pn/Nichtmitglieder\NonMemPhoneNumber';
+        return $this->pnid.'/pn/Nichtmitglieder\NonMemPhoneNumber';
     }
     
     /**
