@@ -251,7 +251,7 @@ class NonMemberController extends Controller {
     $fm= new FunctionManager($doctrine, $adminyear);
     
     $validfrom=$request->query->get('version');
-    $dependencies=array( 'Nichtmitglieder\NonMemPhoneNumber', 'Nichtmitglieder\NonMemRehabilitationCertificate');
+    $dependencies=array( 'Nichtmitglieder\NonMemPhoneNumber', 'Nichtmitglieder\NonMemRehabilitationCertificate','Nichtmitglieder\NonMember_Sportsgroup');
 
     
     $qb=[];
@@ -268,21 +268,24 @@ class NonMemberController extends Controller {
         
         $nonmember=$doctrine->getRepository('AppBundle:Nichtmitglieder\Nonmember')->findOneBy(array('nmemid' => $ID, 'validfrom'=>$validfrom));
        $nonmember_old = clone $nonmember;
-//        echo '</pre>'; 
-//        print_r ($nonmember); 
-//         echo '</pre>';
-//        print_r($nonmember);
-//        echo '</pre>';
+
+
         
         if (!$nonmember){
             throw $this->createNotFoundException('Es konnte kein Nichtmitglied mit der Nichtmitgliedsnr.: '.$ID.' gefunden werden');
         }
         $phonenumbers=$qb['Nichtmitglieder\NonMemPhoneNumber']->getQuery()->getResult();
         $rehabcerts=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
-        
+        $sportsgrouplist=$qb['Nichtmitglieder\NonMember_Sportsgroup']->getQuery()->getResult();
 
+                echo '<pre>'; 
+        print_r ($sportsgrouplist); 
+         echo '</pre>';
+        
         $originalrehabs = new ArrayCollection();
         $originalphonenrs = new ArrayCollection();
+        $originalsportsgroups = new ArrayCollection();
+
 //        $originalsections = new ArrayCollection();
         
             // Create an ArrayCollection of the current Rehab objects in the database
@@ -298,6 +301,15 @@ class NonMemberController extends Controller {
              $origininalphonenr= clone $phonenr;
              $nonmember->addPhonenumber($phonenr);
              $originalphonenrs->add($origininalphonenr);
+         }
+         
+          foreach ($sportsgrouplist as $sport) {
+
+             $originalsportsgroup= clone $sport;
+             $i=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid' => $sport->getSgid(), 'validfrom'=>$validfrom));
+             echo $i;
+             $nonmember->addSportsgroup($doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid' => $sport->getSgid(), 'validfrom'=>$validfrom)));
+             $originalsportsgroups->add($originalsportsgroup);
          }
         // Create an ArrayCollection of the current Rehab objects in the database
         //    foreach ($member->getSection() as $section) {
@@ -322,9 +334,9 @@ class NonMemberController extends Controller {
        if($editnonmemform->isSubmitted() && $editnonmemform->isValid()){ 
 
             $fm->HandleDependencyDiff($nonmember->getRehabilitationcertificate(), $originalrehabs);
-            echo '!!!';
             $fm->HandleDependencyDiff($nonmember->getPhonenumber(), $originalphonenrs);
-echo'???';
+            $fm->HandleDependencyDiff($nonmember->getSportsgroup(), $originalsportsgroups, array('entitypath' => 'AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup','idprefixone' => 'nmem','idone' => $nonmember->getNmemid()));
+
             $fm->HandleObjectDiff($nonmember, $nonmember_old);
 
             $manager->flush();
