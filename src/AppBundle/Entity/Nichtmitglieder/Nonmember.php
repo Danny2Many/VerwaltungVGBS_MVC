@@ -103,7 +103,7 @@ protected $validto;
      *
      * @return integer
      */
-    public function getNMemID()
+    public function getNmemid()
     {
         return $this->nmemid;
     }
@@ -115,7 +115,7 @@ protected $validto;
      *
      * @return Nonmember
      */
-    public function setNMemID($nmemid)
+    public function setNmemid($nmemid)
     {
         $this->nmemid = $nmemid;
 
