@@ -278,9 +278,7 @@ class NonMemberController extends Controller {
         $rehabcerts=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
         $sportsgrouplist=$qb['Nichtmitglieder\NonMember_Sportsgroup']->getQuery()->getResult();
 
-                echo '<pre>'; 
-        print_r ($sportsgrouplist); 
-         echo '</pre>';
+  
         
         $originalrehabs = new ArrayCollection();
         $originalphonenrs = new ArrayCollection();
@@ -304,11 +302,11 @@ class NonMemberController extends Controller {
          }
          
           foreach ($sportsgrouplist as $sport) {
-
-             $originalsportsgroup= clone $sport;
-             $i=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid' => $sport->getSgid(), 'validfrom'=>$validfrom));
-             echo $i;
-             $nonmember->addSportsgroup($doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid' => $sport->getSgid(), 'validfrom'=>$validfrom)));
+             $sp=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid' => $sport->getSgid(), 'validfrom'=>$validfrom));
+echo $sp;
+             $originalsportsgroup= clone $sp;
+          
+             $nonmember->addSportsgroup($sp);
              $originalsportsgroups->add($originalsportsgroup);
          }
         // Create an ArrayCollection of the current Rehab objects in the database
