@@ -55,8 +55,12 @@ class FunctionManager {
                 
                 //you cannot call 'remove' on cloned objects
                 //thats why we query for them again
-                $objecttobedeleted=$manager->find('AppBundle:'.$depmetadata['namespace'], array($depmetadata['idprefix'].'id'=>$depmetadata['id'], 'validfrom'=>$validfrom));
-               
+                if ($many2manyentity != null){
+                    $objecttobedeleted=$manager->find($many2manyentity['entitypath'], array($depmetadata['idprefix'].'id'=>$depmetadata['id'], $many2manyentity['idprefixone'].'id' => $many2manyentity['idone'], 'validfrom'=>$validfrom));
+                }else{
+                    $objecttobedeleted=$manager->find('AppBundle:'.$depmetadata['namespace'], array($depmetadata['idprefix'].'id'=>$depmetadata['id'], 'validfrom'=>$validfrom));
+                }
+                
                 $this->RemoveObject($objecttobedeleted);
             }
         }
@@ -99,24 +103,24 @@ class FunctionManager {
      
         //$many2manyentity==null --> one2many relationship
         if($many2many==null){   
-        if($type=='primary'){
-            
-            $explode=explode('\\', get_class($object));
-            $entityname=  end($explode);
-            
-            $im= new IndexManager($manager, $entityname);
-            $id=$im->getCurrentIndex();
-            
-        }elseif($type=='secondary'){
-          
-          $id=uniqid($metadata['idprefix']);  
-        }
-            
-            call_user_func(array($object, 'set'.$metadata['idprefix'].'id' ), $id);
-            call_user_func(array($object, 'setValidfrom' ), $this->adminyear);
-            call_user_func(array($object, 'setValidto' ), '2155');
-                       
-            $manager->persist($object);
+            if($type=='primary'){
+
+                $explode=explode('\\', get_class($object));
+                $entityname=  end($explode);
+
+                $im= new IndexManager($manager, $entityname);
+                $id=$im->getCurrentIndex();
+
+            }elseif($type=='secondary'){
+
+              $id=uniqid($metadata['idprefix']);  
+            }
+
+                call_user_func(array($object, 'set'.$metadata['idprefix'].'id' ), $id);
+                call_user_func(array($object, 'setValidfrom' ), $this->adminyear);
+                call_user_func(array($object, 'setValidto' ), '2155');
+
+                $manager->persist($object);
         }else{
             $middle= new $many2many['entitypath']();
             call_user_func(array($middle, 'set'.$many2many['idprefixone'].'id' ), $many2many['idone']);
