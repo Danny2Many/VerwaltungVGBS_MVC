@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Nichtmitglieder;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
@@ -33,20 +34,7 @@ class NonMemSportsgroup {
       protected $bssacert;
       protected $trainer;
       protected $substitute;
-//    
-//    /**
-//     * @ORM\Column(type="string")
-//        * @Assert\NotBlank()
-//     * @Assert\Choice(choices = {"Mitglieder", "Nichtmitglieder"}, message = "Bitte wählen Sie eine gültige Kategorie.")
-//     */
-//    protected $category;
-//    
-//    /**
-//     * @ORM\Column(type="string")
-//     */
-//    protected $type;
-//    
-    /**
+      /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank()
      */
@@ -89,9 +77,6 @@ class NonMemSportsgroup {
      */
     protected $token;
     
-     
-  
-    
     /**
     * @ORM\Column(type="integer")
     */
@@ -108,7 +93,11 @@ class NonMemSportsgroup {
     */
     protected $validto;
 
-
+    /** @ORM\PostLoad */
+    public function __construct() {
+        $this->bssacert = new ArrayCollection();
+        $this->substitute = new ArrayCollection();
+    }
 
     /**
      * Get sgid
@@ -132,54 +121,6 @@ class NonMemSportsgroup {
 
         return $this;
     }
-//
-//    /**
-//     * Set category
-//     *
-//     * @param string $category
-//     *
-//     * @return NonMemSportsgroup
-//     */
-//    public function setCategory($category)
-//    {
-//        $this->category = $category;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get category
-//     *
-//     * @return string
-//     */
-//    public function getCategory()
-//    {
-//        return $this->category;
-//    }
-//
-//    /**
-//     * Set type
-//     *
-//     * @param string $type
-//     *
-//     * @return NonMemSportsgroup
-//     */
-//    public function setType($type)
-//    {
-//        $this->type = $type;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get type
-//     *
-//     * @return string
-//     */
-//    public function getType()
-//    {
-//        return $this->type;
-//    }
     
     /**
      * Set name
@@ -302,6 +243,30 @@ class NonMemSportsgroup {
     }
 
     /**
+     * Add trainerid
+     *
+     * @param \AppBundle\Entity\Rooms $roomid
+     *
+     * @return NonMemSportsgroup
+     */
+    public function addRoomid(\AppBundle\Entity\Rooms $roomid)
+    {
+        $this->roomid[] = $roomid;
+
+        return $this;
+    }
+
+    /**
+     * Remove roomid
+     *
+     * @param \AppBundle\Entity\Rooms $roomid
+     */
+    public function removeRoomid(\AppBundle\Entity\Rooms $roomid)
+    {
+        $this->trainerid->removeElement($roomid);
+    }
+    
+    /**
      * Set trainerid
      *
      * @param integer $trainerid
@@ -314,7 +279,20 @@ class NonMemSportsgroup {
 
         return $this;
     }
+    public function addRoomdid(\AppBundle\Entity\Rooms $rooms)
+    {
+        $rooms->setNMemID($this->nmemid);
+        $this->rehabilitationcertificate->add($rooms);
 
+        return $this;
+        
+    }
+
+ 
+    public function removeRehabilitationcertificate(\AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate $rehabilitationcertificate)
+    {
+        $this->rehabilitationcertificate->removeElement($rehabilitationcertificate);
+    }
     /**
      * Get trainerid
      *
@@ -347,13 +325,6 @@ class NonMemSportsgroup {
     public function getToken()
     {
         return $this->token;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->section = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -440,30 +411,30 @@ class NonMemSportsgroup {
     
     
     
-
-    /**
-     * Add trainerid
-     *
-     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
-     *
-     * @return NonMemSportsgroup
-     */
-    public function addTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
-    {
-        $this->trainerid[] = $trainerid;
-
-        return $this;
-    }
-
-    /**
-     * Remove trainerid
-     *
-     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
-     */
-    public function removeTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
-    {
-        $this->trainerid->removeElement($trainerid);
-    }
+//
+//    /**
+//     * Add trainerid
+//     *
+//     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
+//     *
+//     * @return NonMemSportsgroup
+//     */
+//    public function addTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
+//    {
+//        $this->trainerid[] = $trainerid;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Remove trainerid
+//     *
+//     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
+//     */
+//    public function removeTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
+//    {
+//        $this->trainerid->removeElement($trainerid);
+//    }
 
     /**
      * Set bssaid
@@ -504,7 +475,7 @@ class NonMemSportsgroup {
 
     public function addSubstitute(\AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $substitute)
     {
-        $substitute->setSgid($this->sgid);
+        
         $this->substitute->add($substitute);
 
         return $this;
@@ -517,7 +488,8 @@ class NonMemSportsgroup {
         $this->substitute->removeElement($substitute);
     }
     public function setTrainer($trainer)
-    {   $trainer->setSgid($this->sgid);
+    {  
+//        $trainer->setTrainerid($this->Trainerid);
         $this->trainer = $trainer;
 
         return $this;
@@ -532,7 +504,7 @@ class NonMemSportsgroup {
 
     public function addTrainer(\AppBundle\Entity\Trainer\Trainer $trainer)
     {
-        $trainer->setSgid($this->sgid);
+//        $trainer->setTrainerid($this->Trainerid);
         $this->trainer->add($trainer);
 
         return $this;
@@ -545,14 +517,25 @@ class NonMemSportsgroup {
         $this->trainer->removeElement($trainer);
     }
     
+    /**
+    * Set Bssacert
+    *
+    * @param integer $bssacert
+    *
+    * @return NonMemPhoneNumber
+    */
     public function setBssacert($bssacert)
-    {   $bssacert->setSgid($this->sgid);
+    {   
         $this->bssacert = $bssacert;
 
         return $this;
     }
 
-   
+   /**
+    * Get Bssacert
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
     public function getBssacert()
     {
         return $this->bssacert;

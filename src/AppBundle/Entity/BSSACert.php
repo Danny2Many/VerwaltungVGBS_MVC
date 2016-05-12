@@ -1,6 +1,8 @@
 <?php
 namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="BSSACert")
@@ -8,9 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class BSSACert {
     
-
-
-
  /**
 * @ORM\Id
 * @ORM\Column(name="bssaid")
@@ -54,7 +53,10 @@ protected $validto;
 protected $sgid;
 
 
-
+public function __toString()
+    {
+        return (string) $this->sgid.'/sg/BSSACertificate';
+    }
 
     
  

@@ -24,17 +24,9 @@
 
 {% block thead %}
 
-{#<tr>
-    <th colspan="4"></th>
-    <th colspan="3" class="overhead">Mitglieder/Kurs-TN</th>
-    <th colspan="2" class="overhead">Kapazität</th>
-    <th colspan="2"></th>
-    <th colspan="5" class="overhead">BSSA_Zertifizierung</th>
-    <th colspan="4" class="overhead">Finanzen</th>
-</tr>#}
 
-<tr>
-    <th class="overhead2">SGID</th>
+
+    <th class="overhead2">Bearb.</th>
     <th class="overhead2">Sportgruppe</th>
     <th class="overhead2">Info</th>
     <th class="overhead2">Uhrzeit</th>
@@ -62,19 +54,39 @@
     <th class="overhead2">Anzahl RS</th>
     <th class="overhead2">ÜL-Kosten + Halle</th>
     <th class="overhead2">Saldo</th>
-</tr>    
+    
     
 {% endblock %}
  
 {% block tbody %}
     {% for data in tabledata %}
-        {% autoescape  %}
+        
         <tr>
-        <td>{{ data.sgid|striptags }}</td>    
+        {% if data.name|first == 'Ä' %}
+                {% set first = 'A' %}
+                {% elseif data.name|first == 'Ö' %}
+                {% set first = 'O' %}
+                {% elseif data.name|first == 'Ü' %}
+                {% set first = 'U' %}
+                {% else %}
+                {% set first = data.name|first %}   
+        {% endif %}
+        <td><center><a href="{{ path('editsportsgroup', {'letter': first|capitalize, 'ID': data.sgid, 'adminyear': adminyear,  'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></a></center></td>       
         <td>{{ data.name|striptags }}</td>
         <td>{{ data.info|striptags }}</td> 
         <td>{{ data.time|date("h:i") }}</td>
-        <td>{{ data.roomid|striptags }}</td> 
+        {% if sportsgroupdependentlist[data.roomid]['rooms'] is defined %}
+        {% set rooms =sportsgroupdependentlist[data.roomid]['rooms'] %}
+        {% else %}
+          {% set rooms  ='' %}  
+        {% endif %}
+        <td>{% for RO in rooms %}                     
+               {{RO.roomname }}
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %}
+            
+{#/******************************************************** #} 
         <td>{{ data.token|striptags }}</td>
         <td>{{ data.sgid|striptags }}</td>
         {% if sportsgroupdependentlist[data.trainerid]['trainers'] is defined %}
@@ -230,7 +242,7 @@
         
 
         
-        {% endautoescape %}
+        
     {% endfor %}    
 {% endblock %}
     

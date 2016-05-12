@@ -17,17 +17,6 @@ class Nonmember extends HealthData {
 
 protected $rehabilitationcertificate;
 protected $phonenumber; 
-//
-///**
-//* @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
-//* @ORM\JoinTable(name="NonMember_Section",
-//* joinColumns={@ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")},
-//* inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
-//*/
-//protected $section;    
-//    
-//    
-
 protected $sportsgroup; 
 
 
@@ -280,11 +269,11 @@ protected $validto;
     /**
      * Add sportsgroup
      *
-     * @param \AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup
+     * @param \AppBundle\Entity\Nichtmitglieder\onMember_Sportsgroup $sportsgroup
      *
      * @return Nonmember
      */
-    public function addSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup)
+    public function addSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup $sportsgroup)
     {
 
         $this->sportsgroup->add($sportsgroup);

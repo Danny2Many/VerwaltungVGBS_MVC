@@ -222,7 +222,7 @@ class NonMemberController extends Controller {
             $im->add();
             $this->addflash('notice', 'Diese Person wurde erfolgreich angelegt!');
             
-            return $this->redirectToRoute('nonmember_home', array ('letter'=>$letter));
+            return $this->redirectToRoute('nonmember_home', array ('letter'=>$letter, 'adminyear' => $adminyear));
             }
         
             
