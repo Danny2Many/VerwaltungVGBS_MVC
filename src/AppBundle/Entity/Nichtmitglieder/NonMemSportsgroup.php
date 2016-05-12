@@ -95,9 +95,8 @@ class NonMemSportsgroup {
 
     /** @ORM\PostLoad */
     public function __construct() {
-        
-    //        $this->sportsgroup = new ArrayCollection();
         $this->bssacert = new ArrayCollection();
+        $this->substitute = new ArrayCollection();
     }
 
     /**
@@ -412,30 +411,30 @@ class NonMemSportsgroup {
     
     
     
-
-    /**
-     * Add trainerid
-     *
-     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
-     *
-     * @return NonMemSportsgroup
-     */
-    public function addTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
-    {
-        $this->trainerid[] = $trainerid;
-
-        return $this;
-    }
-
-    /**
-     * Remove trainerid
-     *
-     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
-     */
-    public function removeTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
-    {
-        $this->trainerid->removeElement($trainerid);
-    }
+//
+//    /**
+//     * Add trainerid
+//     *
+//     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
+//     *
+//     * @return NonMemSportsgroup
+//     */
+//    public function addTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
+//    {
+//        $this->trainerid[] = $trainerid;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Remove trainerid
+//     *
+//     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
+//     */
+//    public function removeTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
+//    {
+//        $this->trainerid->removeElement($trainerid);
+//    }
 
     /**
      * Set bssaid
@@ -476,7 +475,7 @@ class NonMemSportsgroup {
 
     public function addSubstitute(\AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $substitute)
     {
-        $substitute->setSgid($this->sgid);
+        
         $this->substitute->add($substitute);
 
         return $this;
@@ -489,7 +488,8 @@ class NonMemSportsgroup {
         $this->substitute->removeElement($substitute);
     }
     public function setTrainer($trainer)
-    {   $trainer->setSgid($this->sgid);
+    {  
+//        $trainer->setTrainerid($this->Trainerid);
         $this->trainer = $trainer;
 
         return $this;
@@ -504,7 +504,7 @@ class NonMemSportsgroup {
 
     public function addTrainer(\AppBundle\Entity\Trainer\Trainer $trainer)
     {
-        $trainer->setSgid($this->sgid);
+//        $trainer->setTrainerid($this->Trainerid);
         $this->trainer->add($trainer);
 
         return $this;

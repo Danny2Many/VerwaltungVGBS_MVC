@@ -17,17 +17,6 @@ class Nonmember extends HealthData {
 
 protected $rehabilitationcertificate;
 protected $phonenumber; 
-//
-///**
-//* @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
-//* @ORM\JoinTable(name="NonMember_Section",
-//* joinColumns={@ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")},
-//* inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
-//*/
-//protected $section;    
-//    
-//    
-
 protected $sportsgroup; 
 
 

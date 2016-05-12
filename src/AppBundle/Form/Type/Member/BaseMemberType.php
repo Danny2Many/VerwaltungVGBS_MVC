@@ -38,7 +38,8 @@ public function buildForm(FormBuilderInterface $builder, array $options)
 
         $builder
           ->add('personaldata', PersonalDataType::class, array(
-        'data_class' => 'AppBundle\Entity\Member',
+        'data_class' => 'AppBundle\Entity\Mem'
+              . 'ber',
         'pn_data_class' => 'AppBundle\Entity\MemPhoneNumber'
     )) 
                 

@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityManager;
 use AppBundle\Form\Type\Sportsgroup\AddSportsgroupType;
 use AppBundle\Form\Type\Sportsgroup\BaseSportsgroupType;
 use AppBundle\Services\IndexManager;
+
 use AppBundle\Services\FunctionManager;
 
 class SportsgroupController extends Controller {
@@ -198,15 +199,17 @@ class SportsgroupController extends Controller {
      */
      public function addsportsgroupAction (Request $request, $letter, $adminyear){
      
-     $manager=$this->getDoctrine()->getManager();    
+     $doctrine=$this->getDoctrine();   
+     $manager= $doctrine->getManager();
      $nonmemsportsgroup = new NonMemSportsgroup();
      $bssacert = new BSSACert();
-//     $trainer = new Trainer();
+     $trainer = new Trainer();
      
 //     $im=  $this->get('app.index_manager')
 //                   ->setEntityName('Sportsgroup');
      
      $im=new IndexManager($manager, 'NonMemSportsgroup');
+     $fm= new FunctionManager($doctrine, $adminyear);
      
      $sgid=$im->getCurrentIndex();
      $nonmemsportsgroup->setSgid($sgid);
@@ -219,15 +222,22 @@ class SportsgroupController extends Controller {
      
      if($addnonmemsportsgroupform->isSubmitted() && $addnonmemsportsgroupform->isValid()){
         
+         
         $nonmemsportsgroup->setValidfrom($adminyear)
                     ->setValidto('2155');  
-
+        
+        $nonmemsportsgroup->setTrainerid($nonmemsportsgroup->getTrainer()->getTrainerid());
+        
         foreach($nonmemsportsgroup->getBssacert() as $bs){
                 $bs->setBssaid(uniqid('bs'))
            ->setValidfrom($adminyear)
            ->setValidto('2155');       
         $manager->persist($bs);}
         
+        foreach ($nonmemsportsgroup->getSubstitute() as $su){
+                $fm->AddObject($su,'secondary', array('entitypath' => 'AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub','idprefixone' => 'sg','idone' => $nonmemsportsgroup->getSgid()));
+            }
+            
         $manager->persist($nonmemsportsgroup);
         $manager->flush();
         

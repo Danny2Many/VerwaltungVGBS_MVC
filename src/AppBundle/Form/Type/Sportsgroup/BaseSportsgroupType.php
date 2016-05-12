@@ -25,12 +25,12 @@ class BaseSportsgroupType extends AbstractType{
         ->add('trainer', EntityType::class, array (
             'class' => 'AppBundle:Trainer\Trainer',
             'choice_label' => 'lastname',
-            'multiple' => true,
             'required' => false,'label' => 'Übungsleiter:'))
                      
         ->add('substitute', EntityType::class, array(
                         'class' => 'AppBundle:Trainer\Trainer',
                         'choice_label' => 'lastname',
+                        'multiple' => true,
                         'query_builder' => function (EntityRepository $er) {
                         return $er->createQueryBuilder('s')
                                   ->where('s.validfrom <='.$this->adminyear)
