@@ -273,7 +273,7 @@ protected $validto;
      *
      * @return Nonmember
      */
-    public function addSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup $sportsgroup)
+    public function addSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup)
     {
 
         $this->sportsgroup->add($sportsgroup);

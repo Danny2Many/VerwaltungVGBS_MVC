@@ -303,7 +303,6 @@ class NonMemberController extends Controller {
          
           foreach ($sportsgrouplist as $sport) {
              $sp=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid' => $sport->getSgid(), 'validfrom'=>$validfrom));
-echo $sp;
              $originalsportsgroup= clone $sp;
           
              $nonmember->addSportsgroup($sp);
