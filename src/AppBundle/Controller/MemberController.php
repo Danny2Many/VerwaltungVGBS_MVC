@@ -34,15 +34,42 @@ class MemberController extends Controller
     {
         
    $doctrine=$this->getDoctrine();
+   $manager=$doctrine->getManager();
+//   $im= new IndexManager($manager, 'Member');
    
    
-   
-//   for($i=1;$i<=1000;$i++){
+//   function generateRandomString($length = 10) {
+//    $characters = 'abcdefghijklmnopqrstuvwxyz';
+//    $charactersLength = strlen($characters);
+//    $randomString = '';
+//    for ($i = 0; $i < $length; $i++) {
+//        $randomString .= $characters[rand(0, $charactersLength - 1)];
+//    }
+//    return $randomString;
+//}
+//   
+//   for($i=1;$i<=100;$i++){
 //       $smember= new Member();
+//       $smember->setMemid($im->getCurrentIndex());
+//       $smember->setTitle(1);
+//       $smember->setPostcode(39108);
 //       $smember->setFirstname('Danny');
-//       $smember->setLastname($lastname)
+//       $smember->setLastname(generateRandomString(6));
+//       $smember->setLocation('Magdeburg');
+//       $smember->setStreetaddress('Peerstreet,69');
+//       $smember->setBirthday(new \DateTime('1992-01-07'));
+//       $smember->setAdmissiondate(new \DateTime('2016-05-12'));
+//       $smember->setState(1);
+//       $smember->setDecreaseddues(0);
+//       $smember->setNewsletter(array(0));
+//       $smember->setAdmissioncharge(69);
+//       $smember->setValidfrom(2011);
+//       $smember->setValidto(2155);
+//       $im->add();
+//       $manager->persist($smember);
 //   }
-   
+//   
+//   $manager->flush();
     $dependencies=array('Member', 'MemPhoneNumber', 'MemRehabilitationCertificate');
     
     $qb= [];
