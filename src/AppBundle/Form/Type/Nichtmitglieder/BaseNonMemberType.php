@@ -16,13 +16,19 @@ use AppBundle\Form\Type\RehabCertType;
 use AppBundle\Form\Type\PhoneNumberType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\AbstractType;
+use Doctrine\ORM\EntityRepository;
+
+
 
 class BaseNonMemberType extends AbstractType{
     
+        protected $adminyear;
+
 public function buildForm(FormBuilderInterface $builder, array $options){
     
     
-   
+           $this->adminyear=$options['adyear'];
+
 
         $builder
                 
@@ -80,12 +86,18 @@ public function buildForm(FormBuilderInterface $builder, array $options){
         ->add('additionalagilactivities', SanitizedTextareaType::class, array('label' => 'weit. bewegl. Aktivitäten:', 'required' => false))
 
         ->add('pulseatrest', NumberType::class, array( 'label' => 'Hf-Ruhe/Min:', 'scale' => 0, 'required' => false))
+        
         ->add('sportsgroup', EntityType::class, array(
             'class' => 'AppBundle:Nichtmitglieder\NonMemSportsgroup',
             'choice_label' => 'token',
             'multiple' => true,
             'required' => false,
-            'label' => 'Sportgruppe/n:'            
+            'label' => 'Sportgruppe/n:',
+            'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('s')
+                                  ->where('s.validfrom <='.$this->adminyear)
+                                  ->andWhere('s.validto >'.$this->adminyear);
+                        }            
         )) 
           ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
           ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))

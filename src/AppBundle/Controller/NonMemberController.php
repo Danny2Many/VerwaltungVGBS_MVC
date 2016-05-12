@@ -185,7 +185,7 @@ class NonMemberController extends Controller {
     $nonmember->setNMemID($nmemid);
     
     $nonmember->addPhonenumber($phonenumber);
-    $addnonmemform = $this->createForm(AddNonMemberType::class, $nonmember);    
+    $addnonmemform = $this->createForm(AddNonMemberType::class, $nonmember, array('adyear' => $adminyear));    
     
     $addnonmemform->handleRequest($request);     
         
