@@ -17,23 +17,8 @@ class Nonmember extends HealthData {
 
 protected $rehabilitationcertificate;
 protected $phonenumber; 
-//
-///**
-//* @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
-//* @ORM\JoinTable(name="NonMember_Section",
-//* joinColumns={@ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")},
-//* inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
-//*/
-//protected $section;    
-//    
-//    
-///**
-//* @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup")
-//* @ORM\JoinTable(name="NonMember_Sportsgroup",
-//* joinColumns={@ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")},
-//* inverseJoinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")})
-//*/ 
 protected $sportsgroup; 
+
 
 /**
 * @ORM\Id
@@ -42,7 +27,7 @@ protected $sportsgroup;
 protected $nmemid;    
 
 public function __toString(){
-    return (string) $this->nmemid;
+    return (string) $this->nmemid.'/nmem/Nichtmitglieder\Nonmember';
    
 }
     
@@ -88,6 +73,8 @@ protected $validto;
 * @ORM\Column(type="integer")
 * 
 */protected $newsletter; 
+
+
     
 
     /**
@@ -97,6 +84,8 @@ protected $validto;
     {
         $this->phonenumber = new ArrayCollection();
         $this->rehabilitationcertificate = new ArrayCollection();
+        $this->sportsgroup = new ArrayCollection();
+
         //$this->section = new ArrayCollection();
     }
 
@@ -105,7 +94,7 @@ protected $validto;
      *
      * @return integer
      */
-    public function getNMemID()
+    public function getNmemid()
     {
         return $this->nmemid;
     }
@@ -117,7 +106,7 @@ protected $validto;
      *
      * @return Nonmember
      */
-    public function setNMemID($nmemid)
+    public function setNmemid($nmemid)
     {
         $this->nmemid = $nmemid;
 
@@ -280,13 +269,14 @@ protected $validto;
     /**
      * Add sportsgroup
      *
-     * @param \AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup
+     * @param \AppBundle\Entity\Nichtmitglieder\onMember_Sportsgroup $sportsgroup
      *
      * @return Nonmember
      */
     public function addSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup)
     {
-        $this->sportsgroup($sportsgroup);
+
+        $this->sportsgroup->add($sportsgroup);
 
         return $this;
     }
@@ -407,56 +397,6 @@ public function setPhonenumber($phonenumber)
     {
         $this->getPhonenumber()->removeElement($phonenumber);
     }
-
-
-  
-//
-//    /**
-//     * Get recorded
-//     *
-//     * @return string
-//     */
-//    public function getRecorded()
-//    {
-//        return $this->recorded;
-//    }
-//
-//    /**
-//     * Set deleted
-//     *
-//     * @param \DateTime $deleted
-//     *
-//     * @return Nonmember
-//     */
-//    public function setDeleted($deleted)
-//    {
-//        $this->deleted = $deleted;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get deleted
-//     *
-//     * @return \DateTime
-//     */
-//    public function getDeleted()
-//    {
-//        return $this->deleted;
-//    }
-//
-// 
-//
-//     /**
-//    * @ORM\PrePersist
-//    */
-//    public function setRecorded($recorded)
-//    {   
-//        $now= new \DateTime();
-//        $this->recorded = $now->format('Y-m-d');
-//
-//        return $this;
-//    }
 
     /**
      * Set newsletter

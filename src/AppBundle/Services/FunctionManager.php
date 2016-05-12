@@ -24,7 +24,7 @@ class FunctionManager {
     
     
     //handles the comparison of the dependencies after saving
-    public function HandleDependencyDiff($saveddependencies, $originaldependencies){
+    public function HandleDependencyDiff($saveddependencies, $originaldependencies, $many2manyentity=null){
         $manager=$this->doctrine->getManager();
         
         foreach($saveddependencies  as $ob){
@@ -36,7 +36,7 @@ class FunctionManager {
                      //if an new referencing object was created
                     if ($clone == NULL) { 
                         
-                        $this->AddObject($ob, 'secondary');
+                        $this->AddObject($ob, 'secondary',$many2manyentity);
 
                         }else {
                             $originaldependencies->removeElement($clone);
@@ -93,11 +93,12 @@ class FunctionManager {
     //sets Validfrom and Validto dates and persists an object
     //primarytype=objects with database-indices
     //secondarytype=objects with timestamp-indices
-    public function AddObject($object, $type='primary') {
+    public function AddObject($object, $type='primary', $many2many=null) {
         $manager=  $this->doctrine->getManager();
         $metadata= $this->ObjectMetaDataParser($object);
      
-            
+        //$many2manyentity==null --> one2many relationship
+        if($many2many==null){   
         if($type=='primary'){
             
             $explode=explode('\\', get_class($object));
@@ -116,7 +117,16 @@ class FunctionManager {
             call_user_func(array($object, 'setValidto' ), '2155');
                        
             $manager->persist($object);
-        
+        }else{
+            $middle= new $many2many['entitypath']();
+            call_user_func(array($middle, 'set'.$many2many['idprefixone'].'id' ), $many2many['idone']);
+            call_user_func(array($middle, 'set'.$metadata['idprefix'].'id' ), $metadata['id']);
+            call_user_func(array($middle, 'setValidfrom' ), $this->adminyear);
+            call_user_func(array($middle, 'setValidto' ), '2155');
+            
+            $manager->persist($middle);
+
+        }
     }
     
     

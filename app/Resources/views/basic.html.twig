@@ -81,7 +81,7 @@
                                         {% endfor %}
                                     </ul>
                                 </li>
-                                <li class="{% block HomeAktiv %}{% endblock %}"><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                                <li class="{% block HomeAktiv %}#{% endblock %}"><a href="{{ path('homepage') }}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
                                 <li class="{% block MitglAktiv %}#{% endblock %}"><a href="{{ path('member_home') }}">Mitglieder</a></li>
                                 <li class="{% block NMitglAktiv %}{% endblock %}"><a href="{{path('nonmember_home')}}">Nichtmitglieder</a></li>
                                 <li class="{% block AustrittAktiv %}#{% endblock %}"><a href="#">Austrittsliste</a></li>
@@ -93,6 +93,8 @@
                                     </ul>
                                 </li>
                                 <li class="{% block TrainerAktiv %}#{% endblock %}"><a href="{{path('trainer_home')}}">Übungsleiter</a></li>
+                                <li class="{% block InterAktiv %}#{% endblock %}"><a href="{{path('interested_home')}}">Interessenten</a></li>
+                                <li class="{% block RoomsAktiv %}#{% endblock %}"><a href="{{path('rooms_home')}}">Räumlichkeiten</a></li>
                             </ul>
                         </nav>
                     </header>

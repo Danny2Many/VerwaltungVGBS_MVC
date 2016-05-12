@@ -25,6 +25,12 @@ class NonMemSportsgroup {
      * @ORM\Column(type="string") 
      */
     protected $sgid;
+    
+    public function __toString() {
+            return $this->sgid; 
+        }
+      protected $bssaid;
+      protected $bssacert;
 //    
 //    /**
 //     * @ORM\Column(type="string")
@@ -68,7 +74,10 @@ class NonMemSportsgroup {
      */
     protected $roomid;
     
-   
+
+    /**
+     * @ORM\Column(type="integer") 
+     */
     protected $trainerid;
     
     /**
@@ -79,17 +88,24 @@ class NonMemSportsgroup {
     protected $token;
     
      
-    protected $bssaid;
+  
+    
+    /**
+    * @ORM\Column(type="integer")
+    */
+    protected $capacity;
+
     /**
      * @ORM\Id
-    * @ORM\Column(type="date")
+    * @ORM\Column(type="string")
     */
     protected $validfrom;
 
     /**
-    * @ORM\Column(type="date")
+    * @ORM\Column(type="string")
     */
     protected $validto;
+
 
 
     /**
@@ -150,6 +166,24 @@ class NonMemSportsgroup {
 //        return $this->type;
 //    }
 
+    public function addBssacert(\AppBundle\Entity\BSSACert $bssacertnr)
+    {               
+        $bssacertnr->setSgid($this);
+        $this->bssacertnr->add($bssacertnr);
+
+        return $this;
+    }
+    
+    
+        public function addTrainers(\AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $trainers)
+    {               
+        $trainers->setSgid($this);
+        $this->trainers->add($trainers);
+
+        return $this;
+    }
+    
+    
     /**
      * Set name
      *
@@ -466,5 +500,72 @@ class NonMemSportsgroup {
     public function getBssaid()
     {
         return $this->bssaid;
+    }
+  
+ 
+    public function setValidfrom($validfrom)
+    {
+        
+        $this->validfrom = $validfrom;
+
+        return $this;
+    }
+
+    /**
+     * Get validfrom
+     *
+     * @return string
+     */
+    public function getValidfrom()
+    {
+        return $this->validfrom;
+    }
+
+    /**
+     * Set validto
+     *
+     * @param  string $validto
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setValidto($validto)
+    {
+        $this->validto = $validto;
+
+        return $this;
+    }
+
+    /**
+     * Get validto
+     *
+     * @return string
+     */
+    public function getValidto()
+    {
+        return $this->validto;
+    }
+
+    /**
+     * Set capacity
+     *
+     * @param integer $capacity
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setCapacity($capacity)
+    {
+        $this->capacity = $capacity;
+
+        return $this;
+    }
+
+    /**
+     * Get capacity
+     *
+     * @return integer
+     */
+    public function getCapacity()
+    {
+        return $this->capacity;
     }
 }

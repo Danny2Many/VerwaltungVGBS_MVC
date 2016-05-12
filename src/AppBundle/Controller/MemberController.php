@@ -254,7 +254,7 @@ class MemberController extends Controller
             
             
             
-            
+                    
             $member->setValidfrom($adminyear)
                     ->setValidto('2155');
             
@@ -396,7 +396,7 @@ class MemberController extends Controller
         
         if($editmemform->get('delete')->isClicked()){
 
-            $fm->RemoveObject($member,array($member->getRehabilitationcertificate(),$member->getPhonenumber()));;
+            $fm->RemoveObject($member,array('MemPhoneNumber', 'MemRehabilitationCertificate'));;
             $manager->flush();
             $this->addFlash('notice', 'Dieses Mitglied wurde erfolgreich gelöscht!');
             return $this->redirectToRoute('member_home', array('letter' => $letter, 'adminyear' => $adminyear));
@@ -408,8 +408,9 @@ class MemberController extends Controller
         //if the form is valid -> persist it to the database
         if($editmemform->isSubmitted() && $editmemform->isValid()){
        
-                $fm->HandleDependencyDiff($member->getRehabilitationcertificate(), $originalrehabs, $adminyear);
-                $fm->HandleDependencyDiff($member->getPhonenumber(), $originalphonenrs, $adminyear);
+                $fm->HandleDependencyDiff($member->getRehabilitationcertificate(), $originalrehabs);
+                $fm->HandleDependencyDiff($member->getPhonenumber(), $originalphonenrs);
+                
                 $fm->HandleObjectDiff($member, $memberoriginal);
 
                 $manager->flush();

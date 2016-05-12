@@ -27,6 +27,11 @@ class NonMemRehabilitationCertificate {
      */
     protected $nmemid;
     
+    public function __toString()
+    {
+        return (string) $this->rcid.'/rc/Nichtmitglieder\NonMemRehabilitationCertificate';
+    }
+    
      /**
       *  
       *  @ORM\Column(type="date")
@@ -49,7 +54,7 @@ class NonMemRehabilitationCertificate {
     protected $rehabunits;
 
     /**
-     * 
+     *  @ORM\Id
      * @ORM\Column(type="string")
      * 
      */
