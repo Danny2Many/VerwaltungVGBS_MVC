@@ -11,7 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 class NonMember_Sportsgroup {
 
 public function __toString(){
-    return (string) $this->nmemid.'id/'.$this->sgid.'/Nichtmitglieder\NonMember_Sportsgroup';
+//    return (string) $this->nmemid.'id/'.$this->sgid.'/Nichtmitglieder\NonMember_Sportsgroup';
+    return (string) 'a/a/Nichtmitglieder\NonMember_Sportsgroup';
+
    
 }
     
