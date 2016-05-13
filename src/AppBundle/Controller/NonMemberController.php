@@ -8,6 +8,8 @@ use AppBundle\Entity\Nichtmitglieder\Nonmember;
 use AppBundle\Form\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\Type\Nichtmitglieder\AddNonMemberType;
+use AppBundle\Form\Type\Nichtmitglieder\BaseNonMemberType;
+
 use AppBundle\Form\Type\Nichtmitglieder\EditNonMemberType;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber;
@@ -185,7 +187,7 @@ class NonMemberController extends Controller {
     $nonmember->setNMemID($nmemid);
     
     $nonmember->addPhonenumber($phonenumber);
-    $addnonmemform = $this->createForm(AddNonMemberType::class, $nonmember, array('adyear' => $adminyear));    
+    $addnonmemform = $this->createForm(BaseNonMemberType::class, $nonmember, array('adyear' => $adminyear));    
     
     $addnonmemform->handleRequest($request);     
         
@@ -312,7 +314,7 @@ class NonMemberController extends Controller {
 //        echo '</pre>';
         
         
-        $editnonmemform = $this->createForm(EditNonMemberType::class, $nonmember);
+        $editnonmemform = $this->createForm(EditNonMemberType::class, $nonmember, array('adyear' => $adminyear));
         $editnonmemform->handleRequest($request);
          
         if($editnonmemform->get('delete')->isClicked()){

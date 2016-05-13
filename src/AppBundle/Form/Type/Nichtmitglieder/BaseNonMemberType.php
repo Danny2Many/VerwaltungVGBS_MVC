@@ -17,6 +17,7 @@ use AppBundle\Form\Type\PhoneNumberType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\AbstractType;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 
 
@@ -27,7 +28,7 @@ class BaseNonMemberType extends AbstractType{
 public function buildForm(FormBuilderInterface $builder, array $options){
     
     
-           $this->adminyear=$options['adyear'];
+           $this->adminyear=$options['adyear']; 
 
 
         $builder
@@ -103,6 +104,15 @@ public function buildForm(FormBuilderInterface $builder, array $options){
           ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))
           ->add('reset', ResetType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'zurücksetzen'));
     
+
+        
 }    
+
+public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'adyear' => NULL
+        ));
+    }
 }
 
