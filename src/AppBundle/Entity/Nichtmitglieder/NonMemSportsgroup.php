@@ -398,35 +398,7 @@ class NonMemSportsgroup {
     {
         return $this->deleted;
     }
-
     
-    
-    
-//
-//    /**
-//     * Add trainerid
-//     *
-//     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
-//     *
-//     * @return NonMemSportsgroup
-//     */
-//    public function addTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
-//    {
-//        $this->trainerid[] = $trainerid;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Remove trainerid
-//     *
-//     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
-//     */
-//    public function removeTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
-//    {
-//        $this->trainerid->removeElement($trainerid);
-//    }
-
     /**
      * Set bssaid
      *

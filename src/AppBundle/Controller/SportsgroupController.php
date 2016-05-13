@@ -273,13 +273,13 @@ class SportsgroupController extends Controller {
         
         foreach($dependencies as $dependent){
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-            $qb[$dependent]->where('ditto.validfrom<='.$adminyear)
+            $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
                     ->andWhere('ditto.validto>'.$adminyear)
                     ->andWhere('ditto.sgid='.$ID);
         }
-        $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid'=>$ID, 'validfrom'=>$validfrom));
+        $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\Nonmember')->findOneBy(array('nmemid' => $ID, 'validfrom'=>$validfrom));
        
-                 echo '<pre>';
+        echo '<pre>';
         print_r($nmemsportsgroup);
         echo '</pre>';
      
