@@ -215,7 +215,6 @@ class SportsgroupController extends Controller {
      $nonmemsportsgroup->setSgid($sgid);
      
      $nonmemsportsgroup->addBssacert($bssacert);
-//     $nonmemsportsgroup->addTrainer($trainer);
      
      $addnonmemsportsgroupform = $this->createForm(BaseSportsgroupType::class, $nonmemsportsgroup, array('adyear' => $adminyear)); 
      $addnonmemsportsgroupform->handleRequest($request);
@@ -266,7 +265,7 @@ class SportsgroupController extends Controller {
      
         $doctrine=$this->getDoctrine(); 
         $manager= $doctrine->getManager();
-        $validfrom=$request->query->get('version');
+        $validfrom=$request->query->get('validfrom');
         $fm= new FunctionManager($doctrine, $adminyear);
        
         $dependencies=['BSSACert'];
@@ -278,12 +277,17 @@ class SportsgroupController extends Controller {
                     ->andWhere('ditto.validto>'.$adminyear)
                     ->andWhere('ditto.sgid='.$ID);
         }
-        $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportgroup')->findOneBy(array('sgid'=>$ID, 'validfrom'=>$validfrom));
-        $nmemsportsgrouporiginal= clone $nmemsportsgroup;
+        $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid'=>$ID, 'validfrom'=>$validfrom));
+       
+                 echo '<pre>';
+        print_r($nmemsportsgroup);
+        echo '</pre>';
+     
+        $nmemsportsgrouporiginal = clone $nmemsportsgroup;
         
-//        if (!$nmemsportsgroup) {
-//        throw $this->createNotFoundException('Es konnte keine Sportgruppe mit der ID: '.$ID.' gefunden werden');
-//    }
+         if(!$nmemsportsgroup){
+            throw $this->createNotFoundException('Es konnte keine Sportgruppe mit der ID.: '.$ID.' gefunden werden');
+        }
         $bssacert=$qb['BSSACert']->getQuery()->getResult();
         $originalbssacert = new ArrayCollection();
         
@@ -293,11 +297,11 @@ class SportsgroupController extends Controller {
         $nmemsportsgroup->addBssacert($bssa);
         $originalbssacert->add($originalbssacert);
     }
-        $editsportsgroupform = $this->createForm(EditMemberType::class, $nmemsportsgroup);
+        $editsportsgroupform = $this->createForm(EditSportsgroupType::class, $nmemsportsgroup);
         $editsportsgroupform->handleRequest($request);
         
         if($editsportsgroupform->get('delete')->isClicked()){
-            $fm->RemoveObject($nmemsportsgroup,array('BSSACert'));;
+            $fm->RemoveObject($nmemsportsgroup,array('BSSACert'));
             $manager->flush();
             $this->addFlash('notice', 'Diese Nichtmitglieder-Sportgruppe wurde erfolgreich gelöscht!');
             return $this->redirectToRoute('sportsgroup_home', array('letter' => $letter, 'adminyear' => $adminyear));

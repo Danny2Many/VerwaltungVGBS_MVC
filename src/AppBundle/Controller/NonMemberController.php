@@ -268,11 +268,6 @@ class NonMemberController extends Controller {
         
         $nonmember=$doctrine->getRepository('AppBundle:Nichtmitglieder\Nonmember')->findOneBy(array('nmemid' => $ID, 'validfrom'=>$validfrom));
        $nonmember_old = clone $nonmember;
-//        echo '</pre>'; 
-//        print_r ($nonmember); 
-//         echo '</pre>';
-//        print_r($nonmember);
-//        echo '</pre>';
         
         if (!$nonmember){
             throw $this->createNotFoundException('Es konnte kein Nichtmitglied mit der Nichtmitgliedsnr.: '.$ID.' gefunden werden');

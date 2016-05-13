@@ -6,8 +6,6 @@
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/app/Resources/views/Sportgruppen/sportsgroupform.html.twig</file>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Form/Type/Sportsgroup/BaseSportsgroupType.php</file>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/app/Resources/views/Sportgruppen/sportsgroup.html.twig</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Nichtmitglieder/NonMemSportsgroup.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Services/FunctionManager.php</file>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Nichtmitglieder/Trainer_NonMemSportsgroupSub.php</file>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Controller/SportsgroupController.php</file>
             <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Form/Type/Member/BaseMemberType.php</file>
