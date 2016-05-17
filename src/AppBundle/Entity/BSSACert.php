@@ -48,7 +48,7 @@ protected $validto;
 
 
 /**
-* @ORM\Column(type="integer")
+* @ORM\Column(type="string")
 */
 protected $sgid;
 
@@ -280,7 +280,7 @@ public function __toString()
     /**
      * Set sgid
      *
-     * @param integer $sgid
+     * @param string $sgid
      *
      * @return BSSACert
      */
@@ -294,7 +294,7 @@ public function __toString()
     /**
      * Get sgid
      *
-     * @return integer
+     * @return string
      */
     public function getSgid()
     {

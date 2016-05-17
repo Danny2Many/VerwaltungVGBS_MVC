@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class NonMemSportsgroup {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer") 
+     * @ORM\Column(type="string") 
      */
     protected $sgid;
     
@@ -93,7 +93,7 @@ class NonMemSportsgroup {
     /**
      * Get sgid
      *
-     * @return integer
+     * @return string
      */
     public function getSgid()
     {
@@ -102,7 +102,7 @@ class NonMemSportsgroup {
     /**
      * Set sgid
      *
-     * @param integer $sgid
+     * @param string $sgid
      *
      * @return NonMemSportsgroup
      */

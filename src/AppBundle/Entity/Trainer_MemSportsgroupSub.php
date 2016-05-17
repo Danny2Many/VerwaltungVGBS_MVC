@@ -1,13 +1,13 @@
 <?php
 
-namespace AppBundle\Entity\Nichtmitglieder;
+namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
- * @ORM\Table(name="Trainer_NonMemSportsgroupSub")
+ * @ORM\Table(name="Trainer_MemSportsgroupSub")
  * @ORM\HasLifecycleCallbacks()
  */
-class Trainer_NonMemSportsgroupSub {
+class Trainer_MemSportsgroupSub {
    protected $substitute;
     /**
     * @ORM\Id
@@ -34,7 +34,7 @@ class Trainer_NonMemSportsgroupSub {
      *
      * @param integer $trainerid
      *
-     * @return Trainer_NonMemSportsgroupSub
+     * @return Trainer_MemSportsgroupSub
      */
     public function setTrainerid($trainerid)
     {
@@ -57,7 +57,7 @@ class Trainer_NonMemSportsgroupSub {
      *
      * @param \AppBundle\Entity\Trainer\Trainer $trainerid
      *
-     * @return Trainer_NonMemSportsgroupSub
+     * @return Trainer_MemSportsgroupSub
      */
     public function addTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
     {
@@ -81,7 +81,7 @@ class Trainer_NonMemSportsgroupSub {
      *
      * @param string $sgid
      *
-     * @return Trainer_NonMemSportsgroupSub
+     * @return Trainer_MemSportsgroupSub
      */
     public function setSgid($sgid)
     {
@@ -105,7 +105,7 @@ class Trainer_NonMemSportsgroupSub {
      *
      * @param string $validfrom
      *
-     * @return Trainer_NonMemSportsgroupSub
+     * @return Trainer_MemSportsgroupSub
      */
     public function setValidfrom($validfrom)
     {
@@ -154,7 +154,7 @@ class Trainer_NonMemSportsgroupSub {
      *
      * @param string $validto
      *
-     * @return Trainer_NonMemSportsgroupSub
+     * @return Trainer_MemSportsgroupSub
      */
     public function setValidto($validto)
     {
