@@ -12,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\AbstractType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
+
 
 class BaseSportsgroupType extends AbstractType{
     protected $adminyear;
@@ -25,12 +27,13 @@ class BaseSportsgroupType extends AbstractType{
         ->add('trainer', EntityType::class, array (
             'class' => 'AppBundle:Trainer\Trainer',
             'choice_label' => 'lastname',
-            'required' => false,'label' => 'Übungsleiter:'))
+            'required' => true,'label' => 'Übungsleiter:'))
                      
         ->add('substitute', EntityType::class, array(
                         'class' => 'AppBundle:Trainer\Trainer',
                         'choice_label' => 'lastname',
                         'multiple' => true,
+                        'required' => false,
                         'query_builder' => function (EntityRepository $er) {
                         return $er->createQueryBuilder('s')
                                   ->where('s.validfrom <='.$this->adminyear)
@@ -39,8 +42,9 @@ class BaseSportsgroupType extends AbstractType{
                     ))        
         ->add('day', ChoiceType::class, array ('choices' => array ('Montag' =>'Montag', 'Dienstag' => 'Dienstag','Mittwoch' => 'Mittwoch', 'Donnerstag' => 'Donnerstag', 'Freitag' => 'Freitag'),
              'choices_as_values' => true,
-            'label' => 'Wochentag:'))
-        ->add('time', SanitizedTextType::class, array ('label' => 'Uhrzeit:'))
+            'label' => 'Wochentag:'))      
+                            
+        ->add('time', TimeType::class, array( 'label' => 'Uhrzeit:', 'widget' => 'choice', 'minutes' => array(5,10,15,20,25,30,35,40,45,50,55),'input'  => 'timestamp', 'with_seconds' => false, 'placeholder' => array('minute' => '00', 'hour' => '00')))
         ->add('roomid', SanitizedTextType::class, array ('label' => 'Räumlichkeiten:','required' => false))        
         ->add('capacity', SanitizedTextType::class, array ('label' => 'Kapazität:'))        
         ->add('info',SanitizedTextType::class, array ('label' => 'Info:','required' => false))

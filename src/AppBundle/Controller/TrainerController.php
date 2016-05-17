@@ -275,7 +275,9 @@ class TrainerController extends Controller
         }
         
         $trainer=$doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy(array('trainerid' => $ID, 'validfrom'=>$validfrom));
-       
+       echo '<pre>';
+        print_r($trainer);
+        echo '</pre>';
         $trainer_old = clone $trainer;    
         
         

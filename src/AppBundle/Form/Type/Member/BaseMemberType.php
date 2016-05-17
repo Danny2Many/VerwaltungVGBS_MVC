@@ -122,13 +122,12 @@ public function buildForm(FormBuilderInterface $builder, array $options)
                                   ->where('s.validfrom <='.$this->adminyear)
                                   ->andWhere('s.validto >'.$this->adminyear);
                         }
-                    ))
-                 
+                    ))              
                           
-          ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
-          ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))
-          ->add('reset', ResetType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'zurücksetzen'));
-         
+                ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
+                ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))
+                ->add('reset', ResetType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'zurücksetzen'));
+
     }
     
      

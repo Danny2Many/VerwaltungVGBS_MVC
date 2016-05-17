@@ -12,23 +12,14 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\HasLifecycleCallbacks()
  */
 class NonMemSportsgroup {
-//    
-//    /**
-//    * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
-//    * @ORM\JoinTable(name="NonMemSportsgroup_Section",
-//    * joinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")},
-//    * inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
-//    */ 
-//    protected $section; 
-
     /**
      * @ORM\Id
-     * @ORM\Column(type="string") 
+     * @ORM\Column(type="integer") 
      */
     protected $sgid;
     
     public function __toString() {
-            return $this->sgid.'/sg/Nichtmitglieder\NonMemSportsgroup'; 
+            return (string) $this->sgid.'/sg/Nichtmitglieder\NonMemSportsgroup'; 
         }
       protected $bssaid;
       protected $bssacert;
@@ -407,35 +398,7 @@ class NonMemSportsgroup {
     {
         return $this->deleted;
     }
-
     
-    
-    
-//
-//    /**
-//     * Add trainerid
-//     *
-//     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
-//     *
-//     * @return NonMemSportsgroup
-//     */
-//    public function addTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
-//    {
-//        $this->trainerid[] = $trainerid;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Remove trainerid
-//     *
-//     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
-//     */
-//    public function removeTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
-//    {
-//        $this->trainerid->removeElement($trainerid);
-//    }
-
     /**
      * Set bssaid
      *
