@@ -42,7 +42,7 @@ class NonMemSportsgroup {
 
     /**
      * 
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="string")
      * @Assert\NotBlank()
      */
     protected $time;
@@ -574,7 +574,7 @@ class NonMemSportsgroup {
     /**
      * Set time
      *
-     * @param \DateTime $time
+     * @param string $time
      *
      * @return NonMemSportsgroup
      */
@@ -588,7 +588,7 @@ class NonMemSportsgroup {
     /**
      * Get time
      *
-     * @return \DateTime
+     * @return string
      */
     public function getTime()
     {
