@@ -297,7 +297,7 @@ class SportsgroupController extends Controller {
         $nmemsportsgroup->addBssacert($bssa);
         $originalbssacerts->add($originalbssacert);
     }
-        $editsportsgroupform = $this->createForm(EditSportsgroupType::class, $nmemsportsgroup);
+        $editsportsgroupform = $this->createForm(EditSportsgroupType::class, $nmemsportsgroup, array('adyear' => $adminyear));
         $editsportsgroupform->handleRequest($request);
         
         if($editsportsgroupform->get('delete')->isClicked()){

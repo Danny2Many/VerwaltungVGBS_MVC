@@ -8,6 +8,7 @@ class AppKernel extends Kernel
     public function registerBundles()
     {
         $bundles = [
+            new JMS\SerializerBundle\JMSSerializerBundle(),
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
@@ -28,6 +29,7 @@ class AppKernel extends Kernel
 
         return $bundles;
     }
+    
 
     public function getRootDir()
     {

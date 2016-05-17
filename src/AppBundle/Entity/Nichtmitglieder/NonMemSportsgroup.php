@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Nichtmitglieder;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation as JMS;
 
 
 /**
@@ -12,6 +13,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\HasLifecycleCallbacks()
  */
 class NonMemSportsgroup {
+  
+    
     /**
      * @ORM\Id
      * @ORM\Column(type="integer") 
@@ -36,11 +39,11 @@ class NonMemSportsgroup {
      * @Assert\NotBlank()
      */
     protected $day;
-    
+
     /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
      * 
+     * @ORM\Column(type="time")
+     * @Assert\NotBlank()
      */
     protected $time;
     
@@ -161,29 +164,7 @@ class NonMemSportsgroup {
         return $this->day;
     }
 
-    /**
-     * Set time
-     *
-     * @param \DateTime $time
-     *
-     * @return NonMemSportsgroup
-     */
-    public function setTime($time)
-    {
-        $this->time = $time;
-
-        return $this;
-    }
-
-    /**
-     * Get time
-     *
-     * @return \DateTime
-     */
-    public function getTime()
-    {
-        return $this->time;
-    }
+  
 
     /**
      * Set info
@@ -588,5 +569,29 @@ class NonMemSportsgroup {
     public function getCapacity()
     {
         return $this->capacity;
+    }
+
+    /**
+     * Set time
+     *
+     * @param \DateTime $time
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setTime($time)
+    {
+        $this->time = $time;
+
+        return $this;
+    }
+
+    /**
+     * Get time
+     *
+     * @return \DateTime
+     */
+    public function getTime()
+    {
+        return $this->time;
     }
 }

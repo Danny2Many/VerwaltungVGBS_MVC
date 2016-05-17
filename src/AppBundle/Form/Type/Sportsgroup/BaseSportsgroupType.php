@@ -44,7 +44,8 @@ class BaseSportsgroupType extends AbstractType{
              'choices_as_values' => true,
             'label' => 'Wochentag:'))      
                             
-        ->add('time', TimeType::class, array( 'label' => 'Uhrzeit:', 'widget' => 'choice', 'minutes' => array(5,10,15,20,25,30,35,40,45,50,55),'input'  => 'timestamp', 'with_seconds' => false, 'placeholder' => array('minute' => '00', 'hour' => '00')))
+         ->add('time', TimeType::class, array( 'label' => 'Uhrzeit:', 'widget' => 'choice', 'minutes' => array(5,10,15,20,25,30,35,40,45,50,55),'input'  => 'timestamp', 'with_seconds' => false, 'placeholder' => array('minute' => '00', 'hour' => '00')))
+//       ->add('time', SanitizedTextType::class, array ('label' => 'Uhrzeit:'))
         ->add('roomid', SanitizedTextType::class, array ('label' => 'Räumlichkeiten:','required' => false))        
         ->add('capacity', SanitizedTextType::class, array ('label' => 'Kapazität:'))        
         ->add('info',SanitizedTextType::class, array ('label' => 'Info:','required' => false))
