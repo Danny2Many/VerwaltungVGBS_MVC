@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\BSSACert;
 use Doctrine\ORM\EntityManager;
-use AppBundle\Form\Type\Sportsgroup\AddSportsgroupType;
+use AppBundle\Form\Type\Sportsgroup\EditSportsgroupType;
 use AppBundle\Form\Type\Sportsgroup\BaseSportsgroupType;
 use AppBundle\Services\IndexManager;
 
@@ -277,27 +277,28 @@ class SportsgroupController extends Controller {
                     ->andWhere('ditto.validto>'.$adminyear)
                     ->andWhere('ditto.sgid='.$ID);
         }
-//        $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid'=>$ID, 'validfrom'=>$validfrom));
-        $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid' => $ID, 'validfrom'=>$validfrom));
-        echo '<pre>';
-        print_r($ID);
-        echo '</pre>';
+
+
+        $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid'=>$ID, 'validfrom'=>$validfrom));
+        $nmemsportsgrouporiginal= clone $nmemsportsgroup;
+      
+
      
-        $nmemsportsgrouporiginal = clone $nmemsportsgroup;
         
+
          if(!$nmemsportsgroup){
             throw $this->createNotFoundException('Es konnte keine Sportgruppe mit der ID.: '.$ID.' gefunden werden');
         }
         $bssacert=$qb['BSSACert']->getQuery()->getResult();
-        $originalbssacert = new ArrayCollection();
+        $originalbssacerts = new ArrayCollection();
         
         // Create an ArrayCollection of the current Rehab objects in the database
         foreach ($bssacert as $bssa) {
         $originalbssacert= clone $bssa;
         $nmemsportsgroup->addBssacert($bssa);
-        $originalbssacert->add($originalbssacert);
+        $originalbssacerts->add($originalbssacert);
     }
-        $editsportsgroupform = $this->createForm(EditSportsgroupType::class, $nmemsportsgroup);
+        $editsportsgroupform = $this->createForm(EditSportsgroupType::class, $nmemsportsgroup, array('adyear' => $adminyear));
         $editsportsgroupform->handleRequest($request);
         
         if($editsportsgroupform->get('delete')->isClicked()){
