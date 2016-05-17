@@ -412,7 +412,7 @@ class MemberController extends Controller
     }
     
     
-      $editmemform = $this->createForm(EditMemberType::class, $member);
+      $editmemform = $this->createForm(EditMemberType::class, $member, array('adyear' => $adminyear));
         
         
         

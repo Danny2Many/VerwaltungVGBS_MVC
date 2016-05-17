@@ -19,7 +19,7 @@ public function __toString(){
     
 /**
 * @ORM\Id
-* @ORM\Column(type="integer")  
+* @ORM\Column(type="string")  
 */
 protected $sgid;
 /**
@@ -41,7 +41,7 @@ protected $validto;
     /**
      * Set sgid
      *
-     * @param integer $sgid
+     * @param string $sgid
      *
      * @return NonMember_Sportsgroup
      */
@@ -55,7 +55,7 @@ protected $validto;
     /**
      * Get sgid
      *
-     * @return integer
+     * @return string
      */
     public function getSgid()
     {

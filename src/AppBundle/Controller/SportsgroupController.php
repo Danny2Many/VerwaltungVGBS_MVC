@@ -145,12 +145,12 @@ class SportsgroupController extends Controller {
         foreach ($nonmemberlist as $nm){               
            
                 if(isset($sportsgroupdependentlist[$sg->getSgid()]['nonmembers'][$nm->getNmemid()])){                    
-                     if ($nm->getTitle() === 0 ){
-                     if(!isset($sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['female']))$sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['female']=0;    
-                    $sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['female']+=1;
+                    if ($nm->getTitle() === 0 ){
+                    if(!isset($sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['female']))$sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['female']=0;    
+                    {$sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['female']+=1;}
                 }else if($nm->getTitle() === 1 ) {
                     if(!isset($sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['male']))$sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['male']=0;    
-                    $sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['male']+=1;       
+                    {$sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['male']+=1;}       
                     }
                 }
         }
@@ -208,11 +208,11 @@ class SportsgroupController extends Controller {
 //     $im=  $this->get('app.index_manager')
 //                   ->setEntityName('Sportsgroup');
      
-     $im=new IndexManager($manager, 'NonMemSportsgroup');
+//     $im=new IndexManager($manager, 'Sportsgroup');
      $fm= new FunctionManager($doctrine, $adminyear);
      
-     $sgid=$im->getCurrentIndex();
-     $nonmemsportsgroup->setSgid($sgid);
+//     $sgid=$im->getCurrentIndex();
+     $nonmemsportsgroup->setSgid(uniqid('sg'));
      
      $nonmemsportsgroup->addBssacert($bssacert);
      
@@ -240,7 +240,7 @@ class SportsgroupController extends Controller {
         $manager->persist($nonmemsportsgroup);
         $manager->flush();
         
-        $im->add();
+//        $im->add();
         $this->addFlash('notice', 'Diese Nichtmitglieder-Sportgruppe wurde erfolgreich angelegt');
         return $this->redirectToRoute('sportsgroup_home', array('letter'=>$letter, 'adminyear' => $adminyear));
      }
@@ -278,13 +278,14 @@ class SportsgroupController extends Controller {
                     ->andWhere('ditto.sgid='.$ID);
         }
 
+
         $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid'=>$ID, 'validfrom'=>$validfrom));
         $nmemsportsgrouporiginal= clone $nmemsportsgroup;
       
-        echo '<pre>';
-        print_r($nmemsportsgroup);
-        echo '</pre>';
-            
+
+     
+        
+
          if(!$nmemsportsgroup){
             throw $this->createNotFoundException('Es konnte keine Sportgruppe mit der ID.: '.$ID.' gefunden werden');
         }

@@ -267,7 +267,8 @@ class NonMemberController extends Controller {
         
         
         $nonmember=$doctrine->getRepository('AppBundle:Nichtmitglieder\Nonmember')->findOneBy(array('nmemid' => $ID, 'validfrom'=>$validfrom));
-       $nonmember_old = clone $nonmember;
+        $nonmember_old = clone $nonmember;
+
 
         
         if (!$nonmember){
