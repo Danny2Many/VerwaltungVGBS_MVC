@@ -277,14 +277,14 @@ class SportsgroupController extends Controller {
                     ->andWhere('ditto.validto>'.$adminyear)
                     ->andWhere('ditto.sgid='.$ID);
         }
-        $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid' => $ID, 'validfrom'=>$validfrom));
-       
+
+        $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid'=>$ID, 'validfrom'=>$validfrom));
+        $nmemsportsgrouporiginal= clone $nmemsportsgroup;
+      
         echo '<pre>';
         print_r($nmemsportsgroup);
         echo '</pre>';
-     
-        $nmemsportsgrouporiginal = clone $nmemsportsgroup;
-        
+            
          if(!$nmemsportsgroup){
             throw $this->createNotFoundException('Es konnte keine Sportgruppe mit der ID.: '.$ID.' gefunden werden');
         }
