@@ -40,7 +40,7 @@ class FunctionManager {
 
                         }else {
                             $originaldependencies->removeElement($clone);
-                            $this->HandleObjectDiff($ob, $clone, $many2manyentity);  
+                            $this->HandleObjectDiff($ob, $clone);  
                         }
                     }
                     
