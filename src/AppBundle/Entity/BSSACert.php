@@ -55,7 +55,7 @@ protected $sgid;
 
 public function __toString()
     {
-        return (string) $this->sgid.'/sg/BSSACertificate';
+        return (string) $this->sgid.'/bssa/BSSACert';
     }
 
     
