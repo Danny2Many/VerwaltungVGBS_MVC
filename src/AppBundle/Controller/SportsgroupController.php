@@ -280,7 +280,7 @@ class SportsgroupController extends Controller {
 //        $trainerlist=$qb['Trainer\Trainer']->getQuery()->getResult();
         $trainersublist=$qb['Nichtmitglieder\Trainer_NonMemSportsgroupSub']->getQuery()->getResult();
 
-
+echo'ggggggggggggg';
         
         $originalbssacerts = new ArrayCollection();
         $originaltrainers = new ArrayCollection();
@@ -301,11 +301,11 @@ class SportsgroupController extends Controller {
 //        }
         
         foreach ($trainersublist as $tsub) {
-            $ts=$doctrine->getRepository('AppBundle:Nichtmitglieder\Trainer_NonMemSportsgroupSub')->findOneBy(array('trainerid' => $tsub->getTrainerid(), 'validfrom'=>$validfrom));
+            $ts=$doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy(array('trainerid' => $tsub->getTrainerid(), 'validfrom'=>$validfrom));
 
             $originaltrainersub= clone $ts;
             $nmemsportsgroup->addSubstitute($ts);
-            $originalbssacerts->add($originaltrainersub);
+            $originaltrainersubs->add($originaltrainersub);
         }
     
     

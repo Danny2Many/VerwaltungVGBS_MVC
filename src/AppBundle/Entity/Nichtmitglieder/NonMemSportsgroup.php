@@ -42,7 +42,7 @@ class NonMemSportsgroup {
 
     /**
      * 
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="string")
      * @Assert\NotBlank()
      */
     protected $time;
@@ -417,7 +417,14 @@ class NonMemSportsgroup {
     }
 
 
-    public function addSubstitute(\AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $substitute)
+    /**
+     * Add substitute
+     *
+     * @param \AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $substitute
+     *
+     * @return NonMemSportsgroup
+     */    
+    public function addSubstitute(\AppBundle\Entity\Trainer\Trainer $substitute)
     {
         
         $this->substitute->add($substitute);
@@ -574,7 +581,7 @@ class NonMemSportsgroup {
     /**
      * Set time
      *
-     * @param datetime $time
+     * @param string $time
      *
      * @return NonMemSportsgroup
      */
@@ -588,7 +595,7 @@ class NonMemSportsgroup {
     /**
      * Get time
      *
-     * @return datetime
+     * @return string
      */
     public function getTime()
     {

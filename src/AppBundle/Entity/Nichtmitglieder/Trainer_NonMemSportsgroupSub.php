@@ -29,6 +29,12 @@ class Trainer_NonMemSportsgroupSub {
     */
     protected $validto;
 
+    public function __toString(){
+//    return (string) $this->nmemid.'id/'.$this->sgid.'/Nichtmitglieder\NonMember_Sportsgroup';
+    return (string) 'a/a/Nichtmitglieder\Trainer_NonMemSportsgroupSub';
+}
+    
+    
     /**
      * Set trainerid
      *
