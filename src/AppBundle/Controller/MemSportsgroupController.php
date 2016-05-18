@@ -120,11 +120,11 @@ class MemSportsgroupController extends Controller {
     //by Adding a string 'Danny' to an Array.
     //Count the number of entries in the Array
     foreach ($sportsgroupnonmemberlist as $sn){
-        $sportsgroupdependentlist[$sn->getSgid()]['memberstotal'][$sn->getNmemid()]='Danny';   
+        $sportsgroupdependentlist[$sn->getSgid()]['memberstotal'][$sn->getMemid()]='Danny';   
     }
     
     foreach ($sportsgroupnonmemberlist as $sm){
-    $sportsgroupdependentlist[$sm->getSgid()]['members'][$sm->getNmemid()]=0;
+    $sportsgroupdependentlist[$sm->getSgid()]['members'][$sm->getMemid()]=0;
     }
         
     foreach ($sportsgrouplist as $sg){

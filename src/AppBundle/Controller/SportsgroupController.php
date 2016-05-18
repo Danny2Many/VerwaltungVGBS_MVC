@@ -126,10 +126,6 @@ class SportsgroupController extends Controller {
         $sportsgroupdependentlist[$tr->getTrainerid()]['trainers'][]=$tr; 
         
     }
-//     echo '<pre>';
-//     print_r($sportsgroupdependentlist);
-//     echo '</pre>';
-    
     //Total Number of Nonmembers per Sportsgroup
     //by Adding a string 'Danny' to an Array.
     //Count the number of entries in the Array
@@ -279,7 +275,7 @@ class SportsgroupController extends Controller {
         }
 
 
-        $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid'=>$ID, 'validfrom'=>$validfrom));
+        $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid'=>'"'.$ID.'"', 'validfrom'=>$validfrom));
         $nmemsportsgrouporiginal= clone $nmemsportsgroup;
       
 
