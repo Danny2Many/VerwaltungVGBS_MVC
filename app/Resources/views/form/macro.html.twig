@@ -51,8 +51,9 @@
 {% macro bssaCollectionItem(formData) %}
         
     {% set name = formData.vars.full_name %}
-        
-    <div class="form-group" data-content="{{ name }}">
+    <div class="panel panel-default" data-content="{{ name }}">
+        <div class="panel-body">
+    <div class="form-group" >
         {{ form_label(attribute(formData, 'terminationdate')) }}
     <div class="col-sm-3">
         {{ form_widget(attribute(formData, 'terminationdate')) }}
@@ -80,9 +81,9 @@
     </div>
     
     <div class="col-sm-3">
-          
+    
            <a class="btn-remove" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span>BSSA-Zertifikat  löschen</button></a>
-
+</div></div>  
     </div>
     </div>
 {% endmacro %}

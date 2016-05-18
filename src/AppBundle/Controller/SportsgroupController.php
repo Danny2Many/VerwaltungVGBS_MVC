@@ -126,10 +126,6 @@ class SportsgroupController extends Controller {
         $sportsgroupdependentlist[$tr->getTrainerid()]['trainers'][]=$tr; 
         
     }
-//     echo '<pre>';
-//     print_r($sportsgroupdependentlist);
-//     echo '</pre>';
-    
     //Total Number of Nonmembers per Sportsgroup
     //by Adding a string 'Danny' to an Array.
     //Count the number of entries in the Array
@@ -155,10 +151,7 @@ class SportsgroupController extends Controller {
                 }
         }
     }
-//         echo '<pre>';
-//     print_r($sportsgroupdependentlist);
-//     echo '</pre>';
-//     
+  
     //Substitute Teacher per Sportsgroup
     foreach ($sportgrouptrainerlist as $pn){
         $sportsgroupdependentlist[$pn->getSgid()]['trainersub'][$pn->getTrainerid()]=$pn->getTrainerid();
@@ -171,12 +164,6 @@ class SportsgroupController extends Controller {
                }
     }
    }
-   
-   
-//     echo '<pre>';
-//     print_r($sportsgroupdependentlist);
-//     echo '</pre>';
-     
      
      
     return $this->render(
@@ -281,14 +268,11 @@ class SportsgroupController extends Controller {
         }
 
 
+
         $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid'=>(string)$ID, 'validfrom'=>$validfrom));
         print_r($nmemsportsgroup);
+
         $nmemsportsgrouporiginal= clone $nmemsportsgroup;
-      
-
-     
-        
-
          if(!$nmemsportsgroup){
             throw $this->createNotFoundException('Es konnte keine Sportgruppe mit der ID.: '.$ID.' gefunden werden');
         }

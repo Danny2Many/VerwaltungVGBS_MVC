@@ -30,11 +30,11 @@
         {{ form_row(form.day)}}  
         {{ form_row(form.time)}}  
         {{ form_row(form.info)}}  
-        {{ form_row(form.token)}}
         {{ form_row(form.capacity)}}
         {{ form_row(form.trainer)}}
         {{ form_row(form.substitute)}}
         {{ form_row(form.roomid)}}
+        <legend><h2>BSSA-Zertifikate</h2></legend>   
         <div id="bc" data-prototype="{{ forms.bssaCollectionItem(form.bssacert.vars.prototype)|e }}">
         {% for bc in form.bssacert %}
             {{ forms.bssaCollectionItem(bc) }}
