@@ -269,7 +269,7 @@ protected $validto;
     /**
      * Add sportsgroup
      *
-     * @param \AppBundle\Entity\Nichtmitglieder\onMember_Sportsgroup $sportsgroup
+     * @param \AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup $sportsgroup
      *
      * @return Nonmember
      */

@@ -36,7 +36,8 @@
     {% block thead %}
         
             
-        <th>Bearb.</th><th>M_Nr</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Geb.Datum</th><th>Ort</th><th>Strasse, Hausnr</th><th>PLZ</th><th>Postfach</th><th>Telefonnr.</th><th>E-Mail</th><th>Eintr.Datum</th><th>Aufnahmebest.</th><th>Rehaschein/e<br> (RSNr.-Ablaufd.-Einheiten)</th><th>abgelaufene Rehaschein/e</th><th>Verm. Beitrag</th><th>Krankenkasse</th><th>Zusatzinfo</th> 
+        <th>Bearb.</th><th>M_Nr</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Geb.Datum</th><th>Ort</th><th>Strasse, Hausnr</th><th>PLZ</th><th>Postfach</th><th>Telefonnr.</th><th>E-Mail</th><th>Sportgruppe</th>
+        <th>Eintr.Datum</th><th>Aufnahmebest.</th><th>Rehaschein/e<br> (RSNr.-Ablaufd.-Einheiten)</th><th>abgelaufene Rehaschein/e</th><th>Verm. Beitrag</th><th>Krankenkasse</th><th>Zusatzinfo</th> 
         <th>Ehrung</th><th>Arbeitsplatzhaltung</th><th>chron. Berufserkr.</th><th>Schmerzen in HWS</th><th>Schmerzen in BWS</th><th>Schmerzen in LWS</th><th>obere Extremitäten</th><th>untere Extremitäten</th><th>sonst. Beeinträchtigungen</th><th>Medikamente</th><th>weit. bewegl. Aktivitäten</th><th>Hf-Ruhe/Min</th><th>Hf-Max/Min</th><th>Hf bei 50%</th><th>Hf bei 55%</th><th>Hf bei 60%</th><th>Hf bei 65%</th><th>Hf bei 70%</th><th>Hf bei 75%</th><th>Hf bei 80%</th><th>Hf bei 85%</th>
         
     {% endblock %}
@@ -85,12 +86,18 @@
                     {% endfor %}</td>
                     
                 <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>
-                {#<td>{% for sportsgroup in data.sportsgroup %}
-                        {{ sportsgroup.Token }}<br>
-                        {% else  %}
-                            {{ "-" }}
-                    {% endfor %}
-                   </td>#}
+                                
+                {% if memberdependentlist[data.memid]['sportsgroups'] is defined %}
+                    {% set sportsgroup =memberdependentlist[data.memid]['sportsgroups'] %}
+                {% else %}
+                    {% set sportsgroup ='' %}  
+                {% endif %}
+                 <td>{% for SG in sportsgroup %}                     
+                   {{SG.token }}<br>
+                {% else %}
+                    {{ "-" }}</td>
+                {% endfor %} 
+            
                  <td>{{ data.admissiondate|date("d.m.Y") }}</td>
                  
                  

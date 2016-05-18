@@ -10,6 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\Member;
 use AppBundle\Form\Type\SearchType;
 use AppBundle\Form\Type\Member\AddMemberType;
+use AppBundle\Form\Type\Member\BaseMemberType;
+
 
 use AppBundle\Form\Type\Member\EditMemberType;
 use AppBundle\Entity\MemPhoneNumber;
@@ -70,7 +72,7 @@ class MemberController extends Controller
 //   }
 //   
 //   $manager->flush();
-    $dependencies=array('Member', 'MemPhoneNumber', 'MemRehabilitationCertificate');
+    $dependencies=array('Member', 'MemPhoneNumber', 'MemRehabilitationCertificate', 'MemSportsgroup', 'Member_Sportsgroup',);
     
     $qb= [];
     foreach($dependencies as $dependent){
@@ -82,7 +84,7 @@ class MemberController extends Controller
        
     }
     
-    $qb['Member']->andWhere($qb['Member']->expr()->isNull('ditto.quitdate'));
+//    $qb['Member']->andWhere($qb['Member']->expr()->isNull('ditto.quitdate'));
                
 
 
@@ -185,7 +187,9 @@ class MemberController extends Controller
      $memberlist=$qb['Member']->getQuery()->getResult();
      $phonenumberlist=$qb['MemPhoneNumber']->getQuery()->getResult();
      $rehabcertlist=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
-     
+     $sportsgroupmemberlist=$qb['Member_Sportsgroup']->getQuery()->getResult();
+     $sportsgrouplist=$qb['MemSportsgroup']->getQuery()->getResult();
+    
     
      
      if($adminyear == date('Y')){
@@ -195,9 +199,22 @@ class MemberController extends Controller
          $now=$adminyear.'-12-31';
      }
      
+    $memberdependentlist=[];
 
      
-     $memberdependentlist=[];
+    foreach ($sportsgroupmemberlist as $sn){
+
+        $memberdependentlist[$sn->getMemid()]['sportsgroups'][$sn->getSgid()]=$sn->getSgid();
+    }
+    
+    foreach ($memberlist as $nm){
+        foreach ($sportsgrouplist as $sg){
+            if(isset($memberdependentlist[$nm->getMemid()]['sportsgroups'][$sg->getSgid()])){
+            $memberdependentlist[$nm->getMemid()]['sportsgroups'][$sg->getSgid()]=$sg;
+            } 
+        }
+    }     
+     
      foreach ($phonenumberlist as $pn){
          
          $memberdependentlist[$pn->getMemid()]['phonenumbers'][]=$pn;
@@ -244,7 +261,9 @@ class MemberController extends Controller
      */
     public function addmemberAction(Request $request, $letter, $adminyear)
     {
-        $manager= $this->getDoctrine()->getManager();
+        $doctrine=$this->getDoctrine();   
+        $manager= $doctrine->getManager();
+        
         $member = new Member();
         $phonenumber = new MemPhoneNumber();
         
@@ -253,7 +272,8 @@ class MemberController extends Controller
 //
 //                   ->setEntityName('Member');
         $im= new IndexManager($manager, 'Member');
-        
+        $fm= new FunctionManager($doctrine, $adminyear);
+
 
         $memid=$im->getCurrentIndex();
         $member->setMemid($memid);
@@ -271,35 +291,24 @@ class MemberController extends Controller
         //if the form is valid -> persist it to the database
         if($addmemform->isSubmitted() && $addmemform->isValid()){
 
-
-            
-
-        
-
-            
-         
-            
-            
-            
+            $manager= $this->getDoctrine()->getManager();            
                     
             $member->setValidfrom($adminyear)
                     ->setValidto('2155');
             
             foreach($member->getRehabilitationcertificate() as $rc){
-              $rc->setRcid(uniqid('rc'))
-                 ->setValidfrom($adminyear)
-                 ->setValidto('2155');
-              $manager->persist($rc);
+                $fm->AddObject($rc, 'secondary');
               
           }
             
             foreach($member->getPhonenumber() as $pn){
-              $pn->setPnid(uniqid('pn'))
-                 ->setValidfrom($adminyear)
-                 ->setValidto('2155');
-              $manager->persist($pn);
+                $fm->AddObject($pn, 'secondary');
               
           }
+          
+           foreach ($member->getSportsgroup() as $sg){
+                $fm->AddObject($sg,'secondary', array('entitypath' => 'AppBundle\Entity\Member_Sportsgroup','idprefixone' => 'mem','idone' => $member->getMemid()));
+            }
             
              
           
@@ -352,7 +361,7 @@ class MemberController extends Controller
     $fm= new FunctionManager($doctrine, $adminyear);
 
         
-    $dependencies=['MemPhoneNumber', 'MemRehabilitationCertificate'];
+    $dependencies=['MemPhoneNumber', 'MemRehabilitationCertificate', 'Member_Sportsgroup', ];
     
     $qb=[];
     foreach($dependencies as $dependent){
@@ -383,11 +392,13 @@ class MemberController extends Controller
         
         $phonenumbers=$qb['MemPhoneNumber']->getQuery()->getResult();
         $rehabcerts=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
+        $sportsgrouplist=$qb['Member_Sportsgroup']->getQuery()->getResult();
         
 
         
          $originalrehabs = new ArrayCollection();
          $originalphonenrs = new ArrayCollection();
+         $originalsportsgroups = new ArrayCollection();
         
 
          
@@ -410,6 +421,14 @@ class MemberController extends Controller
         $member->addPhonenumber($phonenr);
         $originalphonenrs->add($originalphonenr);
     }
+    
+    foreach ($sportsgrouplist as $sport) {
+             $sp=$doctrine->getRepository('AppBundle:MemSportsgroup')->findOneBy(array('sgid' => $sport->getSgid(), 'validfrom'=>$validfrom));
+             
+             $originalsportsgroup= clone $sp;          
+             $member->addSportsgroup($sp);
+             $originalsportsgroups->add($originalsportsgroup);
+         }
     
     
       $editmemform = $this->createForm(EditMemberType::class, $member, array('adyear' => $adminyear));
@@ -437,6 +456,8 @@ class MemberController extends Controller
        
                 $fm->HandleDependencyDiff($member->getRehabilitationcertificate(), $originalrehabs);
                 $fm->HandleDependencyDiff($member->getPhonenumber(), $originalphonenrs);
+                $fm->HandleDependencyDiff($member->getSportsgroup(), $originalsportsgroups, array('entitypath' => 'AppBundle\Entity\Member_Sportsgroup','idprefixone' => 'mem','idone' => $member->getMemid()));
+                
                 
                 $fm->HandleObjectDiff($member, $memberoriginal);
 

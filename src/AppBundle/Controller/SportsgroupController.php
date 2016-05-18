@@ -271,17 +271,17 @@ class SportsgroupController extends Controller {
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
             $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
                     ->andWhere('ditto.validto>'.$adminyear)
-                    ->andWhere('ditto.sgid='.$ID);
+                    ->andWhere('ditto.sgid=:ID')
+                    ->setParameter('ID',$ID)
+                   ;
         }
 
 
-        $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid'=>'"'.$ID.'"', 'validfrom'=>$validfrom));
+
+        $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid'=>(string)$ID, 'validfrom'=>$validfrom));
+        print_r($nmemsportsgroup);
+
         $nmemsportsgrouporiginal= clone $nmemsportsgroup;
-      
-
-     
-        
-
          if(!$nmemsportsgroup){
             throw $this->createNotFoundException('Es konnte keine Sportgruppe mit der ID.: '.$ID.' gefunden werden');
         }
@@ -304,9 +304,9 @@ class SportsgroupController extends Controller {
             return $this->redirectToRoute('sportsgroup_home', array('letter' => $letter, 'adminyear' => $adminyear));
         }
         
-        if($editsportsgroupform->isSubmitted() && $$editsportsgroupform->isValid()){
+        if($editsportsgroupform->isSubmitted() && $editsportsgroupform->isValid()){
   
-            $fm->HandleDependencyDiff($nmemsportsgroup->getLicence(), $originalbssacert, $adminyear);
+            $fm->HandleDependencyDiff($nmemsportsgroup->getBssacert(), $originalbssacerts);
             $fm->HandleObjectDiff($nmemsportsgroup, $nmemsportsgrouporiginal);
             $manager->flush();
             $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');           

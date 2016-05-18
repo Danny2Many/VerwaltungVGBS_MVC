@@ -117,6 +117,8 @@ class NonMemberController extends Controller {
     $rehabcertlist=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
     $sportsgroupnonmemberlist=$qb['Nichtmitglieder\NonMember_Sportsgroup']->getQuery()->getResult();
     $sportsgrouplist=$qb['Nichtmitglieder\NonMemSportsgroup']->getQuery()->getResult();
+    
+    
     if($adminyear == date('Y')){
          $now=date('Y-m-d');
      }
