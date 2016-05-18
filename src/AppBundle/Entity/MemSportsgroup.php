@@ -38,7 +38,7 @@ class MemSportsgroup {
     protected $day;
     
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="datetime")
      * @Assert\NotBlank()
      * 
      */

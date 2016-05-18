@@ -74,7 +74,7 @@
         <td><center><a href="{{ path('editsportsgroup', {'letter': first|capitalize, 'ID': data.sgid, 'adminyear': adminyear,  'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></a></center></td>       
         <td>{{ data.name|striptags }}</td>
         <td>{{ data.info|striptags }}</td> 
-        <td>{{ data.time|date("h:i") }}</td>
+        <td>{{ data.time|date("H:i") }}</td>
         {% if sportsgroupdependentlist[data.roomid]['rooms'] is defined %}
         {% set rooms =sportsgroupdependentlist[data.roomid]['rooms'] %}
         {% else %}
@@ -140,7 +140,7 @@
         {% if sportsgroupdependentlist[data.sgid]['nonmembers']['female'] is defined %}
             {% set nonmemberfemale =sportsgroupdependentlist[data.sgid]['nonmembers']['female'] %}
         {% else %}
-          {% set nonmemberfemale ='' %}  
+          {% set nonmemberfemale ='-' %}  
         {% endif %}
     
               <td>  {{ nonmemberfemale }}</td>
@@ -153,7 +153,7 @@
         {% if sportsgroupdependentlist[data.sgid]['nonmembers']['male'] is defined %}
             {% set nonmembermale =sportsgroupdependentlist[data.sgid]['nonmembers']['male'] %}
         {% else %}
-            {% set nonmembermale ='' %}  
+            {% set nonmembermale ='-' %}  
         {% endif %}
         
               <td>  {{ nonmembermale}}</td>

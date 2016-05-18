@@ -14,8 +14,8 @@ class BSSACertType extends AbstractType{
     {
         $builder
                 
-                ->add('terminationdate',DateType::class, array('label' => 'Laufzeit bis:', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag')))
-                ->add('startdate',DateType::class, array('label' => 'Erstanmeldung:', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag')))
+                ->add('terminationdate',DateType::class, array('label' => 'Laufzeit bis:', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Mon.', 'day' => 'Tag')))
+                ->add('startdate',DateType::class, array('label' => 'Erstanmeldung:', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Mon.', 'day' => 'Tag')))
                 ->add('groupnr', SanitizedTextType::class, array('label' => 'VGBS-GruppenNr.:'))
                 ->add('bssacertnr', SanitizedTextType::class, array ('label' => 'BSSA-Zertifikatnr.:'))        
                 

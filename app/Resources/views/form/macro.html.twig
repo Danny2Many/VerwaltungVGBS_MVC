@@ -51,9 +51,9 @@
 {% macro bssaCollectionItem(formData) %}
         
     {% set name = formData.vars.full_name %}
-    <div class="panel panel-default">
+    <div class="panel panel-default" data-content="{{ name }}">
         <div class="panel-body">
-    <div class="form-group" data-content="{{ name }}">
+    <div class="form-group" >
         {{ form_label(attribute(formData, 'terminationdate')) }}
     <div class="col-sm-3">
         {{ form_widget(attribute(formData, 'terminationdate')) }}

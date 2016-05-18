@@ -151,10 +151,7 @@ class SportsgroupController extends Controller {
                 }
         }
     }
-//         echo '<pre>';
-//     print_r($sportsgroupdependentlist);
-//     echo '</pre>';
-//     
+  
     //Substitute Teacher per Sportsgroup
     foreach ($sportgrouptrainerlist as $pn){
         $sportsgroupdependentlist[$pn->getSgid()]['trainersub'][$pn->getTrainerid()]=$pn->getTrainerid();
@@ -167,12 +164,6 @@ class SportsgroupController extends Controller {
                }
     }
    }
-   
-   
-//     echo '<pre>';
-//     print_r($sportsgroupdependentlist);
-//     echo '</pre>';
-     
      
      
     return $this->render(
