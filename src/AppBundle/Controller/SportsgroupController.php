@@ -297,13 +297,15 @@ class SportsgroupController extends Controller {
 
 
         $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid'=>(string)$ID, 'validfrom'=>$validfrom));
+        $ntid=$nmemsportsgroup->getTrainerid();
+        echo $ntid;
         $nmemsportsgrouporiginal= clone $nmemsportsgroup;
         
          if(!$nmemsportsgroup){
             throw $this->createNotFoundException('Es konnte keine Sportgruppe mit der ID.: '.$ID.' gefunden werden');
         }
         $bssacert=$qb['BSSACert']->getQuery()->getResult();
-//        $trainerlist=$qb['Trainer\Trainer']->getQuery()->getResult();
+        $trainerlist=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('trainerid'=>$nmemsportsgroup->getTrainerid(), 'validfrom'=>$validfrom));
         $trainersublist=$qb['Nichtmitglieder\Trainer_NonMemSportsgroupSub']->getQuery()->getResult();
 
 
@@ -320,11 +322,11 @@ class SportsgroupController extends Controller {
             $originalbssacerts->add($originalbssacert);
         }
         
-//        foreach ($trainerlist as $tr) {
-//            $originaltrainer= clone $tr;
-//            $nmemsportsgroup->addTrainer($bssa);
-//            $originaltrainers->add($originaltrainer);
-//        }
+        foreach ($trainerlist as $tr) {
+            $originaltrainer= clone $tr;
+            $nmemsportsgroup->addTrainer($bssa);
+            $originaltrainers->add($originaltrainer);
+        }
         
         foreach ($trainersublist as $tsub) {
             $ts=$doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy(array('trainerid' => $tsub->getTrainerid(), 'validfrom'=>$validfrom));
@@ -351,7 +353,9 @@ class SportsgroupController extends Controller {
             $fm->HandleDependencyDiff($nmemsportsgroup->getBssacert(), $originalbssacerts);
             $fm->HandleDependencyDiff($nmemsportsgroup->getTrainer(), $originaltrainers);
             $fm->HandleDependencyDiff($nmemsportsgroup->getSubstitute(), $originaltrainersubs, array('entitypath' => 'AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub','idprefixone' => 'sg','idone' => $nmemsportsgroup->getSgid()));
-                        
+            
+          
+
             $fm->HandleObjectDiff($nmemsportsgroup, $nmemsportsgrouporiginal);
            //------Generierung der Gruppenbezeichnung-------------------------------        
             switch($day=$nmemsportsgroup->getDay())
