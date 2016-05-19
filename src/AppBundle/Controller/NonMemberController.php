@@ -321,7 +321,7 @@ class NonMemberController extends Controller {
          
         if($editnonmemform->get('delete')->isClicked()){
            
-            $fm->RemoveObject($nonmember, array('Nichtmitglieder\NonMemPhoneNumber', 'Nichtmitglieder\NonMemRehabilitationCertificate'));
+            $fm->RemoveObject($nonmember, array('Nichtmitglieder\NonMemPhoneNumber', 'Nichtmitglieder\NonMemRehabilitationCertificate', 'Nihctmitglieder\NonMember_Sportsgroup'));
            
            $manager->flush();
             $this->addflash('notice', 'Dieses Nichtmitglied wurde erfolgreich gelöscht!');

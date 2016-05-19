@@ -314,7 +314,7 @@ echo'ggggggggggggg';
         $editsportsgroupform->handleRequest($request);
         
         if($editsportsgroupform->get('delete')->isClicked()){
-            $fm->RemoveObject($nmemsportsgroup,array('BSSACert', 'Trainer\Trainer', 'Nichtmitglieder\Trainer_NonMemSportsgroupSub'));
+            $fm->RemoveObject($nmemsportsgroup,array('BSSACert', 'Nichtmitglieder\Trainer_NonMemSportsgroupSub', 'Nichtmitglieder\NonMember_Sportsgroup'));
             $manager->flush();
             $this->addFlash('notice', 'Diese Nichtmitglieder-Sportgruppe wurde erfolgreich gelöscht!');
             return $this->redirectToRoute('sportsgroup_home', array('letter' => $letter, 'adminyear' => $adminyear));
