@@ -219,7 +219,7 @@ class SportsgroupController extends Controller {
            ->setValidto('2155');       
         $manager->persist($bs);}
         
-        $nonmemsportsgroup->setToken()->getName();
+        $nonmemsportsgroup->setToken($nonmemsportsgroup->getName().'_'.$nonmemsportsgroup->getTime());
         
         foreach ($nonmemsportsgroup->getSubstitute() as $su){
                 $fm->AddObject($su,'secondary', array('entitypath' => 'AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub','idprefixone' => 'sg','idone' => $nonmemsportsgroup->getSgid()));
