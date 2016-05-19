@@ -234,7 +234,107 @@ class MemSportsgroupController extends Controller {
           'adminyear' => $adminyear
           ));
      }
+  
+//------------------------------------------------------------------------------------------------- 
+     
+     
+    /**
+     * @Route("/mitgliedersportgruppen/bearbeiten/{adminyear}/{letter}/{ID}", name="editsmemportsgroup", defaults={"letter": "alle"})
+     * 
+     */       
+     public function editsportsgroupAction(Request $request, $adminyear, $ID, $letter){
+     
+        $doctrine=$this->getDoctrine(); 
+        $manager= $doctrine->getManager();
+        $validfrom=$request->query->get('version');
+        $fm= new FunctionManager($doctrine, $adminyear);
+       
+        $dependencies=['BSSACert',  'Trainer_MemSportsgroupSub'];
+        $qb=[];
+        
+        foreach($dependencies as $dependent){
+            $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
+            $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
+                    ->andWhere('ditto.validto>'.$adminyear)
+                    ->andWhere('ditto.sgid=:ID')
+                    ->setParameter('ID',$ID)
+                   ;
+        }
+
+
+
+        $memsportsgroup=$doctrine->getRepository('AppBundle:MemSportsgroup')->findOneBy(array('sgid'=>(string)$ID, 'validfrom'=>$validfrom));
+//        print_r($memsportsgroup);
+
+        $memsportsgrouporiginal= clone $memsportsgroup;
+         if(!$memsportsgroup){
+            throw $this->createNotFoundException('Es konnte keine Sportgruppe mit der ID.: '.$ID.' gefunden werden');
+        }
+        $bssacert=$qb['BSSACert']->getQuery()->getResult();
+//        $trainerlist=$qb['Trainer\Trainer']->getQuery()->getResult();
+        $trainersublist=$qb['Trainer_MemSportsgroupSub']->getQuery()->getResult();
+
+        
+        $originalbssacerts = new ArrayCollection();
+        $originaltrainers = new ArrayCollection();
+        $originaltrainersubs = new ArrayCollection();
+
+        
+        // Create an ArrayCollection of the current Rehab objects in the database
+        foreach ($bssacert as $bssa) {
+            $originalbssacert= clone $bssa;
+            $memsportsgroup->addBssacert($bssa);
+            $originalbssacerts->add($originalbssacert);
+        }
+        
+//        foreach ($trainerlist as $tr) {
+//            $originaltrainer= clone $tr;
+//            $nmemsportsgroup->addTrainer($bssa);
+//            $originaltrainers->add($originaltrainer);
+//        }
+        
+        foreach ($trainersublist as $tsub) {
+            $ts=$doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy(array('trainerid' => $tsub->getTrainerid(), 'validfrom'=>$validfrom));
+
+            $originaltrainersub= clone $ts;
+            $memsportsgroup->addSubstitute($ts);
+            $originaltrainersubs->add($originaltrainersub);
+        }
     
+    
+    
+        $editsportsgroupform = $this->createForm(EditSportsgroupType::class, $memsportsgroup, array('adyear' => $adminyear));
+        $editsportsgroupform->handleRequest($request);
+        
+        if($editsportsgroupform->get('delete')->isClicked()){
+            $fm->RemoveObject($memsportsgroup,array('BSSACert', 'Trainer_MemSportsgroupSub', 'Member_Sportsgroup'));
+            $manager->flush();
+            $this->addFlash('notice', 'Diese Nichtmitglieder-Sportgruppe wurde erfolgreich gelöscht!');
+            return $this->redirectToRoute('memsportsgroup_home', array('letter' => $letter, 'adminyear' => $adminyear));
+        }
+        
+        if($editsportsgroupform->isSubmitted() && $editsportsgroupform->isValid()){
+  
+            $fm->HandleDependencyDiff($memsportsgroup->getBssacert(), $originalbssacerts);
+            $fm->HandleDependencyDiff($memsportsgroup->getTrainer(), $originaltrainers);
+            $fm->HandleDependencyDiff($memsportsgroup->getSubstitute(), $originaltrainersubs, array('entitypath' => 'AppBundle\Entity\Trainer_MemSportsgroupSub','idprefixone' => 'sg','idone' => $memsportsgroup->getSgid()));
+                        
+            $fm->HandleObjectDiff($memsportsgroup, $memsportsgrouporiginal);
+            
+            $manager->flush();
+            $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');           
+          return $this->redirectToRoute('memsportsgroup_home', array('letter' => $letter, 'adminyear' => $adminyear));  
+        }
+        
+        return $this->render(
+        'Sportgruppen/sportsgroupform.html.twig',
+        array(
+           'form' => $editsportsgroupform->createView(),
+           'cletter' => $letter,
+           'title' => 'Sportgruppen bearbeiten',
+           'adminyear' => $adminyear
+           ));
+    }     
 
 
 
