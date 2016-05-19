@@ -218,9 +218,35 @@ class SportsgroupController extends Controller {
            ->setValidfrom($adminyear)
            ->setValidto('2155');       
         $manager->persist($bs);}
-        
-        $nonmemsportsgroup->setToken($nonmemsportsgroup->getName().'_'.$nonmemsportsgroup->getTime());
-        
+//------Generierung der Gruppenbezeichnung-------------------------------        
+    switch($day=$nonmemsportsgroup->getDay())
+    {
+      case ("Montag"):
+      $day='mo';
+      break;
+
+      case ("Dienstag"):
+      $day='di';
+      break;
+  
+      case ("Mittwoch"):
+      $day='mi';
+      break;
+  
+      case ("Donnerstag"):
+      $day='do';
+      break;
+  
+      case ("Freitag"):
+      $day='fr';
+      break;
+    }
+    $time=$nonmemsportsgroup->getTime();
+    $m = floor(($time%3600)/60);
+    $h = floor(($time%86400)/3600)+1;
+    $nonmemsportsgroup->setToken(str_replace(' ', '_',strtolower($day.'_'.$nonmemsportsgroup->getName().'_'.$h.''.$m)));
+//------Ende der Generierung der Gruppenbezeichnung-------------------------------        
+       
         foreach ($nonmemsportsgroup->getSubstitute() as $su){
                 $fm->AddObject($su,'secondary', array('entitypath' => 'AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub','idprefixone' => 'sg','idone' => $nonmemsportsgroup->getSgid()));
             }
@@ -271,9 +297,8 @@ class SportsgroupController extends Controller {
 
 
         $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid'=>(string)$ID, 'validfrom'=>$validfrom));
-        print_r($nmemsportsgroup);
-
         $nmemsportsgrouporiginal= clone $nmemsportsgroup;
+        
          if(!$nmemsportsgroup){
             throw $this->createNotFoundException('Es konnte keine Sportgruppe mit der ID.: '.$ID.' gefunden werden');
         }
@@ -281,7 +306,7 @@ class SportsgroupController extends Controller {
 //        $trainerlist=$qb['Trainer\Trainer']->getQuery()->getResult();
         $trainersublist=$qb['Nichtmitglieder\Trainer_NonMemSportsgroupSub']->getQuery()->getResult();
 
-echo'ggggggggggggg';
+
         
         $originalbssacerts = new ArrayCollection();
         $originaltrainers = new ArrayCollection();
@@ -328,7 +353,34 @@ echo'ggggggggggggg';
             $fm->HandleDependencyDiff($nmemsportsgroup->getSubstitute(), $originaltrainersubs, array('entitypath' => 'AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub','idprefixone' => 'sg','idone' => $nmemsportsgroup->getSgid()));
                         
             $fm->HandleObjectDiff($nmemsportsgroup, $nmemsportsgrouporiginal);
-            
+           //------Generierung der Gruppenbezeichnung-------------------------------        
+            switch($day=$nmemsportsgroup->getDay())
+            {
+              case ("Montag"):
+              $day='mo';
+              break;
+
+              case ("Dienstag"):
+              $day='di';
+              break;
+
+              case ("Mittwoch"):
+              $day='mi';
+              break;
+
+              case ("Donnerstag"):
+              $day='do';
+              break;
+
+              case ("Freitag"):
+              $day='fr';
+              break;
+            }
+            $time=$nmemsportsgroup->getTime();
+            $m = floor(($time%3600)/60);
+            $h = floor(($time%86400)/3600)+1;
+            $nmemsportsgroup->setToken(str_replace(' ', '_',strtolower($day.'_'.$nmemsportsgroup->getName().'_'.$h.''.$m)));
+           
             $manager->flush();
             $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');           
           return $this->redirectToRoute('sportsgroup_home', array('letter' => $letter, 'adminyear' => $adminyear));  
