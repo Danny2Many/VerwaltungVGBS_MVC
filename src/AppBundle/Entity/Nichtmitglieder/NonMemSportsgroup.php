@@ -66,7 +66,6 @@ class NonMemSportsgroup {
     
     /**
      * @ORM\Column(type="string")
-        * @Assert\NotBlank()
      * 
      */
     protected $token;

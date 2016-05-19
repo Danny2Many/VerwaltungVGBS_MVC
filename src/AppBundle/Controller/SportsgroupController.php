@@ -208,7 +208,6 @@ class SportsgroupController extends Controller {
      
      if($addnonmemsportsgroupform->isSubmitted() && $addnonmemsportsgroupform->isValid()){
         
-         
         $nonmemsportsgroup->setValidfrom($adminyear)
                     ->setValidto('2155');  
         
@@ -220,13 +219,15 @@ class SportsgroupController extends Controller {
            ->setValidto('2155');       
         $manager->persist($bs);}
         
+        $nonmemsportsgroup->setToken()->getName();
+        
         foreach ($nonmemsportsgroup->getSubstitute() as $su){
                 $fm->AddObject($su,'secondary', array('entitypath' => 'AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub','idprefixone' => 'sg','idone' => $nonmemsportsgroup->getSgid()));
             }
             
-        $manager->persist($nonmemsportsgroup);
+        $manager->persist($nonmemsportsgroup);     
         $manager->flush();
-        
+
 //        $im->add();
         $this->addFlash('notice', 'Diese Nichtmitglieder-Sportgruppe wurde erfolgreich angelegt');
         return $this->redirectToRoute('sportsgroup_home', array('letter'=>$letter, 'adminyear' => $adminyear));
