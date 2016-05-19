@@ -319,7 +319,7 @@ class TrainerController extends Controller
         
         if($edittrainerform->get('delete')->isClicked()){
             
-           $fm->RemoveObject($trainer, array('Trainer\TrainerFocus', 'Trainer\TrainerPhonenumber', 'Trainer\TrainerLicence'));
+           $fm->RemoveObject($trainer, array('Trainer\TrainerFocus', 'Trainer\TrainerPhonenumber', 'Trainer\TrainerLicence', 'Nichtmitglieder\Trainer_NonMemSportsgroupSub', ));
 
             
             

@@ -416,7 +416,14 @@ class NonMemSportsgroup {
     }
 
 
-    public function addSubstitute(\AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $substitute)
+    /**
+     * Add substitute
+     *
+     * @param \AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $substitute
+     *
+     * @return NonMemSportsgroup
+     */    
+    public function addSubstitute(\AppBundle\Entity\Trainer\Trainer $substitute)
     {
         
         $this->substitute->add($substitute);

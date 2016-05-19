@@ -256,7 +256,7 @@ class SportsgroupController extends Controller {
         $validfrom=$request->query->get('version');
         $fm= new FunctionManager($doctrine, $adminyear);
        
-        $dependencies=['BSSACert'];
+        $dependencies=['BSSACert',  'Nichtmitglieder\Trainer_NonMemSportsgroupSub'];
         $qb=[];
         
         foreach($dependencies as $dependent){
@@ -278,19 +278,44 @@ class SportsgroupController extends Controller {
             throw $this->createNotFoundException('Es konnte keine Sportgruppe mit der ID.: '.$ID.' gefunden werden');
         }
         $bssacert=$qb['BSSACert']->getQuery()->getResult();
+//        $trainerlist=$qb['Trainer\Trainer']->getQuery()->getResult();
+        $trainersublist=$qb['Nichtmitglieder\Trainer_NonMemSportsgroupSub']->getQuery()->getResult();
+
+echo'ggggggggggggg';
+        
         $originalbssacerts = new ArrayCollection();
+        $originaltrainers = new ArrayCollection();
+        $originaltrainersubs = new ArrayCollection();
+
         
         // Create an ArrayCollection of the current Rehab objects in the database
         foreach ($bssacert as $bssa) {
-        $originalbssacert= clone $bssa;
-        $nmemsportsgroup->addBssacert($bssa);
-        $originalbssacerts->add($originalbssacert);
-    }
+            $originalbssacert= clone $bssa;
+            $nmemsportsgroup->addBssacert($bssa);
+            $originalbssacerts->add($originalbssacert);
+        }
+        
+//        foreach ($trainerlist as $tr) {
+//            $originaltrainer= clone $tr;
+//            $nmemsportsgroup->addTrainer($bssa);
+//            $originaltrainers->add($originaltrainer);
+//        }
+        
+        foreach ($trainersublist as $tsub) {
+            $ts=$doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy(array('trainerid' => $tsub->getTrainerid(), 'validfrom'=>$validfrom));
+
+            $originaltrainersub= clone $ts;
+            $nmemsportsgroup->addSubstitute($ts);
+            $originaltrainersubs->add($originaltrainersub);
+        }
+    
+    
+    
         $editsportsgroupform = $this->createForm(EditSportsgroupType::class, $nmemsportsgroup, array('adyear' => $adminyear));
         $editsportsgroupform->handleRequest($request);
         
         if($editsportsgroupform->get('delete')->isClicked()){
-            $fm->RemoveObject($nmemsportsgroup,array('BSSACert'));
+            $fm->RemoveObject($nmemsportsgroup,array('BSSACert', 'Nichtmitglieder\Trainer_NonMemSportsgroupSub', 'Nichtmitglieder\NonMember_Sportsgroup'));
             $manager->flush();
             $this->addFlash('notice', 'Diese Nichtmitglieder-Sportgruppe wurde erfolgreich gelöscht!');
             return $this->redirectToRoute('sportsgroup_home', array('letter' => $letter, 'adminyear' => $adminyear));
@@ -299,7 +324,11 @@ class SportsgroupController extends Controller {
         if($editsportsgroupform->isSubmitted() && $editsportsgroupform->isValid()){
   
             $fm->HandleDependencyDiff($nmemsportsgroup->getBssacert(), $originalbssacerts);
+            $fm->HandleDependencyDiff($nmemsportsgroup->getTrainer(), $originaltrainers);
+            $fm->HandleDependencyDiff($nmemsportsgroup->getSubstitute(), $originaltrainersubs, array('entitypath' => 'AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub','idprefixone' => 'sg','idone' => $nmemsportsgroup->getSgid()));
+                        
             $fm->HandleObjectDiff($nmemsportsgroup, $nmemsportsgrouporiginal);
+            
             $manager->flush();
             $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');           
           return $this->redirectToRoute('sportsgroup_home', array('letter' => $letter, 'adminyear' => $adminyear));  
