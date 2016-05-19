@@ -12,7 +12,8 @@ class EditSportsgroupType extends BaseSportsgroupType {
           
     }
     public function configureOptions(OptionsResolver $resolver)
-        {$resolver->setDefaults(array('data_class' => 'AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup',
+        {$resolver->setDefaults(array(
+//            'data_class' => 'AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup',
             'adyear' => NULL,));
         }
 }

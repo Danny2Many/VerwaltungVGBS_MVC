@@ -101,7 +101,7 @@ class FunctionManager {
                                 
                                 $M2MObject=$manager->find($many2many['entitypath'], array($metadata['idprefix'].'id'=>$metadata['id'], $many2many['idprefixone'].'id' => $many2many['idone'], 'validfrom'=>$originalobject->getValidfrom()));
 
-                                $M2MObject->setSgid($savedobject->getSgid());
+//                                $M2MObject->setSgid($savedobject->getSgid());
                                 call_user_func(array($M2MObject, 'set'.$metadata['idprefix'].'id' ), call_user_func(array($savedobject, 'get'.$metadata['idprefix'].'id')));
                                 $manager->persist($M2MObject); 
                                 $manager->flush();

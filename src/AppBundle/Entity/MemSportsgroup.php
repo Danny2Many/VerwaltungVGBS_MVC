@@ -38,7 +38,7 @@ class MemSportsgroup {
     protected $day;
     
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="string")
      * @Assert\NotBlank()
      * 
      */
@@ -164,7 +164,7 @@ class MemSportsgroup {
     /**
      * Set time
      *
-     * @param \DateTime $time
+     * @param string $time
      *
      * @return MemSportsgroup
      */
@@ -178,7 +178,7 @@ class MemSportsgroup {
     /**
      * Get time
      *
-     * @return \DateTime
+     * @return string
      */
     public function getTime()
     {
@@ -383,7 +383,7 @@ class MemSportsgroup {
     }
 
 
-    public function addSubstitute(\AppBundle\Entity\Trainer_MemSportsgroupSub $substitute)
+    public function addSubstitute(\AppBundle\Entity\Trainer\Trainer $substitute)
     {
         
         $this->substitute->add($substitute);

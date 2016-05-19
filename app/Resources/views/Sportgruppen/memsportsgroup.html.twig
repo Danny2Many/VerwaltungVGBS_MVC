@@ -71,7 +71,7 @@
                 {% else %}
                 {% set first = data.name|first %}   
         {% endif %}
-        <td><center><a href="{{ path('editsportsgroup', {'letter': first|capitalize, 'ID': data.sgid, 'adminyear': adminyear,  'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></a></center><a href="{{ path('editsportsgroup', {'letter': first|capitalize, 'ID': data.sgid, 'adminyear': adminyear,  'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='intern'> <span class='glyphicon glyphicon-list'></span></button></a></center></td>       
+        <td><center><a href="{{ path('editmemsportsgroup', {'letter': first|capitalize, 'ID': data.sgid, 'adminyear': adminyear,  'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></a></center><a href="{{ path('editmemsportsgroup', {'letter': first|capitalize, 'ID': data.sgid, 'adminyear': adminyear,  'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='intern'> <span class='glyphicon glyphicon-list'></span></button></a></center></td>       
         <td>{{ data.name|striptags }}</td>
         <td>{{ data.info|striptags }}</td> 
         <td>{{ data.time|date("h:i") }}</td>
