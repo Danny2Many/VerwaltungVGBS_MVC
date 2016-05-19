@@ -21,7 +21,7 @@ use AppBundle\Services\FunctionManager;
 
 class SportsgroupController extends Controller {
     /**
-    * @Route("/sportgruppen/{adminyear}/{letter}", defaults={"letter"="alle", "adminyear"=2016}, name="sportsgroup_home" , requirements={"letter": "[A-Z]|alle", "adminyear": "[1-9][0-9]{3}"})
+    * @Route("/sportgruppen/{adminyear}/{letter}", defaults={"letter"="alle", "adminyear"=2016}, name="sportsgroup_home" , requirements={"letter": "Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag|alle", "adminyear": "[1-9][0-9]{3}"})
     */ 
      public function indexAction (Request $request, $letter, $adminyear){
      
@@ -56,8 +56,8 @@ class SportsgroupController extends Controller {
 //     print_r($nombre);
 //     echo '</pre>';
     
-    $choices=array('Gruppenbezeichnung' => 'token',
-                   'Sportgruppe/Info' => 'name',
+    $choices=array('Sportgruppe' => 'name',
+                   'Gruppenbezeichnung' => 'token',
                    'Wochentag' => 'day'
         
         );
@@ -80,24 +80,24 @@ class SportsgroupController extends Controller {
     }
      else if ($letter !='alle')
     {
-        $qb['Nichtmitglieder\NonMemSportsgroup']->andWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->like('ditto.name', ':letter'))
-                  ->setParameter('letter',$letter.'%');
+        $qb['Nichtmitglieder\NonMemSportsgroup']->andWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->like('ditto.day', ':letter'))
+                  ->setParameter('letter',$letter);
 
 
 
-         switch($letter){
-           case 'A': $qb['Nichtmitglieder\NonMemSportsgroup']->orWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->like('ditto.name', ':umlautletter'))
-                        ->setParameter('umlautletter','Ä%'); 
-           break;
-
-           case 'O': $qb['Nichtmitglieder\NonMemSportsgroup']->orWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->like('ditto.name', ':umlautletter'))
-                        ->setParameter('umlautletter','Ö%'); 
-           break;
-
-           case 'U': $qb['Nichtmitglieder\NonMemSportsgroup']->orWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->like('ditto.name', ':umlautletter'))
-                        ->setParameter('umlautletter','Ü%'); 
-           break;
-       }
+//         switch($letter){
+//           case 'A': $qb['Nichtmitglieder\NonMemSportsgroup']->orWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->like('ditto.name', ':umlautletter'))
+//                        ->setParameter('umlautletter','Ä%'); 
+//           break;
+//
+//           case 'O': $qb['Nichtmitglieder\NonMemSportsgroup']->orWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->like('ditto.name', ':umlautletter'))
+//                        ->setParameter('umlautletter','Ö%'); 
+//           break;
+//
+//           case 'U': $qb['Nichtmitglieder\NonMemSportsgroup']->orWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->like('ditto.name', ':umlautletter'))
+//                        ->setParameter('umlautletter','Ü%'); 
+//           break;
+//       }
     }else{ $letter=null; } 
     $sportsgrouplist=$qb['Nichtmitglieder\NonMemSportsgroup']->getQuery()->getResult();
     $bssacertlist=$qb['BSSACert']->getQuery()->getResult();
@@ -181,7 +181,7 @@ class SportsgroupController extends Controller {
 //**********************************************************************************************************
 
     /**
-     * @Route("/sportgruppen/anlegen/{adminyear}/{letter}", defaults={"letter": "alle", "adminyear": 2016}, name="addsportsgroup", requirements={"letter": "[A-Z]|alle" ,"adminyear": "[1-9][0-9]{3}"})
+     * @Route("/sportgruppen/anlegen/{adminyear}/{letter}", defaults={"letter": "alle", "adminyear": 2016}, name="addsportsgroup", requirements={ "letter": "Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag|alle" ,"adminyear": "[1-9][0-9]{3}"})
      * 
      */
      public function addsportsgroupAction (Request $request, $letter, $adminyear){
@@ -279,9 +279,8 @@ class SportsgroupController extends Controller {
      
         $doctrine=$this->getDoctrine(); 
         $manager= $doctrine->getManager();
-        $validfrom=$request->query->get('version');
         $fm= new FunctionManager($doctrine, $adminyear);
-       
+        $validfrom=$request->query->get('version');
         $dependencies=['BSSACert',  'Nichtmitglieder\Trainer_NonMemSportsgroupSub'];
         $qb=[];
         
@@ -380,7 +379,7 @@ class SportsgroupController extends Controller {
             $m = floor(($time%3600)/60);
             $h = floor(($time%86400)/3600)+1;
             $nmemsportsgroup->setToken(str_replace(' ', '_',strtolower($day.'_'.$nmemsportsgroup->getName().'_'.$h.''.$m)));
-           
+            //------Ende der Generierung der Gruppenbezeichnung-------------------------------  
             $manager->flush();
             $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');           
           return $this->redirectToRoute('sportsgroup_home', array('letter' => $letter, 'adminyear' => $adminyear));  

@@ -62,7 +62,7 @@
     {% for data in tabledata %}
         
         <tr>
-        {% if data.name|first == 'Ä' %}
+        {#{% if data.name|first == 'Ä' %}
                 {% set first = 'A' %}
                 {% elseif data.name|first == 'Ö' %}
                 {% set first = 'O' %}
@@ -70,8 +70,8 @@
                 {% set first = 'U' %}
                 {% else %}
                 {% set first = data.name|first %}   
-        {% endif %}
-        <td><center><a href="{{ path('editsportsgroup', {'letter': first|capitalize, 'ID': data.sgid, 'adminyear': adminyear,  'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></a></center></td>       
+        {% endif %}#}
+        <td><center><a href="{{ path('editsportsgroup', {'letter': data.day, 'ID': data.sgid, 'adminyear': adminyear,  'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></a></center></td>       
         <td>{{ data.name|striptags }}</td>
         <td>{{ data.info|striptags }}</td> 
         <td>{{ data.time|date("H:i") }}</td>
@@ -253,7 +253,7 @@
                     
                 <li {% if cletter == null %}class="active"{% endif %}><a href="{{ path(path, {'all': 'alle'}) }}">ALLE</a></li>   
                 
-                {% for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'] %}
+                {% for letter in ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'] %}
                     
                     {% if letter == cletter %}     
                     <li class="active"><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>      
@@ -263,7 +263,7 @@
                     
                 {% endfor %}
                 
-                <li class="active"><a href="{{ path(path, {'letter': cletter}) }}">{{ tabledata|length }} Personen wurden gefunden</a></li>
+                <li class="active"><a href="{{ path(path, {'letter': cletter}) }}">{{ tabledata|length }} Sportgruppen wurden gefunden</a></li>
                 </ul>         
             </div>           
         </div>        
