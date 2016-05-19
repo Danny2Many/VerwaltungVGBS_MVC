@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\BSSACert;
 use Doctrine\ORM\EntityManager;
-use AppBundle\Form\Type\Sportsgroup\AddSportsgroupType;
+use AppBundle\Form\Type\Sportsgroup\EditSportsgroupType;
 use AppBundle\Form\Type\Sportsgroup\BaseSportsgroupType;
 use AppBundle\Services\IndexManager;
 use AppBundle\Services\FunctionManager;
@@ -239,7 +239,7 @@ class MemSportsgroupController extends Controller {
      
      
     /**
-     * @Route("/mitgliedersportgruppen/bearbeiten/{adminyear}/{letter}/{ID}", name="editsmemportsgroup", defaults={"letter": "alle"})
+     * @Route("/mitgliedersportgruppen/bearbeiten/{adminyear}/{letter}/{ID}", name="editmemsportsgroup", defaults={"letter": "alle"})
      * 
      */       
      public function editsportsgroupAction(Request $request, $adminyear, $ID, $letter){
