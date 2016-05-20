@@ -23,7 +23,7 @@ use AppBundle\Services\FunctionManager;
 class MemSportsgroupController extends Controller {
 
     /**
-    * @Route("/mitgliedersportgruppen/{adminyear}/{letter}", defaults={"letter"="alle", "adminyear"=2016}, name="memsportsgroup_home" , requirements={"letter": "[A-Z]|alle", "adminyear": "[1-9][0-9]{3}"})
+    * @Route("/mitgliedersportgruppen/{adminyear}/{letter}", defaults={"letter"="alle", "adminyear"=2016}, name="memsportsgroup_home" , requirements={"letter": "Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag|alle", "adminyear": "[1-9][0-9]{3}"})
     */ 
      public function indexAction (Request $request, $letter, $adminyear){
      
@@ -175,7 +175,7 @@ class MemSportsgroupController extends Controller {
 //**********************************************************************************************************
 
     /**
-     * @Route("/mitgliedersportgruppen/anlegen/{adminyear}/{letter}", defaults={"letter": "alle", "adminyear": 2016}, name="addmemsportsgroup", requirements={"letter": "[A-Z]|alle" ,"adminyear": "[1-9][0-9]{3}"})
+     * @Route("/mitgliedersportgruppen/anlegen/{adminyear}/{letter}", defaults={"letter": "alle", "adminyear": 2016}, name="addmemsportsgroup", requirements={"letter": "Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag|alle" ,"adminyear": "[1-9][0-9]{3}"})
      * 
      */
      public function addsportsgroupAction (Request $request, $letter, $adminyear){
@@ -206,6 +206,34 @@ class MemSportsgroupController extends Controller {
                     ->setValidto('2155');  
         
         $memsportsgroup->setTrainerid($memsportsgroup->getTrainer()->getTrainerid());
+        //------Generierung der Gruppenbezeichnung-------------------------------        
+        switch($day=$memsportsgroup->getDay())
+        {
+          case ("Montag"):
+          $day='mo';
+          break;
+
+          case ("Dienstag"):
+          $day='di';
+          break;
+
+          case ("Mittwoch"):
+          $day='mi';
+          break;
+
+          case ("Donnerstag"):
+          $day='do';
+          break;
+
+          case ("Freitag"):
+          $day='fr';
+          break;
+        }
+        $time=$memsportsgroup->getTime();
+        $m = floor(($time%3600)/60);
+        $h = floor(($time%86400)/3600)+1;
+        $memsportsgroup->setToken(str_replace(' ', '_',strtolower($day.'_'.$memsportsgroup->getName().'_'.$h.''.$m)));
+         //------Ende der Generierung der Gruppenbezeichnung-------------------------------   
         
         foreach($memsportsgroup->getBssacert() as $bs){
                 $bs->setBssaid(uniqid('bs'))
