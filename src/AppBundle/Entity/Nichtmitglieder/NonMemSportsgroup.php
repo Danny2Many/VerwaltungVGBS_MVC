@@ -90,6 +90,8 @@ class NonMemSportsgroup {
     public function __construct() {
         $this->bssacert = new ArrayCollection();
         $this->substitute = new ArrayCollection();
+        $this->trainer = new ArrayCollection();
+
     }
 
     /**

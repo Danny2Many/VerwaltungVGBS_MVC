@@ -52,9 +52,7 @@ class SportsgroupController extends Controller {
 //$nombre = $sb->getQuery()->getSingleScalarResult();
 //
 //
-//    echo '<pre>';
-//     print_r($nombre);
-//     echo '</pre>';
+
     
     $choices=array('Gruppenbezeichnung' => 'token',
                    'Sportgruppe/Info' => 'name',
@@ -297,8 +295,8 @@ class SportsgroupController extends Controller {
 
 
         $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid'=>(string)$ID, 'validfrom'=>$validfrom));
-        $ntid=$nmemsportsgroup->getTrainerid();
-        echo $ntid;
+//        $ntid=$nmemsportsgroup->getTrainerid();
+//        echo $ntid;
         $nmemsportsgrouporiginal= clone $nmemsportsgroup;
         
          if(!$nmemsportsgroup){
@@ -308,7 +306,7 @@ class SportsgroupController extends Controller {
         $trainerlist=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('trainerid'=>$nmemsportsgroup->getTrainerid(), 'validfrom'=>$validfrom));
         $trainersublist=$qb['Nichtmitglieder\Trainer_NonMemSportsgroupSub']->getQuery()->getResult();
 
-
+    
         
         $originalbssacerts = new ArrayCollection();
         $originaltrainers = new ArrayCollection();
@@ -324,7 +322,7 @@ class SportsgroupController extends Controller {
         
         foreach ($trainerlist as $tr) {
             $originaltrainer= clone $tr;
-            $nmemsportsgroup->addTrainer($bssa);
+            $nmemsportsgroup->addTrainer($tr);
             $originaltrainers->add($originaltrainer);
         }
         
@@ -349,12 +347,14 @@ class SportsgroupController extends Controller {
         }
         
         if($editsportsgroupform->isSubmitted() && $editsportsgroupform->isValid()){
-  
+            
+
+
             $fm->HandleDependencyDiff($nmemsportsgroup->getBssacert(), $originalbssacerts);
-            $fm->HandleDependencyDiff($nmemsportsgroup->getTrainer(), $originaltrainers);
+//            $fm->HandleDependencyDiff($nmemsportsgroup->getTrainer(), $originaltrainers);
             $fm->HandleDependencyDiff($nmemsportsgroup->getSubstitute(), $originaltrainersubs, array('entitypath' => 'AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub','idprefixone' => 'sg','idone' => $nmemsportsgroup->getSgid()));
             
-          
+          $nmemsportsgroup->setTrainerid($nmemsportsgroup->getTrainer()->getTrainerid());
 
             $fm->HandleObjectDiff($nmemsportsgroup, $nmemsportsgrouporiginal);
            //------Generierung der Gruppenbezeichnung-------------------------------        
