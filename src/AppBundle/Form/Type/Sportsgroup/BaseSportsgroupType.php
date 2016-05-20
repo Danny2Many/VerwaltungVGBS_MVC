@@ -26,7 +26,7 @@ class BaseSportsgroupType extends AbstractType{
         ->add('name', SanitizedTextType::class, array ('label' => 'Sportgruppe:'))
         ->add('trainer', EntityType::class, array (
             'class' => 'AppBundle:Trainer\Trainer',
-            'choice_label' => 'lastname',
+            'choice_label' =>array('lastname', 'firstname'),
             'required' => true,'label' => 'Übungsleiter:'))
                      
         ->add('substitute', EntityType::class, array(
@@ -50,7 +50,7 @@ class BaseSportsgroupType extends AbstractType{
         ->add('capacity', SanitizedTextType::class, array ('label' => 'Kapazität:'))        
         ->add('info',SanitizedTextType::class, array ('label' => 'Info:','required' => false))
         ->add('token', SanitizedTextType::class, array ('label' => 'Gruppenbezeichnung:','required' => false))
-        ->add('bssacert', CollectionType::class, array('entry_type' =>BSSACertType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\BSSACert'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true, ))
+        ->add('bssacert', CollectionType::class, array('entry_type' =>BSSACertType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\BSSACert'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true,'required' => false))
        
         ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
         ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))
