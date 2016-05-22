@@ -12,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\AbstractType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
+
 
 class BaseSportsgroupType extends AbstractType{
     protected $adminyear;
@@ -24,13 +26,14 @@ class BaseSportsgroupType extends AbstractType{
         ->add('name', SanitizedTextType::class, array ('label' => 'Sportgruppe:'))
         ->add('trainer', EntityType::class, array (
             'class' => 'AppBundle:Trainer\Trainer',
-            'choice_label' => 'lastname',
-            'required' => false,'label' => 'Übungsleiter:'))
+            'choice_label' =>array('lastname', 'firstname'),
+            'required' => true,'label' => 'Übungsleiter:'))
                      
         ->add('substitute', EntityType::class, array(
                         'class' => 'AppBundle:Trainer\Trainer',
                         'choice_label' => 'lastname',
                         'multiple' => true,
+                        'required' => false,
                         'query_builder' => function (EntityRepository $er) {
                         return $er->createQueryBuilder('s')
                                   ->where('s.validfrom <='.$this->adminyear)
@@ -39,13 +42,15 @@ class BaseSportsgroupType extends AbstractType{
                     ))        
         ->add('day', ChoiceType::class, array ('choices' => array ('Montag' =>'Montag', 'Dienstag' => 'Dienstag','Mittwoch' => 'Mittwoch', 'Donnerstag' => 'Donnerstag', 'Freitag' => 'Freitag'),
              'choices_as_values' => true,
-            'label' => 'Wochentag:'))
-        ->add('time', SanitizedTextType::class, array ('label' => 'Uhrzeit:'))
+            'label' => 'Wochentag:'))      
+                            
+         ->add('time', TimeType::class, array( 'label' => 'Uhrzeit:', 'widget' => 'choice', 'minutes' => array(00,05,10,15,20,25,30,35,40,45,50,55),'input'  => 'timestamp', 'with_seconds' => false, 'placeholder' => array('minute' => 'Minuten', 'hour' => 'Stunden')))
+//       ->add('time', SanitizedTextType::class, array ('label' => 'Uhrzeit:'))
         ->add('roomid', SanitizedTextType::class, array ('label' => 'Räumlichkeiten:','required' => false))        
         ->add('capacity', SanitizedTextType::class, array ('label' => 'Kapazität:'))        
         ->add('info',SanitizedTextType::class, array ('label' => 'Info:','required' => false))
         ->add('token', SanitizedTextType::class, array ('label' => 'Gruppenbezeichnung:','required' => false))
-        ->add('bssacert', CollectionType::class, array('entry_type' =>BSSACertType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\BSSACert'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true, ))
+        ->add('bssacert', CollectionType::class, array('entry_type' =>BSSACertType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\BSSACert'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true,'required' => false))
        
         ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
         ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))

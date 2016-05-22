@@ -86,9 +86,7 @@ public function buildForm(FormBuilderInterface $builder, array $options)
 
                 ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\MemRehabilitationCertificate'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
 
-                ->add('healthinsurance', SanitizedTextType::class, array('label' => 'Krankenkasse:', 'required' => false))
-                        
-                
+                ->add('healthinsurance', SanitizedTextType::class, array('label' => 'Krankenkasse:', 'required' => false))       
                 
                 ->add('additionalinfo', SanitizedTextareaType::class, array('label' => 'Zusatzinfo:', 'required' => false)) 
                        
@@ -117,18 +115,19 @@ public function buildForm(FormBuilderInterface $builder, array $options)
                 ->add('sportsgroup', EntityType::class, array(
                         'class' => 'AppBundle:MemSportsgroup',
                         'choice_label' => 'token',
+                        'multiple' => true,
+                        'required' => false,
                         'query_builder' => function (EntityRepository $er) {
                         return $er->createQueryBuilder('s')
                                   ->where('s.validfrom <='.$this->adminyear)
                                   ->andWhere('s.validto >'.$this->adminyear);
                         }
-                    ))
-                 
+                    ))              
                           
-          ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
-          ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))
-          ->add('reset', ResetType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'zurücksetzen'));
-         
+                ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
+                ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))
+                ->add('reset', ResetType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'zurücksetzen'));
+
     }
     
      

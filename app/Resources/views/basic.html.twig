@@ -85,7 +85,13 @@
                                 <li class="{% block MitglAktiv %}#{% endblock %}"><a href="{{ path('member_home') }}">Mitglieder</a></li>
                                 <li class="{% block NMitglAktiv %}{% endblock %}"><a href="{{path('nonmember_home')}}">Nichtmitglieder</a></li>
                                 <li class="{% block AustrittAktiv %}#{% endblock %}"><a href="#">Austrittsliste</a></li>
-                                <li class="{% block SportgrAktiv %}#{% endblock %}"><a href="{{path('sportsgroup_home')}}">Sportgruppen</a></li>
+                                <li class="dropdown {% block SportgrAktiv %}{% endblock %}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Sportgruppen/-kurse<span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                        <li class="{% block MemSportgrAktiv %}#{% endblock %}"><a href="{{path('memsportsgroup_home') }}">Mitgliedergruppen</a></li>
+                                        <li class="{% block NmemSportgrAktiv %}#{% endblock %}"><a href="{{path('sportsgroup_home') }}">Nichtmitgliedergruppen</a></li>
+                                        <li class="{% block SportcourseAktiv %}#{% endblock %}"><a href="{{path('sportsgroup_home') }}">Sportkurse</a></li>        
+                                    </ul>
+                                </li>
                                 <li class="dropdown {% block FinanzAktiv %}{% endblock %}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Finanzverwaltung<span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <li class="{% block MitglFinAktiv %}#{% endblock %}"><a href="{{ path('member_fin') }}">Mitglieder</a></li>

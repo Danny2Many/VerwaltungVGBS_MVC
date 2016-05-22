@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\BSSACert;
 use Doctrine\ORM\EntityManager;
-use AppBundle\Form\Type\Sportsgroup\AddSportsgroupType;
+use AppBundle\Form\Type\Sportsgroup\EditSportsgroupType;
 use AppBundle\Form\Type\Sportsgroup\BaseSportsgroupType;
 use AppBundle\Services\IndexManager;
 
@@ -21,7 +21,7 @@ use AppBundle\Services\FunctionManager;
 
 class SportsgroupController extends Controller {
     /**
-    * @Route("/sportgruppen/{adminyear}/{letter}", defaults={"letter"="alle", "adminyear"=2016}, name="sportsgroup_home" , requirements={"letter": "[A-Z]|alle", "adminyear": "[1-9][0-9]{3}"})
+    * @Route("/sportgruppen/{adminyear}/{letter}", defaults={"letter"="alle", "adminyear"=2016}, name="sportsgroup_home" , requirements={"letter": "Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag|alle", "adminyear": "[1-9][0-9]{3}"})
     */ 
      public function indexAction (Request $request, $letter, $adminyear){
      
@@ -52,12 +52,10 @@ class SportsgroupController extends Controller {
 //$nombre = $sb->getQuery()->getSingleScalarResult();
 //
 //
-//    echo '<pre>';
-//     print_r($nombre);
-//     echo '</pre>';
+
     
-    $choices=array('Gruppenbezeichnung' => 'token',
-                   'Sportgruppe/Info' => 'name',
+    $choices=array('Sportgruppe' => 'name',
+                   'Gruppenbezeichnung' => 'token',
                    'Wochentag' => 'day'
         
         );
@@ -80,24 +78,24 @@ class SportsgroupController extends Controller {
     }
      else if ($letter !='alle')
     {
-        $qb['Nichtmitglieder\NonMemSportsgroup']->andWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->like('ditto.name', ':letter'))
-                  ->setParameter('letter',$letter.'%');
+        $qb['Nichtmitglieder\NonMemSportsgroup']->andWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->like('ditto.day', ':letter'))
+                  ->setParameter('letter',$letter);
 
 
 
-         switch($letter){
-           case 'A': $qb['Nichtmitglieder\NonMemSportsgroup']->orWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->like('ditto.name', ':umlautletter'))
-                        ->setParameter('umlautletter','Ä%'); 
-           break;
-
-           case 'O': $qb['Nichtmitglieder\NonMemSportsgroup']->orWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->like('ditto.name', ':umlautletter'))
-                        ->setParameter('umlautletter','Ö%'); 
-           break;
-
-           case 'U': $qb['Nichtmitglieder\NonMemSportsgroup']->orWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->like('ditto.name', ':umlautletter'))
-                        ->setParameter('umlautletter','Ü%'); 
-           break;
-       }
+//         switch($letter){
+//           case 'A': $qb['Nichtmitglieder\NonMemSportsgroup']->orWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->like('ditto.name', ':umlautletter'))
+//                        ->setParameter('umlautletter','Ä%'); 
+//           break;
+//
+//           case 'O': $qb['Nichtmitglieder\NonMemSportsgroup']->orWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->like('ditto.name', ':umlautletter'))
+//                        ->setParameter('umlautletter','Ö%'); 
+//           break;
+//
+//           case 'U': $qb['Nichtmitglieder\NonMemSportsgroup']->orWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->like('ditto.name', ':umlautletter'))
+//                        ->setParameter('umlautletter','Ü%'); 
+//           break;
+//       }
     }else{ $letter=null; } 
     $sportsgrouplist=$qb['Nichtmitglieder\NonMemSportsgroup']->getQuery()->getResult();
     $bssacertlist=$qb['BSSACert']->getQuery()->getResult();
@@ -126,10 +124,6 @@ class SportsgroupController extends Controller {
         $sportsgroupdependentlist[$tr->getTrainerid()]['trainers'][]=$tr; 
         
     }
-//     echo '<pre>';
-//     print_r($sportsgroupdependentlist);
-//     echo '</pre>';
-    
     //Total Number of Nonmembers per Sportsgroup
     //by Adding a string 'Danny' to an Array.
     //Count the number of entries in the Array
@@ -145,20 +139,17 @@ class SportsgroupController extends Controller {
         foreach ($nonmemberlist as $nm){               
            
                 if(isset($sportsgroupdependentlist[$sg->getSgid()]['nonmembers'][$nm->getNmemid()])){                    
-                     if ($nm->getTitle() === 0 ){
-                     if(!isset($sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['female']))$sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['female']=0;    
-                    $sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['female']+=1;
+                    if ($nm->getTitle() === 0 ){
+                    if(!isset($sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['female']))$sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['female']=0;    
+                    {$sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['female']+=1;}
                 }else if($nm->getTitle() === 1 ) {
                     if(!isset($sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['male']))$sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['male']=0;    
-                    $sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['male']+=1;       
+                    {$sportsgroupdependentlist[$sg->getSgid()]['nonmembers']['male']+=1;}       
                     }
                 }
         }
     }
-//         echo '<pre>';
-//     print_r($sportsgroupdependentlist);
-//     echo '</pre>';
-//     
+  
     //Substitute Teacher per Sportsgroup
     foreach ($sportgrouptrainerlist as $pn){
         $sportsgroupdependentlist[$pn->getSgid()]['trainersub'][$pn->getTrainerid()]=$pn->getTrainerid();
@@ -171,12 +162,6 @@ class SportsgroupController extends Controller {
                }
     }
    }
-   
-   
-//     echo '<pre>';
-//     print_r($sportsgroupdependentlist);
-//     echo '</pre>';
-     
      
      
     return $this->render(
@@ -194,7 +179,7 @@ class SportsgroupController extends Controller {
 //**********************************************************************************************************
 
     /**
-     * @Route("/sportgruppen/anlegen/{adminyear}/{letter}", defaults={"letter": "alle", "adminyear": 2016}, name="addsportsgroup", requirements={"letter": "[A-Z]|alle" ,"adminyear": "[1-9][0-9]{3}"})
+     * @Route("/sportgruppen/anlegen/{adminyear}/{letter}", defaults={"letter": "alle", "adminyear": 2016}, name="addsportsgroup", requirements={ "letter": "Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag|alle" ,"adminyear": "[1-9][0-9]{3}"})
      * 
      */
      public function addsportsgroupAction (Request $request, $letter, $adminyear){
@@ -208,21 +193,19 @@ class SportsgroupController extends Controller {
 //     $im=  $this->get('app.index_manager')
 //                   ->setEntityName('Sportsgroup');
      
-     $im=new IndexManager($manager, 'NonMemSportsgroup');
+//     $im=new IndexManager($manager, 'Sportsgroup');
      $fm= new FunctionManager($doctrine, $adminyear);
      
-     $sgid=$im->getCurrentIndex();
-     $nonmemsportsgroup->setSgid($sgid);
+//     $sgid=$im->getCurrentIndex();
+     $nonmemsportsgroup->setSgid(uniqid('sg'));
      
      $nonmemsportsgroup->addBssacert($bssacert);
-//     $nonmemsportsgroup->addTrainer($trainer);
      
      $addnonmemsportsgroupform = $this->createForm(BaseSportsgroupType::class, $nonmemsportsgroup, array('adyear' => $adminyear)); 
      $addnonmemsportsgroupform->handleRequest($request);
      
      if($addnonmemsportsgroupform->isSubmitted() && $addnonmemsportsgroupform->isValid()){
         
-         
         $nonmemsportsgroup->setValidfrom($adminyear)
                     ->setValidto('2155');  
         
@@ -233,15 +216,43 @@ class SportsgroupController extends Controller {
            ->setValidfrom($adminyear)
            ->setValidto('2155');       
         $manager->persist($bs);}
-        
+//------Generierung der Gruppenbezeichnung-------------------------------        
+    switch($day=$nonmemsportsgroup->getDay())
+    {
+      case ("Montag"):
+      $day='mo';
+      break;
+
+      case ("Dienstag"):
+      $day='di';
+      break;
+  
+      case ("Mittwoch"):
+      $day='mi';
+      break;
+  
+      case ("Donnerstag"):
+      $day='do';
+      break;
+  
+      case ("Freitag"):
+      $day='fr';
+      break;
+    }
+    $time=$nonmemsportsgroup->getTime();
+    $m = floor(($time%3600)/60);
+    $h = floor(($time%86400)/3600)+1;
+    $nonmemsportsgroup->setToken(str_replace(' ', '_',strtolower($day.'_'.$nonmemsportsgroup->getName().'_'.$h.''.$m)));
+//------Ende der Generierung der Gruppenbezeichnung-------------------------------        
+       
         foreach ($nonmemsportsgroup->getSubstitute() as $su){
                 $fm->AddObject($su,'secondary', array('entitypath' => 'AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub','idprefixone' => 'sg','idone' => $nonmemsportsgroup->getSgid()));
             }
             
-        $manager->persist($nonmemsportsgroup);
+        $manager->persist($nonmemsportsgroup);     
         $manager->flush();
-        
-        $im->add();
+
+//        $im->add();
         $this->addFlash('notice', 'Diese Nichtmitglieder-Sportgruppe wurde erfolgreich angelegt');
         return $this->redirectToRoute('sportsgroup_home', array('letter'=>$letter, 'adminyear' => $adminyear));
      }
@@ -266,47 +277,113 @@ class SportsgroupController extends Controller {
      
         $doctrine=$this->getDoctrine(); 
         $manager= $doctrine->getManager();
-        $validfrom=$request->query->get('version');
         $fm= new FunctionManager($doctrine, $adminyear);
-       
-        $dependencies=['BSSACert'];
+        $validfrom=$request->query->get('version');
+        $dependencies=['BSSACert',  'Nichtmitglieder\Trainer_NonMemSportsgroupSub'];
         $qb=[];
         
         foreach($dependencies as $dependent){
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-            $qb[$dependent]->where('ditto.validfrom<='.$adminyear)
+            $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
                     ->andWhere('ditto.validto>'.$adminyear)
-                    ->andWhere('ditto.sgid='.$ID);
+                    ->andWhere('ditto.sgid=:ID')
+                    ->setParameter('ID',$ID)
+                   ;
         }
-        $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid'=>$ID, 'validfrom'=>$validfrom));
+
+
+
+        $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid'=>(string)$ID, 'validfrom'=>$validfrom));
+//        $ntid=$nmemsportsgroup->getTrainerid();
+//        echo $ntid;
         $nmemsportsgrouporiginal= clone $nmemsportsgroup;
         
-//        if (!$nmemsportsgroup) {
-//        throw $this->createNotFoundException('Es konnte keine Sportgruppe mit der ID: '.$ID.' gefunden werden');
-//    }
+         if(!$nmemsportsgroup){
+            throw $this->createNotFoundException('Es konnte keine Sportgruppe mit der ID.: '.$ID.' gefunden werden');
+        }
         $bssacert=$qb['BSSACert']->getQuery()->getResult();
-        $originalbssacert = new ArrayCollection();
+        $trainerlist=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('trainerid'=>$nmemsportsgroup->getTrainerid(), 'validfrom'=>$validfrom));
+        $trainersublist=$qb['Nichtmitglieder\Trainer_NonMemSportsgroupSub']->getQuery()->getResult();
+
+    
+        
+        $originalbssacerts = new ArrayCollection();
+        $originaltrainers = new ArrayCollection();
+        $originaltrainersubs = new ArrayCollection();
+
         
         // Create an ArrayCollection of the current Rehab objects in the database
         foreach ($bssacert as $bssa) {
-        $originalbssacert= clone $bssa;
-        $nmemsportsgroup->addBssacert($bssa);
-        $originalbssacert->add($originalbssacert);
-    }
-        $editsportsgroupform = $this->createForm(EditMemberType::class, $nmemsportsgroup);
+            $originalbssacert= clone $bssa;
+            $nmemsportsgroup->addBssacert($bssa);
+            $originalbssacerts->add($originalbssacert);
+        }
+        
+        foreach ($trainerlist as $tr) {
+            $originaltrainer= clone $tr;
+            $nmemsportsgroup->addTrainer($tr);
+            $originaltrainers->add($originaltrainer);
+        }
+        
+        foreach ($trainersublist as $tsub) {
+            $ts=$doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy(array('trainerid' => $tsub->getTrainerid(), 'validfrom'=>$validfrom));
+
+            $originaltrainersub= clone $ts;
+            $nmemsportsgroup->addSubstitute($ts);
+            $originaltrainersubs->add($originaltrainersub);
+        }
+    
+    
+    
+        $editsportsgroupform = $this->createForm(EditSportsgroupType::class, $nmemsportsgroup, array('adyear' => $adminyear));
         $editsportsgroupform->handleRequest($request);
         
         if($editsportsgroupform->get('delete')->isClicked()){
-            $fm->RemoveObject($nmemsportsgroup,array('BSSACert'));;
+            $fm->RemoveObject($nmemsportsgroup,array('BSSACert', 'Nichtmitglieder\Trainer_NonMemSportsgroupSub', 'Nichtmitglieder\NonMember_Sportsgroup'));
             $manager->flush();
             $this->addFlash('notice', 'Diese Nichtmitglieder-Sportgruppe wurde erfolgreich gelöscht!');
             return $this->redirectToRoute('sportsgroup_home', array('letter' => $letter, 'adminyear' => $adminyear));
         }
         
-        if($editsportsgroupform->isSubmitted() && $$editsportsgroupform->isValid()){
-  
-            $fm->HandleDependencyDiff($nmemsportsgroup->getLicence(), $originalbssacert, $adminyear);
+        if($editsportsgroupform->isSubmitted() && $editsportsgroupform->isValid()){
+            
+
+
+            $fm->HandleDependencyDiff($nmemsportsgroup->getBssacert(), $originalbssacerts);
+//            $fm->HandleDependencyDiff($nmemsportsgroup->getTrainer(), $originaltrainers);
+            $fm->HandleDependencyDiff($nmemsportsgroup->getSubstitute(), $originaltrainersubs, array('entitypath' => 'AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub','idprefixone' => 'sg','idone' => $nmemsportsgroup->getSgid()));
+            
+          $nmemsportsgroup->setTrainerid($nmemsportsgroup->getTrainer()->getTrainerid());
+
             $fm->HandleObjectDiff($nmemsportsgroup, $nmemsportsgrouporiginal);
+           //------Generierung der Gruppenbezeichnung-------------------------------        
+            switch($day=$nmemsportsgroup->getDay())
+            {
+              case ("Montag"):
+              $day='mo';
+              break;
+
+              case ("Dienstag"):
+              $day='di';
+              break;
+
+              case ("Mittwoch"):
+              $day='mi';
+              break;
+
+              case ("Donnerstag"):
+              $day='do';
+              break;
+
+              case ("Freitag"):
+              $day='fr';
+              break;
+            }
+            $time=$nmemsportsgroup->getTime();
+            $m = floor(($time%3600)/60);
+            $h = floor(($time%86400)/3600)+1;
+            $nmemsportsgroup->setToken(str_replace(' ', '_',strtolower($day.'_'.$nmemsportsgroup->getName().'_'.$h.''.$m)));
+            //------Ende der Generierung der Gruppenbezeichnung-------------------------------  
             $manager->flush();
             $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');           
           return $this->redirectToRoute('sportsgroup_home', array('letter' => $letter, 'adminyear' => $adminyear));  

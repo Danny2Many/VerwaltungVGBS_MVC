@@ -40,7 +40,7 @@ class FunctionManager {
 
                         }else {
                             $originaldependencies->removeElement($clone);
-                            $this->HandleObjectDiff($ob, $clone);  
+                            $this->HandleObjectDiff($ob, $clone, $many2manyentity);  
                         }
                     }
                     
@@ -55,8 +55,12 @@ class FunctionManager {
                 
                 //you cannot call 'remove' on cloned objects
                 //thats why we query for them again
-                $objecttobedeleted=$manager->find('AppBundle:'.$depmetadata['namespace'], array($depmetadata['idprefix'].'id'=>$depmetadata['id'], 'validfrom'=>$validfrom));
-               
+                if ($many2manyentity != null){
+                    $objecttobedeleted=$manager->find($many2manyentity['entitypath'], array($depmetadata['idprefix'].'id'=>$depmetadata['id'], $many2manyentity['idprefixone'].'id' => $many2manyentity['idone'], 'validfrom'=>$validfrom));
+                }else{
+                    $objecttobedeleted=$manager->find('AppBundle:'.$depmetadata['namespace'], array($depmetadata['idprefix'].'id'=>$depmetadata['id'], 'validfrom'=>$validfrom));
+                }
+                
                 $this->RemoveObject($objecttobedeleted);
             }
         }
@@ -64,10 +68,10 @@ class FunctionManager {
     
     
     //handles the comparison of an object after saving
-    public function HandleObjectDiff($savedobject, $originalobject) {
+    public function HandleObjectDiff($savedobject, $originalobject, $many2many=null) {
         $manager=  $this->doctrine->getManager();
         
-        
+                if($many2many==null){
                     if($originalobject!=$savedobject){
                             if($this->adminyear != $savedobject->getValidfrom()){                       
 
@@ -85,9 +89,30 @@ class FunctionManager {
 
                             }else{ 
                                 $manager->persist($savedobject); 
-                                
                             }  
                         } 
+                }else{
+
+                    if($originalobject!=$savedobject){
+
+//                            if($this->adminyear != $savedobject->getValidfrom()){ 
+
+                                $metadata= $this->ObjectMetaDataParser($originalobject);
+                                
+                                $M2MObject=$manager->find($many2many['entitypath'], array($metadata['idprefix'].'id'=>$metadata['id'], $many2many['idprefixone'].'id' => $many2many['idone'], 'validfrom'=>$originalobject->getValidfrom()));
+
+//                                $M2MObject->setSgid($savedobject->getSgid());
+                                call_user_func(array($M2MObject, 'set'.$metadata['idprefix'].'id' ), call_user_func(array($savedobject, 'get'.$metadata['idprefix'].'id')));
+                                $manager->persist($M2MObject); 
+                                $manager->flush();
+                                
+                                
+//                            }else{ 
+//                                $manager->persist($savedobject);                                 
+//                            }  
+                        } 
+                    
+                }
     }
     
     //sets Validfrom and Validto dates and persists an object
@@ -99,24 +124,24 @@ class FunctionManager {
      
         //$many2manyentity==null --> one2many relationship
         if($many2many==null){   
-        if($type=='primary'){
-            
-            $explode=explode('\\', get_class($object));
-            $entityname=  end($explode);
-            
-            $im= new IndexManager($manager, $entityname);
-            $id=$im->getCurrentIndex();
-            
-        }elseif($type=='secondary'){
-          
-          $id=uniqid($metadata['idprefix']);  
-        }
-            
-            call_user_func(array($object, 'set'.$metadata['idprefix'].'id' ), $id);
-            call_user_func(array($object, 'setValidfrom' ), $this->adminyear);
-            call_user_func(array($object, 'setValidto' ), '2155');
-                       
-            $manager->persist($object);
+            if($type=='primary'){
+
+                $explode=explode('\\', get_class($object));
+                $entityname=  end($explode);
+
+                $im= new IndexManager($manager, $entityname);
+                $id=$im->getCurrentIndex();
+
+            }elseif($type=='secondary'){
+
+              $id=uniqid($metadata['idprefix']);  
+            }
+
+                call_user_func(array($object, 'set'.$metadata['idprefix'].'id' ), $id);
+                call_user_func(array($object, 'setValidfrom' ), $this->adminyear);
+                call_user_func(array($object, 'setValidto' ), '2155');
+
+                $manager->persist($object);
         }else{
             $middle= new $many2many['entitypath']();
             call_user_func(array($middle, 'set'.$many2many['idprefixone'].'id' ), $many2many['idone']);

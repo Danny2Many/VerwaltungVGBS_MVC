@@ -10,10 +10,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class NonMember_Sportsgroup {
 
-  
+public function __toString(){
+//    return (string) $this->nmemid.'id/'.$this->sgid.'/Nichtmitglieder\NonMember_Sportsgroup';
+    return (string) 'a/a/Nichtmitglieder\NonMember_Sportsgroup';
+
+   
+}
+    
 /**
 * @ORM\Id
-* @ORM\Column(type="integer")  
+* @ORM\Column(type="string")  
 */
 protected $sgid;
 /**
@@ -35,7 +41,7 @@ protected $validto;
     /**
      * Set sgid
      *
-     * @param integer $sgid
+     * @param string $sgid
      *
      * @return NonMember_Sportsgroup
      */
@@ -49,7 +55,7 @@ protected $validto;
     /**
      * Get sgid
      *
-     * @return integer
+     * @return string
      */
     public function getSgid()
     {

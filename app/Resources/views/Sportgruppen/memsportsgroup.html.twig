@@ -1,11 +1,11 @@
 {% extends "basic.html.twig" %}
 {% form_theme searchform 'bootstrap_3_layout.html.twig' %}
 
-{% block viewlink %}{{ path('sportsgroup_home') }}{% endblock %}
+{% block viewlink %}{{ path('memsportsgroup_home') }}{% endblock %}
 {% block title %} Sportgruppen {% endblock %}
 {% block viewname %}Sportgruppen{% endblock %}
 {% block SportgrAktiv %} active {% endblock %}
-{% block NmemSportgrAktiv %} active {% endblock %}
+{% block MemSportgrAktiv %} active {% endblock %}
 {% block fixedcolnum %} 6 {% endblock %}
 {% block columnDefs %}
             "columnDefs": [
@@ -17,7 +17,7 @@
             {% endblock%} 
 
 {% block add %}
-    <a href="{{ path('addsportsgroup', {'letter': cletter, 'adminyear': adminyear }) }}"><button    class="add btn btn-default">
+    <a href="{{ path('addmemsportsgroup', {'letter': cletter, 'adminyear': adminyear }) }}"><button    class="add btn btn-default">
       <span class="glyphicon glyphicon-plus"></span> neue Sportgruppe anlegen
         </button></a>  
 {% endblock %}
@@ -73,10 +73,10 @@
                 {% else %}
                 {% set first = data.name|first %}   
         {% endif %}#}
-        <td><a href="{{ path('editsportsgroup', {'letter': data.day, 'ID': data.sgid, 'adminyear': adminyear,  'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></a><a href="{{ path('editmemsportsgroup', {'letter': data.day, 'ID': data.sgid, 'adminyear': adminyear,  'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='intern'> <span class='glyphicon glyphicon-folder-open'></span></button></a></td>       
+        <td><a href="{{ path('editmemsportsgroup', {'letter': data.day, 'ID': data.sgid, 'adminyear': adminyear,  'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></a><a href="{{ path('editmemsportsgroup', {'letter': data.day, 'ID': data.sgid, 'adminyear': adminyear,  'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='intern'> <span class='glyphicon glyphicon-folder-open'></span></button></a></td>       
         <td>{{ data.name|striptags }}</td>
         <td>{{ data.info|striptags }}</td> 
-        <td>{{ data.time|date("H:i") }}</td>
+        <td>{{ data.time|date("h:i") }}</td>
         {% if sportsgroupdependentlist[data.roomid]['rooms'] is defined %}
         {% set rooms =sportsgroupdependentlist[data.roomid]['rooms'] %}
         {% else %}
@@ -90,7 +90,7 @@
             
 {#/******************************************************** #} 
         <td>{{ data.token|striptags }}</td>
-        <td>{{ "-" }}</td>
+        <td>{{ data.sgid|striptags }}</td>
         {% if sportsgroupdependentlist[data.trainerid]['trainers'] is defined %}
             {% set trainer =sportsgroupdependentlist[data.trainerid]['trainers'] %}
         {% else %}
@@ -114,21 +114,9 @@
                 {{ "-" }}</td>
             {% endfor %} 
 {#/******************************************************** #}          
-       {# {% if sportsgroupdependentlist[data.trainerid]['sportgrouptrainer'] is defined %}
-            {% set trainer =sportsgroupdependentlist[data.trainerid]['ssportgrouptrainer'] %}
-        {% else %}
-          {% set trainer ='' %}  
-        {% endif %}
-        <td>{% for TR in trainer if TR.trainerid != NULL %}                     
-               {{TR.trainerid }}<br>
-            {% else %}
-                {{ "-" }}</td>
-            {% endfor %}#} 
-            
-            {#<td bgcolor="#5fa8ec"></td>#}
-{#/******************************************************** #}            
-       {% if sportsgroupdependentlist[data.sgid]['nonmemberstotal'] is defined %}
-            {% set nonmember =sportsgroupdependentlist[data.sgid]['nonmemberstotal'] %}
+          
+       {% if sportsgroupdependentlist[data.sgid]['memberstotal'] is defined %}
+            {% set nonmember =sportsgroupdependentlist[data.sgid]['memberstotal'] %}
         {% else %}
           {% set nonmember ='' %}  
         {% endif %}
@@ -139,10 +127,10 @@
               <td>  {{ foo }}</td>
              
 {#/******************************************************** #}            
-        {% if sportsgroupdependentlist[data.sgid]['nonmembers']['female'] is defined %}
-            {% set nonmemberfemale =sportsgroupdependentlist[data.sgid]['nonmembers']['female'] %}
+        {% if sportsgroupdependentlist[data.sgid]['members']['female'] is defined %}
+            {% set nonmemberfemale =sportsgroupdependentlist[data.sgid]['members']['female'] %}
         {% else %}
-          {% set nonmemberfemale ='-' %}  
+          {% set nonmemberfemale ='' %}  
         {% endif %}
     
               <td>  {{ nonmemberfemale }}</td>
@@ -152,10 +140,10 @@
                 {{ "-" }}</td>
             {% endfor %}#} 
 {#/******************************************************** #}
-        {% if sportsgroupdependentlist[data.sgid]['nonmembers']['male'] is defined %}
-            {% set nonmembermale =sportsgroupdependentlist[data.sgid]['nonmembers']['male'] %}
+        {% if sportsgroupdependentlist[data.sgid]['members']['male'] is defined %}
+            {% set nonmembermale =sportsgroupdependentlist[data.sgid]['members']['male'] %}
         {% else %}
-            {% set nonmembermale ='-' %}  
+            {% set nonmembermale ='' %}  
         {% endif %}
         
               <td>  {{ nonmembermale}}</td>
@@ -229,7 +217,13 @@
             {% else %}
                 {{ "-" }}</td>
             {% endfor %} 
-    
+        {#<td>{{ data.bssaid.StartDate|striptags }}</td> 
+        <td>{{ data.bssaid.Recorded|striptags }}</td> 
+        <td>{{ data.bssaid.GroupNr|striptags }}</td>
+        <td>{{ data.bssaid.BSSACertNr|striptags }}</td> #}
+        
+            
+        {#<td bgcolor="#A9D0F5"></td>#}
         <td>{{ data.sgid|striptags }}</td> 
         <td>{{ data.sgid|striptags }}</td> 
         <td>{{ data.sgid|striptags }}</td>
@@ -259,7 +253,7 @@
                     
                 {% endfor %}
                 
-                <li class="active"><a href="{{ path(path, {'letter': cletter}) }}">{{ tabledata|length }} Sportgruppen wurden gefunden</a></li>
+                <li class="active"><a href="{{ path(path, {'letter': cletter}) }}">{{ tabledata|length }} Sportgruppen gefunden</a></li>
                 </ul>         
             </div>           
         </div>        

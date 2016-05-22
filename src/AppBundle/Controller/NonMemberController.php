@@ -8,6 +8,8 @@ use AppBundle\Entity\Nichtmitglieder\Nonmember;
 use AppBundle\Form\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\Type\Nichtmitglieder\AddNonMemberType;
+use AppBundle\Form\Type\Nichtmitglieder\BaseNonMemberType;
+
 use AppBundle\Form\Type\Nichtmitglieder\EditNonMemberType;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber;
@@ -42,9 +44,7 @@ class NonMemberController extends Controller {
 //                    ->setParameter('adminyear', $adminyear);
     }
         
-//                echo '<pre>';
-//            print_r($qb['Nichtmitglieder\NonMemPhoneNumber']->getQuery()->getResult());
-//            echo '</pre>';
+
     
     $choices=array('Nichtmitgliedsnr.' => 'nmemid',
         'Name' => 'lastname',
@@ -117,6 +117,8 @@ class NonMemberController extends Controller {
     $rehabcertlist=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
     $sportsgroupnonmemberlist=$qb['Nichtmitglieder\NonMember_Sportsgroup']->getQuery()->getResult();
     $sportsgrouplist=$qb['Nichtmitglieder\NonMemSportsgroup']->getQuery()->getResult();
+    
+    
     if($adminyear == date('Y')){
          $now=date('Y-m-d');
      }
@@ -187,7 +189,7 @@ class NonMemberController extends Controller {
     $nonmember->setNMemID($nmemid);
     
     $nonmember->addPhonenumber($phonenumber);
-    $addnonmemform = $this->createForm(AddNonMemberType::class, $nonmember);    
+    $addnonmemform = $this->createForm(BaseNonMemberType::class, $nonmember, array('adyear' => $adminyear));    
     
     $addnonmemform->handleRequest($request);     
         
@@ -267,7 +269,7 @@ class NonMemberController extends Controller {
         
         
         $nonmember=$doctrine->getRepository('AppBundle:Nichtmitglieder\Nonmember')->findOneBy(array('nmemid' => $ID, 'validfrom'=>$validfrom));
-       $nonmember_old = clone $nonmember;
+        $nonmember_old = clone $nonmember;
 
 
         
@@ -303,24 +305,23 @@ class NonMemberController extends Controller {
          
           foreach ($sportsgrouplist as $sport) {
              $sp=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid' => $sport->getSgid(), 'validfrom'=>$validfrom));
-             $originalsportsgroup= clone $sp;
-          
+             
+             $originalsportsgroup= clone $sp;          
              $nonmember->addSportsgroup($sp);
              $originalsportsgroups->add($originalsportsgroup);
          }
-        // Create an ArrayCollection of the current Rehab objects in the database
-        //    foreach ($member->getSection() as $section) {
-        //        
-        //        $originalsections->add($section);
-        //    }
+         
+//        echo '<pre>';
+//        print_r($originalsportsgroup);
+//        echo '</pre>';
         
         
-        $editnonmemform = $this->createForm(EditNonMemberType::class, $nonmember);
+        $editnonmemform = $this->createForm(EditNonMemberType::class, $nonmember, array('adyear' => $adminyear));
         $editnonmemform->handleRequest($request);
          
         if($editnonmemform->get('delete')->isClicked()){
            
-            $fm->RemoveObject($nonmember, array('Nichtmitglieder\NonMemPhoneNumber', 'Nichtmitglieder\NonMemRehabilitationCertificate'));
+            $fm->RemoveObject($nonmember, array('Nichtmitglieder\NonMemPhoneNumber', 'Nichtmitglieder\NonMemRehabilitationCertificate', 'Nihctmitglieder\NonMember_Sportsgroup'));
            
            $manager->flush();
             $this->addflash('notice', 'Dieses Nichtmitglied wurde erfolgreich gelöscht!');

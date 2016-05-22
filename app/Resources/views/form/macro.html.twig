@@ -51,8 +51,9 @@
 {% macro bssaCollectionItem(formData) %}
         
     {% set name = formData.vars.full_name %}
-        
-    <div class="form-group" data-content="{{ name }}">
+    <div class="panel panel-default" data-content="{{ name }}">
+        <div class="panel-body">
+    <div class="form-group" >
         {{ form_label(attribute(formData, 'terminationdate')) }}
     <div class="col-sm-3">
         {{ form_widget(attribute(formData, 'terminationdate')) }}
@@ -80,9 +81,9 @@
     </div>
     
     <div class="col-sm-3">
-          
-           <a class="btn-remove" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span>BSSA-Zertifikat  löschen</button></a>
-
+    
+{#           <a class="btn-remove" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span>BSSA-Zertifikat  löschen</button></a>#}
+</div></div>  
     </div>
     </div>
 {% endmacro %}
@@ -92,45 +93,43 @@
         
         {% set name = formData.vars.full_name %}
     
+        <div class="panel panel-default" data-content="{{ name }}">
+        <div class="panel-body">
     
     <div class="form-group" data-content="{{ name }}">
-        {{ form_label(attribute(formData, 'licencetype')) }}
+        
+    {{ form_label(attribute(formData, 'issuedate')) }}
     <div class="col-sm-3">
-   {{ form_widget(attribute(formData, 'licencetype')) }}
-   
+    {{ form_widget(attribute(formData, 'issuedate')) }}  
     </div>
-   <div class="col-sm-1">
-   {{ form_label(attribute(formData, 'licencenumber')) }}
-   
+    <div class="col-sm-1">
+    {{ form_label(attribute(formData, 'licencenumber')) }}   
     </div>
+    <div class="col-sm-3">         
+    {{ form_widget(attribute(formData, 'licencenumber')) }}   
+    </div> 
+    
+    </div>  
+    
+    <div class="form-group" data-content="{{ name }}">
+        
+    {{ form_label(attribute(formData, 'expirationdate')) }}
     <div class="col-sm-3">
-         
-   {{ form_widget(attribute(formData, 'licencenumber')) }}
-   
+    {{ form_widget(attribute(formData, 'expirationdate')) }}      
     </div>
-       
+    <div class="col-sm-1">
+    {{ form_label(attribute(formData, 'licencetype')) }}   
     </div>
-   
-   <div class="form-group" data-content="{{ name }}">
-        {{ form_label(attribute(formData, 'issuedate')) }}
-    <div class="col-sm-3">
-   {{ form_widget(attribute(formData, 'issuedate')) }}
-   
-    </div>
-   <div class="col-sm-1">
-   {{ form_label(attribute(formData, 'expirationdate')) }}
-   
-    </div>
-    <div class="col-sm-3">
-         
-   {{ form_widget(attribute(formData, 'expirationdate')) }}
-   
+    <div class="col-sm-3">         
+    {{ form_widget(attribute(formData, 'licencetype')) }}     
     </div>
        <div class="col-sm-3">
           
-           <a class="btn-remove" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> Lizenz löschen</button></a>
+            <a class="btn-remove" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> Lizenz löschen</button></a>
 
         </div>
+    </div>
+             </div>
     </div>
         
 {% endmacro %}

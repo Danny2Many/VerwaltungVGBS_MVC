@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Nichtmitglieder;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation as JMS;
 
 
 /**
@@ -12,15 +13,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\HasLifecycleCallbacks()
  */
 class NonMemSportsgroup {
-//    
-//    /**
-//    * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
-//    * @ORM\JoinTable(name="NonMemSportsgroup_Section",
-//    * joinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")},
-//    * inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
-//    */ 
-//    protected $section; 
-
+  
+    
     /**
      * @ORM\Id
      * @ORM\Column(type="string") 
@@ -28,7 +22,7 @@ class NonMemSportsgroup {
     protected $sgid;
     
     public function __toString() {
-            return $this->sgid.'/sg/Nichtmitglieder\NonMemSportsgroup'; 
+            return (string) $this->sgid.'/sg/Nichtmitglieder\NonMemSportsgroup'; 
         }
       protected $bssaid;
       protected $bssacert;
@@ -45,11 +39,11 @@ class NonMemSportsgroup {
      * @Assert\NotBlank()
      */
     protected $day;
-    
+
     /**
+     * 
      * @ORM\Column(type="string")
      * @Assert\NotBlank()
-     * 
      */
     protected $time;
     
@@ -72,7 +66,6 @@ class NonMemSportsgroup {
     
     /**
      * @ORM\Column(type="string")
-        * @Assert\NotBlank()
      * 
      */
     protected $token;
@@ -97,12 +90,14 @@ class NonMemSportsgroup {
     public function __construct() {
         $this->bssacert = new ArrayCollection();
         $this->substitute = new ArrayCollection();
+        $this->trainer = new ArrayCollection();
+
     }
 
     /**
      * Get sgid
      *
-     * @return integer
+     * @return string
      */
     public function getSgid()
     {
@@ -111,7 +106,7 @@ class NonMemSportsgroup {
     /**
      * Set sgid
      *
-     * @param integer $sgid
+     * @param string $sgid
      *
      * @return NonMemSportsgroup
      */
@@ -170,29 +165,7 @@ class NonMemSportsgroup {
         return $this->day;
     }
 
-    /**
-     * Set time
-     *
-     * @param \DateTime $time
-     *
-     * @return NonMemSportsgroup
-     */
-    public function setTime($time)
-    {
-        $this->time = $time;
-
-        return $this;
-    }
-
-    /**
-     * Get time
-     *
-     * @return \DateTime
-     */
-    public function getTime()
-    {
-        return $this->time;
-    }
+  
 
     /**
      * Set info
@@ -407,35 +380,7 @@ class NonMemSportsgroup {
     {
         return $this->deleted;
     }
-
     
-    
-    
-//
-//    /**
-//     * Add trainerid
-//     *
-//     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
-//     *
-//     * @return NonMemSportsgroup
-//     */
-//    public function addTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
-//    {
-//        $this->trainerid[] = $trainerid;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Remove trainerid
-//     *
-//     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
-//     */
-//    public function removeTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
-//    {
-//        $this->trainerid->removeElement($trainerid);
-//    }
-
     /**
      * Set bssaid
      *
@@ -473,7 +418,14 @@ class NonMemSportsgroup {
     }
 
 
-    public function addSubstitute(\AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $substitute)
+    /**
+     * Add substitute
+     *
+     * @param \AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $substitute
+     *
+     * @return NonMemSportsgroup
+     */    
+    public function addSubstitute(\AppBundle\Entity\Trainer\Trainer $substitute)
     {
         
         $this->substitute->add($substitute);
@@ -625,5 +577,29 @@ class NonMemSportsgroup {
     public function getCapacity()
     {
         return $this->capacity;
+    }
+
+    /**
+     * Set time
+     *
+     * @param string $time
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setTime($time)
+    {
+        $this->time = $time;
+
+        return $this;
+    }
+
+    /**
+     * Get time
+     *
+     * @return string
+     */
+    public function getTime()
+    {
+        return $this->time;
     }
 }
