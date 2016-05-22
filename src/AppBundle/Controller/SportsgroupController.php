@@ -25,14 +25,7 @@ class SportsgroupController extends Controller {
     */ 
      public function indexAction (Request $request, $letter, $adminyear){
      
-    if($adminyear == date('Y')){ 
-        $now=date("Y");
-    }
-     //else take the last day of the choosen year
-    else{
-        $now=$adminyear;
-    }     
-         
+        
     $doctrine = $this->getDoctrine();
     $dependencies=array('Nichtmitglieder\NonMemSportsgroup', 'BSSACert', 'Nichtmitglieder\Nonmember', 'Nichtmitglieder\Trainer_NonMemSportsgroupSub' , 'Trainer\Trainer', 'Nichtmitglieder\NonMember_Sportsgroup', 'Rooms');
     $qb=[];
@@ -55,7 +48,7 @@ class SportsgroupController extends Controller {
 
     
     $choices=array('Sportgruppe' => 'name',
-                   'Gruppenbezeichnung' => 'token',
+                   'Gruppenbez.' => 'token',
                    'Wochentag' => 'day'
         
         );

@@ -84,7 +84,7 @@ class MemberController extends Controller
        
     }
     
-//    $qb['Member']->andWhere($qb['Member']->expr()->isNull('ditto.quitdate'));
+    $qb['Member']->andWhere($qb['Member']->expr()->isNull('ditto.quitdate'));
                
 
 
@@ -204,11 +204,15 @@ class MemberController extends Controller
      
     foreach ($sportsgroupmemberlist as $sn){
 
-        $memberdependentlist[$sn->getMemid()]['sportsgroups'][$sn->getSgid()]=$sn->getSgid();
+        $memberdependentlist[$sn->getMemid()]['sportsgroups'][$sn->getSgid()]=0;
     }
+    
+     
+    
     
     foreach ($memberlist as $nm){
         foreach ($sportsgrouplist as $sg){
+            
             if(isset($memberdependentlist[$nm->getMemid()]['sportsgroups'][$sg->getSgid()])){
             $memberdependentlist[$nm->getMemid()]['sportsgroups'][$sg->getSgid()]=$sg;
             } 
@@ -442,7 +446,7 @@ class MemberController extends Controller
         
         if($editmemform->get('delete')->isClicked()){
 
-            $fm->RemoveObject($member,array('MemPhoneNumber', 'MemRehabilitationCertificate'));;
+            $fm->RemoveObject($member,array('MemPhoneNumber', 'MemRehabilitationCertificate', 'Member_Sportsgroup'));;
             $manager->flush();
             $this->addFlash('notice', 'Dieses Mitglied wurde erfolgreich gelöscht!');
             return $this->redirectToRoute('member_home', array('letter' => $letter, 'adminyear' => $adminyear));
