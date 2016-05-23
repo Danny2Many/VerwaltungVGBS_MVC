@@ -294,18 +294,25 @@ class SportsgroupController extends Controller {
 
 
         $nmemsportsgroup=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('sgid'=>(string)$ID, 'validfrom'=>$validfrom));
-//        $ntid=$nmemsportsgroup->getTrainerid();
-//        echo $ntid;
+
+        
+        $qb['Trainer\Trainer'] = $doctrine->getRepository('AppBundle:Trainer\Trainer')->createQueryBuilder('ditto');
+        $qb['Trainer\Trainer']->andWhere('ditto.validfrom<='.$adminyear)
+                    ->andWhere('ditto.validto>'.$adminyear)
+                    ->andWhere('ditto.trainerid=:ID')
+                    ->setParameter('ID',$nmemsportsgroup->getTrainerid())
+                ;
+        
         $nmemsportsgrouporiginal= clone $nmemsportsgroup;
         
          if(!$nmemsportsgroup){
             throw $this->createNotFoundException('Es konnte keine Sportgruppe mit der ID.: '.$ID.' gefunden werden');
         }
         $bssacert=$qb['BSSACert']->getQuery()->getResult();
-        $trainerlist=$doctrine->getRepository('AppBundle:Nichtmitglieder\NonMemSportsgroup')->findOneBy(array('trainerid'=>$nmemsportsgroup->getTrainerid(), 'validfrom'=>$validfrom));
+        $trainerlist=$qb['Trainer\Trainer']->getQuery()->getResult();
         $trainersublist=$qb['Nichtmitglieder\Trainer_NonMemSportsgroupSub']->getQuery()->getResult();
-
-    
+        
+ 
         
         $originalbssacerts = new ArrayCollection();
         $originaltrainers = new ArrayCollection();
@@ -321,7 +328,7 @@ class SportsgroupController extends Controller {
         
         foreach ($trainerlist as $tr) {
             $originaltrainer= clone $tr;
-            $nmemsportsgroup->addTrainer($tr);
+            $nmemsportsgroup->setTrainer($tr);
             $originaltrainers->add($originaltrainer);
         }
         
@@ -333,7 +340,10 @@ class SportsgroupController extends Controller {
             $originaltrainersubs->add($originaltrainersub);
         }
     
-    
+       echo ("<pre>");
+
+    print_r($nmemsportsgroup);
+echo ("</pre>");
     
         $editsportsgroupform = $this->createForm(EditSportsgroupType::class, $nmemsportsgroup, array('adyear' => $adminyear));
         $editsportsgroupform->handleRequest($request);

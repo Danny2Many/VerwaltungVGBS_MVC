@@ -17,17 +17,27 @@ use Symfony\Component\Form\Extension\Core\Type\TimeType;
 
 class BaseSportsgroupType extends AbstractType{
     protected $adminyear;
+//    protected $trainerid;
+
     
     public function buildForm(FormBuilderInterface $builder, array $options){
         
         $this->adminyear=$options['adyear'];
+//        $this->trainerid=$options['tid'];
         $builder
         
         ->add('name', SanitizedTextType::class, array ('label' => 'Sportgruppe:'))
         ->add('trainer', EntityType::class, array (
             'class' => 'AppBundle:Trainer\Trainer',
-            'choice_label' =>array('lastname', 'firstname'),
-            'required' => true,'label' => 'Übungsleiter:'))
+            'choice_label' =>'lastname',
+            'label' => 'Übungsleiter:',
+            'expanded' => true,
+                'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('s')
+                                  ->where('s.validfrom <='.$this->adminyear)
+                                  ->andWhere('s.validto >'.$this->adminyear);
+                        }
+                        ))
                      
         ->add('substitute', EntityType::class, array(
                         'class' => 'AppBundle:Trainer\Trainer',
@@ -61,7 +71,8 @@ class BaseSportsgroupType extends AbstractType{
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'adyear' => NULL
+            'adyear' => NULL,
+//            'tid' => NULL
         ));
     }
 }

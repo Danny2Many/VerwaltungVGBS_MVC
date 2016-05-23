@@ -68,12 +68,15 @@ class NonMemberController extends Controller {
     if($searchcol=='terminationdate'){
         //$rehabsearchqb= clone $qb['MemRehabilitationCertificate'];
        // $rehabsearchqb->andWhere($rehabsearchqb->epxr()->like('ditto.'.$searchcol,':type'))
-        $qb['Nichtmitglieder\NonMemRehabilitationCertificate']->andWhere($qb['Nichtmitglieder\NonMemRehabilitationCertificate']->expr()->in('ditto.'.$searchcol,':type'))
+        $qb['Nichtmitglieder\NonMemRehabilitationCertificate']->andWhere($qb['Nichtmitglieder\NonMemRehabilitationCertificate']->expr()->like('ditto.'.$searchcol,':type'))
         ->setParameter('type','%'.$searchval.'%');
 
             $rehacelist=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
 
-
+    
+       echo '<pre>';
+        print_r($rehacelist);
+        echo '</pre>';
             
             if($rehacelist){          
                 foreach ($rehacelist as $rc){         
@@ -83,6 +86,29 @@ class NonMemberController extends Controller {
             $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->in('ditto.nmemid', $idarray));
             
             }
+            
+//            if($searchcol=='token'){
+//        //$rehabsearchqb= clone $qb['MemRehabilitationCertificate'];
+//       // $rehabsearchqb->andWhere($rehabsearchqb->epxr()->like('ditto.'.$searchcol,':type'))
+//        $qb['Nichtmitglieder\NonMemSportsgroup']->andWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->in('ditto.'.$searchcol,':type'))
+//        ->setParameter('type','%'.$searchval.'%');
+//
+//            $rehacelist=$qb['Nichtmitglieder\NonMemSportsgroup']->getQuery()->getResult();
+//
+//  echo '<pre>';
+//        print_r($rehacelist);
+//        echo '</pre>';
+//            
+//            if($rehacelist){          
+//                foreach ($rehacelist as $rc){         
+//                $idarray2[]=$rc->getNmemid();     
+//                }
+//            }
+//            $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->in('ditto.nmemid', $idarray2));
+//            
+//            }
+            
+            
 //            else{
 //                $qb['Nichtmitgleider\Nonmember']->andWhere('ditto.nmemid<=:abort')->setParameter('abort',-1);
 //            }

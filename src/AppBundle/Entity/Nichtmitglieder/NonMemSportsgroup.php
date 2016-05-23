@@ -454,14 +454,14 @@ class NonMemSportsgroup {
     }
 
 
-    public function addTrainer(\AppBundle\Entity\Trainer\Trainer $trainer)
-    {
-//        $trainer->setTrainerid($this->Trainerid);
-        $this->trainer->add($trainer);
-
-        return $this;
-        
-    }
+//    public function addTrainer(\AppBundle\Entity\Trainer\Trainer $trainer)
+//    {
+////        $trainer->setTrainerid($this->Trainerid);
+//        $this->trainer->add($trainer);
+//
+//        return $this;
+//        
+//    }
 
  
     public function removeTrainer(\AppBundle\Entity\Trainer\Trainer $trainer)
