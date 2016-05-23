@@ -293,13 +293,20 @@ class MemSportsgroupController extends Controller {
 
         $memsportsgroup=$doctrine->getRepository('AppBundle:MemSportsgroup')->findOneBy(array('sgid'=>(string)$ID, 'validfrom'=>$validfrom));
 //        print_r($memsportsgroup);
+        
+        $qb['Trainer\Trainer'] = $doctrine->getRepository('AppBundle:Trainer\Trainer')->createQueryBuilder('ditto');
+        $qb['Trainer\Trainer']->andWhere('ditto.validfrom<='.$adminyear)
+                    ->andWhere('ditto.validto>'.$adminyear)
+                    ->andWhere('ditto.trainerid=:ID')
+                    ->setParameter('ID',$memsportsgroup->getTrainerid())
+                ;
 
         $memsportsgrouporiginal= clone $memsportsgroup;
          if(!$memsportsgroup){
             throw $this->createNotFoundException('Es konnte keine Sportgruppe mit der ID.: '.$ID.' gefunden werden');
         }
         $bssacert=$qb['BSSACert']->getQuery()->getResult();
-//        $trainerlist=$qb['Trainer\Trainer']->getQuery()->getResult();
+        $trainerlist=$qb['Trainer\Trainer']->getQuery()->getResult();
         $trainersublist=$qb['Trainer_MemSportsgroupSub']->getQuery()->getResult();
 
         
@@ -315,11 +322,11 @@ class MemSportsgroupController extends Controller {
             $originalbssacerts->add($originalbssacert);
         }
         
-//        foreach ($trainerlist as $tr) {
-//            $originaltrainer= clone $tr;
-//            $nmemsportsgroup->addTrainer($bssa);
-//            $originaltrainers->add($originaltrainer);
-//        }
+        foreach ($trainerlist as $tr) {
+            $originaltrainer= clone $tr;
+            $memsportsgroup->setTrainer($tr);
+            $originaltrainers->add($originaltrainer);
+        }
         
         foreach ($trainersublist as $tsub) {
             $ts=$doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy(array('trainerid' => $tsub->getTrainerid(), 'validfrom'=>$validfrom));
@@ -344,9 +351,12 @@ class MemSportsgroupController extends Controller {
         if($editsportsgroupform->isSubmitted() && $editsportsgroupform->isValid()){
   
             $fm->HandleDependencyDiff($memsportsgroup->getBssacert(), $originalbssacerts);
-            $fm->HandleDependencyDiff($memsportsgroup->getTrainer(), $originaltrainers);
+//            $fm->HandleDependencyDiff($memsportsgroup->getTrainer(), $originaltrainers);
             $fm->HandleDependencyDiff($memsportsgroup->getSubstitute(), $originaltrainersubs, array('entitypath' => 'AppBundle\Entity\Trainer_MemSportsgroupSub','idprefixone' => 'sg','idone' => $memsportsgroup->getSgid()));
-                        
+                    
+            $memsportsgroup->setTrainerid($memsportsgroup->getTrainer()->getTrainerid());
+
+            
             $fm->HandleObjectDiff($memsportsgroup, $memsportsgrouporiginal);
             
             $manager->flush();
