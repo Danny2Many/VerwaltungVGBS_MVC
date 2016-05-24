@@ -26,7 +26,8 @@ class SearchManager {
             
             if($searchlist){          
                 foreach ($searchlist as $sc){         
-                $idarray[]=  call_user_func('get'.$idprefix.'id',$sc);     
+                $idarray[]=  call_user_func('get'.$idprefix.'id',$sc);   
+//                    $idarray[]=$sc->getNmemid();
                 }                
             }else{
                 $idarray=array(null);

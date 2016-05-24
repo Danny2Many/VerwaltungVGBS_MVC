@@ -75,7 +75,7 @@ class NonMemberController extends Controller {
         
     if($searchcol=='terminationdate'){
         
-        $sm->Many2OneSearch($qb['Nichtmitglieder\NonMemRehabilitationCertificate'],'Nmem');
+        $sm->Many2OneSearch($qb['Nichtmitglieder\NonMemRehabilitationCertificate'],'nmem');
         
 //        $rehabsearchqb= clone $qb['Nichtmitglieder\NonMemRehabilitationCertificate'];
 //        $rehabsearchqb->andWhere($rehabsearchqb->expr()->like('ditto.'.$searchcol,':type'))
