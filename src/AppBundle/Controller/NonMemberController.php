@@ -23,6 +23,8 @@ use AppBundle\Form\SanitizedTextType;
 
 use AppBundle\Services\FunctionManager;
 use AppBundle\Services\IndexManager;
+use AppBundle\Services\SearchManager;
+
 
 class NonMemberController extends Controller {
     /**
@@ -64,54 +66,77 @@ class NonMemberController extends Controller {
         //getting the values of the field and column
         $searchval=$request->query->get('search')['searchfield'];
         $searchcol=$request->query->get('search')['column'];
+        
+        $sm = new SearchManager($qb['Nichtmitglieder\Nonmember'],$searchval,$searchcol);
     
+        
+        
+        
+        
     if($searchcol=='terminationdate'){
-        //$rehabsearchqb= clone $qb['MemRehabilitationCertificate'];
-       // $rehabsearchqb->andWhere($rehabsearchqb->epxr()->like('ditto.'.$searchcol,':type'))
-        $qb['Nichtmitglieder\NonMemRehabilitationCertificate']->andWhere($qb['Nichtmitglieder\NonMemRehabilitationCertificate']->expr()->like('ditto.'.$searchcol,':type'))
-        ->setParameter('type','%'.$searchval.'%');
-
-            $rehacelist=$qb['Nichtmitglieder\NonMemRehabilitationCertificate']->getQuery()->getResult();
-
-    
-       echo '<pre>';
-        print_r($rehacelist);
-        echo '</pre>';
-            
-            if($rehacelist){          
-                foreach ($rehacelist as $rc){         
-                $idarray[]=$rc->getNmemid();     
-                }
-            }
-            $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->in('ditto.nmemid', $idarray));
-            
-            }
-            
-//            if($searchcol=='token'){
-//        //$rehabsearchqb= clone $qb['MemRehabilitationCertificate'];
-//       // $rehabsearchqb->andWhere($rehabsearchqb->epxr()->like('ditto.'.$searchcol,':type'))
-//        $qb['Nichtmitglieder\NonMemSportsgroup']->andWhere($qb['Nichtmitglieder\NonMemSportsgroup']->expr()->in('ditto.'.$searchcol,':type'))
+        
+        $sm->Many2OneSearch($qb['Nichtmitglieder\NonMemRehabilitationCertificate'],'Nmem');
+        
+//        $rehabsearchqb= clone $qb['Nichtmitglieder\NonMemRehabilitationCertificate'];
+//        $rehabsearchqb->andWhere($rehabsearchqb->expr()->like('ditto.'.$searchcol,':type'))
 //        ->setParameter('type','%'.$searchval.'%');
 //
-//            $rehacelist=$qb['Nichtmitglieder\NonMemSportsgroup']->getQuery()->getResult();
-//
-//  echo '<pre>';
-//        print_r($rehacelist);
-//        echo '</pre>';
+//            $rehacelist=$rehabsearchqb->getQuery()->getResult();
 //            
 //            if($rehacelist){          
 //                foreach ($rehacelist as $rc){         
-//                $idarray2[]=$rc->getNmemid();     
-//                }
+//                $idarray[]=$rc->getNmemid();     
+//                }                
+//            }else{
+//                $idarray=array(null);
 //            }
-//            $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->in('ditto.nmemid', $idarray2));
 //            
-//            }
+//            $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->in('ditto.nmemid', $idarray));       
+        }
             
             
-//            else{
-//                $qb['Nichtmitgleider\Nonmember']->andWhere('ditto.nmemid<=:abort')->setParameter('abort',-1);
-//            }
+            
+            
+            
+            
+            
+            
+           elseif($searchcol=='token'){
+            echo $searchval;
+                $sportsearchqb= clone $qb['Nichtmitglieder\NonMemSportsgroup'];
+                $sportsearchqb->andWhere($sportsearchqb->expr()->like('ditto.'.$searchcol,':type'))
+                ->setParameter('type','%'.$searchval.'%');
+
+                $sportlist=$sportsearchqb->getQuery()->getResult();
+                
+                if($sportlist){          
+                    foreach ($sportlist as $rc){         
+                    $sgidarray[]=$rc->getSgid();     
+                    }                
+                }else{
+                    $sgidarray=array(null);
+                }
+                
+                $sport_searchqb = clone $qb['Nichtmitglieder\NonMember_Sportsgroup'];
+                $sport_searchqb->andWhere($sport_searchqb->expr()->in('ditto.sgid',$sgidarray));               
+
+                $sportgroup=$sport_searchqb->getQuery()->getResult();
+                
+                if($sportgroup){          
+                    foreach ($sportgroup as $rc){         
+                    $nmemidarray[]=$rc->getNmemid();     
+                    }                
+                }else{
+                    $nmemidarray=array(null);
+                }
+                
+                    $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->in('ditto.nmemid',$nmemidarray));
+            }
+            
+            
+            
+            
+            
             else{
             $qb['Nichtmitglieder\Nonmember']->andWhere($qb['Nichtmitglieder\Nonmember']->expr()->like('ditto.'.$searchcol, ':nonmember'))
                ->setParameter('nonmember','%'.$searchval.'%');

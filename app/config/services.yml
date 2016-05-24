@@ -23,3 +23,6 @@ services:
     app.function_manager:
         class: AppBundle\Services\FunctionManager
         arguments: ['@doctrine.orm.entity_manager']
+    app.search_manager:
+        class: AppBundle\Services\SearchManager
+        arguments: ['@doctrine.orm.entity_manager']
