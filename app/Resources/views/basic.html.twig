@@ -105,6 +105,7 @@ function myFunction() {
                                 <li class="{% block TrainerAktiv %}#{% endblock %}"><a href="{{path('trainer_home')}}">Übungsleiter</a></li>
                                 <li class="{% block InterAktiv %}#{% endblock %}"><a href="{{path('interested_home')}}">Interessenten</a></li>
                                 <li class="{% block RoomsAktiv %}#{% endblock %}"><a href="{{path('rooms_home')}}">Räumlichkeiten</a></li>
+                                <li class="{% block InventarAktiv %}#{% endblock %}"><a href="{{path('inventory_home')}}">Inventar</a></li>
                             </ul>
                         </nav>
                     </header>
@@ -147,7 +148,7 @@ function myFunction() {
                        {% block topmenu_right %}
                        
                         
-                     
+                        {% block other %}{% endblock %}
                         {% block dropdown %}{% endblock %}
                     
                     
@@ -205,7 +206,7 @@ function myFunction() {
                  {% if tabledata is empty %}
                  
                     <div class="alert alert-info">
-                         Es konnten keine, mit ihrer Suchanfrage übereinstimmenden, Personen gefunden werden.
+                         Es konnten keine, mit ihrer Suchanfrage übereinstimmenden, Einträge gefunden werden.
                     </div>
                      
                  {% else %}
