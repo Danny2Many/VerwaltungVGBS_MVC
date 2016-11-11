@@ -54,6 +54,10 @@
    
 } );
 
+function myFunction() {
+    document.getElementById("test").style.visibility = "hidden";
+}
+
    
         {% endblock %}
 
@@ -71,7 +75,7 @@
                         <nav class="navbar navbar-default  col-md-12">
                             
                             <ul class="nav navbar-nav">
-                                <li class="dropdown adminyeardropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Verwaltungsjahr: {{ adminyear}}<span class="caret"></span></a>
+{#                                <li class="dropdown adminyeardropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Verwaltungsjahr: {{ adminyear}}<span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         {% set end_year = date() | date('Y') %}
                                         {% set start_year = end_year - 5 %}
@@ -80,12 +84,18 @@
                                             <li class="{% if year == adminyear %}active{% endif %}"><a href="{{path(path, {'adminyear': year})}}">{{year}}</a></li>
                                         {% endfor %}
                                     </ul>
-                                </li>
-                                <li class="{% block HomeAktiv %}{% endblock %}"><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                                </li>#}
+                                <li class="{% block HomeAktiv %}#{% endblock %}"><a href="{{ path('homepage') }}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
                                 <li class="{% block MitglAktiv %}#{% endblock %}"><a href="{{ path('member_home') }}">Mitglieder</a></li>
                                 <li class="{% block NMitglAktiv %}{% endblock %}"><a href="{{path('nonmember_home')}}">Nichtmitglieder</a></li>
                                 <li class="{% block AustrittAktiv %}#{% endblock %}"><a href="#">Austrittsliste</a></li>
-                                <li class="{% block SportgrAktiv %}#{% endblock %}"><a href="{{path('sportsgroup_home')}}">Sportgruppen</a></li>
+                                <li class="dropdown {% block SportgrAktiv %}{% endblock %}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Sportgruppen/-kurse<span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                        <li class="{% block MemSportgrAktiv %}#{% endblock %}"><a href="{{path('memsportsgroup_home') }}">Mitgliedergruppen</a></li>
+                                        <li class="{% block NmemSportgrAktiv %}#{% endblock %}"><a href="{{path('sportsgroup_home') }}">Nichtmitgliedergruppen</a></li>
+                                        <li class="{% block SportcourseAktiv %}#{% endblock %}"><a href="{{path('sportsgroup_home') }}">Sportkurse</a></li>        
+                                    </ul>
+                                </li>
                                 <li class="dropdown {% block FinanzAktiv %}{% endblock %}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Finanzverwaltung<span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <li class="{% block MitglFinAktiv %}#{% endblock %}"><a href="{{ path('member_fin') }}">Mitglieder</a></li>
@@ -93,6 +103,8 @@
                                     </ul>
                                 </li>
                                 <li class="{% block TrainerAktiv %}#{% endblock %}"><a href="{{path('trainer_home')}}">Übungsleiter</a></li>
+                                <li class="{% block InterAktiv %}#{% endblock %}"><a href="{{path('interested_home')}}">Interessenten</a></li>
+                                <li class="{% block RoomsAktiv %}#{% endblock %}"><a href="{{path('rooms_home')}}">Räumlichkeiten</a></li>
                             </ul>
                         </nav>
                     </header>
@@ -110,7 +122,7 @@
          {% block topmenu %}                       
             <div class="topmenu row">
                 
-                <div class="topmenu-left col-md-5">
+                <div class="topmenu-left col-md-6">
                  {% block topmenu_left %}
                    {% block search %}
                             {{ form_start(searchform, { 'attr': {'class': 'form-inline'} }) }}
@@ -118,18 +130,20 @@
                             {{ form_widget(searchform.searchfield) }}
                             
                             <button type="submit" class="btn btn-default">
-                                <span class="glyphicon glyphicon-search"></span> suchen
+                                <span class="glyphicon glyphicon-search"></span> Suchen
                             </button>
-                            <a href="{{ path(path,{'adminyear': adminyear}) }}"><input type="button" class="btn btn-default" value="Suche abbrechen" {% if  searchform.vars.submitted == false %}{{ 'disabled' }}{% endif %} ></a>
-                            
+                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">Erweiterte Suche</button>
+                            <a href="{{ path(path) }}"><input type="button" class="btn btn-default" value="Suche abbrechen" {% if  searchform.vars.submitted == false %}{{ 'disabled' }}{% endif %} ></a>
+
                             {{ form_end(searchform) }}
                         {% endblock %}
+
                         {% endblock %}
                      
                 </div>   
                         
                         
-                     <div class="topmenu-right col-md-7">
+                     <div class="topmenu-right col-md-6">
                        {% block topmenu_right %}
                        
                         
@@ -146,7 +160,44 @@
             </div>
             {% endblock %}
      
-     
+ {#    <!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"><h4>Erweiterte Suche</h4>
+         
+      </div>
+        
+      <div class="modal-body" id="test">
+         <ul class="nav nav-pills nav-stacked">
+
+  <li class="active"><a href="#">Rehaschein</a></li>
+  <li><a href="#">Sportgrupe</a></li>
+
+</ul>
+        {{ form_start(rehabsearchform) }}
+        <div class="form-group">
+{{ form_label(rehabsearchform.terminationdate, null, { 'label_attr': {'class': 'control-label col-sm-2'} }) }}
+<div class="col-sm-10">
+{{ form_widget(rehabsearchform.terminationdate) }}
+</div>
+</div>
+{{ form_end(rehabsearchform) }}  
+
+      
+</div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+            
+    </div>
+
+  </div>
+</div>#}
      
              {% block table %}
                  <div class="row">
@@ -186,13 +237,13 @@
   {% for letter in 'a'|upper..'z'|upper %}
   {% if letter == cletter %}
      
-      <li class="active"><a href="{{ path(path, {'letter': letter, 'adminyear': adminyear}) }}">{{ letter }}</a></li>
+      <li class="active"><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>
       
       {% else %}
-      <li><a href="{{ path(path, {'letter': letter, 'adminyear': adminyear}) }}">{{ letter }}</a></li>
+      <li><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>
   {% endif %}
   {% endfor %}
-  <li class="active"><a href="{{ path(path, {'letter': cletter, 'adminyear': adminyear}) }}">{{ tabledata|length }} Person/en wurden gefunden</a></li>
+  <li class="active"><a href="{{ path(path, {'letter': cletter}) }}">{{ tabledata|length }} Person/en wurden gefunden</a></li>
 </ul> 
         
             </div>

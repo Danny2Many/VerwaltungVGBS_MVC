@@ -1,0 +1,51 @@
+<?php
+
+
+
+namespace AppBundle\Entity\Mitglieder;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="Member_Dues")
+ * 
+ */
+class Member_Dues {
+      /**
+* @ORM\Id
+* @ORM\Column(type="integer")
+   * @ORM\GeneratedValue(strategy="AUTO")  
+*/
+protected $mdid;  
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Due", inversedBy="member", cascade={"persist"})
+     * @ORM\JoinColumn(name="dueid", referencedColumnName="dueid")
+     */    
+    protected $due;
+
+    
+        /**
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="due")
+     * @ORM\JoinColumn(name="memid", referencedColumnName="memid")
+     */ 
+    protected $member;
+    
+    
+    
+    /**
+*
+* @ORM\Column(type="date")
+*/
+protected $paystart;
+
+
+
+/**
+* @ORM\Column(type="date")
+*/
+protected $payend;
+
+
+
+}

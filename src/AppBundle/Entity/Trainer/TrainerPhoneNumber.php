@@ -49,7 +49,9 @@ class TrainerPhoneNumber {
      */
     protected $validfrom;
     
-
+    public function __toString() {
+            return $this->tpnid.'/tpn/Trainer\TrainerPhoneNumber'; 
+        }
   
     /**
      * Set trainerid

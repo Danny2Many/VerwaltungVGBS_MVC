@@ -2,12 +2,13 @@
 
 
 
-namespace AppBundle\Form\Type\Member;
+namespace AppBundle\Form\Type\Mitglieder;
 use AppBundle\Form\SanitizedTextType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use AppBundle\Form\Type\Mitglieder\BaseMemberType;
 
 class EditMemberType extends BaseMemberType{
    public function buildForm(FormBuilderInterface $builder, array $options)
@@ -23,7 +24,7 @@ class EditMemberType extends BaseMemberType{
          public function configureOptions(OptionsResolver $resolver)
 {
     $resolver->setDefaults(array(
-        'data_class' => 'AppBundle\Entity\Member',
+        'data_class' => 'AppBundle\Entity\Mitglieder\Member'
         
     ));
 }

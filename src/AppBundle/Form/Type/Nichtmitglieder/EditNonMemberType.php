@@ -18,7 +18,7 @@ class EditNonMemberType extends BaseNonMemberType{
     }
     
          public function configureOptions(OptionsResolver $resolver)
-        {$resolver->setDefaults(array('data_class' => 'AppBundle\Entity\Nichtmitglieder\Nonmember',));
+        {$resolver->setDefaults(array('data_class' => 'AppBundle\Entity\Nichtmitglieder\NonMember'));
         }
 }
 

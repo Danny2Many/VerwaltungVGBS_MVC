@@ -1,0 +1,260 @@
+{% extends "basic.html.twig" %}
+{% form_theme searchform 'bootstrap_3_layout.html.twig' %}
+
+{% block viewlink %}{{ path('memsportsgroup_home') }}{% endblock %}
+{% block title %} Sportgruppen {% endblock %}
+{% block viewname %}Sportgruppen{% endblock %}
+{% block SportgrAktiv %} active {% endblock %}
+{% block MemSportgrAktiv %} active {% endblock %}
+{% block fixedcolnum %} 6 {% endblock %}
+{% block columnDefs %}
+            "columnDefs": [
+            {"width" : "6%", "targets": 16},
+            {"width" : "6%", "targets": 0},
+            {"width" : "5%", "targets": 14},
+           
+        ]
+            {% endblock%} 
+
+{% block add %}
+    <a href="{{ path('addmemsportsgroup', {'letter': cletter, 'adminyear': adminyear }) }}"><button    class="add btn btn-default">
+      <span class="glyphicon glyphicon-plus"></span> neue Sportgruppe anlegen
+        </button></a>  
+{% endblock %}
+
+{% block color %} {{ colorclass }} {% endblock %}
+
+{% block thead %}
+
+
+
+    <th class="overhead2">Bearb.</th>
+    <th class="overhead2">Sportgruppe</th>
+    <th class="overhead2">Info</th>
+    <th class="overhead2">Uhrzeit</th>
+    <th class="overhead2">Räumlichkeit</th>
+    <th class="overhead2">Gruppenbezeichnung</th>
+    <th class="overhead2">Voranmeldungen</th>
+    <th class="overhead2">Übungsleiter</th>
+    <th class="overhead2">Vetretungsmöglichkeit</th>
+    {#<th  class="overhead1"><font color=""> Mitglieder/Kurs-TN</font></th>#}
+    <th class="overhead1"><span style="color:black ;">Mitglieder-</br></span></br>gesamt</th>
+    <th class="overhead1"><span style="color:black ;">Kurs-TN</br></span></br>weiblich</th>
+    <th class="overhead1">männlich</th>
+   {# <th class="overhead2"> <fo<nt color="">Kapazität</font></th>#}
+    <th class="overhead2"><span style="color:black;">Kapazität</br></span></br>gesamt</th>
+    <th class="overhead2">offen</th>
+    
+    {#<th class="overhead1">BSSA_Zertifizierung</th>#}
+    <th class="overhead1"><span style="color:black;">BSSA-</br></span></br>Laufzeit bis</th>
+    <th class="overhead1"><span style="color:black;">Zertifizierung</br></span></br>Erstanmeldung</th>
+    <th class="overhead1">Letzte Änderung</th>
+    <th class="overhead1">VGBS-GruppenNr.</th>
+    <th class="overhead1">BSSA-Zertifikatnr.</th>
+    {#<th class="overhead2">Finanzen</th>#}
+    <th class="overhead2"><span style="color:black;">Finanzen</br></span>Einnahmen gesamt/Monat</th>
+    <th class="overhead2">Anzahl RS</th>
+    <th class="overhead2">ÜL-Kosten + Halle</th>
+    <th class="overhead2">Saldo</th>
+    
+    
+{% endblock %}
+ 
+{% block tbody %}
+    {% for data in tabledata %}
+        
+        <tr>
+        {#{% if data.name|first == 'Ä' %}
+                {% set first = 'A' %}
+                {% elseif data.name|first == 'Ö' %}
+                {% set first = 'O' %}
+                {% elseif data.name|first == 'Ü' %}
+                {% set first = 'U' %}
+                {% else %}
+                {% set first = data.name|first %}   
+        {% endif %}#}
+        <td><a href="{{ path('editmemsportsgroup', {'letter': data.day, 'ID': data.sgid, 'adminyear': adminyear,  'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></a><a href="{{ path('editmemsportsgroup', {'letter': data.day, 'ID': data.sgid, 'adminyear': adminyear,  'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='intern'> <span class='glyphicon glyphicon-folder-open'></span></button></a></td>       
+        <td>{{ data.name|striptags }}</td>
+        <td>{{ data.info|striptags }}</td> 
+        <td>{{ data.time|date("h:i") }}</td>
+        {% if sportsgroupdependentlist[data.roomid]['rooms'] is defined %}
+        {% set rooms =sportsgroupdependentlist[data.roomid]['rooms'] %}
+        {% else %}
+          {% set rooms  ='' %}  
+        {% endif %}
+        <td>{% for RO in rooms %}                     
+               {{RO.roomname }}
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %}
+            
+{#/******************************************************** #} 
+        <td>{{ data.token|striptags }}</td>
+        <td>{{ data.sgid|striptags }}</td>
+        {% if sportsgroupdependentlist[data.trainerid]['trainers'] is defined %}
+            {% set trainer =sportsgroupdependentlist[data.trainerid]['trainers'] %}
+        {% else %}
+          {% set trainer ='' %}  
+        {% endif %}
+        <td>{% for TR in trainer %}                     
+               {{TR.firstname }} {{TR.lastname}}<br>
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %}
+            
+{#/******************************************************** #}              
+        {% if sportsgroupdependentlist[data.sgid]['trainersub'] is defined %}
+            {% set trainer =sportsgroupdependentlist[data.sgid]['trainersub'] %}
+        {% else %}
+          {% set trainer ='' %}  
+        {% endif %}
+        <td>{% for TR in trainer %}                     
+               {{TR.firstname }} {{TR.lastname }}<br>
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %} 
+{#/******************************************************** #}          
+          
+       {% if sportsgroupdependentlist[data.sgid]['memberstotal'] is defined %}
+            {% set nonmember =sportsgroupdependentlist[data.sgid]['memberstotal'] %}
+        {% else %}
+          {% set nonmember ='' %}  
+        {% endif %}
+        {% set foo =0 %}
+        {% for NM in nonmember %}                     
+               {% set foo = foo + 1 %}
+            {% endfor %}
+              <td>  {{ foo }}</td>
+             
+{#/******************************************************** #}            
+        {% if sportsgroupdependentlist[data.sgid]['members']['female'] is defined %}
+            {% set nonmemberfemale =sportsgroupdependentlist[data.sgid]['members']['female'] %}
+        {% else %}
+          {% set nonmemberfemale ='' %}  
+        {% endif %}
+    
+              <td>  {{ nonmemberfemale }}</td>
+              {#<td>{% for TR in nonmemberfemale %}                     
+               {{TR}}
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %}#} 
+{#/******************************************************** #}
+        {% if sportsgroupdependentlist[data.sgid]['members']['male'] is defined %}
+            {% set nonmembermale =sportsgroupdependentlist[data.sgid]['members']['male'] %}
+        {% else %}
+            {% set nonmembermale ='' %}  
+        {% endif %}
+        
+              <td>  {{ nonmembermale}}</td>
+{#/******************************************************** #}        
+        {#<td bgcolor="#A9D0F5"></td>  #}      
+        <td>{{ data.capacity|striptags }}</td> 
+        <td>{{ data.capacity - foo  }}</td>        
+        
+       {# <td bgcolor="#5fa8ec"></td>#}
+        
+        {% if adminyear == "now"|date("Y") %}
+            {% set now = "now"|date("Y-m-d") %}
+            {% else %}
+           {% set now = date(adminyear~'-12-31')  %}     
+        {% endif %}
+        
+        
+        {% if sportsgroupdependentlist[data.sgid]['terminationdate'] is defined %}
+        {% set terminationdate =sportsgroupdependentlist[data.sgid]['terminationdate'] %}
+        {% else %}
+          {% set terminationdate ='' %}  
+        {% endif %}
+        <td>{% for TD in terminationdate  %}
+        <div class="{% if date(TD.terminationdate)|date("Y-m-d") < now|date_modify("+2 months")|date("Y-m-d") %}red {% endif %}
+                   {% if (now|date("Y") == TD.terminationdate|date("Y") and now|date("Y-m-d") < TD.terminationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
+                    <strong>  {{  TD.terminationdate|date("d.m.Y")}}  </strong>   </div>
+                  {% else %}
+                         {{ "-" }}
+                    {% endfor %}
+{#/******************************************************** #}          
+        {% if sportsgroupdependentlist[data.sgid]['startdate'] is defined %}
+            {% set startdate =sportsgroupdependentlist[data.sgid]['startdate'] %}
+        {% else %}
+          {% set startdate ='' %}  
+        {% endif %}
+        <td>{% for SD in startdate if date(SD.startdate) != NULL %}                     
+               {{SD.startdate|date("d.m.Y") }}<br>
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %} 
+{#/******************************************************** #}          
+        {% if sportsgroupdependentlist[data.sgid]['validfrom'] is defined %}
+            {% set validfrom =sportsgroupdependentlist[data.sgid]['validfrom'] %}
+        {% else %}
+          {% set validfrom ='' %}  
+        {% endif %}
+        <td>{% for VF in validfrom if date(VF.validfrom) != NULL %}                     
+               {{VF.validfrom }}<br>
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %}  
+{#/******************************************************** #}          
+        {% if sportsgroupdependentlist[data.sgid]['groupnr'] is defined %}
+            {% set groupnr =sportsgroupdependentlist[data.sgid]['groupnr'] %}
+        {% else %}
+          {% set groupnr ='' %}  
+        {% endif %}
+        <td>{% for GN in groupnr if GN.groupnr != NULL  %}                     
+                <strong>{{GN.groupnr }}</strong><br>
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %}  
+{#/******************************************************** #}           
+        {% if sportsgroupdependentlist[data.sgid]['bssacertnr'] is defined %}
+            {% set bssacertnr =sportsgroupdependentlist[data.sgid]['bssacertnr'] %}
+        {% else %}
+          {% set bssacertnr ='' %}  
+        {% endif %}
+        <td>{% for BC in bssacertnr if BC.bssacertnr != NULL %}                     
+                 <strong>{{BC.bssacertnr }}</strong><br>
+            {% else %}
+                {{ "-" }}</td>
+            {% endfor %} 
+        {#<td>{{ data.bssaid.StartDate|striptags }}</td> 
+        <td>{{ data.bssaid.Recorded|striptags }}</td> 
+        <td>{{ data.bssaid.GroupNr|striptags }}</td>
+        <td>{{ data.bssaid.BSSACertNr|striptags }}</td> #}
+        
+            
+        {#<td bgcolor="#A9D0F5"></td>#}
+        <td>{{ data.sgid|striptags }}</td> 
+        <td>{{ data.sgid|striptags }}</td> 
+        <td>{{ data.sgid|striptags }}</td>
+        <td>{{ data.sgid|striptags }}</td> 
+        
+        
+
+        
+        
+    {% endfor %}    
+{% endblock %}
+    
+ {% block pagination %}
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="pagination">
+                    
+                <li {% if cletter == null %}class="active"{% endif %}><a href="{{ path(path, {'all': 'alle'}) }}">ALLE</a></li>   
+                
+                {% for letter in ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'] %}
+                    
+                    {% if letter == cletter %}     
+                    <li class="active"><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>      
+                    {% else %}
+                    <li><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>                    
+                    {% endif %}
+                    
+                {% endfor %}
+                
+                <li class="active"><a href="{{ path(path, {'letter': cletter}) }}">{{ tabledata|length }} Sportgruppen gefunden</a></li>
+                </ul>         
+            </div>           
+        </div>        
+    {% endblock %}    

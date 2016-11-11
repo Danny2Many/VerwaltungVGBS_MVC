@@ -1,0 +1,1 @@
+UPDATE Member SET state = ?, decreaseddues = ?, newsletter = ?, title = ? WHERE memid = ? AND validfrom = ?11133112016

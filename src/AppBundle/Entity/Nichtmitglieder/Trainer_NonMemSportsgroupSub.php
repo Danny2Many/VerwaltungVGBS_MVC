@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\HasLifecycleCallbacks()
  */
 class Trainer_NonMemSportsgroupSub {
+   protected $substitute;
     /**
     * @ORM\Id
     * @ORM\Column(type="integer")  
@@ -15,7 +16,7 @@ class Trainer_NonMemSportsgroupSub {
     protected $trainerid;
     /**
     * @ORM\Id
-    * @ORM\Column(type="integer")  
+    * @ORM\Column(type="string")  
     */
     protected $sgid;
     /**
@@ -28,6 +29,12 @@ class Trainer_NonMemSportsgroupSub {
     */
     protected $validto;
 
+    public function __toString(){
+//    return (string) $this->nmemid.'id/'.$this->sgid.'/Nichtmitglieder\NonMember_Sportsgroup';
+    return (string) 'a/a/Nichtmitglieder\Trainer_NonMemSportsgroupSub';
+}
+    
+    
     /**
      * Set trainerid
      *
@@ -51,11 +58,34 @@ class Trainer_NonMemSportsgroupSub {
     {
         return $this->trainerid;
     }
+    /**
+     * Add trainerid
+     *
+     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
+     *
+     * @return Trainer_NonMemSportsgroupSub
+     */
+    public function addTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
+    {
+        $this->trainerid[] = $trainerid;
 
+        return $this;
+    }
+
+    /**
+     * Remove trainerid
+     *
+     * @param \AppBundle\Entity\Trainer\Trainer $trainerid
+     */
+    public function removeTrainerid(\AppBundle\Entity\Trainer\Trainer $trainerid)
+    {
+        $this->trainerid->removeElement($trainerid);
+    }
+    
     /**
      * Set sgid
      *
-     * @param integer $sgid
+     * @param string $sgid
      *
      * @return Trainer_NonMemSportsgroupSub
      */
@@ -69,7 +99,7 @@ class Trainer_NonMemSportsgroupSub {
     /**
      * Get sgid
      *
-     * @return integer
+     * @return string
      */
     public function getSgid()
     {
@@ -99,7 +129,32 @@ class Trainer_NonMemSportsgroupSub {
     {
         return $this->validfrom;
     }
+    
+    public function setSubstitute($substitute)
+    {   $substitute->setTrainerid($this->trainerid);
+        $this->substitute = $substitute;
 
+        return $this;
+    }
+
+    public function getSubstitute()
+    {
+        return $this->substitute;
+    }
+
+    public function addSubstitute(\AppBundle\Entity\Trainer\Trainer $substitute)
+    {
+        $substitute->setTrainerid($this->trainerid);
+        $this->substitute->add($substitute);
+
+        return $this;
+        
+    }
+
+    public function removeSubstitute(\AppBundle\Entity\Trainer\Trainer $substitute)
+    {
+        $this->substitute->removeElement($substitute);
+    }
     /**
      * Set validto
      *

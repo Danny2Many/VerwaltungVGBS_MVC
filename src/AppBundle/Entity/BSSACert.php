@@ -1,6 +1,8 @@
 <?php
 namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="BSSACert")
@@ -8,9 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class BSSACert {
     
-
-
-
  /**
 * @ORM\Id
 * @ORM\Column(name="bssaid")
@@ -49,12 +48,15 @@ protected $validto;
 
 
 /**
-* @ORM\Column(type="integer")
+* @ORM\Column(type="string")
 */
 protected $sgid;
 
 
-
+public function __toString()
+    {
+        return (string) $this->sgid.'/bssa/BSSACert';
+    }
 
     
  
@@ -278,7 +280,7 @@ protected $sgid;
     /**
      * Set sgid
      *
-     * @param integer $sgid
+     * @param string $sgid
      *
      * @return BSSACert
      */
@@ -292,7 +294,7 @@ protected $sgid;
     /**
      * Get sgid
      *
-     * @return integer
+     * @return string
      */
     public function getSgid()
     {
