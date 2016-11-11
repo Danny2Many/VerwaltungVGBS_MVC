@@ -1,0 +1,58 @@
+<?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+namespace AppBundle\Entity\Inventory;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="Order")
+ */
+class Order {
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+   protected $orderid;
+   
+    /**
+     * @ORM\Column(type="string")
+     */
+   protected $invoicenumber;
+   
+    /**
+     * @ORM\Column(type="date")
+     */
+   protected $orderdate;
+   
+    /**
+     * @ORM\Column(type="float")
+     */
+   protected $orderprice;
+   
+    /**
+     * @ORM\Column(type="string")
+     */
+   protected $company;
+   
+    /**
+     * @ORM\Column(type="integer")
+     */
+   protected $quantity;
+  
+   /**
+    * @ORM\ManyToOne(targetEntity="Inventory", inversedBy="order")
+    * @ORM\JoinColumn(name="invid", referencedColumnName="invid")
+    */
+   private $inventory;
+   
+}

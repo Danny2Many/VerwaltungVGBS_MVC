@@ -1,0 +1,43 @@
+<?php
+
+namespace AppBundle\Entity\Inventory;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="Inventory")
+ */
+
+class Inventory 
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+ protected $invid;
+ 
+    /**
+     * @ORM\Column(type="string")
+     */
+ protected $objectname;
+ 
+    /**
+     * @ORM\Column(type="string")
+     */
+ protected $description;
+ 
+    /**
+     * @ORM\OneToMany(targetEntity="Order", mappedBy="inventory")
+     */
+ private $order;
+ 
+    /**
+     * @ORM\OneToMany(targetEntity="Stocktaking", mappedBy="inventory")
+     */
+ private $stocktaking;
+ 
+}
