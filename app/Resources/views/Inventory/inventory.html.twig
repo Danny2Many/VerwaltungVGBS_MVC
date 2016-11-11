@@ -1,0 +1,175 @@
+{% extends 'basic.html.twig' %}
+{% form_theme searchform 'bootstrap_3_layout.html.twig' %}
+{% block columnDefs %}
+     "columnDefs": [
+    { "width": "1%", "targets": 0 },
+    { "width": "2%", "targets": 1 },
+    { "width": "15%", "targets": 2 },
+    { "width": "25%", "targets": 3 },
+    { "width": "5%", "targets": 4 },
+    { "width": "7%", "targets": 5 },
+    { "width": "5%", "targets": 6},
+    { "width": "15%", "targets": 7},
+    { "width": "5%", "targets": 8 },
+    { "width": "10%", "targets": 9 }
+  ]  
+  {% endblock %}
+{% block title %}Inventar - Stammdaten{% endblock %}
+{% block fixedcolnum %} 10 {% endblock %}
+{% block viewlink %}{{ path('inventory_home') }}{% endblock %}
+{% block InventarAktiv %} active {% endblock %}
+
+{% block add %}
+    <div class="inline">
+    <a href="{{ path('addobj') }}"><button    class="add btn btn-default">
+      <span class="glyphicon glyphicon-plus"></span> neues Objekt anlegen
+        </button></a> 
+    </div>
+{% endblock %}
+
+{#{% block color %} {{ colorclass }} {% endblock %}#}
+
+{#table header#}
+{% block thead %}
+    <th>Bearb.</th>
+    <th>Inv. ID</th>
+    <th>Bezeichnung</th>
+    <th>Beschreibung</th>
+    <th>Anschaffungs-<br>jahr</th>
+    <th>Anzahl Anschaffung</th>
+    <th>Inventur-<br>datum</th>
+    <th>Standort</th>
+    <th>Anzahl</th>
+    <th>Zustand</th>
+ {% endblock %}
+
+{#data in the table#}
+{% block tbody %}
+    {%for data in tabledata%} 
+        <tr>
+            <td><center><a href="{{ path('editobj', {'ID': data.invid}) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
+            <td>{{data.invid}}</td>
+            <td>{{data.objectname}}</td>
+            <td>{{data.description}}</td>
+            <td>{% if inventorydependentlist[data.invid]['order'] is defined %}
+                {% set anj =inventorydependentlist[data.invid]['order'] %}
+                {% else %}
+                  {% set anj ='' %}  
+                {% endif %}     
+                {% for AJ in anj %}
+                        {{ AJ.orderdate.format("Y") }}<br>
+                        {% else  %}
+                        {{ "-" }}    
+                {% endfor %}</td>
+            <td>{% if inventorydependentlist[data.invid]['order'] is defined %}
+                {% set aan =inventorydependentlist[data.invid]['order'] %}
+                {% else %}
+                  {% set aan ='' %}  
+                {% endif %}     
+                {% for QU in aan %}
+                        {{ QU.quantity }}<br>
+                        {% else  %}
+                        {{ "-" }}    
+                {% endfor %}</td>
+            <td>{% if inventorydependentlist[data.invid]['stocktaking'] is defined %}
+                {% set ina =inventorydependentlist[data.invid]['stocktaking'] %}
+                {% else %}
+                  {% set ina ='' %}  
+                {% endif %}     
+                {% for IV in ina %}
+                        {{ IV.stockdate }}<br>
+                        {% else  %}
+                        {{ "-" }}    
+                {% endfor %}</td>
+            <td>{% if inventorydependentlist[data.invid]['stocktaking'] is defined %}
+                {% set st =inventorydependentlist[data.invid]['stocktaking'] %}
+                {% else %}
+                  {% set st ='' %}  
+                {% endif %}     
+                {% for LO in st %}
+                        {{ LO.location.roomname }}<br>
+                        {% else  %}
+                        {{ "-" }}    
+                {% endfor %}</td>
+            <td>{% if inventorydependentlist[data.invid]['stocktaking'] is defined %}
+                {% set anz =inventorydependentlist[data.invid]['stocktaking'] %}
+                {% else %}
+                  {% set anz ='' %}  
+                {% endif %}     
+                {% for QU in anz %}
+                        {{ QU.quantity}}<br>
+                        {% else  %}
+                        {{ "-" }}    
+                        {% endfor %}</td>
+            <td>{% if inventorydependentlist[data.invid]['stocktaking'] is defined %}
+                {% set zus =inventorydependentlist[data.invid]['stocktaking'] %}
+                {% else %}
+                  {% set zus ='' %}  
+                {% endif %}     
+                {% for ST in zus %}
+                    {{ST.state}}<br>
+                        
+                {% else  %}
+                  {{ "-" }}
+                {% endfor %}</td>
+        </tr>
+    {%endfor%}
+{%endblock%}
+
+{#dropdown menu for the location search#}
+{#each location is taken from the database directly#}
+ {% block other %}
+     <div class="inline">
+      <div class="dropdown">
+      <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Standort: {{currroomname}}
+      <span class="caret"></span></button>
+       <ul class="dropdown-menu">
+            <li {% if currroom=='alle' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':'alle','state':state, 'letter':letter})}}">alle</a></li>
+            {% for RL in roomlist %}
+            <li {% if RL.roomid==currroom %}class="active"{% endif %}><a href="{{ path('inventory_home', {'currroom': RL.roomid, 'state':state, 'letter':letter}) }}"> {{ RL.roomname}}</a></li>
+            {% endfor %}
+       </ul>
+      </div>
+     </div>
+            
+{#dropdown menu for the state search#}
+  <div class="inline">
+   <div class="dropdown">
+   <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Zustand: {{state}}
+   <span class="caret"></span></button>
+   <ul class="dropdown-menu">
+        <li {% if state=='alle' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom, 'state':'alle', 'letter':letter})}}">alle</a></li>
+        <li {% if state=='neu' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'neu', 'letter':letter})}}">neu</a></li>
+        <li {% if state=='gebraucht' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'gebraucht', 'letter':letter})}}">gebraucht</a></li>
+        <li {% if state=='sehr gut' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'sehr gut', 'letter':letter})}}">sehr gut</a></li>
+        <li {% if state=='gut' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'gut', 'letter':letter})}}">gut</a></li>
+        <li {% if state=='befriedigend' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'befriedigend', 'letter':letter})}}">befriedigend</a></li>
+        <li {% if state=='schlecht' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'schlecht', 'letter':letter})}}">schlecht</a></li>
+        <li {% if state=='sehr schlecht' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'sehr schlecht', 'letter':letter})}}">sehr schlecht</a></li>
+   </ul>
+   </div>
+  </div>
+{% endblock %}
+
+{#create the option to filter objects by their starting letter #}
+{#ignores capitalization#}
+{% block pagination %}
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="pagination">
+                <li {% if cletter == null %}class="active"{% endif %}><a href="{{ path('inventory_home', {'currroom':currroom,'state':state,'letter': 'alle'}) }}">ALLE</a></li>   
+                
+                {% for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'] %}
+                    {% if letter == cletter %}     
+                    <li class="active"><a href="{{ path(path, {'currroom':currroom,'state':state,'letter': letter}) }}">{{ letter }}</a></li>      
+                    {% else %}
+                    <li><a href="{{ path(path, {'currroom':currroom,'state':state,'letter': letter}) }}">{{ letter }}</a></li>                    
+                    {% endif %}
+                    
+                {% endfor %}
+        {# show how many objects were found#}
+                <li class="active"><a href="{{ path('inventory_home', {'currroom':currroom,'state':state,'letter': cletter}) }}">{{ tabledata|length }} Objekte wurden gefunden</a></li>
+                </ul>         
+            </div>           
+        </div>        
+    {% endblock %}  

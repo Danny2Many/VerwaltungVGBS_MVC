@@ -1,0 +1,59 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="Room")
+ */
+
+class Room {
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */    
+    protected $roomid;
+    
+    /**
+     *@ORM\Column (type="string")
+     */
+    protected $roomname;
+    /**
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Inventory\Stocktaking", mappedBy="location")
+     */  
+    private $stocktaking;
+    
+    
+    
+    public function getRoomID()
+    {
+     return $this->roomid;
+    }
+    
+    public function setRoomID($roomid)
+    {
+     $this->roomid=$roomid;
+    }
+    
+    public function getRoomname()
+    {
+     return $this->roomname;
+    }
+    
+    public function setRoomname($roomname)
+    {
+     $this->roomname=$roomname;
+    }
+  
+   
+
+   
+
+    
+}
