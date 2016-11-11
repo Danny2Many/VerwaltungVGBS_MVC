@@ -90,6 +90,7 @@ class SportsgroupController extends Controller {
 //           break;
 //       }
     }else{ $letter=null; } 
+    
     $sportsgrouplist=$qb['Nichtmitglieder\NonMemSportsgroup']->getQuery()->getResult();
     $bssacertlist=$qb['BSSACert']->getQuery()->getResult();
     $sportgrouptrainerlist=$qb['Nichtmitglieder\Trainer_NonMemSportsgroupSub']->getQuery()->getResult();
@@ -145,7 +146,7 @@ class SportsgroupController extends Controller {
   
     //Substitute Teacher per Sportsgroup
     foreach ($sportgrouptrainerlist as $pn){
-        $sportsgroupdependentlist[$pn->getSgid()]['trainersub'][$pn->getTrainerid()]=$pn->getTrainerid();
+        $sportsgroupdependentlist[$pn->getSgid()]['trainersub'][$pn->getTrainerid()]=0;
     }
     
    foreach ($sportsgrouplist as $sg){

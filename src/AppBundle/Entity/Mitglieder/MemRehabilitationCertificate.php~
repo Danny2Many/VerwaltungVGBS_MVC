@@ -2,7 +2,7 @@
 
 
 
-namespace AppBundle\Entity\Nichtmitglieder;
+namespace AppBundle\Entity\Member;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -11,16 +11,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="NonMemRehabilitationCertificate")
+ * @ORM\Table(name="MemRehabilitationCertificate")
  * 
  */
-class NonMemRehabilitationCertificate {
+class MemRehabilitationCertificate {
     
     
     /**
-     * @ORM\Column(name="rcid")
      * @ORM\Id
-     *
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      * 
      */
@@ -32,13 +31,13 @@ class NonMemRehabilitationCertificate {
      * 
      * 
      */
-    protected $nmemid;
+    protected $memid;
 
         /**
-     * @ORM\ManyToOne(targetEntity="NonMember", inversedBy="rehabilitationcertificate")
-     * @ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="rehabilitationcertificate")
+     * @ORM\JoinColumn(name="memid", referencedColumnName="memid")
      */
-    protected $nonmember;
+    private $member;
 
     /**
       *  
@@ -64,53 +63,28 @@ class NonMemRehabilitationCertificate {
     
     
     
-
-
+//    public function __toString()
+//    {
+//        return (string) $this->rcid.'/rc/MemRehabilitationCertificate';
+//    }
+//    
+    
     /**
-     * Get rcid
-     *
-     * @return string
-     */
-    public function getRcid()
-    {
-        return $this->rcid;
-    }
 
-    /**
-     * Set nmemid
-     *
-     * @param integer $nmemid
-     *
-     * @return NonMemRehabilitationCertificate
-     */
-    public function setNmemid($nmemid)
-    {
-        $this->nmemid = $nmemid;
-
-        return $this;
-    }
-
-    /**
-     * Get nmemid
-     *
-     * @return integer
-     */
-    public function getNmemid()
-    {
-        return $this->nmemid;
-    }
 
     /**
      * Set terminationdate
      *
      * @param \DateTime $terminationdate
      *
-     * @return NonMemRehabilitationCertificate
+     * @return MemRehabilitationCertificate
      */
     public function setTerminationdate($terminationdate)
     {
-        $this->terminationdate = $terminationdate;
-
+        
+        
+          $this->terminationdate = $terminationdate;  
+        
         return $this;
     }
 
@@ -124,12 +98,24 @@ class NonMemRehabilitationCertificate {
         return $this->terminationdate;
     }
 
+    
+
+    /**
+     * Get rcid
+     *
+     * @return integer
+     */
+    public function getRcid()
+    {
+        return $this->rcid;
+    }
+
     /**
      * Set rehabunits
      *
      * @param integer $rehabunits
      *
-     * @return NonMemRehabilitationCertificate
+     * @return MemRehabilitationCertificate
      */
     public function setRehabunits($rehabunits)
     {
@@ -148,27 +134,33 @@ class NonMemRehabilitationCertificate {
         return $this->rehabunits;
     }
 
+
+
+
+
+ 
+
     /**
-     * Set nonmember
+     * Set memid
      *
-     * @param \AppBundle\Entity\Nichtmitglieder\NonMember $nonmember
+     * @param integer $memid
      *
-     * @return NonMemRehabilitationCertificate
+     * @return MemRehabilitationCertificate
      */
-    public function setNonmember(\AppBundle\Entity\Nichtmitglieder\NonMember $nonmember = null)
+    public function setMemid($memid)
     {
-        $this->nonmember = $nonmember;
+        $this->memid = $memid;
 
         return $this;
     }
 
     /**
-     * Get nonmember
+     * Get memid
      *
-     * @return \AppBundle\Entity\Nichtmitglieder\NonMember
+     * @return integer
      */
-    public function getNonmember()
+    public function getMemid()
     {
-        return $this->nonmember;
+        return $this->memid;
     }
 }

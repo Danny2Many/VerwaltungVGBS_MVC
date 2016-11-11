@@ -2,17 +2,17 @@
 
 
 
-namespace AppBundle\Entity\Nichtmitglieder;
+namespace AppBundle\Entity\Mitglieder;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="NonMemPhoneNumber")
+ * @ORM\Table(name="MemPhoneNumber")
  * 
  */
-class NonMemPhoneNumber {
+class MemPhoneNumber {
     
     /**
      * @ORM\Column(name="pnid")
@@ -39,35 +39,26 @@ class NonMemPhoneNumber {
     /**
      * @ORM\Column(type="integer") 
      */
-    protected $nmemid;
+    protected $memid;
 
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="NonMember", inversedBy="phonenumber")
-     * @ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="phonenumber")
+     * @ORM\JoinColumn(name="memid", referencedColumnName="memid")
      */
-    protected $nonmember;
+    private $member;
 
 
 
 
-    /**
-     * Get pnid
-     *
-     * @return string
-     */
-    public function getPnid()
-    {
-        return $this->pnid;
-    }
 
     /**
      * Set phonenumber
      *
      * @param string $phonenumber
      *
-     * @return NonMemPhoneNumber
+     * @return MemPhoneNumber
      */
     public function setPhonenumber($phonenumber)
     {
@@ -87,50 +78,60 @@ class NonMemPhoneNumber {
     }
 
     /**
-     * Set nmemid
-     *
-     * @param integer $nmemid
-     *
-     * @return NonMemPhoneNumber
-     */
-    public function setNmemid($nmemid)
-    {
-        $this->nmemid = $nmemid;
-
-        return $this;
-    }
-
-    /**
-     * Get nmemid
+     * Get pnid
      *
      * @return integer
      */
-    public function getNmemid()
+    public function getPnid()
     {
-        return $this->nmemid;
+        return $this->pnid;
     }
 
     /**
-     * Set nonmember
+     * Set memid
      *
-     * @param \AppBundle\Entity\Nichtmitglieder\NonMember $nonmember
+     * @param integer $memid
      *
-     * @return NonMemPhoneNumber
+     * @return MemPhoneNumber
      */
-    public function setNonmember(\AppBundle\Entity\Nichtmitglieder\NonMember $nonmember = null)
+    public function setMemid($memid)
     {
-        $this->nonmember = $nonmember;
+        $this->memid = $memid;
 
         return $this;
     }
 
     /**
-     * Get nonmember
+     * Get memid
      *
-     * @return \AppBundle\Entity\Nichtmitglieder\NonMember
+     * @return integer
      */
-    public function getNonmember()
+    public function getMemid()
     {
-        return $this->nonmember;
+        return $this->memid;
+    }
+
+    /**
+     * Set member
+     *
+     * @param \AppBundle\Entity\Mitglieder\Member $member
+     *
+     * @return MemPhoneNumber
+     */
+    public function setMember(\AppBundle\Entity\Mitglieder\Member $member = null)
+    {
+        $this->member = $member;
+
+        return $this;
+    }
+
+    /**
+     * Get member
+     *
+     * @return \AppBundle\Entity\Mitglieder\Member
+     */
+    public function getMember()
+    {
+        return $this->member;
     }
 }

@@ -2,7 +2,7 @@
 
 
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Mitglieder;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,40 +18,29 @@ class MemRehabilitationCertificate {
     
     
     /**
+     * @ORM\Column(name="rcid")
      * @ORM\Id
-     * @ORM\Column(type="string") 
+     *
+     * @ORM\GeneratedValue(strategy="AUTO")
      * 
      */
     protected $rcid;
     
     
-     /**
+        /**
+     * @ORM\Column(type="integer")
      * 
-     * @ORM\Column(type="string") 
      * 
      */
     protected $memid;
-    
-    
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string")
-     * 
+
+        /**
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="rehabilitationcertificate")
+     * @ORM\JoinColumn(name="memid", referencedColumnName="memid")
      */
-    protected $validfrom;
-    
-    
+    private $member;
+
     /**
-     * 
-     * @ORM\Column(type="string")
-     * 
-     */
-    protected $validto;
-    
-    
-    
-    
-     /**
       *  
       *  @ORM\Column(type="date")
       * 
@@ -75,35 +64,14 @@ class MemRehabilitationCertificate {
     
     
     
-    public function __toString()
-    {
-        return (string) $this->rcid.'/rc/MemRehabilitationCertificate';
-    }
-    
+//    public function __toString()
+//    {
+//        return (string) $this->rcid.'/rc/MemRehabilitationCertificate';
+//    }
+//    
     
     /**
-     * Set memid
-     *
-     * @param string $memid
-     *
-     * @return MemRehabilitationCertificate
-     */
-    public function setMemid($memid)
-    {
-        $this->memid = $memid;
 
-        return $this;
-    }
-
-    /**
-     * Get memid
-     *
-     * @return string
-     */
-    public function getMemid()
-    {
-        return $this->memid;
-    }
 
     /**
      * Set terminationdate
@@ -169,65 +137,55 @@ class MemRehabilitationCertificate {
 
 
 
+
+
+ 
+
     /**
-     * Set rcid
+     * Set memid
      *
-     * @param string $rcid
+     * @param integer $memid
      *
      * @return MemRehabilitationCertificate
      */
-    public function setRcid($rcid)
+    public function setMemid($memid)
     {
-        $this->rcid = $rcid;
+        $this->memid = $memid;
 
         return $this;
     }
 
     /**
-     * Set validfrom
+     * Get memid
      *
-     * @param string $validfrom
+     * @return integer
+     */
+    public function getMemid()
+    {
+        return $this->memid;
+    }
+
+    /**
+     * Set member
+     *
+     * @param \AppBundle\Entity\Mitglieder\Member $member
      *
      * @return MemRehabilitationCertificate
      */
-    public function setValidfrom($validfrom)
+    public function setMember(\AppBundle\Entity\Mitglieder\Member $member = null)
     {
-        $this->validfrom = $validfrom;
+        $this->member = $member;
 
         return $this;
     }
 
     /**
-     * Get validfrom
+     * Get member
      *
-     * @return string
+     * @return \AppBundle\Entity\Mitglieder\Member
      */
-    public function getValidfrom()
+    public function getMember()
     {
-        return $this->validfrom;
-    }
-
-    /**
-     * Set validto
-     *
-     * @param string $validto
-     *
-     * @return MemRehabilitationCertificate
-     */
-    public function setValidto($validto)
-    {
-        $this->validto = $validto;
-
-        return $this;
-    }
-
-    /**
-     * Get validto
-     *
-     * @return string
-     */
-    public function getValidto()
-    {
-        return $this->validto;
+        return $this->member;
     }
 }

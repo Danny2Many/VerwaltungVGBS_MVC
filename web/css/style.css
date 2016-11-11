@@ -256,13 +256,22 @@ ul.nav{
 }*/
 
 
-.adminyeardropdown{
+/*.adminyeardropdown{
  
     font-size:1.5em;
     border-right: 1px solid darkgray;
     
-}
+}*/
 
 .panel-heading h1{
     color:#808080;
+}
+
+.panel-heading h3 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: normal;
+    width: 75%;
+    padding-top: 8px;
 }

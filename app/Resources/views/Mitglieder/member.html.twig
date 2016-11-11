@@ -1,8 +1,10 @@
 
 {% extends 'basic.html.twig' %}
 {% form_theme searchform 'bootstrap_3_layout.html.twig' %}
+{% form_theme rehabsearchform 'bootstrap_3_layout.html.twig' %}
  {% block columnDefs %}
      "columnDefs": [
+     { "width": "12%", "targets": 13 },
     { "width": "11%", "targets": 15 },
     { "width": "11%", "targets": 16 }
   ]  
@@ -18,8 +20,8 @@
 
 {% block add %}
     <div class="inline">
-    <a href="{{ path('addmem', {'letter': cletter, 'adminyear': adminyear }) }}"><button    class="add btn btn-default">
-      <span class="glyphicon glyphicon-plus"></span> neues Mitglied anlegen
+    <a href="{{ path('addmem', {'letter': cletter }) }}"><button    class="add btn btn-default">
+      <span class="glyphicon glyphicon-plus"></span> Neues Mitglied anlegen
         </button></a> 
     </div>
 {% endblock %}
@@ -37,7 +39,7 @@
         
             
         <th>Bearb.</th><th>M_Nr</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Geb.Datum</th><th>Ort</th><th>Strasse, Hausnr</th><th>PLZ</th><th>Postfach</th><th>Telefonnr.</th><th>E-Mail</th><th>Sportgruppe</th>
-        <th>Eintr.Datum</th><th>Aufnahmebest.</th><th>Rehaschein/e<br> (RSNr.-Ablaufd.-Einheiten)</th><th>abgelaufene Rehaschein/e</th><th>Verm. Beitrag</th><th>Krankenkasse</th><th>Zusatzinfo</th> 
+        <th>Eintr.Datum</th><th>Aufnahmebest.</th><th>Rehaschein/e<br> (RSNr.-Ablaufd.-Einheiten)</th><th>abgelaufene Rehaschein/e</th><th>Krankenkasse</th><th>Zusatzinfo</th> 
         <th>Ehrung</th><th>Arbeitsplatzhaltung</th><th>chron. Berufserkr.</th><th>Schmerzen in HWS</th><th>Schmerzen in BWS</th><th>Schmerzen in LWS</th><th>obere Extremitäten</th><th>untere Extremitäten</th><th>sonst. Beeinträchtigungen</th><th>Medikamente</th><th>weit. bewegl. Aktivitäten</th><th>Hf-Ruhe/Min</th><th>Hf-Max/Min</th><th>Hf bei 50%</th><th>Hf bei 55%</th><th>Hf bei 60%</th><th>Hf bei 65%</th><th>Hf bei 70%</th><th>Hf bei 75%</th><th>Hf bei 80%</th><th>Hf bei 85%</th>
         
     {% endblock %}
@@ -59,7 +61,7 @@
                     {% else %}
                     {% set first = data.lastname|first %}   
                 {% endif %}
-                <td><center><a href="{{ path('editmem', {'letter': first|capitalize, 'ID': data.memid, 'adminyear': adminyear, 'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
+                <td><center><a href="{{ path('editmem', {'letter': first|capitalize, 'ID': data.memid }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
                 <td>{{ data.memid }}</td>
                
                 <td>{{ data.state == 1 ? "aktiv" : "inaktiv" }}</td>
@@ -87,16 +89,20 @@
                     
                 <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>
                                 
-                {% if memberdependentlist[data.memid]['sportsgroups'] is defined %}
+{#                {% if memberdependentlist[data.memid]['sportsgroups'] is defined %}
                     {% set sportsgroup =memberdependentlist[data.memid]['sportsgroups'] %}
                 {% else %}
                     {% set sportsgroup ='' %}  
-                {% endif %}
-                 <td>{% for SG in sportsgroup %}                     
-                   {{SG.token }}<br>
+                {% endif %}#}
+                
+                
+                
+
+                 <td>{% for SG in data.sportsgroup %}                     
+                     {{SG.sportsgroup.token }}({{SG.joined|date("Y-m-d") }}-{{ SG.resignedfrom is empty ? "AKTUELL" : SG.resignedfrom|date("Y-m-d") }})<br>
                 {% else %}
-                    {{ "-" }}</td>
-                {% endfor %} 
+                    {{ "-" }}
+                {% endfor %}</td> 
             
                  <td>{{ data.admissiondate|date("d.m.Y") }}</td>
                  
@@ -119,19 +125,15 @@
                 {% endif %}
                 
 
-                {% if adminyear == "now"|date("Y") %}
-                    {% set now = "now"|date("Y-m-d") %}
-                    {% else %}
-                   {% set now = date(adminyear~'-12-31')  %}     
-                {% endif %}
+
 
                 <td>
                             
                 {% for RC in validrehab  %}
 
 
-              <div class="{% if date(RC.terminationdate)|date("Y-m-d") < now|date_modify("+2 months")|date("Y-m-d") %}red {% endif %}
-                   {% if (now|date("Y") == RC.terminationdate|date("Y") and now|date("Y-m-d") < RC.terminationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
+              <div class="{% if date(RC.terminationdate)|date("Y-m-d") < "now"|date_modify("+2 months")|date("Y-m-d") %}red {% endif %}
+                   {% if ("now"|date("Y") == RC.terminationdate|date("Y") and "now"|date("Y-m-d") < RC.terminationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
                   {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}</div>
 
                     
@@ -154,7 +156,7 @@
                     
           
                     
-                <td>{{ data.decreaseddues == 0 ? "kein" : "vermindert" }}</td>
+{#                <td>{{ data.decreaseddues == 0 ? "kein" : "vermindert" }}</td>#}
                 <td>{{ data.healthinsurance is empty ? "-" : data.healthinsurance|striptags}}</td>
                 <td>{{ data.additionalinfo is empty ? "-" : data.additionalinfo|striptags }}</td>
                 <td>{{ data.tribute is empty ? "-" : data.Tribute|striptags }}</td>
@@ -214,5 +216,5 @@
             
             
     
-        
+
     

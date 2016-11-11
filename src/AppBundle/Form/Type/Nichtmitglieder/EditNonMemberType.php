@@ -10,7 +10,7 @@ class EditNonMemberType extends BaseNonMemberType{
    public function buildForm(FormBuilderInterface $builder, array $options)
         
     {
-        parent::buildForm($builder, array('adyear'=>$options['adyear']));
+        parent::buildForm($builder, $options);
        $builder->add('nmemid',IntegerType::class, array('label' => 'Nichtmitgliedsnummer:', 'required' => false, 'disabled' => true) )
                ->add('delete', SubmitType::class, array('attr' => array('class' => 'btn btn-danger'), 'label' => 'löschen'));
           
@@ -18,8 +18,7 @@ class EditNonMemberType extends BaseNonMemberType{
     }
     
          public function configureOptions(OptionsResolver $resolver)
-        {$resolver->setDefaults(array('data_class' => 'AppBundle\Entity\Nichtmitglieder\Nonmember',
-            'adyear' => NULL,));
+        {$resolver->setDefaults(array('data_class' => 'AppBundle\Entity\Nichtmitglieder\NonMember'));
         }
 }
 

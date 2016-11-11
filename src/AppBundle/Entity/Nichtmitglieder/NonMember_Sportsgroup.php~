@@ -6,28 +6,49 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="NonMember_Sportsgroup")
- * @ORM\HasLifecycleCallbacks()
+ * 
  */
 class NonMember_Sportsgroup {
 
+
+ 
+    
+  /**
+* @ORM\Id
+* @ORM\Column(type="integer")
+   * @ORM\GeneratedValue(strategy="AUTO")  
+*/
+protected $nmemsgid;  
+    
     /**
-* @ORM\Id
-* @ORM\Column(type="integer")  
-*/
-protected $sgid;
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Sportsgroup", inversedBy="nonmemsubscriber", cascade={"persist"})
+     * @ORM\JoinColumn(name="sgid", referencedColumnName="sgid")
+     */    
+    protected $sportsgroup;
+
+    
+        /**
+     * @ORM\ManyToOne(targetEntity="NonMember", inversedBy="sportsgroup")
+     * @ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")
+     */ 
+    protected $nonmember;
+
+
+
 /**
-* @ORM\Id
-* @ORM\Column(type="integer")  
-*/ 
-protected $nmemid;
-/**
-* @ORM\Id
-* @ORM\Column(type="string")
+*
+* @ORM\Column(type="date")
 */
-protected $validfrom;
+protected $joined;
+
+
+
 /**
-* @ORM\Column(type="string")
+* @ORM\Column(type="date")
 */
-protected $validto;
+protected $resignedfrom;
         
+
+
+
 }

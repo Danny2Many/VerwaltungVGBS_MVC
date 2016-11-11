@@ -39,7 +39,7 @@ class Sportsgroup {
     protected $memsubscriber;
     
         /**
-     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Mitglieder\NonMember_Sportsgroup", mappedBy="sportsgroup")
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup", mappedBy="sportsgroup")
      */
     protected $nonmemsubscriber;
 
@@ -325,5 +325,39 @@ class Sportsgroup {
     public function getMemsubscriber()
     {
         return $this->memsubscriber;
+    }
+
+    /**
+     * Add nonmemsubscriber
+     *
+     * @param \AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup $nonmemsubscriber
+     *
+     * @return Sportsgroup
+     */
+    public function addNonmemsubscriber(\AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup $nonmemsubscriber)
+    {
+        $this->nonmemsubscriber[] = $nonmemsubscriber;
+
+        return $this;
+    }
+
+    /**
+     * Remove nonmemsubscriber
+     *
+     * @param \AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup $nonmemsubscriber
+     */
+    public function removeNonmemsubscriber(\AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup $nonmemsubscriber)
+    {
+        $this->nonmemsubscriber->removeElement($nonmemsubscriber);
+    }
+
+    /**
+     * Get nonmemsubscriber
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNonmemsubscriber()
+    {
+        return $this->nonmemsubscriber;
     }
 }

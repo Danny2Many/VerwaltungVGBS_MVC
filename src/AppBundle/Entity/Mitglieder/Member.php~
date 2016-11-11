@@ -1,7 +1,7 @@
 <?php
 
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Mitglieder;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -12,55 +12,68 @@ use AppBundle\Entity\HealthData;
 /**
  * @ORM\Entity
  * @ORM\Table(name="Member")
- * @ORM\HasLifecycleCallbacks
+ * 
  */
 class Member extends HealthData
 {
     
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO") 
+     * 
+     */
+    protected $memid;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="MemRehabilitationCertificate", mappedBy="member", cascade={"persist"})
+     */
     protected $rehabilitationcertificate;
 
+    
+    /**
+     * @ORM\OneToMany(targetEntity="MemPhoneNumber", mappedBy="member", cascade={"persist"})
+     */
     protected $phonenumber;
     
+    
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Member_Sportsgroup", mappedBy="member", cascade={"persist"})
+     */
     protected $sportsgroup; 
 
-
+        /**
+     * @ORM\OneToMany(targetEntity="Member_Dues", mappedBy="member", cascade={"persist"})
+     */
+    protected $due;
     
-   /** @ORM\PostLoad */
+    /**
+     * @ORM\OneToMany(targetEntity="MemDuesPayed", mappedBy="member", cascade={"persist"})
+     */
+    protected $duespayed;
+    
+
     public function __construct() {
         
         $this->sportsgroup = new ArrayCollection();
         $this->rehabilitationcertificate = new ArrayCollection();
-        $this->phonenumber = new ArrayCollection();;
-
+        $this->phonenumber = new ArrayCollection();
+        $this->dues = new ArrayCollection();
+        $this->duespayed = new ArrayCollection();
      
     }
         
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string") 
-     * 
-     */
-    protected $memid;
+
 
    
-   public function __toString()
-    {
-        return (string) $this->memid.'/mem/Member';
-    }
+//   public function __toString()
+//    {
+//        return (string) $this->memid.'/mem/Member';
+//    }
     
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string")
-     * 
-     */
-    protected $validfrom;
-    
-    
-    /**
-     * @ORM\Column(type="string")
-     * 
-     */
-    protected $validto;
+
    
       /**
      * @ORM\Column(type="date")
@@ -149,7 +162,7 @@ class Member extends HealthData
     /**
      * Get memid
      *
-     * @return string
+     * @return integer
      */
     public function getMemid()
     {
@@ -390,19 +403,6 @@ class Member extends HealthData
 
 
 
-    /**
-     * Set memid
-     *
-     * @param string $memid
-     *
-     * @return Member
-     */
-    public function setMemid($memid)
-    {
-        $this->memid = $memid;
-
-        return $this;
-    }
 
    
 
@@ -456,115 +456,96 @@ class Member extends HealthData
         return array($this->newsletter);
     }
 
-    
-
- 
 
    
-    public function setValidfrom($validfrom)
-    {
-        
-        $this->validfrom = $validfrom;
+    
+ 
+    
+ 
 
-        return $this;
-    }
-
-    /**
-     * Get validfrom
-     *
-     * @return string
-     */
-    public function getValidfrom()
-    {
-        return $this->validfrom;
-    }
+  
 
     /**
-     * Set validto
+     * Add rehabilitationcertificate
      *
-     * @param string $validto
+     * @param \AppBundle\Entity\Mitglieder\MemRehabilitationCertificate $rehabilitationcertificate
      *
      * @return Member
      */
-    public function setValidto($validto)
+    public function addRehabilitationcertificate(\AppBundle\Entity\Mitglieder\MemRehabilitationCertificate $rehabilitationcertificate)
     {
-        $this->validto = $validto;
+        $rehabilitationcertificate->setMember($this);
+        $this->rehabilitationcertificate[] = $rehabilitationcertificate;
 
         return $this;
     }
 
     /**
-     * Get validto
+     * Remove rehabilitationcertificate
      *
-     * @return string
+     * @param \AppBundle\Entity\Mitglieder\MemRehabilitationCertificate $rehabilitationcertificate
      */
-    public function getValidto()
-    {
-        return $this->validto;
-    }
-
-   
-    
- 
-    
-    
-    public function addRehabilitationcertificate(\AppBundle\Entity\MemRehabilitationCertificate $rehabilitationcertificate)
-    {
-  
-        $rehabilitationcertificate->setMemid($this->memid);
-        $this->rehabilitationcertificate->add($rehabilitationcertificate);
-
-        return $this;
-        
-    }
-
-   
-    public function removeRehabilitationcertificate(\AppBundle\Entity\MemRehabilitationCertificate $rehabilitationcertificate)
+    public function removeRehabilitationcertificate(\AppBundle\Entity\Mitglieder\MemRehabilitationCertificate $rehabilitationcertificate)
     {
         $this->rehabilitationcertificate->removeElement($rehabilitationcertificate);
     }
 
-    
+    /**
+     * Get rehabilitationcertificate
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
     public function getRehabilitationcertificate()
     {
         return $this->rehabilitationcertificate;
     }
-    
 
-
-
-    public function getPhonenumber()
+    /**
+     * Add phonenumber
+     *
+     * @param \AppBundle\Entity\Mitglieder\MemPhoneNumber $phonenumber
+     *
+     * @return Member
+     */
+    public function addPhonenumber(\AppBundle\Entity\Mitglieder\MemPhoneNumber $phonenumber)
     {
-        return $this->phonenumber;
-    }
-     
-
-
- public function addPhonenumber(\AppBundle\Entity\MemPhoneNumber $phonenumber)
-    {               
-        $phonenumber->setMemid($this->memid);
-        $this->phonenumber->add($phonenumber);
+        $phonenumber->setMember($this);
+        $this->phonenumber[] = $phonenumber;
 
         return $this;
     }
 
-    
-    public function removePhonenumber(\AppBundle\Entity\MemPhoneNumber $phonenumber)
+    /**
+     * Remove phonenumber
+     *
+     * @param \AppBundle\Entity\Mitglieder\MemPhoneNumber $phonenumber
+     */
+    public function removePhonenumber(\AppBundle\Entity\Mitglieder\MemPhoneNumber $phonenumber)
     {
         $this->phonenumber->removeElement($phonenumber);
     }
-    
+
+    /**
+     * Get phonenumber
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhonenumber()
+    {
+        return $this->phonenumber;
+    }
+
     /**
      * Add sportsgroup
      *
-     * @param \AppBundle\Entity\Member_Sportsgroup $sportsgroup
+     * @param \AppBundle\Entity\Mitglieder\Member_Sportsgroup $sportsgroup
      *
      * @return Member
      */
-    public function addSportsgroup(\AppBundle\Entity\MemSportsgroup $sportsgroup)
+    public function addSportsgroup(\AppBundle\Entity\Mitglieder\Member_Sportsgroup $sportsgroup)
     {
-
-        $this->sportsgroup->add($sportsgroup);
+        $sportsgroup->setMember($this);
+        $this->sportsgroup[] = $sportsgroup;
 
         return $this;
     }
@@ -572,9 +553,9 @@ class Member extends HealthData
     /**
      * Remove sportsgroup
      *
-     * @param \AppBundle\Entity\MemSportsgroup $sportsgroup
+     * @param \AppBundle\Entity\Mitglieder\Member_Sportsgroup $sportsgroup
      */
-    public function removeSportsgroup(\AppBundle\Entity\MemSportsgroup $sportsgroup)
+    public function removeSportsgroup(\AppBundle\Entity\Mitglieder\Member_Sportsgroup $sportsgroup)
     {
         $this->sportsgroup->removeElement($sportsgroup);
     }
@@ -587,5 +568,40 @@ class Member extends HealthData
     public function getSportsgroup()
     {
         return $this->sportsgroup;
+    }
+
+    /**
+     * Add due
+     *
+     * @param \AppBundle\Entity\Mitglieder\Member_Dues $due
+     *
+     * @return Member
+     */
+    public function addDue(\AppBundle\Entity\Mitglieder\Member_Dues $due)
+    {
+        $due->setMember($this);
+        $this->due[] = $due;
+
+        return $this;
+    }
+
+    /**
+     * Remove due
+     *
+     * @param \AppBundle\Entity\Mitglieder\Member_Dues $due
+     */
+    public function removeDue(\AppBundle\Entity\Mitglieder\Member_Dues $due)
+    {
+        $this->due->removeElement($due);
+    }
+
+    /**
+     * Get due
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDue()
+    {
+        return $this->due;
     }
 }

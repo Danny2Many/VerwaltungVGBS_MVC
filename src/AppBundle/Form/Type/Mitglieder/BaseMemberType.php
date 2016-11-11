@@ -2,7 +2,7 @@
 
 
 
-namespace AppBundle\Form\Type\Member;
+namespace AppBundle\Form\Type\Mitglieder;
 
 
 use AppBundle\Form\Type\PersonalDataType;
@@ -24,23 +24,23 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
+use AppBundle\Form\Type\SportsgroupType;
 
 class BaseMemberType extends AbstractType{
- protected $adminyear;
+
     
    
 public function buildForm(FormBuilderInterface $builder, array $options)
         
     {
     
-    $this->adminyear=$options['adyear'];
+
     
 
         $builder
           ->add('personaldata', PersonalDataType::class, array(
-        'data_class' => 'AppBundle\Entity\Mem'
-              . 'ber',
-        'pn_data_class' => 'AppBundle\Entity\MemPhoneNumber'
+        'data_class' => 'AppBundle\Entity\Mitglieder\Member',
+        'pn_data_class' => 'AppBundle\Entity\Mitglieder\MemPhoneNumber'
     )) 
                 
           ->add('admissiondate', DateType::class, array( 'label' => 'Eintrittsdatum:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag')))
@@ -58,18 +58,7 @@ public function buildForm(FormBuilderInterface $builder, array $options)
     
 ))
           
-          ->add('decreaseddues', ChoiceType::class, array(
-    'choices'  => array(
-        'kein' => 0,
-        'verminderter Beitrag' => 1,
-        
-    ),
-    // *this line is important*
-    'choices_as_values' => true,
-    
-    'label' => 'verminderter Beitrag:'
-    
-))
+
 
                 ->add('newsletter', ChoiceType::class, array(
     
@@ -84,7 +73,8 @@ public function buildForm(FormBuilderInterface $builder, array $options)
     
 ))
 
-                ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\MemRehabilitationCertificate'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
+                ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\Mitglieder\MemRehabilitationCertificate'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
+                ->add('sportsgroup', CollectionType::class, array('entry_type' => SportsgroupType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\Mitglieder\Member_Sportsgroup'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
 
                 ->add('healthinsurance', SanitizedTextType::class, array('label' => 'Krankenkasse:', 'required' => false))       
                 
@@ -112,17 +102,7 @@ public function buildForm(FormBuilderInterface $builder, array $options)
                         
                 ->add('pulseatrest', NumberType::class, array( 'label' => 'Hf-Ruhe/Min:', 'scale' => 0, 'required' => false))
                 
-                ->add('sportsgroup', EntityType::class, array(
-                        'class' => 'AppBundle:MemSportsgroup',
-                        'choice_label' => 'token',
-                        'multiple' => true,
-                        'required' => false,
-                        'query_builder' => function (EntityRepository $er) {
-                        return $er->createQueryBuilder('s')
-                                  ->where('s.validfrom <='.$this->adminyear)
-                                  ->andWhere('s.validto >'.$this->adminyear);
-                        }
-                    ))              
+             
                           
                 ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
                 ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))
@@ -130,14 +110,12 @@ public function buildForm(FormBuilderInterface $builder, array $options)
 
     }
     
-     
-public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults(array(
-            'adyear' => NULL
-        ));
-    }
 
-
+         public function configureOptions(OptionsResolver $resolver){
+    $resolver->setDefaults(array(
+        'data_class' => "AppBundle\Entity\Mitglieder\Member",
+        
+    ));
+}
     
 }

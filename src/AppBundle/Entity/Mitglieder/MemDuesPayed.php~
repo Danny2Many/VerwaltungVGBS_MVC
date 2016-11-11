@@ -1,0 +1,49 @@
+<?php
+
+
+
+namespace AppBundle\Entity\Mitglieder;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="MemDuesPayed")
+ */
+class MemDuesPayed {
+    
+        /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO") 
+     * 
+     */
+    protected $dpid;
+    
+        /**
+     * @ORM\Column(type="integer")
+        * 
+     * 
+     */
+    protected $year;
+    
+        /**
+     * @ORM\Column(type="integer")
+        * 
+     * 
+     */
+    protected $month;
+    
+    
+    /**
+     * @ORM\Column(type="float")
+     */
+    protected $duespayed;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="duespayed")
+     * @ORM\JoinColumn(name="memid", referencedColumnName="memid")
+     */
+    protected $member;
+}
