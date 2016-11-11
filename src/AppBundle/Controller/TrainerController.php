@@ -19,11 +19,8 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-
-
-
-
-
+use AppBundle\Services\FunctionManager;
+use AppBundle\Services\IndexManager;
 
 
 
@@ -36,15 +33,15 @@ class TrainerController extends Controller
     {       
         
         $doctrine=$this->getDoctrine();
-        $dependencies=['Trainer\Trainer', 'Trainer\TrainerPhoneNumber', 'Trainer\TrainerFocus','Trainer\TrainerLicence'];
+        $dependencies=['Trainer\Trainer', 'Trainer\TrainerPhoneNumber', 'Trainer\TrainerFocus','Trainer\TrainerLicence', 'Nichtmitglieder\NonMemSportsgroup', 'Nichtmitglieder\Trainer_NonMemSportsgroupSub'];
     
         $qb= [];
         
         foreach($dependencies as $dependent){ 
 
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
-            $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
-                    ->andWhere('ditto.validto>'.$adminyear);   
+            $qb[$dependent] ->andWhere('ditto.validfrom<='.$adminyear)
+                            ->andWhere('ditto.validto>'.$adminyear);   
     }    
         
         $choices=array('Trainernr.' => 'trainerid',
@@ -52,8 +49,7 @@ class TrainerController extends Controller
         'Vorname' => 'firstname',
         'Strasse' => 'streetaddress',
         'E-Mail' => 'email',
-        'Lizenz' => 'licencetype');     
- 
+        'Lizenz' => 'licencetype');      
 
         
     $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('trainer_home',array('adminyear' => $adminyear))));    
@@ -94,15 +90,15 @@ class TrainerController extends Controller
                    ->setParameter('letter',$letter.'%');
         
         switch($letter){
-            case 'A': $qb['Trainer\Trainer']->orWhere($qb['Trainer\Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'A': $qb['Trainer\Trainer']->andWhere($qb['Trainer\Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ä%'); 
             break;
         
-            case 'O': $qb['Trainer\Trainer']->orWhere($qb['Trainer\Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'O': $qb['Trainer\Trainer']->andWhere($qb['Trainer\Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ö%'); 
             break;
         
-            case 'U': $qb['Trainer\Trainer']->orWhere($qb['Trainer\Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
+            case 'U': $qb['Trainer\Trainer']->andWhere($qb['Trainer\Trainer']->expr()->like('ditto.lastname', ':umlautletter'))
                          ->setParameter('umlautletter','Ü%'); 
             break;
         }        
@@ -112,7 +108,15 @@ class TrainerController extends Controller
     $phonenumberlist=$qb['Trainer\TrainerPhoneNumber']->getQuery()->getResult();
     $licencelist=$qb['Trainer\TrainerLicence']->getQuery()->getResult();
     $focuslist=$qb['Trainer\TrainerFocus']->getQuery()->getResult();
+    $nmemsportsgrouplist=$qb['Nichtmitglieder\NonMemSportsgroup']->getQuery()->getResult();
+    $nmemsportsgroupsublist=$qb['Nichtmitglieder\Trainer_NonMemSportsgroupSub']->getQuery()->getResult();
+
     
+//         echo ("<pre>");
+//         print_r($nmemsportsgroupsublist);
+//        echo ("</pre>");
+
+     
  
     
     $trainerdependentlist=[];
@@ -130,7 +134,26 @@ class TrainerController extends Controller
          
          $trainerdependentlist[$fc->getTrainerid()]['focuses'][]=$fc;
      }
+     
+     foreach ($nmemsportsgrouplist as $sg){
+         
+         $trainerdependentlist[$sg->getTrainerid()]['nmemsportsgroups'][]=$sg;
+     }
+     
+     foreach ($nmemsportsgroupsublist as $sgs){
+         
+         $trainerdependentlist[$sgs->getTrainerid()]['nmemsportsgroupssub'][$sgs->getSgid()]=$sgs->getSgid();
+     }
 
+        foreach ($trainerlist as $sg){
+           foreach ($nmemsportsgrouplist as $tr){
+               if(isset($trainerdependentlist[$sg->getTrainerid()]['nmemsportsgroupssub'][$tr->getSgid()])){
+               $trainerdependentlist[$sg->getTrainerid()]['nmemsportsgroupssub'][$tr->getSgid()]=$tr; 
+               }
+            }
+        }
+     
+  
 
         return $this->render('Trainer/trainer.html.twig',
                 array('tabledata'=>$trainerlist,
@@ -151,12 +174,15 @@ class TrainerController extends Controller
      * @Route("/trainer/anlegen/{adminyear}/{letter}", defaults={"letter": "alle", "adminyear": 2016}, name="addtrainer", requirements={"letter": "[A-Z]|alle","adminyear": "[1-9][0-9]{3}"})
      */    
     public function addtrainerAction(Request $request, $letter, $adminyear) {        
+        
+        $manager= $this->getDoctrine()->getManager();
+
+        
         $trainer = new Trainer();
         $phonenumber = new TrainerPhoneNumber();
         $licence = new TrainerLicence();  
         
-        $im=  $this->get('app.index_manager')
-                   ->setEntityName('Trainer');
+        $im= new IndexManager($manager, 'Trainer');
 
         $trainerid=$im->getCurrentIndex();
         $trainer->setTrainerid($trainerid);
@@ -196,7 +222,8 @@ class TrainerController extends Controller
                     ->setValidfrom($adminyear)
                     ->setValidto('2155');
                 $manager->persist($th);              
-            }         
+            }
+                 
 
             $manager->persist($trainer);
           
@@ -205,7 +232,7 @@ class TrainerController extends Controller
             
             
             $this->addFlash('notice', 'Dieser Übungsleiter wurde erfolgreich angelegt!');
-            return $this->redirectToRoute('trainer_home', array('letter' => $letter));
+            return $this->redirectToRoute('trainer_home', array('letter' => $letter, 'adminyear' => $adminyear));
         }
 
         
@@ -214,7 +241,8 @@ class TrainerController extends Controller
                     'form'=>$addtrainerform->createView(),                    
                     'cletter'=>$letter,
                     'title'=>'Übungsleiter anlegen',
-                    'adminyear' => $adminyear));        
+                    'adminyear' => $adminyear,
+                    'path'=>'addtrainer'));        
     }
     
     
@@ -231,19 +259,25 @@ class TrainerController extends Controller
         
         $validfrom=$request->query->get('validfrom');
         
+        $fm= new FunctionManager($doctrine, $adminyear);       
+        
         $dependencies=['Trainer\TrainerPhoneNumber', 'Trainer\TrainerFocus','Trainer\TrainerLicence'];
 
         $qb= [];
+        
         foreach($dependencies as $dependent){          
-            {            
+                      
             $qb[$dependent] = $doctrine->getRepository('AppBundle:'.$dependent)->createQueryBuilder('ditto');
             $qb[$dependent]->andWhere('ditto.validfrom<='.$adminyear)
                             ->andWhere('ditto.validto>'.$adminyear) 
                             ->andWhere('ditto.trainerid='.$ID);
-            }
+            
         }
         
         $trainer=$doctrine->getRepository('AppBundle:Trainer\Trainer')->findOneBy(array('trainerid' => $ID, 'validfrom'=>$validfrom));
+       echo '<pre>';
+        print_r($trainer);
+        echo '</pre>';
         $trainer_old = clone $trainer;    
         
         
@@ -282,62 +316,34 @@ class TrainerController extends Controller
         $edittrainerform = $this->createForm(EditTrainerType::class, $trainer);
         $edittrainerform -> handleRequest($request);
         
+        
         if($edittrainerform->get('delete')->isClicked()){
-            $manager->remove($trainer);
+            
+           $fm->RemoveObject($trainer, array('Trainer\TrainerFocus', 'Trainer\TrainerPhonenumber', 'Trainer\TrainerLicence', 'Nichtmitglieder\Trainer_NonMemSportsgroupSub', ));
+
+            
+            
             $manager->flush();
             $this->addflash('notice', 'Dieser Übungsleiter wurde erfolgreich gelöscht!');
-            return $this->redirectToRoute('trainer_home', array('letter' => $letter));
+            return $this->redirectToRoute('trainer_home', array('letter' => $letter,'adminyear' => $adminyear));
         }        
         
         
                 
         if($edittrainerform->isSubmitted() && $edittrainerform->isValid()){
   
-//          foreach ($originallicences as $licence) {
-//            if (false === $trainer->getLicence()->contains($licence)) {   
-//                $manager->remove($licence);
-//            }
-//        }
-//            
-//            foreach ($phonenumbers as $phonenr) {
-//            if (false === $trainer->getPhonenumber()->contains($phonenr)) {         
-//                $manager->remove($phonenr);
-//            }
-//        }
-//        
-//            foreach ($originalthemes as $theme) {
-//            if (false === $trainer->getTheme()->contains($theme)) {         
-//                $manager->remove($theme);
-//            }
-//        }
+            $fm->HandleDependencyDiff($trainer->getLicence(), $originallicences);
+            $fm->HandleDependencyDiff($trainer->getPhonenumber(), $originalphonenr);
+            $fm->HandleDependencyDiff($trainer->getTheme(), $originalthemes);
 
-        
-        $FM = new \AppBundle\Services\FunctionManager;
-        
-        $FM->AddObjects($trainer, $phonenumbers, $originalphonenr, 'Tpn', $adminyear, $manager, 'getPhonenumber');
-               
-        $FM->AddObjects($trainer, $focuses, $originalthemes, 'Tf', $adminyear, $manager, 'getTheme');
+            $fm->HandleObjectDiff($trainer, $trainer_old);
 
-        $FM->AddObjects($trainer, $licences, $originallicences, 'Li', $adminyear, $manager, 'getLicence');
-
-                
-            if($trainer != $trainer_old){
-            $trainer_old->setValidto($adminyear);
-            $trainer->setValidfrom($adminyear);
-            }
-             
-            $manager->persist($trainer);
             $manager->flush();
-
-            if($trainer != $trainer_old && $adminyear != $trainer_old->getValidfrom()){    
-            $manager->persist($trainer_old);   
-            $manager->flush();
-            }
             
 
             $this->addflash('notice', 'Diese Daten wurden erfolgreich gespeichert!');
            
-          return $this->redirectToRoute('trainer_home', array('letter' => $letter));  
+          return $this->redirectToRoute('trainer_home', array('letter' => $letter, 'adminyear' => $adminyear));  
         }
         
         return $this->render('Trainer/trainerform.html.twig',
@@ -345,8 +351,9 @@ class TrainerController extends Controller
             'form' => $edittrainerform->createView(),
             'cletter' => $letter,
             'title' => 'Trainer bearbeiten',
-            'adminyear' => $adminyear
-
+            'adminyear' => $adminyear,
+            'path'=>'edittrainer',
+            'ID'=>$ID,
             ));
     }
 }

@@ -2,7 +2,7 @@
 
 
 
-namespace AppBundle\Form\Type\Member;
+namespace AppBundle\Form\Type\Mitglieder;
 
 
 use AppBundle\Form\Type\PersonalDataType;
@@ -22,22 +22,25 @@ use AppBundle\Form\SanitizedTextareaType;
 use AppBundle\Form\Type\RehabCertType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Doctrine\ORM\EntityRepository;
+use AppBundle\Form\Type\SportsgroupType;
 
 class BaseMemberType extends AbstractType{
- 
+
     
    
 public function buildForm(FormBuilderInterface $builder, array $options)
         
     {
     
-    
+
     
 
         $builder
           ->add('personaldata', PersonalDataType::class, array(
-        'data_class' => 'AppBundle\Entity\Member',
-        'pn_data_class' => 'AppBundle\Entity\MemPhoneNumber'
+        'data_class' => 'AppBundle\Entity\Mitglieder\Member',
+        'pn_data_class' => 'AppBundle\Entity\Mitglieder\MemPhoneNumber'
     )) 
                 
           ->add('admissiondate', DateType::class, array( 'label' => 'Eintrittsdatum:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag')))
@@ -55,18 +58,7 @@ public function buildForm(FormBuilderInterface $builder, array $options)
     
 ))
           
-          ->add('decreaseddues', ChoiceType::class, array(
-    'choices'  => array(
-        'kein' => 0,
-        'verminderter Beitrag' => 1,
-        
-    ),
-    // *this line is important*
-    'choices_as_values' => true,
-    
-    'label' => 'verminderter Beitrag:'
-    
-))
+
 
                 ->add('newsletter', ChoiceType::class, array(
     
@@ -81,11 +73,10 @@ public function buildForm(FormBuilderInterface $builder, array $options)
     
 ))
 
-                ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\MemRehabilitationCertificate'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
+                ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\Mitglieder\MemRehabilitationCertificate'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
+                ->add('sportsgroup', CollectionType::class, array('entry_type' => SportsgroupType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\Mitglieder\Member_Sportsgroup'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
 
-                ->add('healthinsurance', SanitizedTextType::class, array('label' => 'Krankenkasse:', 'required' => false))
-                        
-                
+                ->add('healthinsurance', SanitizedTextType::class, array('label' => 'Krankenkasse:', 'required' => false))       
                 
                 ->add('additionalinfo', SanitizedTextareaType::class, array('label' => 'Zusatzinfo:', 'required' => false)) 
                        
@@ -110,17 +101,21 @@ public function buildForm(FormBuilderInterface $builder, array $options)
                 ->add('additionalagilactivities', SanitizedTextareaType::class, array('label' => 'weit. bewegl. Aktivitäten:', 'required' => false))
                         
                 ->add('pulseatrest', NumberType::class, array( 'label' => 'Hf-Ruhe/Min:', 'scale' => 0, 'required' => false))
-                 
+                
+             
                           
-          ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
-          ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))
-          ->add('reset', ResetType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'zurücksetzen'));
-         
+                ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
+                ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))
+                ->add('reset', ResetType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'zurücksetzen'));
+
     }
     
-     
 
-
-
+         public function configureOptions(OptionsResolver $resolver){
+    $resolver->setDefaults(array(
+        'data_class' => "AppBundle\Entity\Mitglieder\Member",
+        
+    ));
+}
     
 }

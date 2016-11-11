@@ -1,0 +1,26 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Entity\HealthData;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="Rooms")
+ * @ORM\HasLifecycleCallbacks()
+ */
+class Rooms {
+    /**
+    * @ORM\Id
+    * @ORM\Column(type="integer")
+    */
+    protected $roomid;
+    /**
+    * @ORM\Id
+    * @ORM\Column(type="string")
+    */
+    protected $roomname;
+}

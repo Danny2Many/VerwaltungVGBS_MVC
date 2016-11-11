@@ -14,15 +14,23 @@ use AppBundle\Form\SanitizedTextType;
 use AppBundle\Form\SanitizedTextareaType;
 use AppBundle\Form\Type\RehabCertType;
 use AppBundle\Form\Type\PhoneNumberType;
+use AppBundle\Form\Type\SportsgroupType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\AbstractType;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+
 
 class BaseNonMemberType extends AbstractType{
     
+        protected $adminyear;
+
 public function buildForm(FormBuilderInterface $builder, array $options){
     
     
-   
+
+
 
         $builder
                 
@@ -36,25 +44,29 @@ public function buildForm(FormBuilderInterface $builder, array $options){
         ->add('trainingconfirmation', DateType::class, array( 'label' => 'Teilnahmebeginnbest.:', 'widget' => 'choice', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag'), 'required' => false))       
         ->add('state', ChoiceType::class, array(
                 'choices'  => array(
-                    'aktiv' => '0',
-                    'inaktiv' => '1',
+                    'Aktiv' => 0,
+                    'Inaktiv' => 1,
                 ),
                 'choices_as_values' => true,
                 'label' => 'Status:'
         ))    
      
-        ->add('newsletter', ChoiceType::class, array(
-        // *this line is important*
-                'choices_as_values' => true,
-                'expanded' => true,
-                'multiple' => true,
-                'choices' => array('Soll das Mitglied den kostenlosen VGBS-Newsletter erhalten?' => 1),
-                    'label' => 'Newsletter:',
-                    'required' => false 
-        ))
+->add('newsletter', ChoiceType::class, array(
+    
+    // *this line is important*
+    'choices_as_values' => true,
+    'expanded' => true,
+    'multiple' => true,
+    'choices' => array('Soll das Nichtmitglied den kostenlosen VGBS-Newsletter erhalten?' => 1),
+    
+    'label' => 'Newsletter:',
+    'required' => false
+    
+))
                 
         ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'entry_options'  => array('data_class'  => 'AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true, ))
-                       
+        ->add('sportsgroup', CollectionType::class, array('entry_type' => SportsgroupType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
+                
         ->add('healthinsurance', SanitizedTextType::class, array('label' => 'Krankenkasse:', 'required' => false))
                 
         ->add('additionalinfo', SanitizedTextareaType::class, array('label' => 'Zusatzinfo:', 'required' => false)) 
@@ -80,17 +92,16 @@ public function buildForm(FormBuilderInterface $builder, array $options){
         ->add('additionalagilactivities', SanitizedTextareaType::class, array('label' => 'weit. bewegl. Aktivitäten:', 'required' => false))
 
         ->add('pulseatrest', NumberType::class, array( 'label' => 'Hf-Ruhe/Min:', 'scale' => 0, 'required' => false))
-        ->add('sportsgroup', EntityType::class, array(
-            'class' => 'AppBundle:Nichtmitglieder\NonMemSportsgroup',
-            'choice_label' => 'token',
-            'multiple' => true,
-            'required' => false,
-            'label' => 'Sportgruppe/n:'            
-        )) 
+        
+
           ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
           ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))
           ->add('reset', ResetType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'zurücksetzen'));
     
+
+        
 }    
+
+
 }
 

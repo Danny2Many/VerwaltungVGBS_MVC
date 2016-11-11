@@ -10,46 +10,43 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="NonMember")
- * @ORM\HasLifecycleCallbacks()
+ * 
  */
-class Nonmember extends HealthData {
+class NonMember extends HealthData {
 
 
-protected $rehabilitationcertificate;
-protected $phonenumber; 
-//
-///**
-//* @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Section")
-//* @ORM\JoinTable(name="NonMember_Section",
-//* joinColumns={@ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")},
-//* inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")})
-//*/
-//protected $section;    
-//    
-//    
-///**
-//* @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup")
-//* @ORM\JoinTable(name="NonMember_Sportsgroup",
-//* joinColumns={@ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")},
-//* inverseJoinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")})
-//*/ 
-protected $sportsgroup; 
+    /**
+     * @ORM\OneToMany(targetEntity="NonMemRehabilitationCertificate", mappedBy="nonmember", cascade={"persist"})
+     */
+    protected $rehabilitationcertificate;
+
+    
+    /**
+     * @ORM\OneToMany(targetEntity="NonMemPhoneNumber", mappedBy="nonmember", cascade={"persist"})
+     */
+    protected $phonenumber;
+    
+    
+    
+    /**
+     * @ORM\OneToMany(targetEntity="NonMember_Sportsgroup", mappedBy="nonmember", cascade={"persist"})
+     */
+    protected $sportsgroup; 
+
 
 /**
 * @ORM\Id
-* @ORM\Column(type="integer")  
+* @ORM\Column(type="integer")
+ *@ORM\GeneratedValue(strategy="AUTO")  
 */
 protected $nmemid;    
 
-public function __toString(){
-    return (string) $this->nmemid;
-   
-}
+
     
 /**
 * @ORM\Column(type="integer")
 * @Assert\NotBlank()
-* @Assert\Choice(choices = {"aktiv", "inaktiv"}, message = "Bitte wählen Sie einen gültigen Status.")
+* @Assert\Choice(choices = {"0", "1"}, message = "Bitte wählen Sie einen gültigen Status.")
 */
 protected $state;
 
@@ -73,66 +70,68 @@ protected $trainingconfirmation;
 protected $additionalinfo;
 
 
-/**
-* @ORM\Id
-* @ORM\Column(type="string")
-*/
-protected $validfrom;
 
-/**
-* @ORM\Column(type="string")
-*/
-protected $validto;
 
 /**
 * @ORM\Column(type="integer")
 * 
 */protected $newsletter; 
+
+
     
 
-    /**
-     * @ORM\PostLoad
-     */
     public function __construct()
     {
         $this->phonenumber = new ArrayCollection();
         $this->rehabilitationcertificate = new ArrayCollection();
-        //$this->section = new ArrayCollection();
+        $this->sportsgroup = new ArrayCollection();
+
     }
+
+
 
     /**
      * Get nmemid
      *
      * @return integer
      */
-    public function getNMemID()
+    public function getNmemid()
     {
         return $this->nmemid;
     }
-    
-     /**
-     * Set nmemid
+
+    /**
+     * Set state
      *
-     * @param integer $nmemid
+     * @param integer $state
      *
-     * @return Nonmember
+     * @return NonMember
      */
-    public function setNMemID($nmemid)
+    public function setState($state)
     {
-        $this->nmemid = $nmemid;
+        $this->state = $state;
 
         return $this;
     }
-    
 
     /**
-     * Set trainingDate
+     * Get state
+     *
+     * @return integer
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * Set trainingstartdate
      *
      * @param \DateTime $trainingstartdate
      *
      * @return NonMember
      */
-    public function SetTrainingStartDate($trainingstartdate)
+    public function setTrainingstartdate($trainingstartdate)
     {
         $this->trainingstartdate = $trainingstartdate;
 
@@ -140,23 +139,23 @@ protected $validto;
     }
 
     /**
-     * Get trainingDate
+     * Get trainingstartdate
      *
      * @return \DateTime
      */
-    public function getTrainingStartDate()
+    public function getTrainingstartdate()
     {
         return $this->trainingstartdate;
     }
 
     /**
-     * Set trainingConfirmation
+     * Set trainingconfirmation
      *
      * @param \DateTime $trainingconfirmation
      *
      * @return NonMember
      */
-    public function setTrainingConfirmation($trainingconfirmation)
+    public function setTrainingconfirmation($trainingconfirmation)
     {
         $this->trainingconfirmation = $trainingconfirmation;
 
@@ -164,39 +163,13 @@ protected $validto;
     }
 
     /**
-     * Get trainingConfirmation
+     * Get trainingconfirmation
      *
      * @return \DateTime
      */
-    public function getTrainingConfirmation()
+    public function getTrainingconfirmation()
     {
         return $this->trainingconfirmation;
-    }
-
-   
-
-    /**
-     * Set stresstest
-     *
-     * @param string $stresstest
-     *
-     * @return NonMember
-     */
-    public function setStresstest($stresstest)
-    {
-        $this->stresstest = $stresstest;
-
-        return $this;
-    }
-
-    /**
-     * Get stresstest
-     *
-     * @return string
-     */
-    public function getStresstest()
-    {
-        return $this->stresstest;
     }
 
     /**
@@ -204,7 +177,7 @@ protected $validto;
      *
      * @param string $additionalinfo
      *
-     * @return Nonmember
+     * @return NonMember
      */
     public function setAdditionalinfo($additionalinfo)
     {
@@ -223,70 +196,111 @@ protected $validto;
         return $this->additionalinfo;
     }
 
-
-    public function setRehabilitationcertificate($rehabilitationcertificate)
-    {   $rehabilitationcertificate->setNMemID($this->nmemid);
-        $this->rehabilitationcertificate = $rehabilitationcertificate;
+    /**
+     * Set newsletter
+     *
+     * @param integer $newsletter
+     *
+     * @return NonMember
+     */
+    public function setNewsletter($newsletter)
+    {
+        $this->newsletter = implode($newsletter);
 
         return $this;
     }
 
-   
-    public function getRehabilitationcertificate()
+    /**
+     * Get newsletter
+     *
+     * @return integer
+     */
+    public function getNewsletter()
     {
-        return $this->rehabilitationcertificate;
+        return array($this->newsletter);
     }
 
-
+    /**
+     * Add rehabilitationcertificate
+     *
+     * @param \AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate $rehabilitationcertificate
+     *
+     * @return NonMember
+     */
     public function addRehabilitationcertificate(\AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate $rehabilitationcertificate)
     {
-        $rehabilitationcertificate->setNMemID($this->nmemid);
-        $this->rehabilitationcertificate->add($rehabilitationcertificate);
+        $rehabilitationcertificate->setNonMember($this);
+        $this->rehabilitationcertificate[] = $rehabilitationcertificate;
 
         return $this;
-        
     }
 
- 
+    /**
+     * Remove rehabilitationcertificate
+     *
+     * @param \AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate $rehabilitationcertificate
+     */
     public function removeRehabilitationcertificate(\AppBundle\Entity\Nichtmitglieder\NonMemRehabilitationCertificate $rehabilitationcertificate)
     {
         $this->rehabilitationcertificate->removeElement($rehabilitationcertificate);
     }
 
     /**
-     * Set integer
+     * Get rehabilitationcertificate
      *
-     * @param integer $state
-     *
-     * @return Nonmember
+     * @return \Doctrine\Common\Collections\Collection
      */
-    public function setState($state)
+    public function getRehabilitationcertificate()
     {
-        $this->state = $state;
+        return $this->rehabilitationcertificate;
+    }
+
+    /**
+     * Add phonenumber
+     *
+     * @param \AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber
+     *
+     * @return NonMember
+     */
+    public function addPhonenumber(\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber)
+    {
+        $phonenumber->setNonMember($this);
+        $this->phonenumber[] = $phonenumber;
 
         return $this;
     }
 
     /**
-     * Get integer
+     * Remove phonenumber
      *
-     * @return integer
+     * @param \AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber
      */
-    public function getState()
+    public function removePhonenumber(\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber)
     {
-        return $this->state;
+        $this->phonenumber->removeElement($phonenumber);
+    }
+
+    /**
+     * Get phonenumber
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhonenumber()
+    {
+        return $this->phonenumber;
     }
 
     /**
      * Add sportsgroup
      *
-     * @param \AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup
+     * @param \AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup $sportsgroup
      *
-     * @return Nonmember
+     * @return NonMember
      */
-    public function addSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup)
+    public function addSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup $sportsgroup)
     {
-        $this->sportsgroup($sportsgroup);
+        $sportsgroup->setNonMember($this);
+        $this->sportsgroup[] = $sportsgroup;
 
         return $this;
     }
@@ -294,9 +308,9 @@ protected $validto;
     /**
      * Remove sportsgroup
      *
-     * @param \AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup
+     * @param \AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup $sportsgroup
      */
-    public function removeSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $sportsgroup)
+    public function removeSportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup $sportsgroup)
     {
         $this->sportsgroup->removeElement($sportsgroup);
     }
@@ -309,220 +323,5 @@ protected $validto;
     public function getSportsgroup()
     {
         return $this->sportsgroup;
-    }
-
-//    /**
-//     * Add section
-//     *
-//     * @param \AppBundle\Entity\Section $section
-//     *
-//     * @return Nonmember
-//     */
-//    public function addSection(\AppBundle\Entity\Section $section)
-//    {  
-//        if(!$this->section->contains($section)){
-//        $this->section[] = $section;
-//        return $this;
-//        }
-//    }
-//    
-//    /**
-//     * Remove section
-//     *
-//     * @param \AppBundle\Entity\Section $section
-//     */
-//    public function removeSection(\AppBundle\Entity\Section $section)
-//    {
-//        $this->section->removeElement($section);
-//    }
-//
-//    /**
-//     * Get section
-//     *
-//     * @return \Doctrine\Common\Collections\Collection
-//     */
-//    public function getSection()
-//    {
-//        return $this->section;
-//    }
-//
-//     /**
-// * Set categories
-// * 
-// *
-// * @return Post
-// */
-//public function setSection($section)
-//{
-//
-//    if(!is_array($section))
-//    {
-//        $section = array($section);
-//    }
-//    $this->section = $section;
-//
-//    return $this;
-//} 
-   
-/**
-* Set phonenumber
-*
-* @param string $phonenumber
-*
-* @return NonMemPhoneNumber
-*/
-public function setPhonenumber($phonenumber)
-{  
-   $this->phonenumber = $phonenumber;
-
-   return $this;
-}
-
-/**
-    * Get phonenumber
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPhonenumber()
-    {
-        return $this->phonenumber;
-    }
-     
-
-
- public function addPhonenumber(\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber)
-    {               
-        $phonenumber->setNMemID($this);
-        $this->phonenumber->add($phonenumber);
-
-        return $this;
-    }
-
-    /**
-     * Remove phonenumber
-     *
-     * @param \AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber
-    */
-    public function removePhonenumber(\AppBundle\Entity\Nichtmitglieder\NonMemPhoneNumber $phonenumber)
-    {
-        $this->getPhonenumber()->removeElement($phonenumber);
-    }
-
-
-  
-//
-//    /**
-//     * Get recorded
-//     *
-//     * @return string
-//     */
-//    public function getRecorded()
-//    {
-//        return $this->recorded;
-//    }
-//
-//    /**
-//     * Set deleted
-//     *
-//     * @param \DateTime $deleted
-//     *
-//     * @return Nonmember
-//     */
-//    public function setDeleted($deleted)
-//    {
-//        $this->deleted = $deleted;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get deleted
-//     *
-//     * @return \DateTime
-//     */
-//    public function getDeleted()
-//    {
-//        return $this->deleted;
-//    }
-//
-// 
-//
-//     /**
-//    * @ORM\PrePersist
-//    */
-//    public function setRecorded($recorded)
-//    {   
-//        $now= new \DateTime();
-//        $this->recorded = $now->format('Y-m-d');
-//
-//        return $this;
-//    }
-
-    /**
-     * Set newsletter
-     *
-     * @param boolean $newsletter
-     *
-     * @return Nonmember
-     */
-    public function setNewsletter($newsletter)
-    {
-        $this->newsletter = implode($newsletter);
-
-        return $this;
-    }
-
-    /**
-     * Get newsletter
-     *
-     * @return boolean
-     */
-    public function getNewsletter()
-    {
-        return array($this->newsletter);
-    }
-    
-    
-
-    public function setValidfrom($validfrom)
-    {
-        
-        $this->validfrom  = $validfrom;
-
-        return $this;
-    }
-
-    /**
-     * Get validfrom
-     *
-     * @return string
-     */
-    public function getValidfrom()
-    {
-        return $this->validfrom;
-    }
-
-    /**
-     * Set validto
-     *
-     * @param string $validto
-     *
-     * @return Nonmember
-     */
-    public function setValidto($validto)
-    {
-        $this->validto = $validto;
-
-        return $this;
-    }
-
-    /**
-     * Get validto
-     *
-     * @return string
-     */
-    public function getValidto()
-    {
-        return $this->validto;
     }
 }

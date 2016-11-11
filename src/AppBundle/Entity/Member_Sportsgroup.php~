@@ -1,0 +1,54 @@
+<?php
+
+namespace AppBundle\Entity;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="Member_Sportsgroup")
+ * 
+ */
+class Member_Sportsgroup {
+
+//public function __toString(){
+////    return (string) $this->nmemid.'id/'.$this->sgid.'/Nichtmitglieder\NonMember_Sportsgroup';
+//    return (string) 'a/a/Member_Sportsgroup';
+//
+//   
+//}
+ 
+    
+  /**
+* @ORM\Id
+* @ORM\Column(type="integer")
+   * @ORM\GeneratedValue(strategy="AUTO")  
+*/
+protected $memsgid;  
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Sportsgroup", inversedBy="memsubscriber")
+     * @ORM\JoinColumn(name="sgid", referencedColumnName="sgid")
+     */    
+    protected $sportsgroup;
+
+    
+        /**
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="sportsgroup")
+     * @ORM\JoinColumn(name="memid", referencedColumnName="memid")
+     */ 
+    protected $member;
+
+
+
+/**
+*
+* @ORM\Column(type="date")
+*/
+protected $joined;
+/**
+* @ORM\Column(type="date")
+*/
+protected $resignedfrom;
+        
+
+}

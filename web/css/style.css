@@ -139,13 +139,17 @@ td.red, input[type="text"].red {
 
 
 th.overhead1 {
-    background-color: #5fa8ec;
+    background-color: #75a3a3;
+    vertical-align: bottom;
+    text-align: left;
 /*    border-left: 1.5px solid black;*/
 /*    border-right: 2px solid black;*/
 }
 
 th.overhead2 {
     background-color: #A9D0F5;
+    vertical-align: bottom;
+    text-align: left;
 /*    border-left: 1.5px solid black;*/
 /*    border-right: 2px solid black;*/
 }
@@ -252,13 +256,22 @@ ul.nav{
 }*/
 
 
-.adminyeardropdown{
+/*.adminyeardropdown{
  
     font-size:1.5em;
     border-right: 1px solid darkgray;
     
-}
+}*/
 
 .panel-heading h1{
     color:#808080;
+}
+
+.panel-heading h3 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: normal;
+    width: 75%;
+    padding-top: 8px;
 }

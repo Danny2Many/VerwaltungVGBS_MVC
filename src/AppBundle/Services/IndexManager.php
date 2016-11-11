@@ -9,14 +9,15 @@ class IndexManager{
     
     protected $em;
     
-    public function __construct($entityManager) {
+    public function __construct($entityManager, $entityname) {
 
       $this->em=$entityManager;
+      $this->entityname=$entityname;
     }
     
     public function add($number=1){
-                
-        $index=$this->getIndexEntity()->setIndex($this->getCurrentIndex()+$number);
+        $indexentity=$this->getIndexEntity();      
+        $index=$indexentity->setIndex($indexentity->getCurrentindex()+$number);
         
         $this->em->persist($index);
         $this->em->flush($index);

@@ -1,34 +1,29 @@
 <?php
 
+
+
 namespace AppBundle\Entity\Nichtmitglieder;
+
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="NonMemPhoneNumber")
- * @ORM\HasLifecycleCallbacks()
+ * 
  */
 class NonMemPhoneNumber {
     
-//  /**
-//     * @ORM\ManyToOne(targetEntity="Nonmember", inversedBy="phonenumber", cascade={"persist"})
-//     * @ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")
-//     */
-//    private $nonmember;
-//     
     /**
-     * @ORM\Id
-     * @ORM\Column(type="string") 
+     * @ORM\Column(name="pnid")
+     * @ORM\Id 
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * 
      */
     protected $pnid;
    
-    /**
-     * 
-     * @ORM\Column(type="string") 
-     * 
-     */
-    protected $nmemid;   
+    
+  
     
     /**
      * @ORM\Column(type="string")
@@ -40,43 +35,31 @@ class NonMemPhoneNumber {
      */
     protected $phonenumber;
     
-    /**
-    * @ORM\Column(type="string")
-    */
-    protected $validfrom;
-
-  /**
-     * @ORM\Column(type="string")
-     */
-    protected $validto;
     
+    /**
+     * @ORM\Column(type="integer") 
+     */
+    protected $nmemid;
 
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="NonMember", inversedBy="phonenumber")
+     * @ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")
+     */
+    protected $nonmember;
 
 
 
 
     /**
-     * Set nmemid
+     * Get pnid
      *
-     * @param string $nmemid
-     *
-     * @return NonMemPhoneNumber
+     * @return string
      */
-    public function setNmemID($nmemid)
+    public function getPnid()
     {
-        $this->nmemid = $nmemid;
-
-        return $this;
-    }
-
-    /**
-     * Get nmemid
-     *
-     * @return sting
-     */
-    public function getNmemID()
-    {
-        return $this->nmemid;
+        return $this->pnid;
     }
 
     /**
@@ -103,131 +86,51 @@ class NonMemPhoneNumber {
         return $this->phonenumber;
     }
 
-
-
     /**
-    * @ORM\PrePersist
-    */
-    public function setRecorded($recorded)
-    {
-        $now= new \DateTime();
-        
-        $this->recorded = $now->format('Y-m-d');
-
-        return $this;
-    }
-
-    /**
-     * Get recorded
+     * Set nmemid
      *
-     * @return string
-     */
-    public function getRecorded()
-    {
-        return $this->recorded;
-    }
-
- 
-
-
-
-    /**
-     * Set deleted
-     *
-     * @param string $deleted
+     * @param integer $nmemid
      *
      * @return NonMemPhoneNumber
      */
-    public function setDeleted($deleted)
+    public function setNmemid($nmemid)
     {
-        $this->deleted = $deleted;
+        $this->nmemid = $nmemid;
 
         return $this;
     }
 
     /**
-     * Get deleted
+     * Get nmemid
      *
-     * @return srtring
+     * @return integer
      */
-    public function getDeleted()
+    public function getNmemid()
     {
-        return $this->deleted;
+        return $this->nmemid;
     }
 
-
     /**
-     * Set pnid
+     * Set nonmember
      *
-     * @param string $pnid
+     * @param \AppBundle\Entity\Nichtmitglieder\NonMember $nonmember
      *
      * @return NonMemPhoneNumber
      */
-    public function setPnid($pnid)
+    public function setNonmember(\AppBundle\Entity\Nichtmitglieder\NonMember $nonmember = null)
     {
-        $this->pnid = $pnid;
+        $this->nonmember = $nonmember;
 
         return $this;
     }
 
     /**
-     * Get pnid
+     * Get nonmember
      *
-     * @return string
+     * @return \AppBundle\Entity\Nichtmitglieder\NonMember
      */
-    public function getPnid()
+    public function getNonmember()
     {
-        return $this->pnid;
+        return $this->nonmember;
     }
-
-    /**
-     * Set validto
-     *
-     * @param string $validto
-     *
-     * @return TrainerPhoneNumber
-     */
-    public function setValidto($validto)
-    {
-        $this->deleted = $validto;
-
-        return $this;
-    }
-
-    /**
-     * Get validto
-     *
-     * @return string
-     */
-    public function getValidto()
-    {
-        return $this->validto;
-    }
-
-    /**
-     * Set validfrom
-     *
-     * @param string $validfrom
-     *
-     * @return MemPhoneNumber
-     */
-    public function setValidfrom($validfrom)
-    {
-        
-        $this->validfrom = $validfrom;
-
-        return $this;
-    }
-
-    /**
-     * Get validfrom
-     *
-     * @return string
-     */
-    public function getValidfrom()
-    {
-        return $this->validfrom;
-    }
-
- 
 }

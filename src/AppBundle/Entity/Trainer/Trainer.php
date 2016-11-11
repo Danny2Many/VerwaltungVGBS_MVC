@@ -21,10 +21,12 @@ class Trainer extends PersonalData {
     
     protected $trainerid;
     
+
     public function __toString()
     {
-        return (string) $this->trainerid;
+        return (string) $this->trainerid.'/trainer/Trainer\Trainer';
     }
+
     
     /**
      * @ORM\Id
@@ -53,6 +55,14 @@ class Trainer extends PersonalData {
     
     protected $phonenumber;
     
+    
+    protected $nmemsportsgroup;
+    
+
+    protected $nmemsportsgroupsub;
+
+
+
     /**
      * @ORM\Column(type="integer")
      */
@@ -75,6 +85,8 @@ class Trainer extends PersonalData {
         $this->licence = new ArrayCollection();
         $this->phonenumber = new ArrayCollection();
         $this->theme = new ArrayCollection();
+        $this->nmemsportsgroup = new ArrayCollection();
+        $this->nmemsportsgroupsub = new ArrayCollection();
         }
 
     /**
@@ -283,6 +295,95 @@ class Trainer extends PersonalData {
         return $this;
     }
 
+    
+    
+    public function addNmemsportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $nmemsportsgroup)
+    {
+        $nmemsportsgroup->setTrainerid($this);
+
+        $this->nmemsportsgroup->add($nmemsportsgroup);
+
+        return $this;
+    }
+
+    /**
+     * Remove nmemsportsgroup
+     *
+     * @param \AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $nmemsportsgroup
+     */
+    public function removeNmemsportsgroup(\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $nmemsportsgroup)
+    {
+        $this->nmemsportsgroup->removeElement($nmemsportsgroup);
+    }
+
+    /**
+     * Get nmemsportsgroup
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNmemsportsgroup()
+    {
+        return $this->nmemsportsgroup;
+    }
+    
+    /**
+     * Set nmemsportsgroup
+     *
+     * @param string $nmemsportsgroup
+     *
+     * @return NonMemSportsgroup
+     */
+    public function setNmemsportsgroup($nmemsportsgroup)
+    {
+        $this->nmemsportsgroup = $nmemsportsgroup;
+
+        return $this;
+    }
+    
+    public function addNmemsportsgroupsub(\AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup $nmemsportsgroupsub)
+    {
+        $nmemsportsgroupsub->setTrainerid($this);
+
+        $this->nmemsportsgroupsub->add($nmemsportsgroupsub);
+
+        return $this;
+    }
+
+    /**
+     * Remove nmemsportsgroupsub
+     *
+     * @param \AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $nmemsportsgroupsub
+     */
+    public function removeNmemsportsgroupsub(\AppBundle\Entity\Nichtmitglieder\Trainer_NonMemSportsgroupSub $nmemsportsgroupsub)
+    {
+        $this->nmemsportsgroup->removeElement($nmemsportsgroupsub);
+    }
+
+    /**
+     * Get nmemsportsgroupsub
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNmemsportsgroupsub()
+    {
+        return $this->nmemsportsgroupsub;
+    }
+    
+    /**
+     * Set nmemsportsgroupsub
+     *
+     * @param string $nmemsportsgroupsub
+     *
+     * @return Trainer_NonMemSportsgroupSub
+     */
+    public function setNmemsportsgroupsub($nmemsportsgroupsub)
+    {
+        $this->nmemsportsgroupsub = $nmemsportsgroupsub;
+
+        return $this;
+    }
+    
+    
     /**
      * Set state
      *

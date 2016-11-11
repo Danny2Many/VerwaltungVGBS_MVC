@@ -1,0 +1,38 @@
+<?php
+
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="TestExternPN")
+ * 
+ */
+class TestExternPN {
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="int") 
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="TestExtern")
+     * @ORM\JoinColumn(name="pid", referencedColumnName="id")
+     */
+    protected $testextern;
+    
+    /**
+     * @ORM\Column(type="string")
+       * @Assert\NotBlank()
+     */
+    protected $phonenumber;
+
+     
+
+
+}
