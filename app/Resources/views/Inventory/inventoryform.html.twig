@@ -34,7 +34,7 @@
  
 <div class="row">
  <div class="col-md-12">
-  {#<legend><h2>Bestellinformationen</h2></legend>#}
+  <legend><h2>Bestellinformationen</h2></legend>
    <div id="bi" data-prototype="{{ forms.orderItem(form.order.vars.prototype)|e }}">
         {% for bi in form.order %}
             {{ forms.orderItem(bi) }}
@@ -46,7 +46,7 @@
 
 <div class="row">
  <div class="col-md-12">
-      {#<legend><h2>Inventurinformationen</h2></legend>#}
+      <legend><h2>Inventurinformationen</h2></legend>
       <div id="iv" data-prototype="{{ forms.stocktakingItem(form.stocktaking.vars.prototype)|e }}">
           {% for iv in form.stocktaking %}
             {{ forms.StocktakingItem(iv) }}
