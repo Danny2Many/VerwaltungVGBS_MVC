@@ -42,17 +42,19 @@ class Member extends HealthData
     /**
      * @ORM\OneToMany(targetEntity="Member_Sportsgroup", mappedBy="member", cascade={"persist"})
      */
-    protected $sportsgroup; 
-//
-//        /**
-//     * @ORM\OneToMany(targetEntity="Member_Dues", mappedBy="member", cascade={"persist"})
-//     */
-//    protected $due;
-//    
-//    /**
-//     * @ORM\OneToMany(targetEntity="MemDuesPayed", mappedBy="member", cascade={"persist"})
-//     */
-//    protected $duespayed;
+    protected $sportsgroup;
+    
+    
+
+   /**
+     * @ORM\OneToMany(targetEntity="Member_Dues", mappedBy="member", cascade={"persist"})
+     */
+    protected $due;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="MemDuesPayed", mappedBy="member", cascade={"persist"})
+     */
+    protected $duespayed;
     
 
     public function __construct() {

@@ -16,10 +16,10 @@
                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Finanzjahr: {{ year }}
                     <span class="caret"></span></button>
                         <ul class="dropdown-menu">
-                            {% for finyear in finyears %}
+                            {% for loopyear in 2014.."now"|date("Y") %}
                            
                             
-                                <li {% if finyear.year == year %}class="active"{% endif %}><a href="#">{{ finyear.year }}</a></li>
+                                <li {% if loopyear == year %}class="active"{% endif %}><a href="#">{{ loopyear }}</a></li>
                             {% endfor %}
                         </ul>
                     </div> 
@@ -45,7 +45,7 @@
 
     {% block thead %}
         
-        <th>Bearb.</th><th>M_Nr</th><th>Abt</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Sportgruppen/n</th><th>Aufnahmegeb.</th><th>Aufnahmegeb. offen</th><th>Aufnahmegeb. gez.</th><th>zusätzl. Beitr.Info</th><th>Umlage</th>
+        <th>Bearb.</th><th>M_Nr</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Sportgruppen/n</th><th>Aufnahmegeb.</th><th>Aufnahmegeb. offen</th><th>Aufnahmegeb. gez.</th>
         {% if halfyear == 1 %}
          <th>Beitr. Jan.</th><th>Beitr. Jan. offen</th><th>Beitr. Jan. gez.</th><th>Beitr. Feb.</th><th>Beitr. Feb. offen</th><th>Beitr. Feb. gez.</th><th>Beitr. März</th><th>Beitr. März offen</th><th>Beitr. März gez.</th><th>Beitr. Apr.</th><th>Beitr. Apr. offen</th> 
         <th>Beitr. Apr. gez</th><th>Beitr. Mai</th><th>Beitr. Mai offen</th><th>Beitr. Mai gez.</th><th>Beitr. Juni</th><th>Beitr. Juni offen</th><th>Beitr. Juni gez.</th>
@@ -74,49 +74,72 @@
                 {% endif %}
                 <td><center><a href="{{ path('editmemfin', {'letter': first|capitalize, 'ID': data.memid, 'year': year  }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
                 <td>{{ data.memid }}</td>
-                <td>
+{#                <td>
                     {% for Sec in data.section %}
                         {{ Sec.sectionname }}<br>
                         {% else  %}
                             {{ "-" }}
-                    {% endfor %}</td>
-                <td>{{ data.state|striptags }}</td>
-               
-                <td>{{ data.title|striptags }}</td>
+                    {% endfor %}</td>#}
+                <td>{{ data.state == 1 ? "aktiv" : "inaktiv" }}</td>
+
+                <td>{{ data.title == 1 ? "Frau" : "Herr" }}</td>
                 <td>{{ data.lastname|striptags }}</td>
                 <td>{{ data.firstname|striptags }}</td>
-                <td>
-                    {% for sportsgroup in data.sportsgroup %}
-                        {{ sportsgroup.Token }}<br>
-                        {% else  %}
-                            {{ "-" }}
-                    {% endfor %}</td>                
+                
+                 <td>{% for SG in data.sportsgroup %}                     
+                     {{SG.sportsgroup.token }}({{SG.joined|date("Y-m-d") }}-{{ SG.resignedfrom is empty ? "AKTUELL" : SG.resignedfrom|date("Y-m-d") }})<br>
+                {% else %}
+                    {{ "-" }}
+                {% endfor %}</td> 
+               
                 <td>{{ data.admissioncharge }}</td>
                 {% set admissionchargeopen = data.admissioncharge - data.admissionchargepayed %}
                 <td {% if admissionchargeopen != 0 %}class="red"{% endif %}>{{ admissionchargeopen }}</td>
                 <td>{{ data.admissionchargepayed is empty ? 0 : data.admissionchargepayed  }}</td>
                 
-                {% for yearinfo in data.yearinfo %}
+{#                {% for yearinfo in data.yearinfo %}
                 <td>{{ yearinfo.additionalduesinfo is empty ? "-" : yearinfo.additionalduesinfo }}</td>
                 <td>{{ yearinfo.levy is empty ? 0 : yearinfo.levy }}</td>
-               {% endfor %}
+               {% endfor %}#}
                
                {% if halfyear == 1 %}
-                   {% set months = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni'] %}
+                   {% set months = [1, 2, 3, 4, 5, 6] %}
                    
                    {% else %}
-                    {% set months = ['Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'] %}
+                    {% set months = [7, 8, 9, 10, 11, 12] %}
                {% endif %}
                
-                    {% for monthlydue in data.monthlydues %}
+{#                    {% for monthlydue in data.monthlydues %}
                         {% if monthlydue.month in months %}
                         {% set duesopen = monthlydue.dues - monthlydue.duespayed %}
                         <td>{{ monthlydue.dues }}</td>
                         <td {% if duesopen != 0 %}class="red"{% endif %}>{{ duesopen }}</td>
                         <td>{{ monthlydue.duespayed is empty ? 0 : monthlydue.duespayed }}</td>
                         {% endif %}
-                    {% endfor %}
+                    {% endfor %}#}
+
+                    {% set duespayed = data.duespayed %}
                     
+                    {% for month in months %}
+                        
+                            
+                         {% set pdp = 0 %}
+                         {% set pdd = 0 %}
+                         {% set duesopen = 0 %}
+                         {% for payeddue in duespayed if payeddue.month == month %}
+                          
+                                
+                              {% set pdp = payeddue.duespayed %}
+                              {% set pdd = payeddue.due %}
+                              {% set duesopen = pdd - pdp %}
+                         {% endfor %}   
+                            
+                        
+                        <td>{{ pdd }}</td>
+                        <td {% if duesopen != 0 %}class="red"{% endif %}>{{ duesopen }}</td>
+                        <td>{{ pdp is empty ? 0 : pdp }}</td>
+                        
+                    {% endfor %}                    
                     
                 
            {% endautoescape %} 

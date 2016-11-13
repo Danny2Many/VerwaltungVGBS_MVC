@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="Member")
+ * @ORM\Table(name="Dues")
  * 
  */
 class Dues {

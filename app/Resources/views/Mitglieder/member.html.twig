@@ -38,7 +38,7 @@
     {% block thead %}
         
             
-        <th>Bearb.</th><th>M_Nr</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Geb.Datum</th><th>Ort</th><th>Strasse, Hausnr</th><th>PLZ</th><th>Postfach</th><th>Telefonnr.</th><th>E-Mail</th><th>Sportgruppe</th>
+        <th>Bearb.</th><th>M_Nr</th><th>Abt.</th><th>Status</th><th>Anr.</th><th>Name</th><th>Vorname</th><th>Geb.Datum</th><th>Ort</th><th>Strasse, Hausnr</th><th>PLZ</th><th>Postfach</th><th>Telefonnr.</th><th>E-Mail</th><th>Sportgruppe</th>
         <th>Eintr.Datum</th><th>Aufnahmebest.</th><th>Rehaschein/e<br> (RSNr.-Ablaufd.-Einheiten)</th><th>abgelaufene Rehaschein/e</th><th>Krankenkasse</th><th>Zusatzinfo</th> 
         <th>Ehrung</th><th>Arbeitsplatzhaltung</th><th>chron. Berufserkr.</th><th>Schmerzen in HWS</th><th>Schmerzen in BWS</th><th>Schmerzen in LWS</th><th>obere Extremitäten</th><th>untere Extremitäten</th><th>sonst. Beeinträchtigungen</th><th>Medikamente</th><th>weit. bewegl. Aktivitäten</th><th>Hf-Ruhe/Min</th><th>Hf-Max/Min</th><th>Hf bei 50%</th><th>Hf bei 55%</th><th>Hf bei 60%</th><th>Hf bei 65%</th><th>Hf bei 70%</th><th>Hf bei 75%</th><th>Hf bei 80%</th><th>Hf bei 85%</th>
         
@@ -63,6 +63,11 @@
                 {% endif %}
                 <td><center><a href="{{ path('editmem', {'letter': first|capitalize, 'ID': data.memid }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
                 <td>{{ data.memid }}</td>
+                <td>{% for SG in data.sportsgroup %}                     
+                    {{SG.sportsgroup.section|join('|') }}<br>
+                {% else %}
+                    {{ "-" }}
+                {% endfor %}</td>
                
                 <td>{{ data.state == 1 ? "aktiv" : "inaktiv" }}</td>
                

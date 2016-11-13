@@ -19,18 +19,20 @@ class MemberFinController extends Controller{
     public function indexAction(Request $request,$letter, $year, $halfyear){
         
     
-        $adminyearrepository = $this->getDoctrine()->getRepository('AppBundle:AdministrationYear');
-        $memrepository = $this->getDoctrine()->getRepository('AppBundle:Member');
+      
         
-        $adminyears=$adminyearrepository->findAll();
+        $memrepository = $this->getDoctrine()->getRepository('AppBundle:Mitglieder\Member');
+        $mdrepository = $this->getDoctrine()->getRepository('AppBundle:Mitglieder\Member_Dues');
+
         
         
         
-        $qb = $memrepository->createQueryBuilder('m');
+        $qb['Member'] = $memrepository->createQueryBuilder('m');
+        $qb['Member_Dues'] = $mdrepository->createQueryBuilder('md')
+                                            ->where('md.paystart<=:year')
+                                            ->where('md.payend>:year')
+                                            ->setParameter('year', $year);
         
-        $qb->Join('m.yearinfo', 'i')
-           
-           ->where('i.year ='.$year);
            
     
         $choices=array('Mitgliedsnr.' => 'memid',
@@ -54,18 +56,18 @@ class MemberFinController extends Controller{
     
     
     
-    $query=$qb->where($qb->expr()->like('m.'.$searchcol, ':member'))
+    $query=$qb['Member']->where($qb->expr()->like('m.'.$searchcol, ':member'))
                    ->setParameter('member','%'.$searchval.'%')
                    ->getQuery();
     
-    $memberfinlist=$query->getResult();
+    
     
      
      
     }else{
         
         
-        $query=$qb->where($qb->expr()->like('m.lastname', ':letter'))
+        $query=$qb['Member']->where($qb->expr()->like('m.lastname', ':letter'))
                    ->setParameter('letter',$letter.'%');
                    
         
@@ -84,13 +86,17 @@ class MemberFinController extends Controller{
             break;
         }
         
-        $memberfinlist=$query->getQuery()->getResult();
+        
       
         
     }
     
+    $m_d=$qb['Member_Dues']->getQuery()->getResult();
     
-    
+    foreach ($m_d as $md){
+        
+    }
+    $memberfinlist=$query->getQuery()->getResult();
         return $this->render(
         'Mitglieder/memberfin.html.twig',
         array(
@@ -101,7 +107,7 @@ class MemberFinController extends Controller{
             
             'cletter' => $letter,
             'path' => 'member_fin',
-            'finyears' => $adminyears,
+         
             'year' => $year,
             'halfyear' => $halfyear,
 

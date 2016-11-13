@@ -21,6 +21,15 @@ class MemDuesPayed {
      */
     protected $dpid;
     
+    
+        /**
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Dues", inversedBy="member", cascade={"persist"})
+     * @ORM\JoinColumn(name="dueid", referencedColumnName="dueid")
+     */    
+    protected $due;
+    
+    
+    
         /**
      * @ORM\Column(type="integer")
         * 
@@ -151,5 +160,29 @@ class MemDuesPayed {
     public function getMember()
     {
         return $this->member;
+    }
+
+    /**
+     * Set due
+     *
+     * @param \AppBundle\Entity\Dues $due
+     *
+     * @return MemDuesPayed
+     */
+    public function setDue(\AppBundle\Entity\Dues $due = null)
+    {
+        $this->due = $due;
+
+        return $this;
+    }
+
+    /**
+     * Get due
+     *
+     * @return \AppBundle\Entity\Dues
+     */
+    public function getDue()
+    {
+        return $this->due;
     }
 }

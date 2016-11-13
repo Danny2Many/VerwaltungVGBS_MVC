@@ -43,6 +43,15 @@ class Sportsgroup {
      */
     protected $nonmemsubscriber;
 
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="Section")
+     * @ORM\JoinTable(name="Sportsgroup_Section",
+     *      joinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")}
+     *      )
+     */
+    private $section;
 
     /**
      * @ORM\Column(type="string")
@@ -99,6 +108,8 @@ class Sportsgroup {
     public function __construct()
     {
         $this->memsubscriber = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->nonmemsubscriber = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->section = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -359,5 +370,39 @@ class Sportsgroup {
     public function getNonmemsubscriber()
     {
         return $this->nonmemsubscriber;
+    }
+
+    /**
+     * Add section
+     *
+     * @param \AppBundle\Entity\Section $section
+     *
+     * @return Sportsgroup
+     */
+    public function addSection(\AppBundle\Entity\Section $section)
+    {
+        $this->section[] = $section;
+
+        return $this;
+    }
+
+    /**
+     * Remove section
+     *
+     * @param \AppBundle\Entity\Section $section
+     */
+    public function removeSection(\AppBundle\Entity\Section $section)
+    {
+        $this->section->removeElement($section);
+    }
+
+    /**
+     * Get section
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSection()
+    {
+        return $this->section;
     }
 }
