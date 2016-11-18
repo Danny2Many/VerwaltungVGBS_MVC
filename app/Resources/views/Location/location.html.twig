@@ -1,0 +1,78 @@
+{% extends 'basic.html.twig' %}
+{% form_theme searchform 'bootstrap_3_layout.html.twig' %}
+
+{% block columnDefs %}
+     "columnDefs": [
+    { "width": "1%", "targets": 0 },
+    { "width": "2%", "targets": 1 }    
+  ]  
+  {% endblock %}
+
+
+
+{% block title %}Standort - Stammdaten{% endblock %}
+{% block fixedcolnum %} 0 {% endblock %}
+{% block viewlink %}{{ path('location_home') }}{% endblock %}
+{% block LocationAktiv %} active {% endblock %}
+
+{% block add %}
+    <div class="inline">
+    <a href="{{ path('addloc') }}"><button    class="add btn btn-default">
+      <span class="glyphicon glyphicon-plus"></span> neuen Standort anlegen
+        </button></a> 
+    </div>
+{% endblock %}
+
+{% block thead %}
+    <th>Bearb.</th>
+    <th>Standort ID</th>
+    <th>Standortname</th>
+    <th>Straße, Hnr.</th>
+    <th>PLZ</th>
+    <th>Räume</th>
+ {% endblock %}
+
+{% block tbody %}
+    {%for data in tabledata%} 
+        <tr>
+            <td><center><a href="{{ path('editloc', {'ID': data.locid}) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
+            <td>{{data.locid}}</td>
+            <td>{{data.locname}}</td>
+            <td>{{data.streetaddress}}</td>
+            <td>{{data.postcode}}</td>
+            <td>{% if locationdependentlist[data.locid]['room'] is defined %}
+                  {% set roo =locationdependentlist[data.locid]['room'] %}
+                {% else %}
+                  {% set roo ='' %}  
+                {% endif %}     
+                {% for RO in roo %}
+                        {{ RO.roomname }}<br>
+                        {% else  %}
+                        {{ "-" }}    
+                {% endfor %}</td>
+            
+        </tr>
+    {% endfor %}
+{% endblock %}
+
+
+{% block pagination %}
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="pagination">
+                <li {% if cletter == null %}class="active"{% endif %}><a href="{{ path('location_home', {'letter': 'alle'}) }}">ALLE</a></li>   
+                
+                {% for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'] %}
+                    {% if letter == cletter %}     
+                    <li class="active"><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>      
+                    {% else %}
+                    <li><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>                    
+                    {% endif %}
+                    
+                {% endfor %}
+        {# show how many objects were found#}
+                <li class="active"><a href="{{ path('location_home', {'letter': cletter}) }}">{{ tabledata|length }} Einträge wurden gefunden</a></li>
+                </ul>         
+            </div>           
+        </div>        
+    {% endblock %}  

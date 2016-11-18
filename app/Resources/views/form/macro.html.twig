@@ -280,3 +280,17 @@
     </div>           
 {% endmacro %}
 
+{% macro roomItem(formData) %}
+  {% set name = formData.vars.full_name %}
+    <div class="panel panel-default" data-content="{{ name }}">
+        <div class="panel-heading"><h3 class="panel-title pull-left">Raum</h3><a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> löschen</button></a><div class="clearfix"></div></div>    
+        <div class="panel-body">
+            <div class="form-group">
+                {{ form_label(attribute(formData, 'roomname')) }}
+                <div class="col-sm-3">
+                {{ form_widget(attribute(formData, 'roomname')) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

@@ -3,8 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Common\Collections\ArrayCollection;
+
 
 /**
  * @ORM\Entity
@@ -24,11 +23,21 @@ class Room {
      *@ORM\Column (type="string")
      */
     protected $roomname;
+    
     /**
-     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Inventory\Stocktaking", mappedBy="location")
+     * @ORM\Column (type="string")
+     */
+    protected $locid;
+    /**
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Inventory\Stocktaking", mappedBy="location",cascade={"persist"})
      */  
     private $stocktaking;
     
+    /**
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Location", inversedBy="room")
+     * @ORM\JoinColumn(name="locid",referencedColumnName="locid")
+     */  
+    private $location;
     
     
     public function getRoomID()
@@ -51,9 +60,60 @@ class Room {
      $this->roomname=$roomname;
     }
   
-   
+   public function getLocID()
+    {
+     return $this->locid;
+    }
+    
+    public function setLocID($locid)
+    {
+     $this->locid=$locid;
+    }
 
    
+
+    
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->stocktaking = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add stocktaking
+     *
+     * @param \AppBundle\Entity\Inventory\Stocktaking $stocktaking
+     *
+     * @return Room
+     */
+    public function addStocktaking(\AppBundle\Entity\Inventory\Stocktaking $stocktaking)
+    {
+        $this->stocktaking[] = $stocktaking;
+
+        return $this;
+    }
+
+    /**
+     * Remove stocktaking
+     *
+     * @param \AppBundle\Entity\Inventory\Stocktaking $stocktaking
+     */
+    public function removeStocktaking(\AppBundle\Entity\Inventory\Stocktaking $stocktaking)
+    {
+        $this->stocktaking->removeElement($stocktaking);
+    }
+
+    /**
+     * Get stocktaking
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getStocktaking()
+    {
+        return $this->stocktaking;
+    }
 
     
 }

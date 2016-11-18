@@ -12,9 +12,9 @@ use AppBundle\Form\SanitizedTextType;
 class ObjectOrderType extends AbstractType{
      public function buildForm(FormBuilderInterface $builder, array $options)
     {   
-        $builder->add('invoicenumber',SanitizedTextType::class, array('label' => 'Vereins Beleg Nr.:'))
+        $builder->add('invoicenumber',SanitizedTextType::class, array('label' => 'Vereins Beleg Nr.:','required'=>false))
                 ->add('orderdate',DateType::class,array('label'=>'Bestelldatum:','years'=>range(2004, date('Y')),'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag')))
-                ->add('orderprice',MoneyType::class,array('label'=>'Preis:'))
+                ->add('orderprice',MoneyType::class,array('label'=>'Preis:','required'=>false))
                 ->add('quantity',IntegerType::class,array('label'=>'Anzahl:'))
                 ->add('company',SanitizedTextType::class,array('label'=>'Firma/Hersteller:','required'=>false))
                 ;

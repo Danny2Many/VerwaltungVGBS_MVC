@@ -4,7 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Common\Collections\ArrayCollection;
+
 
 /**
  * @ORM\Entity
@@ -22,13 +22,25 @@ class Room {
     
     /**
      *@ORM\Column (type="string")
+     * @Assert\NotBlank()
+     * @Assert\length(max=100)
      */
     protected $roomname;
+    
+    /**
+     * @ORM\Column (type="string")
+     */
+    protected $locid;
     /**
      * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Inventory\Stocktaking", mappedBy="location",cascade={"persist"})
      */  
     private $stocktaking;
     
+    /**
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Location", inversedBy="room")
+     * @ORM\JoinColumn(name="locid",referencedColumnName="locid")
+     */  
+    private $location;
     
     
     public function getRoomID()
@@ -51,7 +63,15 @@ class Room {
      $this->roomname=$roomname;
     }
   
-   
+   public function getLocID()
+    {
+     return $this->locid;
+    }
+    
+    public function setLocID($locid)
+    {
+     $this->locid=$locid;
+    }
 
    
 
@@ -96,5 +116,31 @@ class Room {
     public function getStocktaking()
     {
         return $this->stocktaking;
+    }
+
+    
+
+    /**
+     * Set location
+     *
+     * @param \AppBundle\Entity\Location $location
+     *
+     * @return Room
+     */
+    public function setLocation(\AppBundle\Entity\Location $location = null)
+    {
+        $this->location = $location;
+
+        return $this;
+    }
+
+    /**
+     * Get location
+     *
+     * @return \AppBundle\Entity\Location
+     */
+    public function getLocation()
+    {
+        return $this->location;
     }
 }

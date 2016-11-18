@@ -13,14 +13,13 @@ class StocktakingType extends AbstractType{
     {   
         //range from five years ago, to the current year 
         $range=range(Date('Y') - 5, date('Y'));
-        $builder->add('stockdate',ChoiceType::class,array('choices'=> array_combine($range, $range)
-                               ,'label'=>'Inventurjahr:'))
+        $builder->add('stockdate',ChoiceType::class,array('choices'=> array_combine($range, $range),'label'=>'Inventurjahr:'))
                 ->add('location', EntityType::class, array(
-            'class' => 'AppBundle:Room',
-            'choice_label' => 'roomname',
-            'multiple' => false,
-            'label' => 'Standort:'            
-        )) 
+                      'class' => 'AppBundle:Room',
+                      'choice_label' => 'roomname',
+                      'multiple' => false,
+                      'label' => 'Standort:'            
+                      )) 
                 ->add('state',ChoiceType::class,array('choices'=>array('neu'=>'neu',
                                                                        'gebraucht'=>'gebraucht',
                                                                        'sehr gut'=>'sehr gut',

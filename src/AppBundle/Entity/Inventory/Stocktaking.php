@@ -22,11 +22,14 @@ class Stocktaking {
     
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     * @Assert\length(max=5)
      */
     protected $quantity;
     
     /**
      * @ORM\Column(type="string")
+     * @Assert\NotBlank()
      */
     protected $stockdate;
     

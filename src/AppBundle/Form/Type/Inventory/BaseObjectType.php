@@ -16,10 +16,10 @@ use Symfony\Component\Form\AbstractType;
 class BaseObjectType extends AbstractType{
     public function buildForm(FormBuilderInterface $builder, array $options){
         
-        //
+        
         $builder
         ->add('objectname', SanitizedTextType::class, array ('label' => 'Objektbezeichnung:'))
-        ->add('description', SanitizedTextareaType::class, array ('label' => 'Objektbeschreibung:'))
+        ->add('description', SanitizedTextareaType::class, array ('label' => 'Objektbeschreibung:','required'=>false))
         
         //possibility to persist multiple orders and stocktakings to the database at once
         //(in form folder ObjectOrderType and StocktakingType)
