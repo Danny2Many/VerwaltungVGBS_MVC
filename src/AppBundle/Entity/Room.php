@@ -42,6 +42,10 @@ class Room {
      */  
     private $location;
     
+    /**
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Sportsgroup", mappedBy="room")
+     */
+    private $sportsgroup;
     
     public function getRoomID()
     {
@@ -142,5 +146,39 @@ class Room {
     public function getLocation()
     {
         return $this->location;
+    }
+
+    /**
+     * Add sportsgroup
+     *
+     * @param \AppBundle\Entity\Sportsgroup $sportsgroup
+     *
+     * @return Room
+     */
+    public function addSportsgroup(\AppBundle\Entity\Sportsgroup $sportsgroup)
+    {
+        $this->sportsgroup[] = $sportsgroup;
+
+        return $this;
+    }
+
+    /**
+     * Remove sportsgroup
+     *
+     * @param \AppBundle\Entity\Sportsgroup $sportsgroup
+     */
+    public function removeSportsgroup(\AppBundle\Entity\Sportsgroup $sportsgroup)
+    {
+        $this->sportsgroup->removeElement($sportsgroup);
+    }
+
+    /**
+     * Get sportsgroup
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSportsgroup()
+    {
+        return $this->sportsgroup;
     }
 }

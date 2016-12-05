@@ -39,7 +39,7 @@ protected $postcode;
 
 /**
  * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Room", mappedBy="location",cascade={"persist"})
- * @ORM\JoinColumn(name="locid",referencedColumnName="locid")
+ * 
  */
 protected $room;
 

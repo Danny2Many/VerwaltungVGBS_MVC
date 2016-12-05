@@ -7,8 +7,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use AppBundle\Form\SanitizedTextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-
-
 class TrainerLicenceType extends AbstractType{
      public function buildForm(FormBuilderInterface $builder, array $options)
     {

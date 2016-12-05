@@ -12,44 +12,55 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="TrainerFocus")
- * @ORM\HasLifecycleCallbacks()
- */
+  */
 class TrainerFocus {
     
      /**
      * @ORM\Id
-     * @ORM\Column(type="string") 
-     * 
+     * @ORM\Column(type="integer")
+      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $tfid;
         
      /**
-     * @ORM\Column(type="string") 
+     * @ORM\Column(type="integer") 
      * 
      */
     protected $trainerid;
     
      /**
-      *  
       *  @ORM\Column(type="string")
-      * 
       */
     protected $theme;
 
     /**
-     * @ORM\Column(type="string")
-     */
-    protected $validto;
-    
+    * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="theme")
+    * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
+    */
+   private $trainer;
+
     /**
-     * @ORM\Id
-     * @ORM\Column(type="string")
+     * Set tfid
+     *
+     * @param string $tfid
+     *
+     * @return TrainerFocus
      */
-    protected $validfrom;
-    
-    
-    public function __toString() {
-        return $this->tfid.'/tf/Trainer\TrainerFocus'; 
+    public function setTfid($tfid)
+    {
+        $this->tfid = $tfid;
+
+        return $this;
+    }
+
+    /**
+     * Get tfid
+     *
+     * @return string
+     */
+    public function getTfid()
+    {
+        return $this->tfid;
     }
 
     /**
@@ -61,7 +72,6 @@ class TrainerFocus {
      */
     public function setTrainerid($trainerid)
     {
-        
         $this->trainerid = $trainerid;
 
         return $this;
@@ -123,71 +133,5 @@ class TrainerFocus {
     public function getTrainer()
     {
         return $this->trainer;
-    }
-
-    /**
-     * Set validto
-     *
-     * @param \DateTime $validto
-     *
-     * @return TrainerFocus
-     */
-    public function setValidto($validto)
-    {
-        $this->validto = $validto;
-
-        return $this;
-    }
-
-    /**
-     * Get Validto
-     *
-     * @return \DateTime
-     */
-    public function getValidto()
-    {
-        return $this->validto;
-    }
-
-    public function setValidfrom($validfrom)
-    {
-        
-        $this->validfrom = $validfrom;
-
-        return $this;
-    }
-
-    /**
-     * Get validfrom
-     *
-     * @return \DateTime
-     */
-    public function getValidfrom()
-    {
-        return $this->validfrom;
-    }
-    
-    /**
-     * Get tfid
-     *
-     * @return integer
-     */
-    public function getTfid()
-    {
-        return $this->tfid;
-    }
-    
-    /**
-     * Set tfid
-     *
-     * @param integer $tfid
-     *
-     * @return TrainerLicence
-     */
-    public function setTfid($tfid)
-    {
-        $this->tfid = $tfid;
-
-        return $this;
     }
 }

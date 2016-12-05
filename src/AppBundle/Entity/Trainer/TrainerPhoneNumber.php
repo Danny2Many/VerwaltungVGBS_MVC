@@ -7,24 +7,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="TrainerPhoneNumber")
- * @ORM\HasLifecycleCallbacks()
  */
 class TrainerPhoneNumber {
     
     
-    /**
+   /**
      * @ORM\Id
-     * @ORM\Column(type="string") 
-     * 
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $tpnid;
-    
-  
-    
-     
+        
     /**
-     * @ORM\Column(type="string") 
-     * 
+     * @ORM\Column(type="integer") 
      */
     protected $trainerid;   
     
@@ -39,24 +34,32 @@ class TrainerPhoneNumber {
     protected $phonenumber;
     
     /**
-     * @ORM\Column(type="string")
-     */
-    protected $validto;
+    * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="phonenumber")
+    * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
+    */
+    private $trainer;
     
+     public function setTpnid($tpnid)
+    {
+        $this->tpnid = $tpnid;
+
+        return $this;
+    }  
+
     /**
-     * @ORM\Id 
-     * @ORM\Column(type="string")
+     * Get tpnid
+     *
+     * @return integer
      */
-    protected $validfrom;
-    
-    public function __toString() {
-            return $this->tpnid.'/tpn/Trainer\TrainerPhoneNumber'; 
-        }
-  
+    public function getTpnid()
+    {
+        return $this->tpnid;
+    }
+
     /**
      * Set trainerid
      *
-     * @param string $trainerid
+     * @param integer $trainerid
      *
      * @return TrainerPhoneNumber
      */
@@ -70,7 +73,7 @@ class TrainerPhoneNumber {
     /**
      * Get trainerid
      *
-     * @return string
+     * @return integer
      */
     public function getTrainerid()
     {
@@ -101,72 +104,27 @@ class TrainerPhoneNumber {
         return $this->phonenumber;
     }
 
-  
-
- 
     /**
-     * Set validto
+     * Set trainer
      *
-     * @param string $validto
+     * @param \AppBundle\Entity\Trainer\Trainer $trainer
      *
      * @return TrainerPhoneNumber
      */
-    public function setValidto($validto)
+    public function setTrainer(\AppBundle\Entity\Trainer\Trainer $trainer = null)
     {
-        $this->validto = $validto;
+        $this->trainer = $trainer;
 
         return $this;
     }
 
     /**
-     * Get validto
+     * Get trainer
      *
-     * @return string
+     * @return \AppBundle\Entity\Trainer\Trainer
      */
-    public function getValidto()
+    public function getTrainer()
     {
-        return $this->validto;
-    }
-
-    public function setValidfrom($validfrom)
-    {
-        
-        $this->validfrom = $validfrom;
-
-        return $this;
-    }
-
-    /**
-     * Get validfrom
-     *
-     * @return string
-     */
-    public function getValidfrom()
-    {
-        return $this->validfrom;
-    }
-    
-    /**
-     * Set tpnid
-     *
-     * @param string $tpnid
-     *
-     * @return TrainerPhoneNumber
-     */
-    public function setTpnid($tpnid)
-    {
-        $this->tpnid = $tpnid;
-
-        return $this;
-    }
-
-    /**
-     * Get tpnid
-     *
-     * @return string
-     */
-    public function getTpnid()
-    {
-        return $this->tpnid;
+        return $this->trainer;
     }
 }

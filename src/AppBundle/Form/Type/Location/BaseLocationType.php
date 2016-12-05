@@ -15,7 +15,7 @@ use Symfony\Component\Form\AbstractType;
 class BaseLocationType extends AbstractType {
    public function buildForm(FormBuilderInterface $builder, array $options){
         $builder
-        ->add('locname', SanitizedTextType::class, array ('label' => 'Räumlichkeitsbezeichnung:'))
+        ->add('locname', SanitizedTextType::class, array ('label' => 'Standortbezeichnung:'))
         ->add('streetaddress', SanitizedTextType::class, array ('label' => 'Adresse:'))
         ->add('postcode',IntegerType::class, array('label'=>'PLZ: '))
         

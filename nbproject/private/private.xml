@@ -3,12 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Controller/LocationController.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Form/Type/RoomType.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Room.php</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/app/Resources/views/Location/location.html.twig</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/app/Resources/views/Location/locationform.html.twig</file>
-            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Form/Type/Location/BaseLocationType.php</file>
+            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Trainer/Trainer.php</file>
+            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Controller/TrainerController.php</file>
+            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/src/AppBundle/Entity/Sportsgroup.php</file>
+            <file>file:/C:/xampp/htdocs/VerwaltungVGBS_MVC/app/Resources/views/Trainer/trainer.html.twig</file>
         </group>
     </open-files>
 </project-private>

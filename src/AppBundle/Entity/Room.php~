@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -21,6 +22,8 @@ class Room {
     
     /**
      *@ORM\Column (type="string")
+     * @Assert\NotBlank()
+     * @Assert\length(max=100)
      */
     protected $roomname;
     
@@ -39,6 +42,10 @@ class Room {
      */  
     private $location;
     
+    /**
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Sportsgroup", mappedBy="room")
+     */
+    private $sportsgroup;
     
     public function getRoomID()
     {
@@ -116,4 +123,28 @@ class Room {
     }
 
     
+
+    /**
+     * Set location
+     *
+     * @param \AppBundle\Entity\Location $location
+     *
+     * @return Room
+     */
+    public function setLocation(\AppBundle\Entity\Location $location = null)
+    {
+        $this->location = $location;
+
+        return $this;
+    }
+
+    /**
+     * Get location
+     *
+     * @return \AppBundle\Entity\Location
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
 }

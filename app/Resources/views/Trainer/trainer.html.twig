@@ -1,25 +1,26 @@
-
-
 {% extends 'basic.html.twig' %}
 {% form_theme searchform 'bootstrap_3_layout.html.twig' %}
-{% block columndefs %}
+{% block columnDefs %}
      "columnDefs": [
-    { "width": "11%", "targets": 15 }
+    { "width": "1%", "targets": 0 },
+    { "width": "2%", "targets": 1 },
+    { "width": "3%", "targets": 2 },
+    { "width": "10%", "targets": 3 },
+    { "width": "10%", "targets": 4 },
+    { "width": "4%", "targets": 5 },
+    { "width": "8%", "targets": 8 }
   ]  
 {% endblock %}
 {% block viewlink %}{{ path('trainer_home') }}{% endblock %}
-{% block title %} Übungsleiter {% endblock %}
-{% block viewname %}Übungsleiter{% endblock %}
+{% block title %} Trainer {% endblock %}
+{% block viewname %}Trainer{% endblock %}
 {% block TrainerAktiv %} active {% endblock %}
 {% block fixedcolnum %} 6 {% endblock %}
 
-
-
-
 {% block add %}
     <div class="inline">
-    <a href="{{ path('addtrainer', {'letter': cletter , 'adminyear': adminyear}) }}"><button    class="add btn btn-default">
-    <span class="glyphicon glyphicon-plus"></span> neuen Übungsleiter anlegen </button></a>  
+    <a href="{{ path('addtrainer', {'letter': cletter }) }}"><button    class="add btn btn-default">
+    <span class="glyphicon glyphicon-plus"></span> neuen Trainer anlegen </button></a>  
     </div>  
 {% endblock %}
 
@@ -41,6 +42,7 @@
     <th>E-Mail</th>
     <th>Postfach</th>
     <th>Art</th>
+    <th>Mitglieder <br> Sportgruppe/n</th>
     <th>Nichtmitglieder <br> Sportgruppe/n</th>
     <th>Vertretung für</th>
     <th>Schwerpunkt</th>
@@ -52,19 +54,19 @@
 {% endblock %}
 
 {% block tbody %}
-        {% for data in tabledata %}
-            {% autoescape  %}
-            <tr>
-                 {% if data.lastname|first == 'Ä' %}
-                    {% set first = 'A' %}
-                    {% elseif data.lastname|first == 'Ö' %}
-                    {% set first = 'O' %}
-                    {% elseif data.lastname|first == 'Ü' %}
-                    {% set first = 'U' %}
-                    {% else %}
-                    {% set first = data.lastname|first %}   
-                {% endif %}
-            <td><center><a href="{{ path('edittrainer', {'letter': first|capitalize, 'ID': data.trainerid, 'adminyear': adminyear, 'validfrom': data.validfrom }) }}">
+    {% for data in tabledata %}
+        {% autoescape  %}
+        <tr>
+        {% if data.lastname|first == 'Ä' %}
+            {% set first = 'A' %}
+            {% elseif data.lastname|first == 'Ö' %}
+            {% set first = 'O' %}
+            {% elseif data.lastname|first == 'Ü' %}
+            {% set first = 'U' %}
+        {% else %}
+            {% set first = data.lastname|first %}   
+        {% endif %}
+        <td><center><a href="{{ path('edittrainer', {'letter': first|capitalize, 'ID': data.trainerid}) }}">
                 <button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></a></center></td>
             <td>{{ data.trainerid }}</td>
             
@@ -102,10 +104,26 @@
                     
             <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>                    
             <td>{{ data.mailbox is empty ? "-" : data.mailbox|striptags }}</td>
-            <td>{{ data.type|striptags }}</td>
+            {% if data.type == '1' %}
+                <td>Übungsleiter</td>
+            {% else %}
+                <td>Mitarbeiter</td>
+            {% endif %}
             
-            {% if trainerdependentlist[data.trainerid]['nmemsportsgroups'] is defined %}
-                {% set nms =trainerdependentlist[data.trainerid]['nmemsportsgroups'] %}
+            {% if trainerdependentlist[data.trainerid]['sportsgroup']['m'] is defined %}
+                {% set ms =trainerdependentlist[data.trainerid]['sportsgroup']['m'] %}
+                {% else %}
+                    {% set ms ='' %}  
+            {% endif %}
+            
+            <td>{% for SG in ms %}
+                        {{ SG.name }}<br>
+                        {% else  %}
+                        {{ "-" }}    
+                {% endfor %}</td>
+            
+            {% if trainerdependentlist[data.trainerid]['sportsgroup']['nm'] is defined %}
+                {% set nms =trainerdependentlist[data.trainerid]['sportsgroup']['nm'] %}
                 {% else %}
                     {% set nms ='' %}  
             {% endif %}
@@ -114,19 +132,13 @@
                         {{ SG.name }}<br>
                         {% else  %}
                         {{ "-" }}    
-                    {% endfor %}</td>
+                {% endfor %}</td>
                     
-                    {% if trainerdependentlist[data.trainerid]['nmemsportsgroupssub'] is defined %}
-                {% set nms =trainerdependentlist[data.trainerid]['nmemsportsgroupssub'] %}
-                {% else %}
-                    {% set nms ='' %}  
-            {% endif %}
-            
-            <td>{% for SG in nms %}
-                        {{ SG.name }}<br>
+            <td>{% for SG in data.sportsgroupsub %}
+                        {{ SG.token }}<br>
                         {% else  %}
                         {{ "-" }}    
-                    {% endfor %}</td>
+                {% endfor %}</td>
             
             {% if trainerdependentlist[data.trainerid]['focuses'] is defined %}
                 {% set foc =trainerdependentlist[data.trainerid]['focuses'] %}
@@ -140,33 +152,25 @@
                         {{ "-" }}    
                     {% endfor %}</td>
                     
-            {% if adminyear == "now"|date("Y") %}
-                {% set now = "now"|date("Y-m-d") %}
-            {% else %}
-                {% set now = date(adminyear~'-12-31')  %}     
-            {% endif %}
-                    
             {% if trainerdependentlist[data.trainerid]['licences'] is defined %}
                 {% set lic =trainerdependentlist[data.trainerid]['licences'] %}
-                {% else %}
-                    {% set lic ='' %}  
+            {% else %}
+                {% set lic ='' %}  
             {% endif %}
-                    
             
             <td>
             {% for licence in lic  %}
-                <div class="{% if date(licence.expirationdate)|date("Y-m-d") < now|date_modify("+2 months")|date("Y-m-d") %}red {% endif %}
-                    {% if (now|date("Y") == licence.expirationdate|date("Y") and now|date("Y-m-d") < licence.expirationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
+                <div class="{% if date(licence.expirationdate)|date("Y-m-d") < "now"|date_modify("+2 months")|date("Y-m-d") %}red {% endif %}
+                    {% if ("now"|date("Y") == licence.expirationdate|date("Y") and "now"|date("Y-m-d") < licence.expirationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
                         {{ licence.licencetype|striptags }}</div>
                     {% else %}
                         {{ "-" }}
                     {% endfor %}
             </td>
-            
             <td>
             {% for licence in lic  %}
-                <div class="{% if date(licence.expirationdate)|date("Y-m-d") < now|date_modify("+2 months")|date("Y-m-d") %}red {% endif %}
-                    {% if (now|date("Y") == licence.expirationdate|date("Y") and now|date("Y-m-d") < licence.expirationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
+                <div class="{% if date(licence.expirationdate)|date("Y-m-d") < "now"|date_modify("+2 months")|date("Y-m-d") %}red {% endif %}
+                    {% if ("now"|date("Y") == licence.expirationdate|date("Y") and "now"|date("Y-m-d") < licence.expirationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
                         {{ licence.licencenumber|striptags }}</div>
                     {% else %}
                         {{ "-" }}
@@ -175,8 +179,8 @@
             
             <td>
             {% for licence in lic  %}
-                <div class="{% if date(licence.expirationdate)|date("Y-m-d") < now|date_modify("+2 months")|date("Y-m-d") %}red {% endif %}
-                    {% if (now|date("Y") == licence.expirationdate|date("Y") and now|date("Y-m-d") < licence.expirationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
+                <div class="{% if date(licence.expirationdate)|date("Y-m-d") < "now"|date_modify("+2 months")|date("Y-m-d") %}red {% endif %}
+                    {% if ("now"|date("Y") == licence.expirationdate|date("Y") and "now"|date("Y-m-d") < licence.expirationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
                         {{ licence.issuedate|date("d.m.Y") }}</div>
                     {% else %}
                         {{ "-" }}
@@ -185,16 +189,13 @@
             
             <td>
             {% for licence in lic  %}
-                <div class="{% if date(licence.expirationdate)|date("Y-m-d") < now|date("Y-m-d") %}red {% endif %}
-                    {% if (now|date("Y") == licence.expirationdate|date("Y") and now|date("Y-m-d") < licence.expirationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
+                <div class="{% if date(licence.expirationdate)|date("Y-m-d") < "now"|date("Y-m-d") %}red {% endif %}
+                    {% if ("now"|date("Y") == licence.expirationdate|date("Y") and "now"|date("Y-m-d") < licence.expirationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
                         {{ licence.expirationdate|date("d.m.Y") }}</div>
                     {% else %}
                         {{ "-" }}
                     {% endfor %}
             </td>
-                    
-           
-                    
             </tr>
             {% endautoescape %} 
         {% endfor %}
@@ -204,20 +205,17 @@
         <div class="row">
             <div class="col-md-12">
                 <ul class="pagination">
-                    
-                <li {% if cletter == null %}class="active"{% endif %}><a href="{{ path(path, {'all': 'alle', 'adminyear': adminyear}) }}">ALLE</a></li>   
-                
+                <li {% if cletter == null %}class="active"{% endif %}><a href="{{ path(path, {'all': 'alle'}) }}">ALLE</a></li>   
                 {% for letter in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'] %}
-                    
                     {% if letter == cletter %}     
-                    <li class="active"><a href="{{ path(path, {'letter': letter, 'adminyear': adminyear}) }}">{{ letter }}</a></li>      
+                    <li class="active"><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>      
                     {% else %}
-                    <li><a href="{{ path(path, {'letter': letter,'adminyear': adminyear}) }}">{{ letter }}</a></li>                    
+                    <li><a href="{{ path(path, {'letter': letter}) }}">{{ letter }}</a></li>                    
                     {% endif %}
                     
                 {% endfor %}
                 
-                <li class="active"><a href="{{ path(path, {'letter': cletter,'adminyear': adminyear}) }}">{{ tabledata|length }} Personen wurden gefunden</a></li>
+                <li class="active"><a href="{{ path(path, {'letter': cletter}) }}">{{ tabledata|length }} Einträge wurden gefunden</a></li>
                 </ul>         
             </div>           
         </div>        
