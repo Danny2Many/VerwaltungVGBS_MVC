@@ -8,7 +8,7 @@ use AppBundle\Form\Type\SearchType;
 use AppBundle\Form\Type\Location\AddLocationType;
 use AppBundle\Form\Type\Location\EditLocationType;
 use AppBundle\Entity\Location;
-use Doctrine\Common\Collections\ArrayCollection;
+//use Doctrine\Common\Collections\ArrayCollection;
 
 class LocationController extends Controller {
     /**

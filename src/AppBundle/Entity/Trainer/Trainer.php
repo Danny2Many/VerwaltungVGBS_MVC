@@ -7,12 +7,9 @@ use AppBundle\Entity\PersonalData;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
-//haslifecycle, postload, die validattr löschen; assoc setzen
-
 /**
  * @ORM\Entity
  * @ORM\Table(name="Trainer")
- * 
  */
 class Trainer extends PersonalData {
     
@@ -64,11 +61,8 @@ class Trainer extends PersonalData {
         $this->licence = new \Doctrine\Common\Collections\ArrayCollection();
         $this->phonenumber = new \Doctrine\Common\Collections\ArrayCollection();
         $this->sportsgroupsub = new \Doctrine\Common\Collections\ArrayCollection();
-
-        
     }
     
-
     /**
      * Get trainerid
      *

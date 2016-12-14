@@ -27,7 +27,6 @@
 {% block color %} {{colorclass}} {% endblock %}
 
 {% block thead %}
-    
     <th>Bearb.</th>
     <th>Trainer Nr.</th>
     <th>Anr.</th>
@@ -50,7 +49,6 @@
     <th>Lizenz-Nr.</th>
     <th>ausgestellt</th>
     <th>gültig bis</th>    
-    
 {% endblock %}
 
 {% block tbody %}
@@ -150,14 +148,18 @@
                         {{ FC.theme }}<br>
                         {% else  %}
                         {{ "-" }}    
-                    {% endfor %}</td>
+                {% endfor %}</td>
                     
             {% if trainerdependentlist[data.trainerid]['licences'] is defined %}
                 {% set lic =trainerdependentlist[data.trainerid]['licences'] %}
             {% else %}
                 {% set lic ='' %}  
             {% endif %}
-            
+{#
+  same for all licence columns:
+  if the licence expires in less than 2 months -> change the font colour to red
+  if the licence expires in the current year -> change the background colour to yellow
+#}
             <td>
             {% for licence in lic  %}
                 <div class="{% if date(licence.expirationdate)|date("Y-m-d") < "now"|date_modify("+2 months")|date("Y-m-d") %}red {% endif %}
@@ -165,7 +167,7 @@
                         {{ licence.licencetype|striptags }}</div>
                     {% else %}
                         {{ "-" }}
-                    {% endfor %}
+            {% endfor %}
             </td>
             <td>
             {% for licence in lic  %}
@@ -174,7 +176,7 @@
                         {{ licence.licencenumber|striptags }}</div>
                     {% else %}
                         {{ "-" }}
-                    {% endfor %}
+            {% endfor %}
             </td>
             
             <td>
@@ -184,7 +186,7 @@
                         {{ licence.issuedate|date("d.m.Y") }}</div>
                     {% else %}
                         {{ "-" }}
-                    {% endfor %}
+            {% endfor %}
             </td>
             
             <td>
@@ -194,7 +196,7 @@
                         {{ licence.expirationdate|date("d.m.Y") }}</div>
                     {% else %}
                         {{ "-" }}
-                    {% endfor %}
+            {% endfor %}
             </td>
             </tr>
             {% endautoescape %} 

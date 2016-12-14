@@ -30,6 +30,8 @@ class TrainerFocus {
     
      /**
       *  @ORM\Column(type="string")
+      *  @Assert\NotBlank()
+      *  @Assert\length(max=255)
       */
     protected $theme;
 

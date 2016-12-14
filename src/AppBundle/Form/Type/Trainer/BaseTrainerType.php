@@ -25,14 +25,12 @@ class BaseTrainerType extends AbstractType {
         'data_class' => 'AppBundle\Entity\Trainer\Trainer',
         'pn_data_class' => 'AppBundle\Entity\Trainer\TrainerPhoneNumber')) 
                 
-        ->add('type', ChoiceType::class, array('choices'  => array(
-        'Mitarbeiter' => '0', 'Übungsleiter' => '1'),
+        ->add('type', ChoiceType::class, array('choices'  => array('Mitarbeiter' => '0', 'Übungsleiter' => '1'),
         // *this line is important*
         'choices_as_values' => true,
         'label' => 'Art:',))
                 
-        ->add('state', ChoiceType::class, array('choices'  => array(
-        'Inaktiv' => '0','Aktiv' => '1'),
+        ->add('state', ChoiceType::class, array('choices'  => array('Inaktiv' => '0','Aktiv' => '1'),
         // *this line is important*
         'choices_as_values' => true,
         'label' => 'Status:',))

@@ -23,12 +23,16 @@ class TrainerLicence {
     protected $trainerid;
     
     /**
-     * @ORM\Column(type="string") 
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\length(max=255) 
      */
     protected $licencetype;
     
     /**
-     * @ORM\Column(type="string") 
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\length(max=50) 
      */
     protected $licencenumber;
     
