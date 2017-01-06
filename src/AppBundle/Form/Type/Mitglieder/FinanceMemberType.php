@@ -26,7 +26,7 @@ class FinanceMemberType extends AbstractType {
         $builder
                 ->add('memid', IntegerType::class, array('disabled' => true, 'label' => 'Mitgliedsnr.:'))
             ->add('personaldata', PersonalDataType::class, array(
-        'data_class' => 'AppBundle\Entity\Member',
+        'data_class' => 'AppBundle\Entity\Mitglieder\Member',
         'pn_data_class' => 'AppBundle\Entity\MemPhoneNumber',
         'title_disabled' => true,
         'firstname_disabled' => true,

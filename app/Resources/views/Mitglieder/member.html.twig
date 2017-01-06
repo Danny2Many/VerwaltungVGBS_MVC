@@ -63,6 +63,8 @@
                 {% endif %}
                 <td><center><a href="{{ path('editmem', {'letter': first|capitalize, 'ID': data.memid }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
                 <td>{{ data.memid }}</td>
+                
+                
                 <td>{% for SG in data.sportsgroup %}                     
                     {{SG.sportsgroup.section|join('|') }}<br>
                 {% else %}

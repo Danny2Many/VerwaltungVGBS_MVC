@@ -16,7 +16,7 @@
                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Finanzjahr: {{ year }}
                     <span class="caret"></span></button>
                         <ul class="dropdown-menu">
-                            {% for loopyear in 2014.."now"|date("Y") %}
+                            {% for loopyear in 2004.."now"|date("Y") %}
                            
                             
                                 <li {% if loopyear == year %}class="active"{% endif %}><a href="#">{{ loopyear }}</a></li>
@@ -123,21 +123,51 @@
                     {% for month in months %}
                         
                             
-                         {% set pdp = 0 %}
-                         {% set pdd = 0 %}
-                         {% set duesopen = 0 %}
+                         
+                     
+                         {% set duefound = false %}
+                         
+                           {% set payeddues = '-' %}
+                          {% set opendues = '-' %}
+                          {% set due = '-' %}
+                         
+                        
+                          
+                         {% for due in data.due if due.paystart|date("m") <= month and due.payend|date("m") > month %}
+                          
+                                
+                              {% set payeddues = 0 %}
+                              
+                              {% set due = due.due %}
+                              {% set opendues = due %}
+                             {% set duefound = true %}
+                          
+                         {% endfor %}
+                            
+                             
+                         
+                         
+                         
+                         
+                         {% if duefound == true %}
                          {% for payeddue in duespayed if payeddue.month == month %}
                           
                                 
-                              {% set pdp = payeddue.duespayed %}
-                              {% set pdd = payeddue.due %}
-                              {% set duesopen = pdd - pdp %}
-                         {% endfor %}   
-                            
+                              {% set payeddues = payeddue.duespayed %}
+                              
+                              {% set opendues = pdd - pdp %}
+                              
+                         {% endfor %} 
+                         {% endif %}
+
+                         
+
                         
-                        <td>{{ pdd }}</td>
-                        <td {% if duesopen != 0 %}class="red"{% endif %}>{{ duesopen }}</td>
-                        <td>{{ pdp is empty ? 0 : pdp }}</td>
+                        
+                        
+                        <td>{{ due }}</td>
+                        <td {% if opendues != 0 %}class="red"{% endif %}>{{ opendues }}</td>
+                        <td>{{ payeddues }}</td>
                         
                     {% endfor %}                    
                     

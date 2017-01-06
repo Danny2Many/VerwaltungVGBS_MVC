@@ -39,10 +39,10 @@
            <div class="col-md-12"> 
         <legend><h2>Verwaltungsjahr: {{ year }}</h2></legend>
          
-        {% for yi in form.yearinfo %}
+{#        {% for yi in form.yearinfo %}
         {{ form_row(yi.levy) }}
         {{ form_row(yi.additionalduesinfo) }}
-        {% endfor %}
+        {% endfor %}#}
         
         {% for md in form.monthlydues %}
             

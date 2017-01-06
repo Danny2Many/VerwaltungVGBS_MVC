@@ -22,16 +22,13 @@ class MemberFinController extends Controller{
       
         
         $memrepository = $this->getDoctrine()->getRepository('AppBundle:Mitglieder\Member');
-        $mdrepository = $this->getDoctrine()->getRepository('AppBundle:Mitglieder\Member_Dues');
+
 
         
         
         
-        $qb['Member'] = $memrepository->createQueryBuilder('m');
-        $qb['Member_Dues'] = $mdrepository->createQueryBuilder('md')
-                                            ->where('md.paystart<=:year')
-                                            ->where('md.payend>:year')
-                                            ->setParameter('year', $year);
+        $qb = $memrepository->createQueryBuilder('m');
+
         
            
     
@@ -67,7 +64,7 @@ class MemberFinController extends Controller{
     }else{
         
         
-        $query=$qb['Member']->where($qb->expr()->like('m.lastname', ':letter'))
+        $query=$qb->where($qb->expr()->like('m.lastname', ':letter'))
                    ->setParameter('letter',$letter.'%');
                    
         
@@ -91,11 +88,9 @@ class MemberFinController extends Controller{
         
     }
     
-    $m_d=$qb['Member_Dues']->getQuery()->getResult();
+
     
-    foreach ($m_d as $md){
-        
-    }
+
     $memberfinlist=$query->getQuery()->getResult();
         return $this->render(
         'Mitglieder/memberfin.html.twig',
@@ -127,7 +122,7 @@ class MemberFinController extends Controller{
     {
         $manager=$this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()->getRepository('AppBundle:Member');
-        $qb=$repository->createQueryBuilder('m');
+
 //        $qb->join('m.monthlydues', 'md')
 //           ->join('m.yearinfo', 'yi')
 //           ->where('md.year='.$year)
