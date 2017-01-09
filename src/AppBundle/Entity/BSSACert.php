@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class BSSACert {
     
- /**
+/**
 * @ORM\Id
 * @ORM\Column(name="bssaid")
 */
@@ -35,30 +35,11 @@ protected $groupnr;
 */ 
 protected $bssacertnr;
 
-/**
-* @ORM\Id
-* @ORM\Column(type="string")  
-*/
-protected $validfrom;
 
 /**
-* @ORM\Column(type="string")
-*/
-protected $validto;
-
-
-/**
-* @ORM\Column(type="string")
-*/
-protected $sgid;
-
-
-public function __toString()
-    {
-        return (string) $this->sgid.'/bssa/BSSACert';
-    }
-
-    
+ * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Sportsgroup",mappedBy="bssacert")
+ */
+private $sportsgroup;    
  
 
     /**
@@ -229,75 +210,23 @@ public function __toString()
         return $this->deleted;
     }
 
-    /**
-     * Set validfrom
-     *
-     * @param string $validfrom
-     *
-     * @return BSSACert
-     */
-    public function setValidfrom($validfrom)
+   public function setSportsgroup(\AppBundle\Entity\Sportsgroup $sportsgroup)
     {
-        $this->validfrom = $validfrom;
+        //$sportsgroup->setSportsgroup($this);
+        $this->sportsgroup[] = $sportsgroup;
 
         return $this;
     }
-
-    /**
-     * Get validfrom
+    
+   /**
+     * Remove bssa
      *
-     * @return string
+     * @param \AppBundle\Entity\BSSACert $sportsgroup
      */
-    public function getValidfrom()
+    public function removeSportsgroup(\AppBundle\Entity\Sportsgroup $sportsgroup)
     {
-        return $this->validfrom;
+        $this->sportsgroup->removeElement($sportsgroup);
     }
 
-    /**
-     * Set validto
-     *
-     * @param string $validto
-     *
-     * @return BSSACert
-     */
-    public function setValidto($validto)
-    {
-        $this->validto = $validto;
-
-        return $this;
-    }
-
-    /**
-     * Get validto
-     *
-     * @return string
-     */
-    public function getValidto()
-    {
-        return $this->validto;
-    }
-
-    /**
-     * Set sgid
-     *
-     * @param string $sgid
-     *
-     * @return BSSACert
-     */
-    public function setSgid($sgid)
-    {
-        $this->sgid = $sgid;
-
-        return $this;
-    }
-
-    /**
-     * Get sgid
-     *
-     * @return string
-     */
-    public function getSgid()
-    {
-        return $this->sgid;
-    }
+    
 }

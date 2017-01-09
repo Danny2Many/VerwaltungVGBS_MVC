@@ -130,6 +130,27 @@ td.red, input[type="text"].red {
     background-color: yellow;
 }
 
+.redbackground {
+    
+    background-color: red;
+}
+
+.yellowsquare {
+    width: 15px;
+    height:15px;
+    background: yellow;
+   display: inline-block;
+
+    
+}
+
+.redsquare {
+    
+    background: red;
+    width: 15px;
+    height:15px;
+    display: inline-block;
+}
 /*rehabcerts in table*/
 .strong{
     font-weight: bold;

@@ -17,7 +17,7 @@
             {% endblock%} 
 
 {% block add %}
-    <a href="{{ path('addmemsportsgroup', {'letter': cletter, 'adminyear': adminyear }) }}"><button    class="add btn btn-default">
+    <a href="{{ path('addmemsportsgroup', {'letter': cletter}) }}"><button    class="add btn btn-default">
       <span class="glyphicon glyphicon-plus"></span> neue Sportgruppe anlegen
         </button></a>  
 {% endblock %}
@@ -73,7 +73,7 @@
                 {% else %}
                 {% set first = data.name|first %}   
         {% endif %}#}
-        <td><a href="{{ path('editmemsportsgroup', {'letter': data.day, 'ID': data.sgid, 'adminyear': adminyear,  'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></a><a href="{{ path('editmemsportsgroup', {'letter': data.day, 'ID': data.sgid, 'adminyear': adminyear,  'version': data.validfrom }) }}"><button  class='btn btn-default btn-sm'  name='intern'> <span class='glyphicon glyphicon-folder-open'></span></button></a></td>       
+        <td><a href="{{ path('editmemsportsgroup', {'letter': data.day, 'ID': data.sgid,  }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></a><a href="{{ path('editmemsportsgroup', {'letter': data.day, 'ID': data.sgid,}) }}"><button  class='btn btn-default btn-sm'  name='intern'> <span class='glyphicon glyphicon-folder-open'></span></button></a></td>       
         <td>{{ data.name|striptags }}</td>
         <td>{{ data.info|striptags }}</td> 
         <td>{{ data.time|date("h:i") }}</td>
@@ -154,11 +154,7 @@
         
        {# <td bgcolor="#5fa8ec"></td>#}
         
-        {% if adminyear == "now"|date("Y") %}
-            {% set now = "now"|date("Y-m-d") %}
-            {% else %}
-           {% set now = date(adminyear~'-12-31')  %}     
-        {% endif %}
+        
         
         
         {% if sportsgroupdependentlist[data.sgid]['terminationdate'] is defined %}

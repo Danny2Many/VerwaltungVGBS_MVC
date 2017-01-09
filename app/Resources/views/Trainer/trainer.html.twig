@@ -8,7 +8,7 @@
     { "width": "10%", "targets": 3 },
     { "width": "10%", "targets": 4 },
     { "width": "4%", "targets": 5 },
-    { "width": "8%", "targets": 8 }
+    { "width": "10%", "targets": 17 }
   ]  
 {% endblock %}
 {% block viewlink %}{{ path('trainer_home') }}{% endblock %}
@@ -20,7 +20,7 @@
 {% block add %}
     <div class="inline">
     <a href="{{ path('addtrainer', {'letter': cletter }) }}"><button    class="add btn btn-default">
-    <span class="glyphicon glyphicon-plus"></span> neuen Trainer anlegen </button></a>  
+    <span class="glyphicon glyphicon-plus"></span> Neuen Trainer anlegen </button></a>  
     </div>  
 {% endblock %}
 
@@ -33,6 +33,15 @@
     <th>Name</th>
     <th>Vorname</th>
     <th>Status</th>
+    <th>Art</th>
+    <th>Mitglieder <br> Sportgruppe/n</th>
+    <th>Nichtmitglieder <br> Sportgruppe/n</th>
+    <th>Vertretung für</th>
+    <th>Schwerpunkt</th>
+    <th>Lizenz*</th>
+    <th>Lizenz-Nr.*</th>
+    <th>Ausgestellt*</th>
+    <th>Gültig bis*</th>
     <th>Geb.Datum</th>
     <th>Ort</th>
     <th>Straße, Hausnr.</th>
@@ -40,15 +49,7 @@
     <th>Telefon</th>
     <th>E-Mail</th>
     <th>Postfach</th>
-    <th>Art</th>
-    <th>Mitglieder <br> Sportgruppe/n</th>
-    <th>Nichtmitglieder <br> Sportgruppe/n</th>
-    <th>Vertretung für</th>
-    <th>Schwerpunkt</th>
-    <th>Lizenz</th>
-    <th>Lizenz-Nr.</th>
-    <th>ausgestellt</th>
-    <th>gültig bis</th>    
+    
 {% endblock %}
 
 {% block tbody %}
@@ -82,27 +83,7 @@
             {% else %}
                 <td>Inaktiv</td>
             {% endif %}
-            
-            <td>{{ data.birthday|date("d.m.Y") }}</td>
-            <td>{{ data.location|striptags }}</td>
-            <td>{{ data.streetaddress|striptags }}</td>
-            <td>{{ data.postcode|striptags }}</td>
-            
-            {% if trainerdependentlist[data.trainerid]['phonenumbers'] is defined %}
-                {% set pns =trainerdependentlist[data.trainerid]['phonenumbers'] %}
-                {% else %}
-                    {% set pns ='' %}  
-                {% endif %}
-            
-            <td>{% for PN in pns %}
-                        {{ PN.phonenumber }}<br>
-                        {% else  %}
-                        {{ "-" }}    
-                    {% endfor %}</td>
-                    
-            <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>                    
-            <td>{{ data.mailbox is empty ? "-" : data.mailbox|striptags }}</td>
-            {% if data.type == '1' %}
+                        {% if data.type == '1' %}
                 <td>Übungsleiter</td>
             {% else %}
                 <td>Mitarbeiter</td>
@@ -115,7 +96,7 @@
             {% endif %}
             
             <td>{% for SG in ms %}
-                        {{ SG.name }}<br>
+                        {{ SG.token }}<br>
                         {% else  %}
                         {{ "-" }}    
                 {% endfor %}</td>
@@ -127,7 +108,7 @@
             {% endif %}
             
             <td>{% for SG in nms %}
-                        {{ SG.name }}<br>
+                        {{ SG.token }}<br>
                         {% else  %}
                         {{ "-" }}    
                 {% endfor %}</td>
@@ -160,44 +141,73 @@
   if the licence expires in less than 2 months -> change the font colour to red
   if the licence expires in the current year -> change the background colour to yellow
 #}
-            <td>
+
+   
             {% for licence in lic  %}
-                <div class="{% if date(licence.expirationdate)|date("Y-m-d") < "now"|date_modify("+2 months")|date("Y-m-d") %}red {% endif %}
-                    {% if ("now"|date("Y") == licence.expirationdate|date("Y") and "now"|date("Y-m-d") < licence.expirationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
-                        {{ licence.licencetype|striptags }}</div>
+                {% if date(licence.expirationdate)|date("Y-m-d") < "now"|date("Y-m-d") %} 
+                    {% set backgr = "redbackground" %}
+  
+                {% elseif date(licence.expirationdate)|date("Y-m-d") < "now"|date_modify("+2 months")|date("Y-m-d")%}
+                    {% set backgr = "yellowbackground" %}
+                    
                     {% else %}
-                        {{ "-" }}
+                        {% set backgr = "" %}
+                 {% endif %}
+                 
+                <td class="{{ backgr }}">
+                    
+                        {{ licence.licencetype|striptags }}
+
+                </td>
+                
+     
+                        
+                        <td class="{{ backgr }}">  
+                    
+               
+                        {{ licence.licencenumber|striptags }}
+
+                    </td>
+                    <td class="{{ backgr }}">
+                                    
+                        {{ licence.issuedate|date("d.m.Y") }}
+
+                        </td>
+                        <td class="{{ backgr }}">
+                        
+                        {{ licence.expirationdate|date("d.m.Y") }}
+                        </td>
+                        {% else %}
+                        <td>{{"-"}}</td>
+                        <td>{{"-"}}</td>
+                        <td>{{"-"}}</td>
+                        <td>{{"-"}}</td>
             {% endfor %}
-            </td>
-            <td>
-            {% for licence in lic  %}
-                <div class="{% if date(licence.expirationdate)|date("Y-m-d") < "now"|date_modify("+2 months")|date("Y-m-d") %}red {% endif %}
-                    {% if ("now"|date("Y") == licence.expirationdate|date("Y") and "now"|date("Y-m-d") < licence.expirationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
-                        {{ licence.licencenumber|striptags }}</div>
-                    {% else %}
-                        {{ "-" }}
-            {% endfor %}
-            </td>
             
-            <td>
-            {% for licence in lic  %}
-                <div class="{% if date(licence.expirationdate)|date("Y-m-d") < "now"|date_modify("+2 months")|date("Y-m-d") %}red {% endif %}
-                    {% if ("now"|date("Y") == licence.expirationdate|date("Y") and "now"|date("Y-m-d") < licence.expirationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
-                        {{ licence.issuedate|date("d.m.Y") }}</div>
-                    {% else %}
-                        {{ "-" }}
-            {% endfor %}
-            </td>
+         
+            <td>{{ data.birthday|date("d.m.Y") }}</td>
+            <td>{{ data.location|striptags }}</td>
+            <td>{{ data.streetaddress|striptags }}</td>
+            <td>{{ data.postcode|striptags }}</td>
             
-            <td>
-            {% for licence in lic  %}
-                <div class="{% if date(licence.expirationdate)|date("Y-m-d") < "now"|date("Y-m-d") %}red {% endif %}
-                    {% if ("now"|date("Y") == licence.expirationdate|date("Y") and "now"|date("Y-m-d") < licence.expirationdate|date("Y.m.d")) %}yellowbackground{% endif %}">
-                        {{ licence.expirationdate|date("d.m.Y") }}</div>
-                    {% else %}
-                        {{ "-" }}
-            {% endfor %}
-            </td>
+            {% if trainerdependentlist[data.trainerid]['phonenumbers'] is defined %}
+                {% set pns =trainerdependentlist[data.trainerid]['phonenumbers'] %}
+                {% else %}
+                    {% set pns ='' %}  
+                {% endif %}
+            
+            <td>{% for PN in pns %}
+                        {{ PN.phonenumber }}<br>
+                        {% else  %}
+                        {{ "-" }}    
+                    {% endfor %}</td>
+                    
+            <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>                    
+            <td>{{ data.mailbox is empty ? "-" : data.mailbox|striptags }}</td>
+
+            
+            
+
             </tr>
             {% endautoescape %} 
         {% endfor %}
@@ -220,5 +230,10 @@
                 <li class="active"><a href="{{ path(path, {'letter': cletter}) }}">{{ tabledata|length }} Einträge wurden gefunden</a></li>
                 </ul>         
             </div>           
-        </div>        
+        </div> 
+                        <div class="row">
+            <div class="col-md-12">
+                    <span class="strong">*( </span><span class="yellowsquare"></span><span class="strong">: Lizenz läuft in 2 Monaten ab,</span> <span class="redsquare"></span><span class="strong">: Lizenz ist abgelaufen )</span>
+            </div>
+          </div>
     {% endblock %}

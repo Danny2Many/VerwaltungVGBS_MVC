@@ -16,30 +16,25 @@ use Symfony\Component\Form\Extension\Core\Type\TimeType;
 
 
 class BaseSportsgroupType extends AbstractType{
-    protected $adminyear;
+    
     
     public function buildForm(FormBuilderInterface $builder, array $options){
-        
-        $this->adminyear=$options['adyear'];
+       // array('lastname', 'firstname')
         $builder
         
         ->add('name', SanitizedTextType::class, array ('label' => 'Sportgruppe:'))
         ->add('trainer', EntityType::class, array (
-            'class' => 'AppBundle:Trainer\Trainer',
-            'choice_label' =>array('lastname', 'firstname'),
-            'required' => true,'label' => 'Übungsleiter:'))
+            'class' => 'AppBundle:Trainer\Trainer','choice_label' =>'lastname','required' => true,'label' => 'Übungsleiter:'))
                      
-        ->add('substitute', EntityType::class, array(
-                        'class' => 'AppBundle:Trainer\Trainer',
-                        'choice_label' => 'lastname',
-                        'multiple' => true,
-                        'required' => false,
-                        'query_builder' => function (EntityRepository $er) {
-                        return $er->createQueryBuilder('s')
-                                  ->where('s.validfrom <='.$this->adminyear)
-                                  ->andWhere('s.validto >'.$this->adminyear);
-                        }
-                    ))        
+//        ->add('substitute', EntityType::class, array(
+//                        'class' => 'AppBundle:Trainer\Trainer',
+//                        'choice_label' => 'lastname',
+//                        'multiple' => true,
+//                        'required' => false,
+//                        'query_builder' => function (EntityRepository $er) {
+//                        return $er->createQueryBuilder('s');
+//                                 }
+//                    ))        
         ->add('day', ChoiceType::class, array ('choices' => array ('Montag' =>'Montag', 'Dienstag' => 'Dienstag','Mittwoch' => 'Mittwoch', 'Donnerstag' => 'Donnerstag', 'Freitag' => 'Freitag'),
              'choices_as_values' => true,
             'label' => 'Wochentag:'))      
@@ -55,7 +50,6 @@ class BaseSportsgroupType extends AbstractType{
         ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'speichern'))
         ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'abbrechen'))
         ->add('reset', ResetType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'zurücksetzen'));        
-       
     }
     
     public function configureOptions(OptionsResolver $resolver)
