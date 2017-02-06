@@ -14,10 +14,9 @@ class TrainerFocusType extends AbstractType{
     {
         $builder->add('theme', SanitizedTextType::class, array('label' => 'Schwerpunkt:'));
     }
+    
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => NULL,
-        ));
+        $resolver->setDefaults(array('data_class' => "AppBundle\Entity\TrainerFocus"));
     }
 }

@@ -158,7 +158,7 @@ class InventoryController extends Controller
                     'currroom'=>$currroom,
                     'currroomname'=>$currroomname,
                     'state'=>$state,
-                    'letter'=>$letter));
+                    ));
            }       
     /**
      * @Route("/inventar/anlegen", name="addobj")

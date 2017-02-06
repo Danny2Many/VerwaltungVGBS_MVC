@@ -26,26 +26,33 @@ class ObjectOrder {
    
     /**
      * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\length(max=25)
      */
    protected $invoicenumber;
    
     /**
      * @ORM\Column(type="date")
+     * @Assert\NotBlank()
      */
    protected $orderdate;
    
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank()
      */
    protected $orderprice;
    
     /**
      * @ORM\Column(type="string")
+     * @Assert\length(max=100)
      */
    protected $company;
    
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     * @Assert\length(max=5)
      */
    protected $quantity;
    

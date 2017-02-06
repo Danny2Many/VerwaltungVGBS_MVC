@@ -12,17 +12,7 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-    
      
-    
-    
-    
-  
-
-                                       
-
-
-    
     <div class="container">
         
         <div class="row vert-offset-bottom-2">
@@ -37,41 +27,8 @@
         
             <div class="row">
                 <div class="col-md-12">   
-                
-                            
-                            
                 <legend><h2>Stammdaten</h2></legend>
 
-                {% if ID is not defined %}
-
-                    <div class="dropdown">
-                        
-                        <button class="btn btn-info btn-lg dropdown-toggle" type="button" data-toggle="dropdown">Verwaltungsjahr: {{ adminyear }}
-                        <span class="caret"></span></button>
-                    
-                        <ul class="dropdown-menu">
-                            {% set end_year = date() | date('Y') %}
-                            {% set start_year = end_year - 5 %}
-                                        
-                            {% for year in end_year..start_year %}
-                                <li class="{% if year == adminyear %}active{% endif %}"><a href="
-                                                                                           
-                                        {% if ID is defined %}
-                                            {{path(path, {'adminyear': year, 'ID': ID })}}">{{year}}
-                                        {% else %}
-                                            {{path(path, {'adminyear': year })}}">{{year}}
-                                        {% endif %}
-                                        
-                                    </a></li>
-                            {% endfor %}
-                        
-                        </ul>
-                    </div>
-                            
-                            <br>
-                    
-                    {% endif %}
-                              
                     {% if (attribute(form, 'trainerid') is defined) %}
                         {{ form_row(form.trainerid) }}
                     {% endif %}     
@@ -93,46 +50,39 @@
                     </div>
                     <div class="form-group "><div class="col-sm-10 col-sm-push-2"><a href="#" class="btn-add" data-target="pn"><button class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>Telefonnr. hinzufügen</button></a></div></div>
 
-                    
                     {{ form_row(form.personaldata.email) }}
                     {{ form_row(form.type) }}
-{#                    {{ form_row(form.section) }}
-#}
-                    <div id="tf" data-prototype="{{ forms.textCollectionItem(form.theme.vars.prototype, 'theme', 'Schwerpunkt löschen')|e }}">
+                                        
+                    <div id="tf" data-prototype="{{ forms.focusItem(form.theme.vars.prototype, 'theme', 'Schwerpunkt löschen')|e }}">
                         {% for tf in form.theme %}
-                            {{ forms.textCollectionItem(tf, 'theme', 'Schwerpunkt löschen' ) }}
+                            {{ forms.focusItem(tf) }}
                         {% endfor %}
                     </div>
                     <div class="form-group "><div class="col-sm-10 col-sm-push-2"><a href="#" class="btn-add" data-target="tf"><button class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>Schwerpunkt hinzufügen</button></a></div></div>
-                              <legend><h2>Lizenzen</h2></legend>   
-
+                    
+                    <legend><h2>Lizenzen</h2></legend>   
                     <div id="rc" data-prototype="{{ forms.licenceCollectionItem(form.licence.vars.prototype)|e }}">
                         {% for rc in form.licence %}
                             {{ forms.licenceCollectionItem(rc) }}
                         {% endfor %}
                     </div>  
                     <div class="form-group "><div class="col-sm-10 col-sm-push-2"><a href="#" class="btn-add" data-target="rc"><button class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>Lizenz hinzufügen</button></a></div></div>
-  
-            </div>        
-                </div>   
-                  
+                </div>        
+            </div>   
 
         <div class="row vert-offset-top-1">
             <div class="col-md-12"> 
                 <div class="form-group">
                     <div class="col-sm-10 col-sm-push-2">
-                        <a href="{{ path('trainer_home', {'letter': cletter, 'adminyear': adminyear}) }}">
-                        {{ form_widget(form.save, {'attr': {'onclick': 'confirmaction(event, "Sie befinden sich im Verwaltungsjahr '~adminyear~'. Die zu speichernden Daten sind nur für dieses Jahr gültig. Wollen Sie diese Daten dennoch speichern?")'}}) }}
-                        </a> 
+                        {{ form_widget(form.save, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sicher dass Sie die eingegebenen Daten speichern wollen?"'}})}}
                         {{ form_widget(form.reset, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie dieses Formular zurücksetzen möchten?.")'}}) }}
 
                         {% if (attribute(form, 'delete') is defined) %}
                             {{ form_widget(form.delete, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie diesen Übungsleiter aus ihrer Datenbank entfernen möchten?")'}}) }}
                         {% endif %}
 
-                        <a href="{{ path('trainer_home', {'letter': cletter, 'adminyear': adminyear}) }}">{{ form_widget(form.cancel,
+                        <a href="{{ path('trainer_home') }}">{{ form_widget(form.cancel,
                             {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie diese Seite verlassen möchten? Ungespeicherte Daten werden dabei verloren gehen.")'}}) }}</a> 
-
                         {{ form_row(form._token) }}
                     </div>
                 </div>

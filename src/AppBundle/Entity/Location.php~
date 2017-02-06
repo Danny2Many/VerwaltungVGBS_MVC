@@ -1,0 +1,85 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="Location")
+ */
+class Location 
+{
+ /**
+  * @ORM\Id
+  * @ORM\Column(type="integer")
+  * @ORM\GeneratedValue(strategy="AUTO")
+  */   
+protected $locid;
+
+/**
+     *@ORM\Column (type="string")
+*/
+protected $locname;    
+
+/**
+     *@ORM\Column (type="string")
+*/
+protected $streetaddress;
+
+/**
+     *@ORM\Column (type="integer")
+*/
+protected $postcode;
+
+/**
+ * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Room", mappedBy="location",cascade={"persist"})
+ * @ORM\JoinColumn(name="locid",referencedColumnName="locid")
+ */
+protected $room;
+
+
+public function getLocID()
+    {
+     return $this->locid;
+    }
+ 
+public function setLocID($locid)
+    {
+    $this->locid=$locid;
+    }
+
+public function getLocName()
+    {
+     return $this->locname;
+    }
+ 
+public function setLocName($locname)
+    {
+    $this->locname=$locname;
+    }
+
+public function getStreetAddress()
+    {
+     return $this->streetaddress;
+    }
+ 
+public function setStreetaddress($streetaddress)
+    {
+    $this->streetaddress=$streetaddress;
+    }
+    
+public function getPostcode()
+    {
+     return $this->postcode;
+    }
+ 
+public function setPostcode($postcode)
+    {
+    $this->postcode=$postcode;
+    }
+ 
+    
+
+    
+}

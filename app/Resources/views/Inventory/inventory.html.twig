@@ -15,7 +15,7 @@
   ]  
   {% endblock %}
 {% block title %}Inventar - Stammdaten{% endblock %}
-{% block fixedcolnum %} 10 {% endblock %}
+{% block fixedcolnum %} 0 {% endblock %}
 {% block viewlink %}{{ path('inventory_home') }}{% endblock %}
 {% block InventarAktiv %} active {% endblock %}
 
@@ -27,7 +27,7 @@
     </div>
 {% endblock %}
 
-{#{% block color %} {{ colorclass }} {% endblock %}#}
+{% block color %} {{ colorclass }} {% endblock %}
 
 {#table header#}
 {% block thead %}
@@ -124,9 +124,9 @@
       <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Standort: {{currroomname}}
       <span class="caret"></span></button>
        <ul class="dropdown-menu">
-            <li {% if currroom=='alle' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':'alle','state':state, 'letter':letter})}}">alle</a></li>
+            <li {% if currroom=='alle' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':'alle','state':state, 'letter':cletter})}}">alle</a></li>
             {% for RL in roomlist %}
-            <li {% if RL.roomid==currroom %}class="active"{% endif %}><a href="{{ path('inventory_home', {'currroom': RL.roomid, 'state':state, 'letter':letter}) }}"> {{ RL.roomname}}</a></li>
+            <li {% if RL.roomid==currroom %}class="active"{% endif %}><a href="{{ path('inventory_home', {'currroom': RL.roomid, 'state':state, 'letter':cletter}) }}"> {{ RL.roomname}}</a></li>
             {% endfor %}
        </ul>
       </div>
@@ -138,14 +138,14 @@
    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Zustand: {{state}}
    <span class="caret"></span></button>
    <ul class="dropdown-menu">
-        <li {% if state=='alle' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom, 'state':'alle', 'letter':letter})}}">alle</a></li>
-        <li {% if state=='neu' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'neu', 'letter':letter})}}">neu</a></li>
-        <li {% if state=='gebraucht' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'gebraucht', 'letter':letter})}}">gebraucht</a></li>
-        <li {% if state=='sehr gut' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'sehr gut', 'letter':letter})}}">sehr gut</a></li>
-        <li {% if state=='gut' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'gut', 'letter':letter})}}">gut</a></li>
-        <li {% if state=='befriedigend' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'befriedigend', 'letter':letter})}}">befriedigend</a></li>
-        <li {% if state=='schlecht' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'schlecht', 'letter':letter})}}">schlecht</a></li>
-        <li {% if state=='sehr schlecht' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'sehr schlecht', 'letter':letter})}}">sehr schlecht</a></li>
+        <li {% if state=='alle' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom, 'state':'alle', 'letter':cletter})}}">alle</a></li>
+        <li {% if state=='neu' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'neu', 'letter':cletter})}}">neu</a></li>
+        <li {% if state=='gebraucht' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'gebraucht', 'letter':cletter})}}">gebraucht</a></li>
+        <li {% if state=='sehr gut' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'sehr gut', 'letter':cletter})}}">sehr gut</a></li>
+        <li {% if state=='gut' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'gut', 'letter':cletter})}}">gut</a></li>
+        <li {% if state=='befriedigend' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'befriedigend', 'letter':cletter})}}">befriedigend</a></li>
+        <li {% if state=='schlecht' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'schlecht', 'letter':cletter})}}">schlecht</a></li>
+        <li {% if state=='sehr schlecht' %}class="active"{% endif %}><a href="{{ path('inventory_home',{'currroom':currroom,'state':'sehr schlecht', 'letter':cletter})}}">sehr schlecht</a></li>
    </ul>
    </div>
   </div>
@@ -168,7 +168,7 @@
                     
                 {% endfor %}
         {# show how many objects were found#}
-                <li class="active"><a href="{{ path('inventory_home', {'currroom':currroom,'state':state,'letter': cletter}) }}">{{ tabledata|length }} Objekte wurden gefunden</a></li>
+                <li class="active"><a href="{{ path('inventory_home', {'currroom':currroom,'state':state,'letter': cletter}) }}">{{ tabledata|length }} Einträge wurden gefunden</a></li>
                 </ul>         
             </div>           
         </div>        

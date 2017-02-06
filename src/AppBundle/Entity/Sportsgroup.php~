@@ -101,7 +101,12 @@ class Sportsgroup {
 //        $this->substitute = new ArrayCollection();
 //    }
 
-   
+    /**
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Room",inversedBy="sportsgroup")
+     * @ORM\JoinColumn(name="roomid",referencedColumnName="roomid") 
+     */
+    private $room;
+    
     /**
      * Constructor
      */

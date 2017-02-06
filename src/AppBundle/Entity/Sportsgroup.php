@@ -5,8 +5,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
-
-
 /**
  * @ORM\Entity
  * @ORM\Table(name="Sportsgroup")
@@ -18,18 +16,11 @@ class Sportsgroup {
      */
     protected $sgid;
     
-
-    
-    
 //    /**
 //     * @OneToOne(targetEntity="BSSACert")
 //     * @JoinColumn(name="bssaid", referencedColumnName="bssaid")
 //     */
 //      protected $bssacert;
-      
-      
-      
-      
 //      protected $trainer;
 //      protected $substitute;
       
@@ -43,15 +34,6 @@ class Sportsgroup {
      */
     protected $nonmemsubscriber;
 
-    
-    /**
-     * @ORM\ManyToMany(targetEntity="Section")
-     * @ORM\JoinTable(name="Sportsgroup_Section",
-     *      joinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="secid", referencedColumnName="secid")}
-     *      )
-     */
-    private $section;
 
     /**
      * @ORM\Column(type="string")
@@ -68,7 +50,6 @@ class Sportsgroup {
     /**
      * @ORM\Column(type="time")
      * @Assert\NotBlank()
-     * 
      */
     protected $time;
     
@@ -77,8 +58,6 @@ class Sportsgroup {
      * 
      */
     protected $info;
-    
-
     
     /**
      * @ORM\Column(type="string")
@@ -96,20 +75,26 @@ class Sportsgroup {
     */
     protected $type;
 
-//    public function __construct() {
-//        $this->bssacert = new ArrayCollection();
-//        $this->substitute = new ArrayCollection();
-//    }
-
-   
+    /**
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Room",inversedBy="sportsgroup")
+     * @ORM\JoinColumn(name="roomid",referencedColumnName="roomid") 
+     */
+    private $room;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Trainer\Trainer", inversedBy="sportsgroupsub")
+     * @ORM\JoinTable(name="Trainer_SportsgroupSub", joinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")})
+     */
+    private $trainersub;
+    
     /**
      * Constructor
      */
     public function __construct()
     {
         $this->memsubscriber = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->nonmemsubscriber = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->section = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->trainersub= new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -373,36 +358,61 @@ class Sportsgroup {
     }
 
     /**
-     * Add section
+     * Set room
      *
-     * @param \AppBundle\Entity\Section $section
+     * @param \AppBundle\Entity\Room $room
      *
      * @return Sportsgroup
      */
-    public function addSection(\AppBundle\Entity\Section $section)
+    public function setRoom(\AppBundle\Entity\Room $room = null)
     {
-        $this->section[] = $section;
+        $this->room = $room;
 
         return $this;
     }
 
     /**
-     * Remove section
+     * Get room
      *
-     * @param \AppBundle\Entity\Section $section
+     * @return \AppBundle\Entity\Room
      */
-    public function removeSection(\AppBundle\Entity\Section $section)
+    public function getRoom()
     {
-        $this->section->removeElement($section);
+        return $this->room;
     }
 
     /**
-     * Get section
+     * Add trainersub
+     *
+     * @param \AppBundle\Entity\Trainer\Trainer $trainersub
+     *
+     * @return Sportsgroup
+     */
+public function addTrainersub(\AppBundle\Entity\Trainer\Trainer $trainersub)
+    {
+        $trainersub->addSportsgroupsub($this);
+        $this->trainersub[] = $trainersub;
+
+        return $this;
+    }
+    
+   /**
+     * Remove trainersub
+     *
+     * @param \AppBundle\Entity\Trainer\Trainer $trainersub
+     */
+    public function removeTrainersub(\AppBundle\Entity\Trainer\Trainer $trainersub)
+    {
+        $this->trainersub->removeElement($trainersub);
+    }
+
+    /**
+     * Get trainersub
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getSection()
+    public function getTrainersub()
     {
-        return $this->section;
-    }
+        return $this->trainersub;
+    }  
 }

@@ -7,14 +7,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="TrainerLicence")
- * @ORM\HasLifecycleCallbacks()
  */
 class TrainerLicence {
     
-    
     /**
      * @ORM\Id
-     * @ORM\Column(type="string") 
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO") 
      */
     protected $liid;
     
@@ -24,12 +23,16 @@ class TrainerLicence {
     protected $trainerid;
     
     /**
-     * @ORM\Column(type="string") 
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\length(max=255) 
      */
     protected $licencetype;
     
     /**
-     * @ORM\Column(type="string") 
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\length(max=50) 
      */
     protected $licencenumber;
     
@@ -47,61 +50,27 @@ class TrainerLicence {
      */
     protected $expirationdate;
     
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $validto;
     
     /**
-     * @ORM\Id
-     * @ORM\Column(type="string")
-     */
-    protected $validfrom;  
+    * @ORM\ManyToOne(targetEntity="Trainer", inversedBy="licence")
+    * @ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")
+    */
+    private $trainer;
     
-    public function __toString() {
-        return $this->liid.'/li/Trainer\TrainerLicence'; 
-    }
+    
 
     /**
-     * Set validto
+     * Set liid
      *
-     * @param string $validto
+     * @param string $liid
      *
      * @return TrainerLicence
      */
-    public function setValidto($validto)
+    public function setLiid($liid)
     {
-        $this->validto = $validto;
+        $this->liid = $liid;
 
         return $this;
-    }
-
-    /**
-     * Get Validto
-     *
-     * @return string
-     */
-    public function getValidto()
-    {
-        return $this->validto;
-    }
-
-    public function setValidfrom($validfrom)
-    {
-        
-        $this->validfrom = $validfrom;
-
-        return $this;
-    }
-
-    /**
-     * Get validfrom
-     *
-     * @return string
-     */
-    public function getValidfrom()
-    {
-        return $this->validfrom;
     }
 
     /**
@@ -257,63 +226,4 @@ class TrainerLicence {
     {
         return $this->trainer;
     }
-
-    /**
-     * Set liid
-     *
-     * @param integer $liid
-     *
-     * @return TrainerLicence
-     */
-    public function setLiid($liid)
-    {
-        $this->liid = $liid;
-
-        return $this;
-    }
-
-//    /**
-//     * Set deleted
-//     *
-//     * @param \DateTime $deleted
-//     *
-//     * @return TrainerLicence
-//     */
-//    public function setDeleted($deleted)
-//    {
-//        $this->deleted = $deleted;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get deleted
-//     *
-//     * @return \DateTime
-//     */
-//    public function getDeleted()
-//    {
-//        return $this->deleted;
-//    }
-//
-//    /**
-//     * @ORM\PrePersist
-//     */
-//    public function setRecorded()
-//    {
-//        $now= new \DateTime();
-//        $this->recorded = $now->format('Y-m-d');
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * Get recorded
-//     *
-//     * @return \DateTime
-//     */
-//    public function getRecorded()
-//    {
-//        return $this->recorded;
-//    }
 }

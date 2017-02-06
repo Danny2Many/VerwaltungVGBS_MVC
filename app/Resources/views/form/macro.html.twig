@@ -19,10 +19,7 @@
 
 
 {% macro rehabCollectionItem(formData) %}
-    
-    
-        
-        {% set name = formData.vars.full_name %}
+    {% set name = formData.vars.full_name %}
     
  <div class="panel panel-default" data-content="{{ name }}">
         <div class="panel-heading"><h3 class="panel-title pull-left">Rehaschein</h3> <a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> löschen</button></a><div class="clearfix"></div></div>
@@ -53,16 +50,8 @@
  </div>
 {% endmacro %}
 
-
-
-
-
 {% macro sportsgrCollectionItem(formData) %}
-    
-    
-        
-        {% set name = formData.vars.full_name %}
-    
+    {% set name = formData.vars.full_name %}
     
     <div class="panel panel-default" data-content="{{ name }}">
           <div class="panel-heading"><h3 class="panel-title pull-left">Sportgruppenzuweisung</h3> <a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> löschen</button></a><div class="clearfix"></div></div>
@@ -102,10 +91,6 @@
     </div>
 {% endmacro %}
 
-
-
-
-
 {% macro bssaCollectionItem(formData) %}
         
     {% set name = formData.vars.full_name %}
@@ -141,57 +126,60 @@
     <div class="col-sm-3">
     
 {#           <a class="btn-remove" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span>BSSA-Zertifikat  löschen</button></a>#}
-</div></div>  
+</div>
+   </div>  
     </div>
     </div>
 {% endmacro %}
 
-
+{#macro for the Trainer-Licence form#}
 {% macro licenceCollectionItem(formData) %}   
-        
-        {% set name = formData.vars.full_name %}
+    {% set name = formData.vars.full_name %}
+<div class="panel panel-default" data-content="{{ name }}">
+    <div class="panel-heading"><h3 class="panel-title pull-left">Lizenzinformationen</h3><a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> löschen</button></a><div class="clearfix"></div></div>    
+    <div class="panel-body">
+        <div class="form-group" data-content="{{ name }}">
+            {{ form_label(attribute(formData, 'issuedate')) }}
+            <div class="col-sm-3">
+                {{ form_widget(attribute(formData, 'issuedate')) }}  
+            </div>
+            <div class="col-sm-1">
+                {{ form_label(attribute(formData, 'licencenumber')) }}   
+            </div>
+            <div class="col-sm-3">         
+                {{ form_widget(attribute(formData, 'licencenumber')) }}   
+            </div> 
+        </div>  
     
-        <div class="panel panel-default" data-content="{{ name }}">
-        <div class="panel-body">
-    
-    <div class="form-group" data-content="{{ name }}">
-        
-    {{ form_label(attribute(formData, 'issuedate')) }}
-    <div class="col-sm-3">
-    {{ form_widget(attribute(formData, 'issuedate')) }}  
-    </div>
-    <div class="col-sm-1">
-    {{ form_label(attribute(formData, 'licencenumber')) }}   
-    </div>
-    <div class="col-sm-3">         
-    {{ form_widget(attribute(formData, 'licencenumber')) }}   
-    </div> 
-    
-    </div>  
-    
-    <div class="form-group" data-content="{{ name }}">
-        
-    {{ form_label(attribute(formData, 'expirationdate')) }}
-    <div class="col-sm-3">
-    {{ form_widget(attribute(formData, 'expirationdate')) }}      
-    </div>
-    <div class="col-sm-1">
-    {{ form_label(attribute(formData, 'licencetype')) }}   
-    </div>
-    <div class="col-sm-3">         
-    {{ form_widget(attribute(formData, 'licencetype')) }}     
-    </div>
-       <div class="col-sm-3">
-          
-            <a class="btn-remove" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> Lizenz löschen</button></a>
-
+        <div class="form-group" data-content="{{ name }}">
+            {{ form_label(attribute(formData, 'expirationdate')) }}
+            <div class="col-sm-3">
+                {{ form_widget(attribute(formData, 'expirationdate')) }}      
+            </div>
+            <div class="col-sm-1">
+                {{ form_label(attribute(formData, 'licencetype')) }}   
+            </div>
+            <div class="col-sm-3">         
+                {{ form_widget(attribute(formData, 'licencetype')) }}     
+            </div>  
         </div>
     </div>
-             </div>
-    </div>
-        
+</div>
 {% endmacro %}
 
+{#macro for the Trainer-Focus form#}
+{% macro focusItem(formData) %}
+  {% set name = formData.vars.full_name %}
+    <div class="form-group" data-content="{{ name }}">
+                {{ form_label(attribute(formData, 'theme')) }}
+                <div class="col-sm-3">
+                {{ form_widget(attribute(formData, 'theme')) }}
+                </div>
+       <div class="col-sm-7">          
+           <a class="btn-remove" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> Schwerpunkt löschen</button></a>
+       </div>           
+    </div>
+{% endmacro %}
 
 {#macro for the ObjectOrder form#}
 {% macro orderItem(formData) %}
@@ -218,7 +206,6 @@
                 <div class="col-sm-3">
                     {{form_widget(attribute(formData,'orderprice'))}}
                 </div>
-                
                 <div class="col-sm-2">
                 {{form_label(attribute(formData,'quantity'))}}
                 </div>
@@ -232,9 +219,7 @@
                 <div class="col-sm-10">
                     {{form_widget(attribute(formData,'company'))}}
                 </div>
-                
-    </div>
-    
+            </div>
         </div>    
     </div>           
 {% endmacro %}
@@ -242,7 +227,6 @@
 {#macro for the Stocktaking form#}
 {% macro stocktakingItem(formData) %}
   {% set name = formData.vars.full_name %}
-    
     
     <div class="panel panel-default" data-content="{{ name }}">
         <div class="panel-heading"><h3 class="panel-title pull-left">Inventurinformation</h3><a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> löschen</button></a><div class="clearfix"></div></div>    
@@ -273,10 +257,22 @@
                 {{form_widget(attribute(formData,'state'))}}
                 </div>
             </div>
-    
-    
         </div>
-    
     </div>           
 {% endmacro %}
 
+{#macro for the Room form#}
+{% macro roomItem(formData) %}
+  {% set name = formData.vars.full_name %}
+    <div class="panel panel-default" data-content="{{ name }}">
+        <div class="panel-heading"><h3 class="panel-title pull-left">Raum</h3><a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> löschen</button></a><div class="clearfix"></div></div>    
+        <div class="panel-body">
+            <div class="form-group">
+                {{ form_label(attribute(formData, 'roomname')) }}
+                <div class="col-sm-3">
+                {{ form_widget(attribute(formData, 'roomname')) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
