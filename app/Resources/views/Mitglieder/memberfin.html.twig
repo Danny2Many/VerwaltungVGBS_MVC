@@ -19,7 +19,7 @@
                             {% for loopyear in 2004.."now"|date("Y") %}
                            
                             
-                                <li {% if loopyear == year %}class="active"{% endif %}><a href="#">{{ loopyear }}</a></li>
+                                <li {% if loopyear == year %}class="active"{% endif %}><a href="{{ path('member_fin', {'year': loopyear, 'halfyear': 1, 'letter': cletter}|merge(app.request.query.all)) }}">{{ loopyear }}</a></li>
                             {% endfor %}
                         </ul>
                     </div> 
@@ -30,8 +30,8 @@
   
     <div class="inline">
      <ul class="pagination-own pagination">
-  <li {% if halfyear == 1 %} class="active" {% endif %}><a href="{{ path('member_fin', {'halfyear': 1, 'letter': cletter}|merge(app.request.query.all)) }}">1. Halbjahr</a></li>
-  <li {% if halfyear == 2 %} class="active" {% endif %}><a href="{{ path('member_fin', {'halfyear': 2, 'letter': cletter}|merge(app.request.query.all)) }}">2. Halbjahr</a></li>
+  <li {% if halfyear == 1 %} class="active" {% endif %}><a href="{{ path('member_fin', {'year': year, 'halfyear': 1, 'letter': cletter}|merge(app.request.query.all)) }}">1. Halbjahr</a></li>
+  <li {% if halfyear == 2 %} class="active" {% endif %}><a href="{{ path('member_fin', {'year': year, 'halfyear': 2, 'letter': cletter}|merge(app.request.query.all)) }}">2. Halbjahr</a></li>
   
 </ul>
     </div>
@@ -183,13 +183,13 @@
   {% for letter in 'a'|upper..'z'|upper %}
   {% if letter == cletter %}
      
-      <li class="active"><a href="{{ path(path, {'letter': letter, 'year': year, 'halfyear': halfyear}) }}">{{ letter }}</a></li>
+      <li class="active"><a href="{{ path(path, {'year': year, 'halfyear': halfyear, 'letter': cletter}) }}">{{ letter }}</a></li>
       
       {% else %}
-      <li><a href="{{ path(path, {'letter': letter, 'year': year, 'halfyear': halfyear}) }}">{{ letter }}</a></li>
+      <li><a href="{{ path(path, {'year': year, 'halfyear': halfyear, 'letter': cletter}) }}">{{ letter }}</a></li>
   {% endif %}
   {% endfor %}
-  <li class="active"><a href="{{ path(path, {'letter': cletter, 'year': year, 'halfyear': halfyear}) }}">{{ tabledata|length }} Person/en wurden gefunden</a></li>
+  <li class="active"><a href="{{ path(path, {'year': year, 'halfyear': halfyear, 'letter': cletter}) }}">{{ tabledata|length }} Person/en wurden gefunden</a></li>
 </ul> 
         
             </div>

@@ -23,15 +23,12 @@ class MemberFinController extends Controller{
         
         $memrepository = $this->getDoctrine()->getRepository('AppBundle:Mitglieder\Member');
 
-
-        
-        
-        
-        $qb = $memrepository->createQueryBuilder('m');
-
-        
-           
     
+        $qb = $memrepository->createQueryBuilder('m');
+        $qb->where('m.year', $year);
+           
+
+
         $choices=array('Mitgliedsnr.' => 'memid',
         'Name' => 'lastname',
         'Vorname' => 'firstname',
