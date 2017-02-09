@@ -65,11 +65,11 @@
                 <td>{{ data.memid }}</td>
                 
                 
-                <td>{% for SG in data.sportsgroup %}                     
+{#                <td>{% for SG in data.sportsgroup %}                     
                     {{SG.sportsgroup.section|join('|') }}<br>
                 {% else %}
                     {{ "-" }}
-                {% endfor %}</td>
+                {% endfor %}</td>#}
                
                 <td>{{ data.state == 1 ? "aktiv" : "inaktiv" }}</td>
                

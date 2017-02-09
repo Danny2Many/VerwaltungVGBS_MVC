@@ -82,7 +82,7 @@ class Sportsgroup {
     private $room;
     
     /**
-     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Trainer\Trainer", inversedBy="sportsgroupsub")
+     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Trainer\Trainer", mappedBy="sportsgroupsub")
      * @ORM\JoinTable(name="Trainer_SportsgroupSub", joinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")})
      */
