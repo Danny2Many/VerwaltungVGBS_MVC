@@ -8,12 +8,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class EditSportsgroupType extends BaseSportsgroupType {
     public function buildForm(FormBuilderInterface $builder, array $options){
         parent::buildForm($builder, $options);
-        $builder->add('delete', SubmitType::class, array('attr' => array('class' => 'btn btn-danger'), 'label' => 'löschen'));
+        $builder->add('sgid',IntegerType::class, array('label' => 'Sportgruppennummer:', 'required' => false, 'disabled' => true) )
+                ->add('delete', SubmitType::class, array('attr' => array('class' => 'btn btn-danger'), 'label' => 'löschen'));
           
     }
     public function configureOptions(OptionsResolver $resolver)
-        {$resolver->setDefaults(array(
-//            'data_class' => 'AppBundle\Entity\Nichtmitglieder\NonMemSportsgroup',
-            'adyear' => NULL,));
+        {
+        $resolver->setDefaults(array('data_class' => 'AppBundle\Entity\Sportsgroup'));
         }
 }

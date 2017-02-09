@@ -46,11 +46,17 @@ class Trainer extends PersonalData {
     protected $state;
     
     /**
-     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Sportsgroup", inversedBy="trainersub")
+     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Sportsgroup", mappedBy="trainersub")
      * @ORM\JoinTable(name="Trainer_SportsgroupSub", joinColumns={@ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="sgid", referencedColumnName="sgid")})
      */
     private $sportsgroupsub;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Sportsgroup", inversedBy="trainer")
+     * @ORM\JoinColumn(name="trainerid",referencedColumnName="trainerid")
+     */
+    Private $sportsgroup;
     
     /**
      * Constructor

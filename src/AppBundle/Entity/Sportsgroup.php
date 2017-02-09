@@ -74,7 +74,12 @@ class Sportsgroup {
     * @ORM\Column(type="string")
     */
     protected $type;
-
+    
+    /**
+    * @ORM\Column(type="integer")
+    */
+    protected $roomid;
+    
     /**
      * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Room",inversedBy="sportsgroup")
      * @ORM\JoinColumn(name="roomid",referencedColumnName="roomid") 
@@ -87,13 +92,30 @@ class Sportsgroup {
      *      inverseJoinColumns={@ORM\JoinColumn(name="trainerid", referencedColumnName="trainerid")})
      */
     private $trainersub;
+
+    /**
+    * @ORM\Column(type="integer")
+    */
+    protected $trainerid;
+
+    /**
+     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\BSSACert",inversedBy="sportsgroup")
+     * @ORM\JoinColumn(name="bssaid",referencedColumnName="bssaid")
+     */
+    private $bssacert;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\Trainer\Trainer",mappedBy="sportsgroup")
+     * 
+     */
+    private $trainer;
     
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->memsubscriber = new \Doctrine\Common\Collections\ArrayCollection();
+    //    $this->memsubscriber = new \Doctrine\Common\Collections\ArrayCollection();
         $this->trainersub= new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -414,5 +436,68 @@ public function addTrainersub(\AppBundle\Entity\Trainer\Trainer $trainersub)
     public function getTrainersub()
     {
         return $this->trainersub;
-    }  
+    }
+    
+    public function getTrainerid()
+    {
+        return $this->trainerid;
+    }
+
+     /**
+     * Add bssa
+     *
+     * @param \AppBundle\Entity\BSSACert $bssa
+     *
+     * @return Sportsgroup
+     */
+    public function addBssacert(\AppBundle\Entity\BSSACert $bssa)
+    {
+        $bssa->setSportsgroup($this);
+        $this->bssacert[] = $bssa;
+
+        return $this;
+    }
+    
+   /**
+     * Remove bssa
+     *
+     * @param \AppBundle\Entity\BSSACert $bssa
+     */
+    public function removeBssacert(\AppBundle\Entity\BSSACert $bssa)
+    {
+        $this->bssacert->removeElement($bssa);
+    }
+    
+    public function getBssacert()
+    {
+        return $this->bssacert;
+    }
+    
+    public function addTrainer(\AppBundle\Entity\Trainer\Trainer $trainer)
+    {
+     $trainer->setSportsgroup($this);
+     $this->trainer[]=$trainer;
+    }
+    
+    public function removeTrainer(\AppBundle\Entity\Trainer\Trainer $trainer)
+    {
+     $this->trainer->removeElement($trainer);
+    }
+    
+    public function getTrainer()
+    {
+        return $this->trainer;
+    }
+    
+    public function setRoomid($roomid)
+    {
+        $this->roomid = $roomid;
+
+        return $this;
+    }
+
+    public function getRoomid()
+    {
+        return $this->roomid;
+    }
 }

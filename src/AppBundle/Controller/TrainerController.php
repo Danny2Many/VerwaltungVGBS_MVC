@@ -10,6 +10,7 @@ use AppBundle\Form\Type\Trainer\AddTrainerType;
 use AppBundle\Form\Type\Trainer\EditTrainerType;
 
 use AppBundle\Entity\Trainer\Trainer;
+use AppBundle\Entity\Sportsgroup;
 //use AppBundle\Entity\Trainer\TrainerPhoneNumber;
 //use AppBundle\Entity\Trainer\TrainerFocus;
 //use AppBundle\Entity\Trainer\TrainerLicence;
@@ -146,6 +147,10 @@ class TrainerController extends Controller
     public function addtrainerAction(Request $request) 
     {        
      $trainer = new Trainer();
+     $phonenumber=new \AppBundle\Entity\Trainer\TrainerPhoneNumber();
+     $focus=new \AppBundle\Entity\Trainer\TrainerFocus();
+     $trainer->addPhonenumber($phonenumber);
+     $trainer->addTheme($focus);
      $addtrainerform = $this->createForm(AddTrainerType::class, $trainer);
      $addtrainerform->handleRequest($request);
        
@@ -161,7 +166,7 @@ class TrainerController extends Controller
      return $this->render('Trainer/trainerform.html.twig',
                    array(
                          'form'=>$addtrainerform->createView(),                    
-                         'title'=>'Übungsleiter anlegen'
+                         'title'=>'Trainer anlegen'
                         ));        
     }
 //-------------------------------------------------------------------------------------------------   
