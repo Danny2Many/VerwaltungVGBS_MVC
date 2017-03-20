@@ -23,7 +23,7 @@ class MemDuesPayed {
     
     
         /**
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Dues", inversedBy="member", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Dues\Dues", inversedBy="member", cascade={"persist"})
      * @ORM\JoinColumn(name="dueid", referencedColumnName="dueid")
      */    
     protected $due;

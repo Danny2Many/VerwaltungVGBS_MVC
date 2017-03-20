@@ -16,13 +16,7 @@ use AppBundle\Form\Type\Mitglieder\EditMemberType;
 
 use AppBundle\Entity\Mitglieder\MemPhoneNumber;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Common\Collections\ArrayCollection;
-use AppBundle\Entity\MemYearInfo;
-use AppBundle\Entity\MemMonthlyDues;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Form\FormError;
-use AppBundle\Services\FunctionManager;
-use AppBundle\Services\IndexManager;
+
 
 
 
