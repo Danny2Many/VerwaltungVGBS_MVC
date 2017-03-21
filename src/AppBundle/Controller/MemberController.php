@@ -22,12 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MemberController extends Controller
 {
-    
-    
-    
-    
-    
-    
+
     /**
      * @Route("/mitglieder/{letter}", defaults={"letter"="A"}, name="member_home", requirements={"letter": "[A-Z]"})
      */
@@ -230,12 +225,7 @@ class MemberController extends Controller
         $phonenumber = new MemPhoneNumber();
         $m_sg= new \AppBundle\Entity\Mitglieder\Member_Sportsgroup();
   
-        
-
-    
-        
-        
-                   
+              
         $member->addPhonenumber($phonenumber);               
         $member->addSportsgroup($m_sg);
 

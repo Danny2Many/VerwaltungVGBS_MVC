@@ -43,7 +43,7 @@ class Dues {
     protected $member;
     
          /**
-     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Mitglieder\Member_Dues", mappedBy="due")
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Dues\Price", mappedBy="due")
      */
     protected $price;
     

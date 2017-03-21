@@ -23,7 +23,6 @@ use AppBundle\Form\Type\RehabCertType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Doctrine\ORM\EntityRepository;
 use AppBundle\Form\Type\SportsgroupType;
 
 class BaseMemberType extends AbstractType{
@@ -33,9 +32,6 @@ class BaseMemberType extends AbstractType{
 public function buildForm(FormBuilderInterface $builder, array $options)
         
     {
-    
-
-    
 
         $builder
           ->add('personaldata', PersonalDataType::class, array(
