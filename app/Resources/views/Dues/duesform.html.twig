@@ -1,0 +1,113 @@
+
+
+{% extends "basic.html.twig" %}
+
+
+{% import 'form/macro.html.twig' as forms %}
+
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+
+
+
+
+
+
+
+
+{% block javascriptsrc %} 
+    <script type="text/javascript" src="{{ asset('js/jquery-2.1.4.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/myfunctions.js') }}"></script>
+{% endblock %}
+
+
+
+{% block title %}{{ title }}{% endblock %}
+
+
+
+{% block body %}
+    <div class="container">
+       
+        <div class="row vert-offset-bottom-2">
+           <div class="col-md-12">
+         <div class="alert alert-info">
+             <strong>{% include 'form/requiredtext.html' %}</strong> {{ form_errors(form) }}
+            </div>
+           </div>
+        </div>
+            
+    {{ form_start(form) }}
+    
+    <div class="row">
+           <div class="col-md-12">
+  
+
+
+       
+       
+       {% if (attribute(form, 'dueid') is defined) %}
+           {{ form_row(form.dueid) }}
+       {% endif %}
+       
+       {{ form_row(form.ifcustom) }}
+       {{ form_row(form.name) }}
+       {{ form_row(form.description) }}
+        
+      
+       
+
+        
+     
+    
+               </div>
+            </div>
+
+
+     <div class="row">
+           <div class="col-md-12 vert-offset-top-2">
+        <legend><h2>Preishistorie</h2></legend>
+        
+  
+   
+       
+         <div id="price" data-prototype="{{ forms.duePriceCollectionItem(form.price.vars.prototype)|e }}">
+      {% for price in form.price %}
+            {{ forms.duePriceCollectionItem(price) }}
+        {% endfor %}
+        
+       </div>
+
+  
+          </div>
+            </div>
+
+       
+       
+        
+        
+         <div class="row vert-offset-top-1">
+           <div class="col-md-12"> 
+         <div class="form-group">
+             <div class="col-sm-10 col-sm-push-2">
+  {{ form_widget(form.save) }}
+  {{ form_widget(form.reset, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie dieses Formular zurücksetzen möchten?")'}}) }}
+
+{% if (attribute(form, 'delete') is defined) %}
+    {{ form_widget(form.delete, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie diesen Beitrag aus ihrer Datenbank entfernen möchten?")'}}) }}
+ 
+{% endif %}
+  <a href="{{ path('dues_home') }}">{{ form_widget(form.cancel, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie diese Seite verlassen möchten? Ungespeicherte Daten werden dabei verloren gehen.")'}}) }}</a>
+ 
+  {{ form_row(form._token) }}
+             </div>
+        </div>
+           </div>
+         </div>
+    
+
+
+    {{ form_end(form, {'render_rest': false}) }}
+            
+    </div>
+{% endblock %}

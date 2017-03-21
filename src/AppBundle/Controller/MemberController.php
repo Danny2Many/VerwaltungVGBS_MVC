@@ -232,13 +232,7 @@ class MemberController extends Controller
         $addmemform = $this->createForm(AddMemberType::class, $member);
         $addmemform->handleRequest($request);
      
-//        echo $addmemform->getErrorsAsString();
-
-        echo $addmemform->getErrors(true);
-        
-        
-        
-        
+    
         //if the form is valid -> persist it to the database
         if($addmemform->isSubmitted() && $addmemform->isValid()){
 

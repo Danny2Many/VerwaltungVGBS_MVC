@@ -47,7 +47,12 @@ class Dues {
      */
     protected $price;
     
-
+  /**
+     * @ORM\Column(type="string")
+     * 
+     * 
+     */
+    protected $description;
     
   /**
      * @ORM\Column(type="integer")
@@ -161,14 +166,16 @@ class Dues {
         return $this->ifcustom;
     }
 
+   
+
     /**
      * Add price
      *
-     * @param \AppBundle\Entity\Mitglieder\Member_Dues $price
+     * @param \AppBundle\Entity\Dues\Price $price
      *
      * @return Dues
      */
-    public function addPrice(\AppBundle\Entity\Mitglieder\Member_Dues $price)
+    public function addPrice(\AppBundle\Entity\Dues\Price $price)
     {
         $this->price[] = $price;
 
@@ -178,9 +185,9 @@ class Dues {
     /**
      * Remove price
      *
-     * @param \AppBundle\Entity\Mitglieder\Member_Dues $price
+     * @param \AppBundle\Entity\Dues\Price $price
      */
-    public function removePrice(\AppBundle\Entity\Mitglieder\Member_Dues $price)
+    public function removePrice(\AppBundle\Entity\Dues\Price $price)
     {
         $this->price->removeElement($price);
     }
@@ -193,5 +200,31 @@ class Dues {
     public function getPrice()
     {
         return $this->price;
+    }
+
+   
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return Dues
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }
