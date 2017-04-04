@@ -218,7 +218,7 @@ class SportsgroupController extends Controller {
         $originaltrainersubs = new ArrayCollection();
         
         
-        foreach($sportsgroup->getBssacert()as $bssa)
+        foreach($sportsgroup->getBssacert() as $bssa)
             {
              $originalbssacerts->add($bssa);
             }
