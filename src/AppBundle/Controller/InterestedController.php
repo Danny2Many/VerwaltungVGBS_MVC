@@ -78,14 +78,16 @@ class InterestedController  extends Controller{
     public function editinterestedAction(Request $request, $ID, $letter){
         $doctrine=$this->getDoctrine();
         $manager= $doctrine->Manager();
-        $interested=$manager->getRepository('AppBundle:Interested\Interested')->findOneBy(array('intvid'=>$ID));
+        $interested=$manager->getRepository('AppBundle:Interested\Interested')->findOneBy(array('intid'=>$ID));
         //throw an exceptopn if the object doesn't exist
         //only happens when the object ID is entered directly in the URL
         if(!$object){
             throw $this->createNotFoundException('Es konnte kein Interessent mit der ID '.$ID' gefunden werden');
         }
             
-        
+    //Creating ArrayCollections for...?
+    //  -
+    //  -
         
     }
     

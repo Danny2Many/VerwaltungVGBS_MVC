@@ -1,0 +1,27 @@
+{% extends "basic.html.twig" %}
+{% import 'form/macro.html.twig' as forms %}
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% block javascriptsrc %} 
+    <script type="text/javascript" src="{{ asset('js/jquery-2.1.4.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/myfunctions.js') }}"></script>
+{% endblock %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row vert-offset-bottom-2">
+        <div class="col-md-12">
+            <div class="alert alert-info">
+                <strong>{% include 'form/requiredtext.html' %}</strong>
+            </div>
+        </div>
+    </div>   
+    
+    {{form_start(form)}}
+    <div class="row">    
+    <!-- Daten für Interessenten  -->    
+    </div>  
+    
+{% endblock %}   
