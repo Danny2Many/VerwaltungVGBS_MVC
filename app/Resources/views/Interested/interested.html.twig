@@ -1,0 +1,32 @@
+{% extends 'basic.html.twig' %}
+{% form_theme searchform 'bootstrap_3_layout.html.twig' %}
+
+{% block viewlink %}{{ path('interested_home') }}{% endblock %}
+{% block title %} Interessenten {% endblock %}
+{% block viewname %} Interessenten {% endblock %}
+
+{% block fixedcolnum %} 5 {% endblock %}
+
+{% block add %}
+    <a href="{{ path('addinterested', {'letter': cletter}) }}"> <button class="add btn btn-default">
+      <span class="glyphicon glyphicon-plus"></span> Neuen Interessenten anlegen
+        </button></a>  
+{% endblock %}
+
+{% block color %} {{ colorclass }} {% endblock %}
+
+<th>Bearb.</th>
+<th>Status</th> <!-- Differenzierung zwischen Neu/Mitg/NichtMitg. -->
+<th>ID</th>
+<th>Anr.</th>
+<th>Name</th>
+<th>Vorname</th>
+<th>Geb.Datum</th>
+<th>Ort</th>
+<th>Strasse, Hausnr</th>
+<th>PLZ</th>
+<th>Postfach</th>
+<th>Telefon</th>
+<th>Mitglieder-Sportgr.</th> <!-- Token der Sportkurse/-gruppen -->
+<th>NichtMitgl.-Sportgr.</th> <!-- Token der Sportkurse/-gruppen -->
+<th>Sportkurs</th>
