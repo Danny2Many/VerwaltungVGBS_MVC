@@ -17,14 +17,15 @@ class EditMemberType extends BaseMemberType{
         parent::buildForm($builder, $options);
        $builder->add('tribute',SanitizedTextType::class, array('label' => 'Ehrung:', 'required' => false) )
                ->add('memid',SanitizedTextType::class, array('label' => 'Mitgliedsnummer:', 'required' => false, 'disabled' => true) )
-               ->add('delete', SubmitType::class, array('attr' => array('class' => 'btn btn-danger'), 'label' => 'löschen'));   
+               ->add('delete', SubmitType::class, array('attr' => array('class' => 'btn btn-danger'), 'label' => 'Löschen'));   
 
     }
     
          public function configureOptions(OptionsResolver $resolver)
 {
     $resolver->setDefaults(array(
-        'data_class' => 'AppBundle\Entity\Mitglieder\Member'
+        'data_class' => 'AppBundle\Entity\Mitglieder_NichtMitglieder\Member',
+        'typeSymbol' => null
         
     ));
 }

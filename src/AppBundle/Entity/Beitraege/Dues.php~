@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace AppBundle\Entity\Dues;
+namespace AppBundle\Entity\Beitraege;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,6 +18,15 @@ use Doctrine\Common\Collections\ArrayCollection;
  * 
  */
 class Dues {
+    
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->member = new ArrayCollection();
+        $this->duescharge = new ArrayCollection();
+    }
     
      /**
      * @ORM\Id
@@ -42,10 +51,11 @@ class Dues {
      */
     protected $member;
     
-         /**
-     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Dues\Price", mappedBy="due")
+    /**
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Beitraege\DuesPrice", mappedBy="due",cascade={"persist"})
+     * @ORM\OrderBy({"validfrom" = "DESC"})
      */
-    protected $price;
+    protected $duescharge;
     
   /**
      * @ORM\Column(type="string")
@@ -59,9 +69,14 @@ class Dues {
      * 
      * 
      */
-    protected $ifcustom;
+    protected $type;
     
-    
+      /**
+     * @ORM\Column(type="integer")
+     * 
+     * 
+     */
+    protected $state;
 
     /**
      * Get dueid
@@ -99,14 +114,7 @@ class Dues {
 
 
     
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->member = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->price = new \Doctrine\Common\Collections\ArrayCollection();
-    }
+
 
     /**
      * Add member
@@ -142,67 +150,9 @@ class Dues {
         return $this->member;
     }
 
-    /**
-     * Set ifcustom
-     *
-     * @param integer $ifcustom
-     *
-     * @return Dues
-     */
-    public function setIfcustom($ifcustom)
-    {
-        $this->ifcustom = $ifcustom;
-
-        return $this;
-    }
-
-    /**
-     * Get ifcustom
-     *
-     * @return integer
-     */
-    public function getIfcustom()
-    {
-        return $this->ifcustom;
-    }
 
    
 
-    /**
-     * Add price
-     *
-     * @param \AppBundle\Entity\Dues\Price $price
-     *
-     * @return Dues
-     */
-    public function addPrice(\AppBundle\Entity\Dues\Price $price)
-    {
-        $this->price[] = $price;
-
-        return $this;
-    }
-
-    /**
-     * Remove price
-     *
-     * @param \AppBundle\Entity\Dues\Price $price
-     */
-    public function removePrice(\AppBundle\Entity\Dues\Price $price)
-    {
-        $this->price->removeElement($price);
-    }
-
-    /**
-     * Get price
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-   
 
     /**
      * Set description
@@ -226,5 +176,66 @@ class Dues {
     public function getDescription()
     {
         return $this->description;
+    }
+
+    
+
+    /**
+     * Add duescharge
+     *
+     * @param \AppBundle\Entity\Beitraege\DuesPrice $duescharge
+     *
+     * @return Dues
+     */
+    public function addDuescharge(\AppBundle\Entity\Beitraege\DuesPrice $duescharge)
+    {
+        $duescharge->setDue($this);
+        $this->duescharge[] = $duescharge;
+
+        return $this;
+    }
+
+    /**
+     * Remove duescharge
+     *
+     * @param \AppBundle\Entity\Beitraege\DuesPrice $duescharge
+     */
+    public function removeDuescharge(\AppBundle\Entity\Beitraege\DuesPrice $duescharge)
+    {
+        $this->duescharge->removeElement($duescharge);
+    }
+
+    /**
+     * Get duescharge
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDuescharge()
+    {
+        return $this->duescharge;
+    }
+
+    /**
+     * Set type
+     *
+     * @param integer $type
+     *
+     * @return Dues
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return integer
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

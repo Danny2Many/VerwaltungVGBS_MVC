@@ -82,8 +82,8 @@
                     {% else %}
                     {% set first = data.lastname|first %}   
                 {% endif %}
-            <td><center><a href="{{ path('editnonmem', {'letter': first|capitalize, 'ID': data.nmemid }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
-            <td>{{ data.nmemid }}</td>
+            <td><center><a href="{{ path('editnonmem', {'letter': first|capitalize, 'ID': data.id }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
+            <td>{{ data.id }}</td>
             {#<td>{% for Sec in data.section %}
                         {{ Sec.sectionname }}<br>
                         {% else  %}

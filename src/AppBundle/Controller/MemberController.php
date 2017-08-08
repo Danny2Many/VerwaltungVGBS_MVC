@@ -7,15 +7,16 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use AppBundle\Entity\Mitglieder\Member;
+use AppBundle\Entity\Mitglieder_NichtMitglieder\Member;
 use AppBundle\Form\Type\SearchType;
 use AppBundle\Form\Type\Mitglieder\AddMemberType;
+use AppBundle\Form\Type\Mitglieder\BaseMemberType;
 use AppBundle\Form\Type\Mitglieder\EditMemberType;
-
-
-
-use AppBundle\Entity\Mitglieder\MemPhoneNumber;
+use AppBundle\Form\Type\Mitglieder\AdvancedSearchType;
+use AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup;
+use AppBundle\Entity\Mitglieder_NichtMitglieder\MemPhoneNumber;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Services\ToolsManager;
 
 
 
@@ -24,188 +25,127 @@ class MemberController extends Controller
 {
 
     /**
-     * @Route("/mitglieder/{letter}", defaults={"letter"="A"}, name="member_home", requirements={"letter": "[A-Z]"})
+     * @Route("/vgbsverwaltung/{type}/{letter}", defaults={"letter"="A"}, name="member_home", requirements={"type": "mitglieder|nichtmitglieder", "letter": "[A-Z]"})
      */
-    public function indexAction(Request $request, $letter)
+    public function indexAction(Request $request, $type, $letter)
     {
-        
-   $doctrine=$this->getDoctrine();
-//   $dependencies=array('Member', 'MemPhoneNumber', 'MemRehabilitationCertificate', 'MemSportsgroup', 'Member_Sportsgroup',);
-   $dependencies=array('Member', 'MemPhoneNumber', 'MemRehabilitationCertificate');    
-    $qb= [];
-    foreach($dependencies as $dependent){
- 
-     $qb[$dependent] = $doctrine->getRepository('AppBundle:Mitglieder\\'.$dependent)->createQueryBuilder('ditto');
-                    
-       
-    }
-    
-    $qb['Member']->where($qb['Member']->expr()->isNull('ditto.quitdate'));
-               
 
-
-     
-    
-    
-    $choices=array('Mitgliedsnr.' => 'memid',
-        'Name' => 'lastname',
-        'Vorname' => 'firstname',
-        'Strasse' => 'streetaddress',
-        'E-Mail' => 'email',
-        'Sportgruppe' => 'token',
-        'RS-Ablaufdatum' => 'terminationdate',
-        'Krankenkasse' => 'healthinsurance');
-     
- 
-    $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('member_home')));
-    $rehabsearchform = $this->createForm(\AppBundle\Form\Type\RehabcertSearchType::class, null, array('action' => $this->generateUrl('member_home')));
-        
-    $searchform->handleRequest($request);
-    
-    
-    //the search
-    if($searchform->isSubmitted() && $searchform->isValid()){
-     
-        //setting the letter to null for the pagination not to show any letter
-     $letter=null;
-     
-     //getting the values of the field and column
-    $searchval=$request->query->get('search')['searchfield'];
-    $searchcol=$request->query->get('search')['column'];
-
-    
-
-
-    if($searchcol=='terminationdate'){
-        $rehabsearchqb= clone $qb['MemRehabilitationCertificate'];
-        $rehabsearchqb->andWhere($rehabsearchqb->expr()->like('ditto.'.$searchcol,':type'))
-            ->setParameter('type','%'.$searchval.'%');
-
-            $rehacelist=$rehabsearchqb->getQuery()->getResult();
+        if($type=='mitglieder')
+        {
+            //0 stands for members
+            $dbTypeSymbol='\'m\'';
             
-
+            $idColumnName = 'Mitgliedsnr';
+        }
+        else
+        {
+            //1 stands for nonmembers
+            $dbTypeSymbol='\'nm\'';
             
-                
-                if($rehacelist){
-                foreach ($rehacelist as $rc){         
-                $idarray[]=$rc->getMemid();     
+            $idColumnName = 'NichtMitgliedsnr';
+        }
+        $doctrine=$this->getDoctrine();
+
+        $qb = $doctrine->getRepository('AppBundle:Mitglieder_NichtMitglieder\Member')->createQueryBuilder('m');
+        $qb->where('m.type = '.$dbTypeSymbol);
+
+
+        $choices=array(
+            'Alte_Nr' => 'lagacymemid',
+            $idColumnName   => 'memid',
+            'Name' => 'lastname',
+            'Vorname' => 'firstname',
+            'Strasse' => 'streetaddress',
+            'E-Mail' => 'email',
+            'Sportgruppe' => 'token',
+            'RS-Ablaufdatum' => 'terminationdate',
+            'Krankenkasse' => 'healthinsurance');
+     
+ 
+        $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('member_home', array('type'=>$type))));
+//        $rehabsearchform = $this->createForm(\AppBundle\Form\Type\RehabcertSearchType::class, null, array('action' => $this->generateUrl('member_home')));
+        
+        $searchform->handleRequest($request);
+    
+    
+        //the search
+        if($searchform->isSubmitted() && $searchform->isValid())
+        {
+     
+            //setting the letter to null for the pagination not to show any letter
+            $letter=null;
+     
+            //getting the values of the field and column
+            $searchval=$request->query->get('search')['searchfield'];
+            $searchcol=$request->query->get('search')['column'];
+
+    
+
+
+            if($searchcol=='terminationdate')
+            {
+                $rehabsearchqb= clone $qb['MemRehabilitationCertificate'];
+                $rehabsearchqb  ->andWhere($rehabsearchqb->expr()->like('ditto.'.$searchcol,':type'))
+                                ->setParameter('type','%'.$searchval.'%');
+
+                $rehacelist=$rehabsearchqb->getQuery()->getResult();
+            
+                if($rehacelist)
+                {
+                    foreach ($rehacelist as $rc)
+                    {         
+                        $idarray[]=$rc->getMemid();     
+                    }
                 }
-                }else{
-                  $idarray=array(null);  
+                else
+                {
+                    $idarray=array(null);  
                 }
-
-            $qb['Member']->andWhere($qb['Member']->expr()->in('ditto.memid', $idarray));
+                $qb['Member']   ->andWhere($qb['Member']->expr()->in('ditto.memid', $idarray));
+            }
+            else
+            {
+                $qb   ->andWhere($qb->expr()->like('m.'.$searchcol, ':searchval'))
+                                ->setParameter('searchval','%'.$searchval.'%');
+            }
+     
         }
+        else
+        {
+            $qb   ->andWhere($qb->expr()->like('m.lastname',':letter' ))
+                            ->setParameter('letter',$letter.'%');
+     
+            switch($letter)
+            {
+                case 'A': $qb ->andWhere($qb->expr()->like('m.lastname', ':umlautletter'))
+                                        ->setParameter('umlautletter','Ä%');
+                break;
         
-       
+                case 'O': $qb ->andWhere($qb->expr()->like('m.lastname', ':umlautletter'))
+                                        ->setParameter('umlautletter','Ö%');
+                break;
         
-        else{
-
-
-
-    //building the query
-
-    $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.'.$searchcol, ':member'))
-                 ->setParameter('member','%'.$searchval.'%');
-    
+                case 'U': $qb ->andWhere($qb->expr()->like('m.lastname', ':umlautletter'))
+                                        ->setParameter('umlautletter','Ü%');
+                break;
+            } 
+        
+        
         }
-     
-    }
-    
-    else{
-      
-        
-        $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.lastname',':letter' ))
-                    ->setParameter('letter',$letter.'%');
-                   
-           
-        
-          switch($letter){
-            case 'A': $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.lastname', ':umlautletter'))
-                                  ->setParameter('umlautletter','Ä%');
-            break;
-        
-            case 'O': $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.lastname', ':umlautletter'))
-                                    ->setParameter('umlautletter','Ö%');
-            break;
-        
-            case 'U': $qb['Member']->andWhere($qb['Member']->expr()->like('ditto.lastname', ':umlautletter'))
-                                    ->setParameter('umlautletter','Ü%');
-            break;
-        } 
-        
-        
-    }
-    
+  
+        $memberdata=$qb->getQuery()->getResult();
 
-    
-    //get the builded queries
-     $memberlist=$qb['Member']->getQuery()->getResult();
-     $phonenumberlist=$qb['MemPhoneNumber']->getQuery()->getResult();
-     $rehabcertlist=$qb['MemRehabilitationCertificate']->getQuery()->getResult();
-//     $sportsgroupmemberlist=$qb['Member_Sportsgroup']->getQuery()->getResult();
-//     $sportsgrouplist=$qb['MemSportsgroup']->getQuery()->getResult();
-    
-     
-    
-     
+ 
 
-     
-    $memberdependentlist=[];
-
-     
-//    foreach ($sportsgroupmemberlist as $sn){
-//
-//        $memberdependentlist[$sn->getMemid()]['sportsgroups'][$sn->getSgid()]=0;
-//    }
-//    
-     
-    
-    
-//    foreach ($memberlist as $nm){
-//        foreach ($sportsgrouplist as $sg){
-//            
-//            if(isset($memberdependentlist[$nm->getMemid()]['sportsgroups'][$sg->getSgid()])){
-//            $memberdependentlist[$nm->getMemid()]['sportsgroups'][$sg->getSgid()]=$sg;
-//            } 
-//        }
-//    }     
-     
-     foreach ($phonenumberlist as $pn){
-         
-         $memberdependentlist[$pn->getMemid()]['phonenumbers'][]=$pn;
-     }
-     
-     
-     $now= date('Y-m-d');
-      foreach ($rehabcertlist as $rc){
-        if($rc->getTerminationdate()->format("Y-m-d") > $now){
-         $memberdependentlist[$rc->getMemid()]['validrehabcerts'][]=$rc;
-        }else{
-          $memberdependentlist[$rc->getMemid()]['expiredrehabcerts'][]=$rc;  
-        }
-         
-     }
-     
-     
-     
-     
-
-    return $this->render(
-        'Mitglieder/member.html.twig',
+        return $this->render(
+        'Mitglieder_Nichtmitglieder/member.html.twig',
         array(
-            'tabledata' => $memberlist,
+            'tabledata' => $memberdata,
+            'type' => $type,
             'colorclass' => "bluetheader",
             'searchform' => $searchform->createView(),
-            'rehabsearchform' => $rehabsearchform->createView(),
-
-            'memberdependentlist' => $memberdependentlist,         
-
             'cletter' => $letter,
-
-            'path' => 'member_home'
-           
-         
+            'path' => $this->generateUrl('member_home', array('type'=>$type))     
             ));
     }
   
@@ -213,85 +153,57 @@ class MemberController extends Controller
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     
     /**
-     * @Route("/mitglieder/anlegen/{letter}", defaults={"letter": "A"}, name="addmem", requirements={"letter": "[A-Z]"})
+     * @Route("/vgbsverwaltung/{type}/anlegen/{letter}", defaults={"letter": "A"}, name="addmem", requirements={"type": "mitglieder|nichtmitglieder", "letter": "[A-Z]"})
      * 
      */
-    public function addmemberAction(Request $request, $letter)
+    public function addmemberAction(Request $request, $type, $letter)
     {
         $doctrine=$this->getDoctrine();   
         $manager= $doctrine->getManager();
         
         $member = new Member();
         $phonenumber = new MemPhoneNumber();
-        $m_sg= new \AppBundle\Entity\Mitglieder\Member_Sportsgroup();
+        $m_sg= new Member_Sportsgroup();
   
               
         $member->addPhonenumber($phonenumber);               
         $member->addSportsgroup($m_sg);
-
-        $addmemform = $this->createForm(AddMemberType::class, $member);
+        if($type == 'mitglieder')
+        {
+            $formType = AddMemberType::class;
+            $typeSymbol = 'm';
+            $titel = 'Mitglied anlegen';
+        }
+        else
+        {
+            $formType = BaseMemberType::class;
+            $typeSymbol = 'nm';
+            $titel = 'Nichtmitglied anlegen';
+        }
+        
+        $addmemform = $this->createForm($formType, $member, array('typeSymbol'=>$typeSymbol));
         $addmemform->handleRequest($request);
      
     
         //if the form is valid -> persist it to the database
-        if($addmemform->isSubmitted() && $addmemform->isValid()){
-
-            $manager= $this->getDoctrine()->getManager();            
-                    
-
-            
-//            foreach($member->getRehabilitationcertificate() as $rc){
-//                $fm->AddObject($rc, 'secondary');
-//              
-//          }
-//            
-//            foreach($member->getPhonenumber() as $pn){
-//                $fm->AddObject($pn, 'secondary');
-//              
-//          }
-//          
-//           foreach ($member->getSportsgroup() as $sg){
-//                $fm->AddObject($sg,'secondary', array('entitypath' => 'AppBundle\Entity\Member_Sportsgroup','idprefixone' => 'mem','idone' => $member->getMemid()));
-//            }
-//            
-             
-          
- 
-                      
-          
-            
-            $manager->persist($member);
-            
-//            foreach ($member->getPhonenumber() as $pn){
-//              $manager->persist($pn);  
-//            }
-//            foreach ($member->getRehabilitationcertificate() as $rc){
-//                $rc->setMemid($member->getMemid());
-//              $manager->persist($rc);  
-//            }            
-
-            
+        if($addmemform->isSubmitted() && $addmemform->isValid())
+        {
+            $member->setType($typeSymbol);
+            $manager->persist($member);      
             $manager->flush();
             
-            
-//            $im->add();
-            
-            
-           $this->addFlash('notice', 'Diese Person wurde erfolgreich angelegt!'); 
-          return $this->redirectToRoute('member_home', array('letter' => $letter));
-          
-          
-
+            $this->addFlash('notice', 'Diese Person wurde erfolgreich angelegt!'); 
+            return $this->redirectToRoute('member_home', array('type'=>$type, 'letter' => $letter));    
         }
         
 
-      return $this->render(
-        'Mitglieder/memberform.html.twig',
+        return $this->render(
+        'Mitglieder_NichtMitglieder/memberform.html.twig',
         array(
-            
             'form' => $addmemform->createView(),
             'cletter' => $letter,
-            'title' => 'Mitglied anlegen'
+            'title' => $titel,
+            'type'=>$type
             
             ));
     }
@@ -300,148 +212,104 @@ class MemberController extends Controller
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
     
     /**
-     * @Route("/mitglieder/bearbeiten/{letter}/{ID}", defaults={"letter": "[A-Z]"}, name="editmem")
+     * @Route("/vgbsverwaltung/{type}/bearbeiten/{letter}/{ID}", defaults={"type": "mitglieder", "letter": "A"}, requirements={"type": "mitglieder|nichtmitglieder", "letter": "[A-Z]"}, name="editmem")
      * 
      */
-    public function editmemberAction(Request $request, $ID, $letter)
+    public function editmemberAction(Request $request, $ID, $type, $letter)
     {
-      
-        
-        
+        if($type == 'mitglieder')
+        {
+            $typeSymbol='m';
+            $titel = 'Mitglied bearbeiten';
+        }else
+        {
+            $typeSymbol='nm';
+            $titel = 'Nichtmitglied bearbeiten';
+        }
     
-    
-    $doctrine=$this->getDoctrine(); 
-    $manager= $doctrine->getManager();
+ 
+        $doctrine=$this->getDoctrine(); 
+        $manager= $doctrine->getManager();
+        $tm = new ToolsManager($manager);
+
+        $member=$doctrine->getRepository('AppBundle:Mitglieder_NichtMitglieder\Member')->findOneBy(array('memid'=>$ID));
+   
+        
+        if (!$member)
+        {
+            throw $this->createNotFoundException('Es konnte kein Mitglied mit der Mitgliedsnr.: '.$ID.' gefunden werden');
+        }
+   
+        $originalrehabs = $tm->copyArrayCollection($member->getRehabilitationcertificate());
+        $originalphonenrs = $tm->copyArrayCollection($member->getPhonenumber());
+        $originalsportsgroups = $tm->copyArrayCollection($member->getSportsgroup());
   
-
-        
-
-     
-
-            $member=$doctrine->getRepository('AppBundle:Mitglieder\Member')->findOneBy(array('memid'=>$ID));
-         
-
-
-    
-         
-        
-        
-        if (!$member) {
-        throw $this->createNotFoundException('Es konnte kein Mitglied mit der Mitgliedsnr.: '.$ID.' gefunden werden');
-    }
-   
-    
-    
-        
-
-        
-
-        
-         $originalrehabs = new ArrayCollection();
-         $originalphonenrs = new ArrayCollection();
-         $originalsportsgroups = new ArrayCollection();
-        
-
-         
-         
-         
-         
-         
-         
-    // Create an ArrayCollection of the current Rehab objects in the database
-    foreach ($member->getRehabilitationcertificate() as $rehab) {
- 
-   
-        $originalrehabs->add($rehab);
-    }
-
-       // Create an ArrayCollection of the current Rehab objects in the database
-    foreach ($member->getPhonenumber() as $pn) {
- 
-   
-        $originalphonenrs->add($pn);
-    }
-    
-           // Create an ArrayCollection of the current Rehab objects in the database
-    foreach ($member->getSportsgroup() as $sg) {
- 
-   
-        $originalsportsgroups->add($sg);
-    }
-    
-    
-    
-      $editmemform = $this->createForm(EditMemberType::class, $member);
-        
-        
-        
-    
-    
+        $editmemform = $this->createForm(EditMemberType::class, $member, array('typeSymbol' =>$typeSymbol));
         $editmemform->handleRequest($request);
-        
-        
-        
-        if($editmemform->get('delete')->isClicked()){
-
+          
+        if($editmemform->get('delete')->isClicked())
+        {
             $manager->remove($member);
             $manager->flush();
 
-            $this->addFlash('notice', 'Dieses Mitglied wurde erfolgreich gelöscht!');
-            return $this->redirectToRoute('member_home', array('letter' => $letter));
+            $this->addFlash('notice', 'Diese Person wurde erfolgreich gelöscht!');
+            return $this->redirectToRoute('member_home', array('type'=>$type, 'letter' => $letter));
         }
-
-        
-       
-    
-        //if the form is valid -> persist it to the database
-        if($editmemform->isSubmitted() && $editmemform->isValid()){
-                
-                
-              
-                foreach ($originalrehabs as $rehab) {
-            if (false === $member->getRehabilitationcertificate()->contains($rehab)) {
-                $manager->remove($rehab);
-            }
-        }
-
-                  
-        foreach ($originalphonenrs as $pn) {
-            if (false === $member->getPhonenumber()->contains($pn)) {
-                $manager->remove($pn);
-            }
-        }                
-        
-        
-        foreach ($originalsportsgroups as $sg) {
-            if (false === $member->getSportsgroup()->contains($sg)) {
-                $manager->remove($sg);
-            }
-        }              
-                
-                
-                
-                $manager->persist($member);
-                $manager->flush();
-                
  
-                
-                
-               
-      $this->addFlash('notice', 'Die Daten wurden erfolgreich gespeichert!');  
-      return $this->redirectToRoute('member_home', array('letter' => $letter));  
+        //if the form is valid -> persist it to the database
+        if($editmemform->isSubmitted() && $editmemform->isValid())
+        {      
+            $tm->sortOutRemoved($originalrehabs, $member->getRehabilitationcertificate());
+            $tm->sortOutRemoved($originalphonenrs, $member->getPhonenumber());
+            $tm->sortOutRemoved($originalsportsgroups, $member->getSportsgroup());
+      
+            $manager->persist($member);
+            $manager->flush();
+                        
+            $this->addFlash('notice', 'Die Daten wurden erfolgreich gespeichert!');  
+            return $this->redirectToRoute('member_home', array('type' => $type, 'letter' => $letter));  
         }
         
         
-      return $this->render(
-        'Mitglieder/memberform.html.twig',
-        array(
+        return $this->render(
+            'Mitglieder_Nichtmitglieder/memberform.html.twig',
+            array(
             
             'form' => $editmemform->createView(),
             'cletter' => $letter,
-            'title' => 'Mitglied bearbeiten'
+            'type' => $type,
+            'title' => $titel
             ));
     }
     
+    /**
+     * @Route("/vgbsverwaltung/{type}/erweitertesuche/{letter}", defaults={"letter"="A"}, name="advancedsearchmem", requirements={"type": "mitglieder|nichtmitglieder", "letter": "[A-Z]"})
+     */
+    public function advancedSearchAction(Request $request, $type, $letter)
+    {
+        $advancedsearchform = $this->createForm(AdvancedSearchType::class, null);
+        
+        $advancedsearchform->handleRequest($request);
+        if($advancedsearchform->isSubmitted() && $advancedsearchform->isValid())
+        {
+            return $this->redirectToRoute('member_home', array('type'=>$type, 'letter' => $letter, 
+                'erweitertesuche'=> 'true', 
+                'tdcompop' => $advancedsearchform->get('terminationdatecompoperators')->getData(),
+                'td'=> $advancedsearchform->get('terminationdate')->getData(),
+                'rucompop'=> $advancedsearchform->get('rehabunitscompoperators')->getData(),
+                'rucompop'=> $advancedsearchform->get('rehabunits')->getData()));
+        } 
+        
+        return $this->render(
+            'Mitglieder_Nichtmitglieder/advancedsearchform.html.twig',
+            array(           
+            'form' => $advancedsearchform->createView(),
+            'cletter' => $letter,
+            'type' => $type,
+            'title' => 'Erweiterte Suche'
+            ));
+
+    }
 }
 
 

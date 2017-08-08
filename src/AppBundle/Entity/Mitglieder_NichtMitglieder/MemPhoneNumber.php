@@ -2,14 +2,14 @@
 
 
 
-namespace AppBundle\Entity\Mitglieder;
+namespace AppBundle\Entity\Mitglieder_NichtMitglieder;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="MemPhoneNumber")
+ * @ORM\Table(name="NonAndMemPhoneNumber")
  * 
  */
 class MemPhoneNumber {
@@ -30,7 +30,7 @@ class MemPhoneNumber {
      * @Assert\NotBlank()
      * @Assert\Regex(
      *     pattern="/\d\/\d/",
-     *     message="Ihre Telefonnummer entspricht entweder nicht dem gegebenen Format oder enthält einen Buchstaben."
+     *     message="Ihre Telefonnummer entspricht entweder nicht dem gegebenen Format (Vorwahl/Telephonnummer) oder enthält einen Buchstaben."
      * )
      */
     protected $phonenumber;
@@ -114,11 +114,11 @@ class MemPhoneNumber {
     /**
      * Set member
      *
-     * @param \AppBundle\Entity\Mitglieder\Member $member
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\Member $member
      *
      * @return MemPhoneNumber
      */
-    public function setMember(\AppBundle\Entity\Mitglieder\Member $member = null)
+    public function setMember(\AppBundle\Entity\Mitglieder_NichtMitglieder\Member $member = null)
     {
         $this->member = $member;
 
@@ -128,7 +128,7 @@ class MemPhoneNumber {
     /**
      * Get member
      *
-     * @return \AppBundle\Entity\Mitglieder\Member
+     * @return \AppBundle\Entity\Mitglieder_NichtMitglieder\Member
      */
     public function getMember()
     {

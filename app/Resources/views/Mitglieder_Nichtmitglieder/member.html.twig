@@ -1,0 +1,295 @@
+
+{% extends 'basic.html.twig' %}
+{% form_theme searchform 'bootstrap_3_layout.html.twig' %}
+{#{% form_theme rehabsearchform 'bootstrap_3_layout.html.twig' %}#}
+
+{% set capitalizedType = type|capitalize %}
+{% block title %}{{ capitalizedType }} - Stammdaten{% endblock %}
+{% block fixedcolnum %} 8 {% endblock %}
+
+{% set columnDefs = ['"2.4%"', '"4.5%"', '"4.5%"','"2.5%"', '"2%"', '"7%"', '"5%"', '"5%"', 
+'"8%"', '"10%"', '"3%"', '"5%"', '"7%"', '"13%"', '"18%"', '"6.5%"', '"8.5%"', '"10%"', '"10%"', '"5%"', '"10%"', '"10%"', '"8%"', '"12%"',
+'"12%"', '"12%"', '"12%"', '"12%"', '"12%"', '"12%"', '"12%"', '"12%"', '"10%"', '"5%"', '"4.5%"', '"3%"', '"3%"', '"3%"', '"3%"', '"3%"', '"3%"',
+'"3%"', '"3%"'] %}
+
+{% if type == 'mitglieder' %}
+    {% block MitglAktiv %}{% if type == 'mitglieder' %}active{% endif %}{% endblock %}
+    {% set entityOfType = 'Mitglied' %}
+    
+    {% set IDName = 'M_Nr' %}
+    {% set beginDate = 'Eintr.Datum' %}
+    {% set participationConfirmation = 'Aufnahmebest.' %}
+    
+    {% set lengthOfColumnDefs = columnDefs|length - 1 %}
+{% elseif type == 'nichtmitglieder' %}
+    
+    {% block NMitglAktiv %}{% if type == 'nichtmitglieder' %}active{% endif %}{% endblock %}
+    {% set entityOfType = 'Nichtmitglied' %}
+    
+    {% set IDName = 'Nmtgl_Nr' %}
+    {% set beginDate = 'Trainingsbeginn' %}
+    {% set participationConfirmation = 'Teilnahmebeginnbest.' %}
+    {% set tribute = ' ' %}
+    
+    {% set lengthOfColumnDefs = columnDefs|length - 2 %}
+{% endif %}
+
+ {% block columnDefs %}
+     "columnDefs": [
+    
+     {% for i in 0..lengthOfColumnDefs %}
+        {% if(i==22 and type != 'mitglieder') %}
+            { "width": {{columnDefs[i+1]|raw}}, "targets": {{ i }} },
+        {% else %}
+            { "width": {{columnDefs[i]|raw}}, "targets": {{ i }} },
+        {% endif %}
+    {% endfor %}
+
+  ]  
+  {% endblock %}
+  
+{% block advancedsearch %}
+    <a href="{{ path('advancedsearchmem', {'type': type, 'letter': cletter }) }}">
+        <input type="button" class="btn btn-default" value="Erweiterte Suche" >
+    </a>
+{% endblock %}
+
+
+{% block add %}
+    <div class="inline">
+    <a href="{{ path('addmem', {'type': type, 'letter': cletter }) }}"><button    class="add btn btn-default">
+      <span class="glyphicon glyphicon-plus"></span> Neues {{ entityOfType }} anlegen
+        </button></a> 
+    </div>
+{% endblock %}
+
+
+
+
+{% block color %} {{ colorclass }} {% endblock %}
+
+
+   {% set tableColumns = [
+        'Bearb.',
+        IDName,
+        'Alte_Nr',
+        'Status',
+        'Anr.',
+        'Name',
+        'Vorname',
+        'Geb.Datum',
+        'Ort',
+        'Strasse, Hausnr',
+        'PLZ',
+        'Postfach',
+        'Telefon',
+        'E-Mail',
+        'Sportgruppe (Beigetr. - Ausgetr.)',  
+        beginDate,
+        participationConfirmation,
+        '*akt. Rehaschein/e<br> (RSNr.-Ablaufd.-Einheiten)',
+        'abgel. Rehaschein/e<br> (RSNr.-Ablaufd.-Einheiten)',
+        'Newsletter',
+        'Krankenkasse',
+        'Zusatzinfo',
+        'Ehrung', 
+        'Arbeitsplatzhaltung',
+        'chron. Berufserkr.',
+        'Schmerzen in HWS',
+        'Schmerzen in BWS',
+        'Schmerzen in LWS',
+        'obere Extremitäten',
+        'untere Extremitäten',
+        'sonst. Beeinträchtigungen',
+        'Medikamente',
+        'weit. bewegl. Aktivitäten',
+        'Hf-Ruhe/Min',
+        'Hf-Max/Min',
+        'Hf bei 50%',
+        'Hf bei 55%',
+        'Hf bei 60%',
+        'Hf bei 65%',
+        'Hf bei 70%',
+        'Hf bei 75%',
+        'Hf bei 80%',
+        'Hf bei 85%'
+        ] %}
+
+    {% block thead %}
+        {% for column in tableColumns %}
+            {% if column!='Ehrung' or (column == 'Ehrung' and type == 'mitglieder') %}
+                <th>{{column|raw}}</th>
+            {% endif %}
+        {% endfor %}
+    {% endblock %}
+        
+    
+    
+    
+    
+    {% block tbody %}
+        {% for data in tabledata %}
+            
+            <tr> 
+                {% if data.lastname|first == 'Ä' %}
+                    {% set first = 'A' %}
+                    {% elseif data.lastname|first == 'Ö' %}
+                    {% set first = 'O' %}
+                    {% elseif data.lastname|first == 'Ü' %}
+                    {% set first = 'U' %}
+                    {% else %}
+                    {% set first = data.lastname|first %}   
+                {% endif %}
+
+                    {% set id = data.memid %}
+
+                <td><center><a href="{{ path('editmem', {'type': type, 'letter': first|capitalize, 'ID': id }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
+
+                <td>{{ id }}</td>
+                <td>{{ data.lagacymemid is empty ? "-" : data.lagacymemid|striptags}}</td>
+               
+                <td>{{ data.state == 1 ? "aktiv" : "inaktiv" }}</td>
+               
+                <td>{{ data.title == 0 ? "Frau" : "Herr" }}</td>
+                <td>{{ data.lastname|striptags }}</td>
+                <td>{{ data.firstname|striptags }}</td>                
+                <td>{{ data.birthday|date("d.m.Y") }}</td>
+                <td>{{ data.location|striptags }}</td>
+                <td>{{ data.streetaddress|striptags }}</td>
+                <td>{{ data.postcode|striptags }}</td>
+                <td>{{ data.mailbox is empty ? "-" : data.mailbox|striptags }}</td>
+                
+               
+                <td>{% for PN in data.phonenumber %}
+                        {{ PN.phonenumber }}<br>
+                        {% else  %}
+                        {{ "-" }}    
+                    {% endfor %}</td>
+                    
+                <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>
+                               
+
+                 <td>{% for SG in data.sportsgroup %}                     
+                     {{SG.sportsgroup.token }} ({{SG.joined|date("Y-m-d") }}-{{ SG.resignedfrom is empty ? "AKTUELL" : SG.resignedfrom|date("Y-m-d") }})<br>
+                {% else %}
+                    {{ "-" }}
+                {% endfor %}</td> 
+                
+
+                <td>{{ data.admissiondate|date("d.m.Y") }}</td>
+                <td>{{ data.admissionconfirmation is empty ? "-" : data.admissionconfirmation|date("d.m.Y") }}</td>
+
+                <td>
+                            
+                {% for RC in data.rehabilitationcertificate('valid')  %}
+
+                <div class="{% if date(RC.terminationdate)|date("Y-m-d") <= "now"|date_modify("+2 months")|date("Y-m-d") %}red {% endif %}
+                   {% if ("now"|date("Y") == RC.terminationdate|date("Y")) %}yellowbackground{% endif %}">
+                  {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}</div>
+               
+                         {% else %}
+                         {{ "-" }}
+                    {% endfor %}
+                   </td>
+                    
+                    
+                  <td>
+                      {% for RC in data.rehabilitationcertificate('expired')  %}
+                          
+                        
+                    {{'RS'}}{{loop.index}}-<strong>{{RC.terminationdate|date("d.m.Y") }}</strong>-{{RC.rehabunits }}<br>
+                        
+                         {% else %}
+                         {{ "-" }}
+                    {% endfor %}
+                   </td>
+                <td>{{ data.newsletter == 1 ? "Ja" : "Nein" }}</td>
+                <td>{{ data.healthinsurance is empty ? "-" : data.healthinsurance|striptags}}</td>
+                <td>{{ data.additionalinfo is empty ? "-" : data.additionalinfo|striptags }}</td>
+                {% if type == 'mitglieder' %}
+                <td>{{ data.tribute is empty ? "-" : data.Tribute|striptags }}</td>
+                {%endif%}
+                <td>{{ data.workplaceposture is empty ? "-" : data.workplaceposture|striptags }}</td>
+                <td>{{ data.chronoccupationaldis is empty ? "-" : data.chronoccupationaldis|striptags }}</td>
+                <td>{{ data.paincervicalspine is empty ? "-" : data.paincervicalspine|striptags }}</td>
+                <td>{{ data.painthoracicspine is empty ? "-" : data.painthoracicspine|striptags }}</td>
+                <td>{{ data.painlumbarspine is empty ? "-" : data.painlumbarspine|striptags }}</td>
+                <td>{{ data.upperlimbs is empty ? "-" : data.upperlimbs|striptags }}</td>
+                <td>{{ data.lowerlimbs is empty ? "-" : data.lowerlimbs|striptags }}</td>
+                <td>{{ data.otherimpairments is empty ? "-" : data.otherimpairments|striptags }}</td>
+                <td>{{ data.medication is empty ? "-" : data.medication|striptags }}</td>
+                <td>{{ data.additionalagilactivities is empty ? "-" : data.additionalagilactivities|striptags }}</td>
+               
+                <td>{{ data.pulseatrest is empty ? "-" : data.pulseatrest|striptags }}</td>
+                
+                 {% if data.pulseatrest is not empty %}
+                {% set pulseatrest = data.pulseatrest %}                
+                {% set hfmax = 220 - data.birthday|age  %}
+                {% set hfres = hfmax - pulseatrest  %}
+                {% set hfbei50 = pulseatrest+(0.5*hfres)|round  %}
+                {% set hfbei55 = pulseatrest+(0.55*hfres)|round  %}
+                {% set hfbei60 = pulseatrest+(0.6*hfres)|round  %}
+                {% set hfbei65 = pulseatrest+(0.65*hfres)|round  %}
+                {% set hfbei70 = pulseatrest+(0.7*hfres)|round  %}
+                {% set hfbei75 = pulseatrest+(0.75*hfres)|round  %}
+                {% set hfbei80 = pulseatrest+(0.8*hfres)|round  %}
+                {% set hfbei85 = pulseatrest+(0.85*hfres)|round  %}
+                {% else %}
+                {% set hfmax = "-"  %}
+                {% set hfbei50 = "-"  %}
+                {% set hfbei55 = "-"  %}
+                {% set hfbei60 = "-"  %}
+                {% set hfbei65 = "-"  %}
+                {% set hfbei70 = "-"  %}
+                {% set hfbei75 = "-"  %}
+                {% set hfbei80 = "-"  %}
+                {% set hfbei85 = "-"  %}
+                {% endif %}
+                
+                 <td>{{ hfmax }}</td>
+                 <td>{{ hfbei50 }}</td>
+                 <td>{{ hfbei55 }}</td>
+                 <td>{{ hfbei60 }}</td>
+                 <td>{{ hfbei65 }}</td>
+                 <td>{{ hfbei70 }}</td>
+                 <td>{{ hfbei75 }}</td>
+                 <td>{{ hfbei80 }}</td>
+                 <td>{{ hfbei85 }}</td>
+                               
+            </tr>
+            
+        {% endfor %}
+            {% endblock %}
+            
+                
+            {% block pagination %}
+   {#         {{ parent() }}#}
+   
+<div class="row">
+<div class="col-md-12">
+    <ul class="pagination">
+    {% for letter in 'a'|upper..'z'|upper %}
+        {% if letter == cletter %}
+            <li class="active">
+                <a href="{{ path~"/"~letter }}">{{ letter }}</a>
+            </li>
+        {% else %}
+            <li>
+                <a href="{{ path~"/"~letter }}">{{ letter }}</a>
+            </li>
+        {% endif %}
+    {% endfor %}
+    <li class="active"><a href="{{ path }}">{{ tabledata|length }} Person/en wurden gefunden</a></li>
+    </ul> 
+</div>
+
+           
+        </div>
+            <div class="row">
+            <div class="col-md-12">
+                <span class="strong">*( </span><span class="yellowsquare"></span><span class="strong">: Rehaschein läuft in diesem Jahr ab,</span> <span class="redsquare"></span><span class="strong">: Rehaschein ist nicht einmal mehr 2 Monate gültig )</span>
+            </div>
+          </div>
+             {% endblock %}
+
+    

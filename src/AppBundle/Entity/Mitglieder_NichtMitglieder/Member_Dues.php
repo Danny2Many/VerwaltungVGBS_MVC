@@ -2,7 +2,7 @@
 
 
 
-namespace AppBundle\Entity\Mitglieder;
+namespace AppBundle\Entity\Mitglieder_NichtMitglieder;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,7 +19,7 @@ class Member_Dues {
 protected $mdid;  
     
     /**
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Dues\Dues", inversedBy="member", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Beitraege\Dues", inversedBy="member", cascade={"persist"})
      * @ORM\JoinColumn(name="dueid", referencedColumnName="dueid")
      */    
     protected $due;
@@ -110,11 +110,11 @@ protected $payend;
     /**
      * Set due
      *
-     * @param \AppBundle\Entity\Due $due
+     * @param \AppBundle\Entity\Beitraege\Dues $due
      *
      * @return Member_Dues
      */
-    public function setDue(\AppBundle\Entity\Due $due = null)
+    public function setDue(\AppBundle\Entity\Beitraege\Dues $due = null)
     {
         $this->due = $due;
 
@@ -124,7 +124,7 @@ protected $payend;
     /**
      * Get due
      *
-     * @return \AppBundle\Entity\Due
+     * @return \AppBundle\Entity\Beiträge\Dues
      */
     public function getDue()
     {

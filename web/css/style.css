@@ -5,6 +5,7 @@
  border-collapse: collapse;
  line-height: 1;
  background-color: white;
+ table-layout:fixed;
 
 }
 
@@ -12,7 +13,11 @@
 
  
 
-td {padding-right: 5px; padding-left: 3px; height:30px;   }
+td {padding-right: 5px; 
+    padding-left: 3px; 
+    height:30px;
+    word-wrap:break-word;
+}
 
  table, th, td {
    border: 1px solid #C0C0C0;
@@ -78,7 +83,9 @@ background-color: #CC0033;}
     padding-right: 5px;
 }
 
-
+.add{
+   float: right; 
+}
 
 /*M_anlegen2.php*/
              
@@ -296,3 +303,4 @@ ul.nav{
     width: 75%;
     padding-top: 8px;
 }
+

@@ -1,0 +1,242 @@
+
+
+{% extends "basic.html.twig" %}
+
+
+{% import 'form/macro.html.twig' as forms %}
+
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+
+{% block javascriptsrc %} 
+    <script type="text/javascript" src="{{ asset('js/jquery-2.1.4.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/myfunctions.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+{% endblock %}
+
+{% block title %}{{ title }}{% endblock %}
+
+
+
+{% block body %}
+    <div class="container">
+       
+        <div class="row vert-offset-bottom-2">
+            <div class="col-md-12">
+                <div class="alert alert-info">
+                    <strong>{% include 'form/requiredtext.html' %}</strong>
+                    {{ form_errors(form) }}
+                </div>
+           </div>
+        </div>
+            
+    {{ form_start(form) }}
+    
+        <div class="row">
+            <div class="col-md-12">
+                <legend><h2>Stammdaten</h2></legend>
+                {% if (attribute(form, 'memid') is defined) %}
+                    {{ form_row(form.memid) }}
+                {% endif %}
+                
+                {{ form_row(form.lagacymemid) }}
+
+                {{ form_row(form.personaldata.title) }}
+
+                {{ form_row(form.personaldata.firstname) }}
+
+                {{ form_row(form.personaldata.lastname) }}
+
+                {{ form_row(form.personaldata.birthday) }}
+
+                {{ form_row(form.personaldata.streetaddress) }}
+
+                {{ form_row(form.personaldata.postcode) }}
+
+                {{ form_row(form.personaldata.mailbox) }}
+
+                {{ form_row(form.personaldata.location) }}
+
+                <div id="pn" data-prototype="{{ forms.textCollectionItem(form.personaldata.phonenumber.vars.prototype, 'phonenumber', 'Telefonnr. löschen')|e }}">
+                    {% for pn in form.personaldata.phonenumber %}
+                         {{ forms.textCollectionItem(pn, 'phonenumber', 'Telefonnr. löschen') }}
+                    {% endfor %}
+                </div>
+
+                <div class="form-group ">
+                    <div class="col-sm-10 col-sm-push-2">
+                        <a href="#" class="btn-add" data-target="pn">
+                            <button class="btn btn-info">
+                                <span class="glyphicon glyphicon-plus"></span>Telefonnr. hinzufügen
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                {{ form_row(form.personaldata.email) }}
+
+                {{ form_row(form.newsletter) }}
+
+                {{ form_row(form.admissiondate) }}
+
+                {{ form_row(form.admissionconfirmation) }}
+
+                {% if (attribute(form, 'tribute') is defined) %}
+                    {{ form_row(form.tribute) }}
+                {% endif %}
+
+                {{ form_row(form.state) }}
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 vert-offset-top-2">
+                <legend>
+                    <h2>Historie der Sportgruppenzuweisungen 
+                        <a href="#" class="add btn-add" data-target="sg">
+                            <button class="btn btn-info">
+                                <span class="glyphicon glyphicon-plus"></span> Sportgruppenzuweisung hinzufügen
+                            </button>
+                        </a>
+                    </h2>
+                </legend>
+
+                <div id="sg" data-prototype="{{ forms.sportgroupCollectionItem(form.sportsgroup.vars.prototype)|e }}">
+                    {% for sg in form.sportsgroup %}
+                        {{ forms.sportgroupCollectionItem(sg) }}
+                    {% endfor %}
+                </div>
+                
+                <div class="form-group "><div class="col-sm-10 col-sm-push-2"></div></div>
+                
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 vert-offset-top-2">
+                <legend>
+                    <h2>Historie der Rehascheine
+                        <a href="#" class="add btn-add" data-target="rc">
+                            <button class="btn btn-info">
+                                <span class="glyphicon glyphicon-plus"></span> Rehaschein hinzufügen
+                            </button>
+                        </a>
+                    </h2>
+                </legend>
+
+                <div id="rc" data-prototype="{{ forms.rehabCollectionItem(form.rehabilitationcertificate.vars.prototype)|e }}">
+                    {% for rc in form.rehabilitationcertificate %}
+                        {{ forms.rehabCollectionItem(rc) }}
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>      
+        <div class="row">
+            <div class="col-md-12 vert-offset-top-2">
+                <legend><h2>Gesundheitsdaten</h2></legend>
+
+                    {{ form_row(form.healthinsurance) }}
+
+                    {{ form_row(form.additionalinfo) }}
+
+
+                    {{ form_row(form.workplaceposture) }}
+
+
+                    {{ form_row(form.chronoccupationaldis) }}
+
+
+                    {{ form_row(form.paincervicalspine) }}
+
+
+                    {{ form_row(form.painthoracicspine) }}
+
+
+                    {{ form_row(form.painlumbarspine) }}
+
+                    {{ form_row(form.upperlimbs) }}
+
+                    {{ form_row(form.lowerlimbs) }}
+
+                    {{ form_row(form.otherimpairments) }}
+
+
+                    {{ form_row(form.medication) }}
+
+                    {{ form_row(form.additionalagilactivities) }}
+
+
+                    {{ form_row(form.pulseatrest) }}
+
+            </div>
+        </div>
+
+        {% if (attribute(form, 'admissioncharge') is defined) %}
+            <div class="row">
+                   <div class="col-md-12 vert-offset-top-2">
+                        <legend><h2>Finanzdaten</h2></legend>
+                        <div id="due" data-prototype="{{ forms.dueCollectionItem(form.due.vars.prototype)|e }}">
+                            {% for due in form.due %}
+                                {{ forms.dueCollectionItem(due) }}
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group ">
+                            <div class="col-sm-10 col-sm-push-2">
+                                <div class="dropdown">
+                                    <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown"><span class="glyphicon glyphicon-plus"></span> Zu zahlender Beitrag hinzufügen
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">       
+                                        <li><a href='#' class="btn-add" data-target="due"><span class="glyphicon glyphicon-plus"></span> Bestehender Beitrag</a></li>
+                                        <li><a href='#'><span class="glyphicon glyphicon-plus"></span> Neuer Beitrag</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{ form_row(form.admissioncharge) }}
+
+                    </div> 
+            </div>
+
+        {% endif %}
+
+        <div class="row vert-offset-top-1">
+            <div class="col-md-12"> 
+                <div class="form-group">
+                    <div class="col-sm-10 col-sm-push-2">
+                        {{ form_widget(form.save) }}
+
+                        {% set isEdit = false %}
+                        {% if (attribute(form, 'delete') is defined) %}
+                            {% set isEdit = true %}
+                            {% set path = path('editmem', {'letter': cletter,'ID': form.memid.vars.value }) %}
+                            {% else %}
+                            {% set path = path('addmem', {'type': type, 'letter': cletter}) %}    
+                        {% endif %}
+
+                        <a href="{{ path }}">{{ form_widget(form.reset, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie dieses Formular zurücksetzen möchten? Ungespeicherte Daten gehen dabei verloren.")'}}) }}</a>
+
+
+
+                        <a href="{{ path('member_home', {'type': type, 'letter': cletter}) }}">{{ form_widget(form.cancel, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie diese Seite verlassen möchten? Ungespeicherte Daten werden dabei verloren gehen.")'}}) }}</a>
+
+                        {% if (isEdit == true) %}
+                            {{ form_widget(form.delete, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie diese Person aus ihrer Datenbank entfernen möchten?")'}}) }}
+                        {% endif %}
+                        {{ form_row(form._token) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {{ form_end(form, {'render_rest': false}) }}
+            
+    </div>
+{% endblock %}

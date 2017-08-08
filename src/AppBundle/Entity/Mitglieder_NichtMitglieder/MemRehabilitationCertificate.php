@@ -2,7 +2,7 @@
 
 
 
-namespace AppBundle\Entity\Mitglieder;
+namespace AppBundle\Entity\Mitglieder_NichtMitglieder;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="MemRehabilitationCertificate")
+ * @ORM\Table(name="NonAndMemRehabilitationCertificate")
  * 
  */
 class MemRehabilitationCertificate {
@@ -56,21 +56,10 @@ class MemRehabilitationCertificate {
        * @Assert\NotNull()
      * @Assert\Type(
      *     type="integer",
-     *     message="The value {{ value }} is not a valid {{ type }}."
+     *     message="Der angegebene Wert {{ value }} ist keine ganze Zahl."
      * )
      */
     protected $rehabunits;
-
-    
-    
-    
-//    public function __toString()
-//    {
-//        return (string) $this->rcid.'/rc/MemRehabilitationCertificate';
-//    }
-//    
-    
-    /**
 
 
     /**
@@ -172,7 +161,7 @@ class MemRehabilitationCertificate {
      *
      * @return MemRehabilitationCertificate
      */
-    public function setMember(\AppBundle\Entity\Mitglieder\Member $member = null)
+    public function setMember(\AppBundle\Entity\Mitglieder_NichtMitglieder\Member $member = null)
     {
         $this->member = $member;
 
@@ -182,7 +171,7 @@ class MemRehabilitationCertificate {
     /**
      * Get member
      *
-     * @return \AppBundle\Entity\Mitglieder\Member
+     * @return \AppBundle\Entity\Mitglieder_NichtMitglieder\Member
      */
     public function getMember()
     {

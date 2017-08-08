@@ -9,6 +9,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use AppBundle\Form\Type\Dues\ChooseDuesType;
 
 class AddMemberType extends BaseMemberType {
     
@@ -19,26 +21,21 @@ class AddMemberType extends BaseMemberType {
     {
         parent::buildForm($builder, $options);
         $builder->add('admissioncharge', MoneyType::class, array('label' => 'Aufnahmegebühr:'))
-//                ->add('dues', MoneyType::class, array('mapped' => false, 'label' => 'Monatlicher Beitr:'));
-          
-                  ->add('decreaseddues', ChoiceType::class, array(
-    'choices'  => array(
-        'kein' => 0,
-        'verminderter Beitrag' => 1,
-        
-    ),
-    // *this line is important*
-    'choices_as_values' => true,
-    
-    'label' => 'verminderter Beitrag:'
-    
-));
+                ->add('due', EntityType::class, array(
+                                'class' => 'AppBundle:Beitraege:Dues',
+                                'choice_label' => 'name',
+                                'multiple' => false,
+                                'expanded' => false,
+                    ))
+
+                ->add('due', CollectionType::class, array('entry_type' => ChooseDuesType::class, 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true));
 
     }
     
          public function configureOptions(OptionsResolver $resolver){
-    $resolver->setDefaults(array(
-        'data_class' => "AppBundle\Entity\Mitglieder\Member",
+            $resolver->setDefaults(array(
+                'data_class' => "AppBundle\Entity\Mitglieder_NichtMitglieder\Member",
+                'typeSymbol'=>null
         
     ));
 }

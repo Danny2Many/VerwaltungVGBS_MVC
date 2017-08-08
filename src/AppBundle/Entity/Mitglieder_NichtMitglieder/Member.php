@@ -1,7 +1,7 @@
 <?php
 
 
-namespace AppBundle\Entity\Mitglieder;
+namespace AppBundle\Entity\Mitglieder_NichtMitglieder;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -11,7 +11,7 @@ use AppBundle\Entity\HealthData;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="Member")
+ * @ORM\Table(name="NonAndMember")
  * 
  */
 class Member extends HealthData
@@ -25,6 +25,34 @@ class Member extends HealthData
      * 
      */
     protected $memid;
+
+    
+    /**
+     *@Assert\Length(
+     *      max = 11,
+     *      maxMessage = "Die Nummer darf nicht länger als {{ limit }} zeichen sein."
+     * )
+     * @ORM\Column(type="string")
+     * 
+     */
+    protected $lagacymemid;
+    
+    /**
+     * @ORM\Column(type="string")
+     * 
+     */
+    protected $type;
+    
+        /**
+     * @ORM\Column(type="string")
+     *@Assert\Length(
+     *      max = 100,
+     *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen (einschließlich Leerzeichen) sein."
+     * )
+     * 
+     */
+    protected $tribute;
+    
     
     /**
      * @ORM\OneToMany(targetEntity="MemRehabilitationCertificate", mappedBy="member", cascade={"persist"})
@@ -68,14 +96,6 @@ class Member extends HealthData
     }
         
 
-
-   
-//   public function __toString()
-//    {
-//        return (string) $this->memid.'/mem/Member';
-//    }
-    
-
    
       /**
      * @ORM\Column(type="date")
@@ -108,15 +128,7 @@ class Member extends HealthData
      */
     public $admissionconfirmation;
     
-    
-      
-    
-       /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     * 
-     */
-    public $decreaseddues;
+
     
     /**
      * @ORM\Column(type="integer")
@@ -128,16 +140,13 @@ class Member extends HealthData
     
       /**
      * @ORM\Column(type="string")
+     *@Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen (einschließlich Leerzeichen) sein."
+     * )
      */
     public $additionalinfo;
 
-      /**
-     * @ORM\Column(type="string")
-     */
-    protected $tribute;
-    
-     
-    
    
       /**
      * @ORM\Column(type="text")
@@ -243,31 +252,6 @@ class Member extends HealthData
         return $this->admissionconfirmation;
     }
 
-    /**
-     * Set decreaseddues
-     *
-     * @param string $decreaseddues
-     *
-     * @return Member
-     */
-    public function setDecreaseddues($decreaseddues)
-    {
-        $this->decreaseddues = $decreaseddues;
-
-        return $this;
-    }
-
-    /**
-     * Get decreaseddues
-     *
-     * @return string
-     */
-    public function getDecreaseddues()
-    {
-        return $this->decreaseddues;
-    }
-
-   
 
     /**
      * Set additionalinfo
@@ -393,18 +377,6 @@ class Member extends HealthData
         return $this->admissionchargepayed;
     }
 
-     
-    
-    
-    
-    
-    
-    
-
-   
-
-
-
 
    
 
@@ -443,7 +415,7 @@ class Member extends HealthData
      */
     public function setNewsletter($newsletter)
     {
-        $this->newsletter = implode($newsletter);
+        $this->newsletter = $newsletter;
 
         return $this;
     }
@@ -455,26 +427,19 @@ class Member extends HealthData
      */
     public function getNewsletter()
     {
-        return array($this->newsletter);
+        return $this->newsletter;
     }
-
-
-   
-    
- 
-    
- 
 
   
 
     /**
      * Add rehabilitationcertificate
      *
-     * @param \AppBundle\Entity\Mitglieder\MemRehabilitationCertificate $rehabilitationcertificate
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\MemRehabilitationCertificate $rehabilitationcertificate
      *
      * @return Member
      */
-    public function addRehabilitationcertificate(\AppBundle\Entity\Mitglieder\MemRehabilitationCertificate $rehabilitationcertificate)
+    public function addRehabilitationcertificate(\AppBundle\Entity\Mitglieder_NichtMitglieder\MemRehabilitationCertificate $rehabilitationcertificate)
     {
         $rehabilitationcertificate->setMember($this);
         $this->rehabilitationcertificate[] = $rehabilitationcertificate;
@@ -485,31 +450,58 @@ class Member extends HealthData
     /**
      * Remove rehabilitationcertificate
      *
-     * @param \AppBundle\Entity\Mitglieder\MemRehabilitationCertificate $rehabilitationcertificate
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\MemRehabilitationCertificate $rehabilitationcertificate
      */
-    public function removeRehabilitationcertificate(\AppBundle\Entity\Mitglieder\MemRehabilitationCertificate $rehabilitationcertificate)
+    public function removeRehabilitationcertificate(\AppBundle\Entity\Mitglieder_NichtMitglieder\MemRehabilitationCertificate $rehabilitationcertificate)
     {
         $this->rehabilitationcertificate->removeElement($rehabilitationcertificate);
     }
 
+    
     /**
      * Get rehabilitationcertificate
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getRehabilitationcertificate()
+    public function getRehabilitationcertificate($filterMode=null)
     {
-        return $this->rehabilitationcertificate;
+        
+        if($filterMode==null)
+        {
+            $rehabcerts=$this->rehabilitationcertificate;
+        }
+        else
+        {
+            $now= date('Y-m-d');
+            $rehabcerts=$this->rehabilitationcertificate->filter(
+                    function($rc) use ($now, $filterMode)
+                    { 
+                        if($filterMode=='valid' && $rc->getTerminationdate()->format("Y-m-d") > $now)
+                        {
+                            return true;
+                        }
+                        elseif($filterMode=='expired' && $rc->getTerminationdate()->format("Y-m-d") <= $now)
+                        {
+                            return true;
+                        }
+
+                    });
+        }
+
+        return $rehabcerts;
     }
+    
+    
+   
 
     /**
      * Add phonenumber
      *
-     * @param \AppBundle\Entity\Mitglieder\MemPhoneNumber $phonenumber
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\MemPhoneNumber $phonenumber
      *
      * @return Member
      */
-    public function addPhonenumber(\AppBundle\Entity\Mitglieder\MemPhoneNumber $phonenumber)
+    public function addPhonenumber(\AppBundle\Entity\Mitglieder_NichtMitglieder\MemPhoneNumber $phonenumber)
     {
         $phonenumber->setMember($this);
         $this->phonenumber[] = $phonenumber;
@@ -520,7 +512,7 @@ class Member extends HealthData
     /**
      * Remove phonenumber
      *
-     * @param \AppBundle\Entity\Mitglieder\MemPhoneNumber $phonenumber
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\MemPhoneNumber $phonenumber
      */
     public function removePhonenumber(\AppBundle\Entity\Mitglieder\MemPhoneNumber $phonenumber)
     {
@@ -540,11 +532,11 @@ class Member extends HealthData
     /**
      * Add sportsgroup
      *
-     * @param \AppBundle\Entity\Mitglieder\Member_Sportsgroup $sportsgroup
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup $sportsgroup
      *
      * @return Member
      */
-    public function addSportsgroup(\AppBundle\Entity\Mitglieder\Member_Sportsgroup $sportsgroup)
+    public function addSportsgroup(\AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup $sportsgroup)
     {
         $sportsgroup->setMember($this);
         $this->sportsgroup[] = $sportsgroup;
@@ -555,9 +547,9 @@ class Member extends HealthData
     /**
      * Remove sportsgroup
      *
-     * @param \AppBundle\Entity\Mitglieder\Member_Sportsgroup $sportsgroup
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup $sportsgroup
      */
-    public function removeSportsgroup(\AppBundle\Entity\Mitglieder\Member_Sportsgroup $sportsgroup)
+    public function removeSportsgroup(\AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup $sportsgroup)
     {
         $this->sportsgroup->removeElement($sportsgroup);
     }
@@ -575,11 +567,11 @@ class Member extends HealthData
     /**
      * Add due
      *
-     * @param \AppBundle\Entity\Mitglieder\Member_Dues $due
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Dues $due
      *
      * @return Member
      */
-    public function addDue(\AppBundle\Entity\Mitglieder\Member_Dues $due)
+    public function addDue(\AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Dues $due)
     {
         $due->setMember($this);
         $this->due[] = $due;
@@ -590,9 +582,9 @@ class Member extends HealthData
     /**
      * Remove due
      *
-     * @param \AppBundle\Entity\Mitglieder\Member_Dues $due
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Dues $due
      */
-    public function removeDue(\AppBundle\Entity\Mitglieder\Member_Dues $due)
+    public function removeDue(\AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Dues $due)
     {
         $this->due->removeElement($due);
     }
@@ -610,7 +602,7 @@ class Member extends HealthData
     /**
      * Add duespayed
      *
-     * @param \AppBundle\Entity\Mitglieder\MemDuesPayed $duespayed
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\MemDuesPayed $duespayed
      *
      * @return Member
      */
@@ -624,7 +616,7 @@ class Member extends HealthData
     /**
      * Remove duespayed
      *
-     * @param \AppBundle\Entity\Mitglieder\MemDuesPayed $duespayed
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\MemDuesPayed $duespayed
      */
     public function removeDuespayed(\AppBundle\Entity\Mitglieder\MemDuesPayed $duespayed)
     {
@@ -639,5 +631,53 @@ class Member extends HealthData
     public function getDuespayed()
     {
         return $this->duespayed;
+    }
+
+    /**
+     * Set lagacymemid
+     *
+     * @param string $lagacymemid
+     *
+     * @return Member
+     */
+    public function setLagacymemid($lagacymemid)
+    {
+        $this->lagacymemid = $lagacymemid;
+
+        return $this;
+    }
+
+    /**
+     * Get lagacymemid
+     *
+     * @return string
+     */
+    public function getLagacymemid()
+    {
+        return $this->lagacymemid;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return Member
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

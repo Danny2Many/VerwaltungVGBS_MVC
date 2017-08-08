@@ -22,7 +22,7 @@
     {% set name = formData.vars.full_name %}
     
  <div class="panel panel-default" data-content="{{ name }}">
-        <div class="panel-heading"><h3 class="panel-title pull-left">Rehaschein</h3> <a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> löschen</button></a><div class="clearfix"></div></div>
+        <div class="panel-heading"><h3 class="panel-title pull-left">Rehaschein</h3> <a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> Löschen</button></a><div class="clearfix"></div></div>
    <div class="panel-body">
     <div class="form-group">
 
@@ -50,11 +50,13 @@
  </div>
 {% endmacro %}
 
-{% macro sportsgrCollectionItem(formData) %}
+{% macro sportgroupCollectionItem(formData) %}
     {% set name = formData.vars.full_name %}
+
+
     
     <div class="panel panel-default" data-content="{{ name }}">
-          <div class="panel-heading"><h3 class="panel-title pull-left">Sportgruppenzuweisung</h3> <a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> löschen</button></a><div class="clearfix"></div></div>
+          <div class="panel-heading"><h3 class="panel-title pull-left">Sportgruppenzuweisung</h3> <a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> Löschen</button></a><div class="clearfix"></div></div>
           <div class="panel-body">
            <div class="form-group">
      
@@ -75,11 +77,11 @@
    {{ form_widget(attribute(formData, 'joined')) }}
    
     </div>
-   <div class="col-sm-1">
+   <div class="col-md-1">
    {{ form_label(attribute(formData, 'resignedfrom')) }}
    
     </div>
-    <div class="col-sm-5">
+    <div class="col-md-5">
          
    {{ form_widget(attribute(formData, 'resignedfrom')) }}
    
@@ -136,7 +138,7 @@
 {% macro licenceCollectionItem(formData) %}   
     {% set name = formData.vars.full_name %}
 <div class="panel panel-default" data-content="{{ name }}">
-    <div class="panel-heading"><h3 class="panel-title pull-left">Lizenzinformationen</h3><a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> löschen</button></a><div class="clearfix"></div></div>    
+    <div class="panel-heading"><h3 class="panel-title pull-left">Lizenzinformationen</h3><a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> Löschen</button></a><div class="clearfix"></div></div>    
     <div class="panel-body">
         <div class="form-group" data-content="{{ name }}">
             {{ form_label(attribute(formData, 'issuedate')) }}
@@ -185,7 +187,7 @@
 {% macro orderItem(formData) %}
   {% set name = formData.vars.full_name %}
     <div class="panel panel-default" data-content="{{ name }}">
-        <div class="panel-heading"><h3 class="panel-title pull-left">Bestellinformation</h3><a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> löschen</button></a><div class="clearfix"></div></div>    
+        <div class="panel-heading"><h3 class="panel-title pull-left">Bestellinformation</h3><a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> Löschen</button></a><div class="clearfix"></div></div>    
         <div class="panel-body">
             <div class="form-group">
                 {{ form_label(attribute(formData, 'invoicenumber')) }}
@@ -229,7 +231,7 @@
   {% set name = formData.vars.full_name %}
     
     <div class="panel panel-default" data-content="{{ name }}">
-        <div class="panel-heading"><h3 class="panel-title pull-left">Inventurinformation</h3><a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> löschen</button></a><div class="clearfix"></div></div>    
+        <div class="panel-heading"><h3 class="panel-title pull-left">Inventurinformation</h3><a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> Löschen</button></a><div class="clearfix"></div></div>    
         <div class="panel-body">
             <div class="form-group">
                 {{ form_label(attribute(formData, 'stockdate')) }}
@@ -265,7 +267,7 @@
 {% macro roomItem(formData) %}
   {% set name = formData.vars.full_name %}
     <div class="panel panel-default" data-content="{{ name }}">
-        <div class="panel-heading"><h3 class="panel-title pull-left">Raum</h3><a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> löschen</button></a><div class="clearfix"></div></div>    
+        <div class="panel-heading"><h3 class="panel-title pull-left">Raum</h3><a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> Löschen</button></a><div class="clearfix"></div></div>    
         <div class="panel-body">
             <div class="form-group">
                 {{ form_label(attribute(formData, 'roomname')) }}
@@ -277,38 +279,88 @@
     </div>
 {% endmacro %}
 
-{% macro duePriceCollectionItem(formData) %}
+{% macro duePriceCollectionItem(formData, time) %}
     {% set name = formData.vars.full_name %}
     
-    <div class="panel panel-default" data-content="{{ name }}">
-          <div class="panel-heading"><h3 class="panel-title pull-left">Beitragspreis</h3> <a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> löschen</button></a><div class="clearfix"></div></div>
+          {% if time == 'future' %} 
+              {% set panel = 'info' %}
+              {% set type = 'Zukünftig' %}
+          {% elseif time == 'present' %}
+              {% set panel = 'success' %}
+              {% set type = 'Aktuell' %}
+          {% elseif  time == 'past' %}
+              {% set panel = 'danger' %}
+              {% set type = 'Veraltet' %}
+          {% else %}
+               {% set panel = 'default' %}
+              {% set type = 'Neu' %}             
+          {% endif %}
+    
+    <div class="panel panel-{{panel}}" data-content="{{ name }}">
+          <div class="panel-heading"><h3 class="panel-title pull-left">Beitragspreis ({{ type }})</h3> <a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> Löschen</button></a><div class="clearfix"></div></div>
           <div class="panel-body">
            <div class="form-group">
      
    {{ form_label(attribute(formData, 'price')) }}
    
     
-    <div class="col-sm-10">
+    <div class="col-sm-4">
          
    {{ form_widget(attribute(formData, 'price')) }}
+   
+    </div>
+   
+      <div class="col-sm-1">
+   {{ form_label(attribute(formData, 'validfrom')) }}
+   
+    </div>
+    <div class="col-sm-5">
+         
+   {{ form_widget(attribute(formData, 'validfrom')) }}
+   
+    </div>
+   </div>
+
+
+          </div>
+    </div>
+{% endmacro %}
+
+
+{% macro dueCollectionItem(formData) %}
+    {% set name = formData.vars.full_name %}
+
+
+    
+    <div class="panel panel-default" data-content="{{ name }}">
+          <div class="panel-heading"><h3 class="panel-title pull-left">Beitragszuweisung</h3> <a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> Löschen</button></a><div class="clearfix"></div></div>
+          <div class="panel-body">
+           <div class="form-group">
+     
+   {{ form_label(attribute(formData, 'due')) }}
+   
+    
+    <div class="col-sm-10">
+         
+   {{ form_widget(attribute(formData, 'due')) }}
    
     </div>
    </div>
    
    
         <div class="form-group">
-        {{ form_label(attribute(formData, 'validfrom')) }}
+        {{ form_label(attribute(formData, 'paystart')) }}
     <div class="col-sm-4">
-   {{ form_widget(attribute(formData, 'validfrom')) }}
+   {{ form_widget(attribute(formData, 'paystart')) }}
    
     </div>
-   <div class="col-sm-1">
-   {{ form_label(attribute(formData, 'validto')) }}
+   <div class="col-md-1.5">
+   {{ form_label(attribute(formData, 'payend')) }}
    
     </div>
-    <div class="col-sm-5">
+    <div class="col-md-4.5">
          
-   {{ form_widget(attribute(formData, 'validto')) }}
+   {{ form_widget(attribute(formData, 'payend')) }}
    
     </div>
 

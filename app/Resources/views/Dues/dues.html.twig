@@ -1,0 +1,112 @@
+{% extends 'basic.html.twig' %}
+{% form_theme searchform 'bootstrap_3_layout.html.twig' %}
+{% block title %}Beiträge{% endblock %}
+{% block FinanzAktiv %} active {% endblock %}
+{% block BeitragAktiv %} active {% endblock %}
+
+{% block columnDefs %}
+     "columnDefs": [
+    { "width": "3%", "targets": 0 },
+    { "width": "2%", "targets": 1 },
+    { "width": "8%", "targets": 2 },
+    { "width": "25%", "targets": 3 },
+    { "width": "47%", "targets": 4 },
+    { "width": "10%", "targets": 5 },
+   
+  ]  
+  {% endblock %}
+{% block fixedcolnum %}0{% endblock %}
+
+{% block add %}
+    <div class="inline">
+    <a href="{{ path('adddues') }}"><button    class="add btn btn-default">
+      <span class="glyphicon glyphicon-plus"></span> Neuen Beitrag anlegen
+        </button></a> 
+    </div>
+{% endblock %}
+
+{% set types = ['alle', 'standart', 'angepasst'] %}
+{% set states = ['alle','aktuell', 'veraltet'] %}
+{% block other %}
+     <div class="inline">
+      <div class="dropdown">
+      <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Art: {{currtype|capitalize}}
+      <span class="caret"></span></button>
+       <ul class="dropdown-menu">
+            
+            {% for t in types %}
+            <li {% if t ==currtype %}class="active"{% endif %}><a href="{{ path('dues_home', {'type': t, 'state': currstate}) }}"> {{ t|capitalize}}</a></li>
+            {% endfor %}
+       </ul>
+      </div>
+
+     </div>
+       <div class="inline">
+              <div class="dropdown">
+      <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Status: {{currstate|capitalize}}
+      <span class="caret"></span></button>
+       <ul class="dropdown-menu">
+            
+            {% for s in states %}
+            <li {% if s ==currstate %}class="active"{% endif %}><a href="{{ path('dues_home', {'type': currtype, 'state': s}) }}"> {{ s|capitalize}}</a></li>
+            {% endfor %}
+       </ul>
+      </div>
+       </div>
+       
+    {% endblock %}
+
+{% block color %} {{ colorclass }} {% endblock %}
+
+
+    {% block thead %}
+        
+            
+        <th>Bearb.</th><th>B_Nr</th><th>Art \ Status</th><th>Name</th><th>Beschreibung</th><th>Akt. Preis (Gültig ab)</th>        
+    {% endblock %}
+    
+    {% block tbody %}
+        {% for data in tabledata %}
+            
+            <tr> 
+
+                <td><center><a href="{{ path('editdues', {'ID': data.dueid }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
+                <td>{{ data.dueid }}</td>
+                
+                <td>
+                
+                {%if data.type == 0 %}
+                    Standart
+                {%elseif data.type == 1 %}
+                    Angepasst
+
+                    {%endif %}
+                \
+                {%if data.state == 0 %}
+                    Aktuell
+                {%elseif data.state == 1 %}
+                    Veraltet
+                    {%endif %}</td>
+
+                <td>{{ data.name|striptags }}</td>
+                <td>{{ data.description|striptags }}</td>                
+                <td>
+                    {% set currChargeFound = false %}
+                    {% for charge in data.duescharge %}
+                        {% set validFrom = charge.validfrom %}
+                    {%if date(validFrom) <= date() and currChargeFound == false %}
+                        {{ charge.price }}€ ({{ validFrom|date("d.m.Y") }})
+                        {% set currChargeFound = true %}
+                    {% endif %}                    
+                    {% endfor %}
+                
+                </td>
+                
+                               
+            </tr>
+            
+        {% endfor %}
+            {% endblock %}
+            
+            {% block pagination %}
+                {% endblock %}

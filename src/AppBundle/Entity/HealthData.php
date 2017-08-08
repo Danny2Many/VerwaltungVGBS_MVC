@@ -17,32 +17,56 @@ class HealthData extends PersonalData {
     
        /**
      * @ORM\Column(type="string")
+    *@Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen (einschließlich Leerzeichen) sein."
+     * )
      */
     protected $chronoccupationaldis;
     
     
        /**
      * @ORM\Column(type="string")
+    *@Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen (einschließlich Leerzeichen) sein."
+     * )
      */
        protected $paincervicalspine;
     
         /**
      * @ORM\Column(type="string")
+     *@Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen (einschließlich Leerzeichen) sein."
+     * )
      */
         protected $painthoracicspine;
     
        /**
      * @ORM\Column(type="string")
+     *@Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen (einschließlich Leerzeichen) sein."
+     * )
      */
        protected $painlumbarspine;
     
        /**
      * @ORM\Column(type="string")
+     *@Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen (einschließlich Leerzeichen) sein."
+     * )
      */
        protected $upperlimbs;
     
        /**
      * @ORM\Column(type="string")
+     *@Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen (einschließlich Leerzeichen) sein."
+     * )
      */
        protected $lowerlimbs;
     
@@ -53,11 +77,19 @@ class HealthData extends PersonalData {
     
       /**
      * @ORM\Column(type="string")
+     *@Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen (einschließlich Leerzeichen) sein."
+     * )
      */
       protected $medication;
     
        /**
      * @ORM\Column(type="string")
+     *@Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen (einschließlich Leerzeichen) sein."
+     * )
      */
        protected $additionalagilactivities;
     
@@ -66,6 +98,10 @@ class HealthData extends PersonalData {
         * @Assert\Type(
      * type="numeric",
      * message="{{ value }} ist kein gültiger {{ type }}.")
+     * @Assert\Length(
+     *      max = 11,
+     *      maxMessage = "Der Puls darf nicht länger als {{ limit }} Zeichen sein."
+     * )
      */
        protected $pulseatrest;
     
@@ -74,6 +110,10 @@ class HealthData extends PersonalData {
     
       /**
      * @ORM\Column(type="string")
+     *@Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen (einschließlich Leerzeichen) sein."
+     * )
      */
     protected $healthinsurance;
     

@@ -1,14 +1,14 @@
 <?php
 
-namespace AppBundle\Entity\Nichtmitglieder;
+namespace AppBundle\Entity\Mitglieder_NichtMitglieder;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="NonMember_Sportsgroup")
+ * @ORM\Table(name="NonAndMember_Sportsgroup")
  * 
  */
-class NonMember_Sportsgroup {
+class Member_Sportsgroup {
 
 
  
@@ -16,22 +16,22 @@ class NonMember_Sportsgroup {
   /**
 * @ORM\Id
 * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue(strategy="AUTO")  
+* @ORM\GeneratedValue(strategy="AUTO")  
 */
-protected $nmemsgid;  
+protected $memsgid;  
     
     /**
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Sportsgroup", inversedBy="nonmemsubscriber", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Sportsgroup", inversedBy="memsubscriber", cascade={"persist"})
      * @ORM\JoinColumn(name="sgid", referencedColumnName="sgid")
      */    
     protected $sportsgroup;
 
     
         /**
-     * @ORM\ManyToOne(targetEntity="NonMember", inversedBy="sportsgroup")
-     * @ORM\JoinColumn(name="nmemid", referencedColumnName="nmemid")
+     * @ORM\ManyToOne(targetEntity="Member", inversedBy="sportsgroup")
+     * @ORM\JoinColumn(name="memid", referencedColumnName="memid")
      */ 
-    protected $nonmember;
+    protected $member;
 
 
 
@@ -50,16 +50,14 @@ protected $resignedfrom;
         
 
 
-
-
     /**
-     * Get nmemsgid
+     * Get memsgid
      *
      * @return integer
      */
-    public function getNmemsgid()
+    public function getMemsgid()
     {
-        return $this->nmemsgid;
+        return $this->memsgid;
     }
 
     /**
@@ -67,7 +65,7 @@ protected $resignedfrom;
      *
      * @param \DateTime $joined
      *
-     * @return NonMember_Sportsgroup
+     * @return Member_Sportsgroup
      */
     public function setJoined($joined)
     {
@@ -91,7 +89,7 @@ protected $resignedfrom;
      *
      * @param \DateTime $resignedfrom
      *
-     * @return NonMember_Sportsgroup
+     * @return Member_Sportsgroup
      */
     public function setResignedfrom($resignedfrom)
     {
@@ -115,7 +113,7 @@ protected $resignedfrom;
      *
      * @param \AppBundle\Entity\Sportsgroup $sportsgroup
      *
-     * @return NonMember_Sportsgroup
+     * @return Member_Sportsgroup
      */
     public function setSportsgroup(\AppBundle\Entity\Sportsgroup $sportsgroup = null)
     {
@@ -135,26 +133,26 @@ protected $resignedfrom;
     }
 
     /**
-     * Set nonmember
+     * Set member
      *
-     * @param \AppBundle\Entity\Nichtmitglieder\NonMember $nonmember
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\Member $member
      *
-     * @return NonMember_Sportsgroup
+     * @return Member_Sportsgroup
      */
-    public function setNonmember(\AppBundle\Entity\Nichtmitglieder\NonMember $nonmember = null)
+    public function setMember(\AppBundle\Entity\Mitglieder_NichtMitglieder\Member $member = null)
     {
-        $this->nonmember = $nonmember;
+        $this->member = $member;
 
         return $this;
     }
 
     /**
-     * Get nonmember
+     * Get member
      *
-     * @return \AppBundle\Entity\Nichtmitglieder\NonMember
+     * @return \AppBundle\Entity\Mitglieder_NichtMitglieder\Member
      */
-    public function getNonmember()
+    public function getMember()
     {
-        return $this->nonmember;
+        return $this->member;
     }
 }

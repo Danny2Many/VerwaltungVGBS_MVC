@@ -10,26 +10,33 @@ use Symfony\Component\Validator\Constraints as Assert;
 class PersonalData {
     
         /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string")
        * @Assert\NotBlank()
      * @Assert\Regex(
      *     pattern="/\d/",
      *     match=false,
      *     message="Ein Vorname kann keine Zahl enthalten."
      * )
+     *@Assert\Length(
+     *      max = 100,
+     *      maxMessage = "Der Vorname darf nicht länger als {{ limit }} zeichen sein."
+     * )
      */
     protected $firstname;
 
      /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string")
      *@Assert\NotBlank()
      * @Assert\Regex(
      *     pattern="/\d/",
      *     match=false,
      *     message="Ein Name kann keine Zahl enthalten."
      * )
+    *@Assert\Length(
+     *      max = 100,
+     *      maxMessage = "Der Nachname darf nicht länger als {{ limit }} zeichen sein."
+     * )
      */
-    
     protected $lastname;
     
     
@@ -54,21 +61,32 @@ class PersonalData {
      * @Assert\Regex(
      * pattern="/[a-zA-ZäöüÄÖÜ \.]+,( )*[a-zA-Z]?[1-9][0-9]{0,2}[a-z]?/",
      * message="Bitte halten Sie sich an das Format.")
+     *@Assert\Length(
+     *      max = 100,
+     *      maxMessage = "Die Straße und Hausnummer dürfen zusammen nicht länger als {{ limit }} Zeichen (einschließlich Leerzeichen) sein."
+     * )
      */
     protected $streetaddress;
     
      /**
-     * @ORM\Column(type="string", length=5)
+     * @ORM\Column(type="string")
      * @Assert\NotBlank()
      * @Assert\Regex(
      * pattern="/^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$/",
      * message="Bitte geben Sie eine gültige Postleitzahl an.")
+     *@Assert\Length(
+     *      max = 5,
+     *      maxMessage = "Die Postleitzahl darf nicht länger als {{ limit }} Zeichen sein."
+     * ) 
      */
     protected $postcode;
     
      /**
      * @ORM\Column(type="text", name="mailbox")
-     * 
+     *@Assert\Length(
+     *      max = 100,
+     *      maxMessage = "Das Postfach darf nicht länger als {{ limit }} Zeichen (einschließlich Leerzeichen) sein."
+     * ) 
      * 
      */
     protected $mailbox;
@@ -81,6 +99,10 @@ class PersonalData {
      *     match=false,
      *     message="Ein Ort kann keine Zahl enthalten."
      * )
+     * @Assert\Length(
+     *      max = 100,
+     *      maxMessage = "Der Ort darf nicht länger als {{ limit }} Zeichen (einschließlich Leerzeichen) sein."
+     * )
      */
     protected $location;
     
@@ -89,6 +111,10 @@ class PersonalData {
      * @ORM\Column(type="string", options={"default":"-"})
      * @Assert\Email(message = "Die E-Mail '{{ value }}' ist keine gültige E-Mail.",
      *     checkMX = true)
+     *@Assert\Length(
+     *      max = 100,
+     *      maxMessage = "Die E-Mail-Adresse darf nicht länger als {{ limit }} Zeichen (einschließlich Leerzeichen) sein."
+     * )
      */
     protected $email;
     

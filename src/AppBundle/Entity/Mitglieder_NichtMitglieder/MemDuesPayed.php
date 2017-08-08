@@ -2,7 +2,7 @@
 
 
 
-namespace AppBundle\Entity\Mitglieder;
+namespace AppBundle\Entity\Mitglieder_NichtMitglieder;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -23,7 +23,7 @@ class MemDuesPayed {
     
     
         /**
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Dues\Dues", inversedBy="member", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Beitraege\Dues", inversedBy="member", cascade={"persist"})
      * @ORM\JoinColumn(name="dueid", referencedColumnName="dueid")
      */    
     protected $due;

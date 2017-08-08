@@ -42,10 +42,7 @@
         leftColumns: {% block fixedcolnum %}{% endblock %}
 
     },
-            {% block columnDefs %}
-       
-       
-  {% endblock %}
+    {% block columnDefs %}{% endblock %}
 
 
     } );
@@ -75,19 +72,9 @@ function myFunction() {
                         <nav class="navbar navbar-default  col-md-12">
                             
                             <ul class="nav navbar-nav">
-{#                                <li class="dropdown adminyeardropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Verwaltungsjahr: {{ adminyear}}<span class="caret"></span></a>
-                                    <ul class="dropdown-menu">
-                                        {% set end_year = date() | date('Y') %}
-                                        {% set start_year = end_year - 5 %}
-                                        
-                                        {% for year in end_year..start_year %}
-                                            <li class="{% if year == adminyear %}active{% endif %}"><a href="{{path(path, {'adminyear': year})}}">{{year}}</a></li>
-                                        {% endfor %}
-                                    </ul>
-                                </li>#}
                                 <li class="{% block HomeAktiv %}#{% endblock %}"><a href="{{ path('homepage') }}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-                                <li class="{% block MitglAktiv %}#{% endblock %}"><a href="{{ path('member_home') }}">Mitglieder</a></li>
-                                <li class="{% block NMitglAktiv %}{% endblock %}"><a href="{{path('nonmember_home')}}">Nichtmitglieder</a></li>
+                                <li class="{% block MitglAktiv %}#{% endblock %}"><a href="{{ path('member_home', {'type': 'mitglieder'}) }}">Mitglieder</a></li>
+                                <li class="{% block NMitglAktiv %}#{% endblock %}"><a href="{{ path('member_home', {'type': 'nichtmitglieder'}) }}">Nichtmitglieder</a></li>
                                 <li class="{% block AustrittAktiv %}#{% endblock %}"><a href="#">Austrittsliste</a></li>
                                 <li class="dropdown {% block SportgrAktiv %}{% endblock %}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Sportgruppen/-kurse<span class="caret"></span></a>
                                     <ul class="dropdown-menu">
@@ -124,22 +111,25 @@ function myFunction() {
             <div class="topmenu row">
                 
                 <div class="topmenu-left col-md-6">
-                 {% block topmenu_left %}
-                   {% block search %}
-                            {{ form_start(searchform, { 'attr': {'class': 'form-inline'} }) }}
-                            {{ form_widget(searchform.column) }}
-                            {{ form_widget(searchform.searchfield) }}
-                            
-                            <button type="submit" class="btn btn-default">
-                                <span class="glyphicon glyphicon-search"></span> Suchen
-                            </button>
-                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">Erweiterte Suche</button>
-                            <a href="{{ path(path) }}"><input type="button" class="btn btn-default" value="Suche abbrechen" {% if  searchform.vars.submitted == false %}{{ 'disabled' }}{% endif %} ></a>
+                    {% block topmenu_left %}
+                        {% block search %}
+                                {{ form_start(searchform, { 'attr': {'class': 'form-inline'} }) }}
+                                {{ form_widget(searchform.column) }}
+                                {{ form_widget(searchform.searchfield) }}
 
-                            {{ form_end(searchform) }}
+                                <button type="submit" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-search"></span> Suchen
+                                </button>
+                                {% block advancedsearch %}
+                                {% endblock %}
+                                <a href="{{ path }}"><input type="button" class="btn btn-default" value="Suche abbrechen" {% if  searchform.vars.submitted == false %}{{ 'disabled' }}{% endif %} ></a>
+
+
+                                {{ form_end(searchform) }}
                         {% endblock %}
 
-                        {% endblock %}
+
+                    {% endblock %}
                      
                 </div>   
                         
@@ -161,44 +151,7 @@ function myFunction() {
             </div>
             {% endblock %}
      
- {#    <!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-lg">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title"><h4>Erweiterte Suche</h4>
-         
-      </div>
-        
-      <div class="modal-body" id="test">
-         <ul class="nav nav-pills nav-stacked">
-
-  <li class="active"><a href="#">Rehaschein</a></li>
-  <li><a href="#">Sportgrupe</a></li>
-
-</ul>
-        {{ form_start(rehabsearchform) }}
-        <div class="form-group">
-{{ form_label(rehabsearchform.terminationdate, null, { 'label_attr': {'class': 'control-label col-sm-2'} }) }}
-<div class="col-sm-10">
-{{ form_widget(rehabsearchform.terminationdate) }}
-</div>
-</div>
-{{ form_end(rehabsearchform) }}  
-
-      
-</div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-default">Submit</button>
-      </div>
-            
-    </div>
-
-  </div>
-</div>#}
      
              {% block table %}
                  <div class="row">
@@ -211,7 +164,7 @@ function myFunction() {
                      
                  {% else %}
               
-            <table id="myTable" class="{% block color %} {{ colorclass }} {% endblock %}">
+            <table id="myTable" class="{% block color %} {{ colorclass }} {% endblock %}" >
     
                 <thead>
                     {% block thead %}{% endblock %}

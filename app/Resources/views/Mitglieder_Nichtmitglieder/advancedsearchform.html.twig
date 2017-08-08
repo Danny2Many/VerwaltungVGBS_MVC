@@ -1,0 +1,102 @@
+
+
+{% extends "basic.html.twig" %}
+
+
+{% import 'form/macro.html.twig' as forms %}
+
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+
+{% block javascriptsrc %} 
+    <script type="text/javascript" src="{{ asset('js/jquery-2.1.4.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/myfunctions.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+{% endblock %}
+
+{% block title %}Erweiterte Suche{% endblock %}
+
+
+
+{% block body %}
+    <div class="container">
+       
+{#        <div class="row vert-offset-bottom-2">
+            <div class="col-md-12">
+                <div class="alert alert-info">
+                    <strong>{% include 'form/requiredtext.html' %}</strong>
+                    {{ form_errors(form) }}
+                </div>
+           </div>
+        </div>#}
+            
+    {{ form_start(form) }}
+    
+        <div class="row">
+            <div class="col-md-12">
+                <legend><h2>Rehaschein-Suche</h2></legend>
+                <div class="form-group">
+                    <div class="col-sm-1">
+                    {{ form_label(form.terminationdatecompoperators) }}
+                    </div>
+                    <div class="col-sm-1">
+                        {{ form_widget(form.terminationdatecompoperators) }}
+                    </div>
+                    <div class="col-sm-3">
+                        {{ form_widget(form.terminationdate) }}
+                    </div>
+                    <div class="col-sm-1">
+                        {{ form_label(form.rehabunitscompoperators) }}
+                    </div>
+                    <div class="col-sm-1">
+                        {{ form_widget(form.rehabunitscompoperators) }}
+                    </div>
+                    <div class="col-sm-3">
+                        {{ form_widget(form.rehabunits) }}
+                    </div>
+                    <div class="col-sm-2">
+                        {{ form_label(form.rehabunits) }}
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 vert-offset-top-2">
+                <legend>
+                        <h2>
+                            Sportgruppen-Suche
+                        </h2>
+                </legend>
+
+            </div>
+        </div>
+        
+
+
+
+        <div class="row vert-offset-top-1">
+            <div class="col-md-12"> 
+                <div class="form-group">
+                    <div class="col-sm-10 col-sm-push-2">
+                        {{ form_widget(form.search) }}
+                        <a href="">{{ form_widget(form.reset, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie dieses Formular zurücksetzen möchten? Ungespeicherte Daten gehen dabei verloren.")'}}) }}</a>
+                        <a href="{{ path('member_home', {'type': type, 'letter': cletter}) }}">{{ form_widget(form.cancel, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie diese Seite verlassen möchten? Ungespeicherte Daten werden dabei verloren gehen.")'}}) }}</a>
+
+                        {{ form_row(form._token) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {{ form_end(form, {'render_rest': false}) }}
+            
+    </div>
+{% endblock %}

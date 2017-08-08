@@ -9,11 +9,11 @@ class FunctionManager {
   
     
     protected $doctrine;
-    protected $adminyear;
+
     
-    public function __construct($doctrine, $adminyear) {
+    public function __construct($doctrine) {
         $this->doctrine=$doctrine;
-        $this->adminyear=$adminyear;
+
     } 
     
     //analizes the __toString return value of an object

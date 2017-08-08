@@ -1,7 +1,7 @@
 <?php
 
 
-namespace AppBundle\Entity\Mitglieder;
+namespace AppBundle\Entity\Mitglieder_NichtMitglieder;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -11,7 +11,7 @@ use AppBundle\Entity\HealthData;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="Member")
+ * @ORM\Table(name="NonAndMember")
  * 
  */
 class Member extends HealthData
@@ -25,6 +25,20 @@ class Member extends HealthData
      * 
      */
     protected $memid;
+
+    
+        /**
+     * @ORM\Column(type="integer")
+     * 
+     */
+    protected $lagacymemid;
+    
+    /**
+     * @ORM\Column(type="integer")
+     * 
+     */
+    protected $type;
+    
     
     /**
      * @ORM\OneToMany(targetEntity="MemRehabilitationCertificate", mappedBy="member", cascade={"persist"})
@@ -42,9 +56,11 @@ class Member extends HealthData
     /**
      * @ORM\OneToMany(targetEntity="Member_Sportsgroup", mappedBy="member", cascade={"persist"})
      */
-    protected $sportsgroup; 
+    protected $sportsgroup;
+    
+    
 
-        /**
+   /**
      * @ORM\OneToMany(targetEntity="Member_Dues", mappedBy="member", cascade={"persist"})
      */
     protected $due;
@@ -65,14 +81,6 @@ class Member extends HealthData
      
     }
         
-
-
-   
-//   public function __toString()
-//    {
-//        return (string) $this->memid.'/mem/Member';
-//    }
-    
 
    
       /**
@@ -106,15 +114,7 @@ class Member extends HealthData
      */
     public $admissionconfirmation;
     
-    
-      
-    
-       /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     * 
-     */
-    public $decreaseddues;
+
     
     /**
      * @ORM\Column(type="integer")
@@ -241,31 +241,6 @@ class Member extends HealthData
         return $this->admissionconfirmation;
     }
 
-    /**
-     * Set decreaseddues
-     *
-     * @param string $decreaseddues
-     *
-     * @return Member
-     */
-    public function setDecreaseddues($decreaseddues)
-    {
-        $this->decreaseddues = $decreaseddues;
-
-        return $this;
-    }
-
-    /**
-     * Get decreaseddues
-     *
-     * @return string
-     */
-    public function getDecreaseddues()
-    {
-        return $this->decreaseddues;
-    }
-
-   
 
     /**
      * Set additionalinfo
@@ -391,18 +366,6 @@ class Member extends HealthData
         return $this->admissionchargepayed;
     }
 
-     
-    
-    
-    
-    
-    
-    
-
-   
-
-
-
 
    
 
@@ -456,19 +419,12 @@ class Member extends HealthData
         return array($this->newsletter);
     }
 
-
-   
-    
- 
-    
- 
-
   
 
     /**
      * Add rehabilitationcertificate
      *
-     * @param \AppBundle\Entity\Mitglieder\MemRehabilitationCertificate $rehabilitationcertificate
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\MemRehabilitationCertificate $rehabilitationcertificate
      *
      * @return Member
      */
@@ -483,27 +439,54 @@ class Member extends HealthData
     /**
      * Remove rehabilitationcertificate
      *
-     * @param \AppBundle\Entity\Mitglieder\MemRehabilitationCertificate $rehabilitationcertificate
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\MemRehabilitationCertificate $rehabilitationcertificate
      */
     public function removeRehabilitationcertificate(\AppBundle\Entity\Mitglieder\MemRehabilitationCertificate $rehabilitationcertificate)
     {
         $this->rehabilitationcertificate->removeElement($rehabilitationcertificate);
     }
 
+    
     /**
      * Get rehabilitationcertificate
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getRehabilitationcertificate()
+    public function getRehabilitationcertificate($filterMode=null)
     {
-        return $this->rehabilitationcertificate;
+        
+        if($filterMode==null)
+        {
+            $rehabcerts=$this->rehabilitationcertificate;
+        }
+        else
+        {
+            $now= date('Y-m-d');
+            $rehabcerts=$this->rehabilitationcertificate->filter(
+                    function($rc) use ($now, $filterMode)
+                    { 
+                        if($filterMode=='valid' && $rc->getTerminationdate()->format("Y-m-d") > $now)
+                        {
+                            return true;
+                        }
+                        elseif($filterMode=='expired' && $rc->getTerminationdate()->format("Y-m-d") <= $now)
+                        {
+                            return true;
+                        }
+
+                    });
+        }
+
+        return $rehabcerts;
     }
+    
+    
+   
 
     /**
      * Add phonenumber
      *
-     * @param \AppBundle\Entity\Mitglieder\MemPhoneNumber $phonenumber
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\MemPhoneNumber $phonenumber
      *
      * @return Member
      */
@@ -518,7 +501,7 @@ class Member extends HealthData
     /**
      * Remove phonenumber
      *
-     * @param \AppBundle\Entity\Mitglieder\MemPhoneNumber $phonenumber
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\MemPhoneNumber $phonenumber
      */
     public function removePhonenumber(\AppBundle\Entity\Mitglieder\MemPhoneNumber $phonenumber)
     {
@@ -538,7 +521,7 @@ class Member extends HealthData
     /**
      * Add sportsgroup
      *
-     * @param \AppBundle\Entity\Mitglieder\Member_Sportsgroup $sportsgroup
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup $sportsgroup
      *
      * @return Member
      */
@@ -553,7 +536,7 @@ class Member extends HealthData
     /**
      * Remove sportsgroup
      *
-     * @param \AppBundle\Entity\Mitglieder\Member_Sportsgroup $sportsgroup
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup $sportsgroup
      */
     public function removeSportsgroup(\AppBundle\Entity\Mitglieder\Member_Sportsgroup $sportsgroup)
     {
@@ -573,7 +556,7 @@ class Member extends HealthData
     /**
      * Add due
      *
-     * @param \AppBundle\Entity\Mitglieder\Member_Dues $due
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Dues $due
      *
      * @return Member
      */
@@ -588,7 +571,7 @@ class Member extends HealthData
     /**
      * Remove due
      *
-     * @param \AppBundle\Entity\Mitglieder\Member_Dues $due
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Dues $due
      */
     public function removeDue(\AppBundle\Entity\Mitglieder\Member_Dues $due)
     {
@@ -603,5 +586,63 @@ class Member extends HealthData
     public function getDue()
     {
         return $this->due;
+    }
+
+    /**
+     * Add duespayed
+     *
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\MemDuesPayed $duespayed
+     *
+     * @return Member
+     */
+    public function addDuespayed(\AppBundle\Entity\Mitglieder\MemDuesPayed $duespayed)
+    {
+        $this->duespayed[] = $duespayed;
+
+        return $this;
+    }
+
+    /**
+     * Remove duespayed
+     *
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\MemDuesPayed $duespayed
+     */
+    public function removeDuespayed(\AppBundle\Entity\Mitglieder\MemDuesPayed $duespayed)
+    {
+        $this->duespayed->removeElement($duespayed);
+    }
+
+    /**
+     * Get duespayed
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDuespayed()
+    {
+        return $this->duespayed;
+    }
+
+    /**
+     * Set lagacymemid
+     *
+     * @param integer $lagacymemid
+     *
+     * @return Member
+     */
+    public function setLagacymemid($lagacymemid)
+    {
+        $this->lagacymemid = $lagacymemid;
+
+        return $this;
+    }
+
+    /**
+     * Get lagacymemid
+     *
+     * @return integer
+     */
+    public function getLagacymemid()
+    {
+        return $this->lagacymemid;
     }
 }

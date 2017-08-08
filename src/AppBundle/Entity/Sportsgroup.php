@@ -25,15 +25,10 @@ class Sportsgroup {
 //      protected $substitute;
       
     /**
-     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Mitglieder\Member_Sportsgroup", mappedBy="sportsgroup")
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup", mappedBy="sportsgroup")
      */
     protected $memsubscriber;
     
-        /**
-     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup", mappedBy="sportsgroup")
-     */
-    protected $nonmemsubscriber;
-
 
     /**
      * @ORM\Column(type="string")
@@ -314,11 +309,11 @@ class Sportsgroup {
     /**
      * Add memsubscriber
      *
-     * @param \AppBundle\Entity\Mitglieder\Member_Sportsgroup $memsubscriber
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup $memsubscriber
      *
      * @return Sportsgroup
      */
-    public function addMemsubscriber(\AppBundle\Entity\Mitglieder\Member_Sportsgroup $memsubscriber)
+    public function addMemsubscriber(\AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup $memsubscriber)
     {
         $this->memsubscriber[] = $memsubscriber;
 
@@ -328,9 +323,9 @@ class Sportsgroup {
     /**
      * Remove memsubscriber
      *
-     * @param \AppBundle\Entity\Mitglieder\Member_Sportsgroup $memsubscriber
+     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup $memsubscriber
      */
-    public function removeMemsubscriber(\AppBundle\Entity\Mitglieder\Member_Sportsgroup $memsubscriber)
+    public function removeMemsubscriber(\AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup $memsubscriber)
     {
         $this->memsubscriber->removeElement($memsubscriber);
     }
@@ -345,40 +340,7 @@ class Sportsgroup {
         return $this->memsubscriber;
     }
 
-    /**
-     * Add nonmemsubscriber
-     *
-     * @param \AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup $nonmemsubscriber
-     *
-     * @return Sportsgroup
-     */
-    public function addNonmemsubscriber(\AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup $nonmemsubscriber)
-    {
-        $this->nonmemsubscriber[] = $nonmemsubscriber;
-
-        return $this;
-    }
-
-    /**
-     * Remove nonmemsubscriber
-     *
-     * @param \AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup $nonmemsubscriber
-     */
-    public function removeNonmemsubscriber(\AppBundle\Entity\Nichtmitglieder\NonMember_Sportsgroup $nonmemsubscriber)
-    {
-        $this->nonmemsubscriber->removeElement($nonmemsubscriber);
-    }
-
-    /**
-     * Get nonmemsubscriber
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getNonmemsubscriber()
-    {
-        return $this->nonmemsubscriber;
-    }
-
+   
     /**
      * Set room
      *
