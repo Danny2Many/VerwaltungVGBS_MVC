@@ -30,12 +30,13 @@ class AdvancedSearchType extends AbstractType{
               
                 ->add('terminationdatecompoperators', ChoiceType::class, array(
                 'choices'  => array(
-                'am' => 'am',
-                'vor' => 'vor',
-                'nach' => 'nach'
+                'am' => '=',
+                'vor' => '<',
+                'nach' => '>'
                 ),
                 'choices_as_values' => true,
-                'label' => 'Läuft ab:'
+                'label' => 'Läuft ab:',
+                'required' => false
                 ))
                 
                 ->add('rehabunitscompoperators', ChoiceType::class, array(
@@ -48,7 +49,8 @@ class AdvancedSearchType extends AbstractType{
 
                 ),
                 'choices_as_values' => true,
-                'label' => 'mit:'
+                'label' => 'besitzt:',
+                'required' => false
                 ))
                
                 ->add('search', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'Suchen'))
@@ -56,7 +58,6 @@ class AdvancedSearchType extends AbstractType{
                 ->add('reset', ButtonType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'Zurücksetzen'));
 
     }
-
 
 
     

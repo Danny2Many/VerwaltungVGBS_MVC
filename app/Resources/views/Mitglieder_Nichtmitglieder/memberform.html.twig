@@ -228,6 +228,7 @@
                         <a href="{{ path('member_home', {'type': type, 'letter': cletter}) }}">{{ form_widget(form.cancel, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie diese Seite verlassen möchten? Ungespeicherte Daten werden dabei verloren gehen.")'}}) }}</a>
 
                         {% if (isEdit == true) %}
+                            {{ form_widget(form.exit) }}
                             {{ form_widget(form.delete, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie diese Person aus ihrer Datenbank entfernen möchten?")'}}) }}
                         {% endif %}
                         {{ form_row(form._token) }}

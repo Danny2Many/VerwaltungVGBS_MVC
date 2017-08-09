@@ -17,8 +17,8 @@ class EditMemberType extends BaseMemberType{
         parent::buildForm($builder, $options);
        $builder->add('tribute',SanitizedTextType::class, array('label' => 'Ehrung:', 'required' => false) )
                ->add('memid',SanitizedTextType::class, array('label' => 'Mitgliedsnummer:', 'required' => false, 'disabled' => true) )
-               ->add('delete', SubmitType::class, array('attr' => array('class' => 'btn btn-danger'), 'label' => 'Löschen'));   
-
+               ->add('delete', SubmitType::class, array('attr' => array('class' => 'btn btn-danger'), 'label' => 'Löschen'))   
+               ->add('exit', SubmitType::class, array('attr' => array('class' => 'btn btn-warning'), 'label' => 'Austritt'));
     }
     
          public function configureOptions(OptionsResolver $resolver)

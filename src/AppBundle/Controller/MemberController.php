@@ -57,16 +57,12 @@ class MemberController extends Controller
             'Vorname' => 'firstname',
             'Strasse' => 'streetaddress',
             'E-Mail' => 'email',
-            'Sportgruppe' => 'token',
-            'RS-Ablaufdatum' => 'terminationdate',
             'Krankenkasse' => 'healthinsurance');
      
  
-        $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('member_home', array('type'=>$type))));
-//        $rehabsearchform = $this->createForm(\AppBundle\Form\Type\RehabcertSearchType::class, null, array('action' => $this->generateUrl('member_home')));
-        
+        $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('member_home', array('type'=>$type))));        
         $searchform->handleRequest($request);
-    
+        
     
         //the search
         if($searchform->isSubmitted() && $searchform->isValid())
@@ -81,34 +77,23 @@ class MemberController extends Controller
 
     
 
-
-            if($searchcol=='terminationdate')
-            {
-                $rehabsearchqb= clone $qb['MemRehabilitationCertificate'];
-                $rehabsearchqb  ->andWhere($rehabsearchqb->expr()->like('ditto.'.$searchcol,':type'))
-                                ->setParameter('type','%'.$searchval.'%');
-
-                $rehacelist=$rehabsearchqb->getQuery()->getResult();
-            
-                if($rehacelist)
-                {
-                    foreach ($rehacelist as $rc)
-                    {         
-                        $idarray[]=$rc->getMemid();     
-                    }
-                }
-                else
-                {
-                    $idarray=array(null);  
-                }
-                $qb['Member']   ->andWhere($qb['Member']->expr()->in('ditto.memid', $idarray));
-            }
-            else
-            {
                 $qb   ->andWhere($qb->expr()->like('m.'.$searchcol, ':searchval'))
                                 ->setParameter('searchval','%'.$searchval.'%');
-            }
-     
+        }
+        elseif ($request->request->has('advanced_search'))
+        {
+            $letter=null;
+            $advancedsearchform = $request->request->get('advanced_search');
+            $qb     ->join('m.rehabilitationcertificate', 'mr')
+                    ->join('m.sportsgroup', 'ms');
+            
+            if(!in_array('', $advancedsearchform['terminationdate']))
+                $qb     ->andWhere('mr.terminationdate'.$advancedsearchform['terminationdatecompoperators']. '\''.$advancedsearchform['terminationdate']['year'].'-'.$advancedsearchform['terminationdate']['month'].'-'.$advancedsearchform['terminationdate']['day'].'\'');
+            
+            if($advancedsearchform['rehabunits']!='')
+                $qb     ->andWhere('mr.rehabunits'.$advancedsearchform['rehabunitscompoperators'].$advancedsearchform['rehabunits']);
+
+            
         }
         else
         {
@@ -287,18 +272,12 @@ class MemberController extends Controller
      */
     public function advancedSearchAction(Request $request, $type, $letter)
     {
-        $advancedsearchform = $this->createForm(AdvancedSearchType::class, null);
+        $advancedsearchform = $this->createForm(AdvancedSearchType::class, null, array('action' => $this->generateUrl('member_home', array('type'=>$type))));
         
         $advancedsearchform->handleRequest($request);
-        if($advancedsearchform->isSubmitted() && $advancedsearchform->isValid())
-        {
-            return $this->redirectToRoute('member_home', array('type'=>$type, 'letter' => $letter, 
-                'erweitertesuche'=> 'true', 
-                'tdcompop' => $advancedsearchform->get('terminationdatecompoperators')->getData(),
-                'td'=> $advancedsearchform->get('terminationdate')->getData(),
-                'rucompop'=> $advancedsearchform->get('rehabunitscompoperators')->getData(),
-                'rucompop'=> $advancedsearchform->get('rehabunits')->getData()));
-        } 
+        
+        //some logic needs to be added: https://symfony.com/doc/current/form/direct_submit.html
+ 
         
         return $this->render(
             'Mitglieder_Nichtmitglieder/advancedsearchform.html.twig',

@@ -122,7 +122,7 @@ function myFunction() {
                                 </button>
                                 {% block advancedsearch %}
                                 {% endblock %}
-                                <a href="{{ path }}"><input type="button" class="btn btn-default" value="Suche abbrechen" {% if  searchform.vars.submitted == false %}{{ 'disabled' }}{% endif %} ></a>
+                                <a href="{{ path }}"><input type="button" class="btn btn-primary" value="Suche abbrechen" {% if  searchform.vars.submitted == false %}{{ 'disabled' }}{% endif %} ></a>
 
 
                                 {{ form_end(searchform) }}
