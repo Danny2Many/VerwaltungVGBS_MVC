@@ -272,12 +272,19 @@ class MemberController extends Controller
      */
     public function advancedSearchAction(Request $request, $type, $letter)
     {
-        $advancedsearchform = $this->createForm(AdvancedSearchType::class, null, array('action' => $this->generateUrl('member_home', array('type'=>$type))));
+        $advancedSearch = new \AppBundle\Entity\Mitglieder_NichtMitglieder\advancedsearch();
+        $advancedsearchform = $this->createForm(AdvancedSearchType::class, $advancedSearch);
         
         $advancedsearchform->handleRequest($request);
         
+
         //some logic needs to be added: https://symfony.com/doc/current/form/direct_submit.html
  
+        if ($advancedsearchform->isSubmitted() && $advancedsearchform->isValid())
+        {
+
+            return  $this->redirectToRoute('member_home', array_merge(array('type'=>$type, 'letter' => $letter), $advancedsearchform->getData()));
+        }
         
         return $this->render(
             'Mitglieder_Nichtmitglieder/advancedsearchform.html.twig',

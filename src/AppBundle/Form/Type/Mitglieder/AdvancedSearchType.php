@@ -16,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Validator\Constraints\Date;
 
 
 class AdvancedSearchType extends AbstractType{
@@ -25,7 +26,11 @@ class AdvancedSearchType extends AbstractType{
 
         $builder
 
-                ->add('terminationdate',DateType::class, array('label' => 'RS gültig bis:', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag'), 'required' => false))
+                ->add('terminationdate',DateType::class, array('label' => 'RS gültig bis:', 
+                    'format' => 'yyyy-MM-dd', 
+                    'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag'), 
+                    'required' => false))
+                
                 ->add('rehabunits',IntegerType::class, array('label' => 'Einheiten', 'required' => false))
               
                 ->add('terminationdatecompoperators', ChoiceType::class, array(
