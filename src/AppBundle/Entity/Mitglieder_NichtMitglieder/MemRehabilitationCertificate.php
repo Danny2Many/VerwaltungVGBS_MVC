@@ -53,10 +53,14 @@ class MemRehabilitationCertificate {
       *  
       *  @ORM\Column(type="integer")
       * 
-       * @Assert\NotNull()
+      * @Assert\NotNull()
      * @Assert\Type(
      *     type="integer",
      *     message="Der angegebene Wert {{ value }} ist keine ganze Zahl."
+     * )
+     * @Assert\Range(
+     *      min = 0,
+     *      minMessage = "Bitte geben sie eine Zahl größer-gleich {{ limit }} ein.",
      * )
      */
     protected $rehabunits;

@@ -28,10 +28,8 @@
        
         <div class="row vert-offset-bottom-2">
             <div class="col-md-12">
-                <div class="alert alert-info">
-                    <strong>{% include 'form/requiredtext.html' %}</strong>
                     {{ form_errors(form) }}
-                </div>
+
            </div>
         </div>
             
@@ -44,22 +42,26 @@
                     <div class="col-sm-1">
                     {{ form_label(form.terminationdatecompoperators) }}
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-sm-2">
                         {{ form_widget(form.terminationdatecompoperators) }}
+                        {{ form_errors(form.terminationdatecompoperators) }}
                     </div>
                     <div class="col-sm-3">
                         {{ form_widget(form.terminationdate) }}
+                        {{ form_errors(form.terminationdate) }}
                     </div>
                     <div class="col-sm-1">
                         {{ form_label(form.rehabunitscompoperators) }}
                     </div>
                     <div class="col-sm-1">
                         {{ form_widget(form.rehabunitscompoperators) }}
+                        {{ form_errors(form.rehabunitscompoperators) }}
                     </div>
                     <div class="col-sm-3">
                         {{ form_widget(form.rehabunits) }}
+                        {{ form_errors(form.rehabunits) }}
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-1">
                         {{ form_label(form.rehabunits) }}
                     </div>
                 </div>

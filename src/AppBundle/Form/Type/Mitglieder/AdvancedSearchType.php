@@ -16,10 +16,15 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Constraints\Range;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 
 class AdvancedSearchType extends AbstractType{
+    
+    public $rehabunitsvalue;
+    public $terminationdatecompoperatorsvalue;
   
     public function buildForm(FormBuilderInterface $builder, array $options)      
     {
@@ -29,9 +34,11 @@ class AdvancedSearchType extends AbstractType{
                 ->add('terminationdate',DateType::class, array('label' => 'RS gültig bis:', 
                     'format' => 'yyyy-MM-dd', 
                     'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag'), 
-                    'required' => false))
+                    'required' => false,
+                    'invalid_message' => 'Bitte geben Sie ein gültiges Datum an.'))
                 
-                ->add('rehabunits',IntegerType::class, array('label' => 'Einheiten', 'required' => false))
+                ->add('rehabunits',IntegerType::class, array('label' => 'Einheiten', 
+                    'required' => false))
               
                 ->add('terminationdatecompoperators', ChoiceType::class, array(
                 'choices'  => array(
@@ -43,7 +50,7 @@ class AdvancedSearchType extends AbstractType{
                 'label' => 'Läuft ab:',
                 'required' => false
                 ))
-                
+
                 ->add('rehabunitscompoperators', ChoiceType::class, array(
                 'choices'  => array(
                 '=' => '=',

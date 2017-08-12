@@ -80,19 +80,22 @@ class MemberController extends Controller
                 $qb   ->andWhere($qb->expr()->like('m.'.$searchcol, ':searchval'))
                                 ->setParameter('searchval','%'.$searchval.'%');
         }
-        elseif ($request->request->has('advanced_search'))
+        elseif ($request->query->has('as'))
         {
             $letter=null;
-            $advancedsearchform = $request->request->get('advanced_search');
-            $qb     ->join('m.rehabilitationcertificate', 'mr')
-                    ->join('m.sportsgroup', 'ms');
+            $advancedsearchform = $request->query->all();
+            $qb     ->leftJoin('m.rehabilitationcertificate', 'mr')
+                    ->leftJoin('m.sportsgroup', 'ms');
             
-            if(!in_array('', $advancedsearchform['terminationdate']))
+            if(isset($advancedsearchform['terminationdatecompoperators']))
+            {
                 $qb     ->andWhere('mr.terminationdate'.$advancedsearchform['terminationdatecompoperators']. '\''.$advancedsearchform['terminationdate']['year'].'-'.$advancedsearchform['terminationdate']['month'].'-'.$advancedsearchform['terminationdate']['day'].'\'');
+            }
             
-            if($advancedsearchform['rehabunits']!='')
+            if(isset($advancedsearchform['rehabunitscompoperators']))
+            {
                 $qb     ->andWhere('mr.rehabunits'.$advancedsearchform['rehabunitscompoperators'].$advancedsearchform['rehabunits']);
-
+            }
             
         }
         else
@@ -272,18 +275,28 @@ class MemberController extends Controller
      */
     public function advancedSearchAction(Request $request, $type, $letter)
     {
-        $advancedSearch = new \AppBundle\Entity\Mitglieder_NichtMitglieder\advancedsearch();
-        $advancedsearchform = $this->createForm(AdvancedSearchType::class, $advancedSearch);
+
+        $advancedsearch = new \AppBundle\Entity\Mitglieder_NichtMitglieder\advancedsearch();
+        $advancedsearchform = $this->createForm(AdvancedSearchType::class, $advancedsearch);
         
         $advancedsearchform->handleRequest($request);
-        
 
-        //some logic needs to be added: https://symfony.com/doc/current/form/direct_submit.html
  
         if ($advancedsearchform->isSubmitted() && $advancedsearchform->isValid())
         {
-
-            return  $this->redirectToRoute('member_home', array_merge(array('type'=>$type, 'letter' => $letter), $advancedsearchform->getData()));
+            //entfernen von leeren Einträgen (nicht ausgefüllten Feldern)
+            $advancedsearchform= array_filter($request->request->get('advanced_search'));
+            
+            
+            $flashtext;
+            
+            foreach($advancedsearchform as $fieldvalue)
+            {
+                
+            }
+            
+            $this->addFlash('search', 'Such-Parameter:\n');
+            return  $this->redirectToRoute('member_home', array_merge(array('type'=>$type, 'letter' => $letter, 'as' => true, 'search' => ''), $advancedsearchform));
         }
         
         return $this->render(
