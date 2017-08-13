@@ -41,48 +41,31 @@ class advancedsearch
     {
         if($this->allFieldsAreEmpty())
         {
-            $context->buildViolation('Sie haben keine Such-Parameter angegeben.')
+            $context->buildViolation('Um eine Suche durchführen zu können, werden Such-Parameter benötigt.')
                     ->atPath('form')
                     ->addViolation();
         }
         else
         {
-            if($this->getTerminationdatecompoperators()!='' && $this->getTerminationdate()=='')
-            {
-                switch ($this->getTerminationdatecompoperators())
-                {
-                    case '=': $time = 'An';
-                    break;
-                    case '<': $time = 'Vor';
-                    break;
-                    case '>': $time = 'Nach';
-                    break;
-
-                }
-                $context->buildViolation($time.' welchem Datum läuft der Rehaschein ab?')
-                        ->atPath('terminationdate')
-                        ->addViolation();
-            }
-            else if ($this->getTerminationdate()!='' && $this->getTerminationdatecompoperators()=='')
-            {
-                $context->buildViolation('Bitte geben Sie einen Zeitraum an.')
-                        ->atPath('terminationdatecompoperators')
-                        ->addViolation();
-            }
-
+            $tdcompoperatormapping = array(''=> null, '=' => 'Zu', '<' => 'Vor', '>' => 'Nach');
+            $termDateViolationText = $tdcompoperatormapping[$this->getTerminationdatecompoperators()].' welchem Datum läuft der Rehaschein ab?';
             
-            if ($this->getRehabunitscompoperators()!='' && $this->getRehabunits()=='')
-            {
-                $context->buildViolation('Bitte geben Sie die Anzahl der Einheiten an.')
-                        ->atPath('rehabunits')
-                        ->addViolation();
-            }
-            else if ($this->getRehabunits()!='' && $this->getRehabunitscompoperators()=='')
-            {
-                $context->buildViolation('Bitte geben Sie einen Vergleichsoperator an.')
-                        ->atPath('rehabunitscompoperators')
-                        ->addViolation();
-            }
+            $this->buildBothFieldsAreNotFilledViolation($this->getTerminationdatecompoperators(), $this->getTerminationdate(), $termDateViolationText, 'terminationdate', $context);
+            $this->buildBothFieldsAreNotFilledViolation($this->getTerminationdate(), $this->getTerminationdatecompoperators(), 'Bitte geben Sie einen Zeitraum an.', 'terminationdatecompoperators', $context);
+
+            $this->buildBothFieldsAreNotFilledViolation($this->getRehabunitscompoperators(), $this->getRehabunits(), 'Bitte geben Sie die Anzahl der Einheiten an.', 'rehabunits', $context);
+            $this->buildBothFieldsAreNotFilledViolation($this->getRehabunits(), $this->getRehabunitscompoperators(), 'Bitte geben Sie einen Vergleichsoperator an.', 'rehabunitscompoperators', $context);
+
+        }
+    }
+    
+    private function buildBothFieldsAreNotFilledViolation($notEmptyVar, $emptyVar, $violationText, $path, $context)
+    {
+        if(!empty($notEmptyVar) && empty($emptyVar))
+        {
+            $context->buildViolation($violationText)
+                    ->atPath($path)
+                    ->addViolation();
         }
     }
     

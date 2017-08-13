@@ -287,15 +287,31 @@ class MemberController extends Controller
             //entfernen von leeren Einträgen (nicht ausgefüllten Feldern)
             $advancedsearchform= array_filter($request->request->get('advanced_search'));
             
+            $tdcompoperatormapping = array('=' => 'am', '<' => 'vor', '>' => 'nach');
             
-            $flashtext;
             
-            foreach($advancedsearchform as $fieldvalue)
+            $terminationdateset = false;
+            if(isset($advancedsearchform['terminationdatecompoperators']))
             {
+                $flashtext='Rehaschein[ ';
+                $flashtext=$flashtext.'Ablauf-Datum: '.$tdcompoperatormapping[$advancedsearchform['terminationdatecompoperators']].' '.$advancedsearch->getTerminationdate()->format('d.m.Y');
+                $terminationdateset = true;
                 
+            }    
+            if(isset($advancedsearchform['rehabunitscompoperators']))
+            {
+                if($terminationdateset)
+                {
+                    $flashtext.=', ';
+                }
+                else
+                {
+                    $flashtext='Rehaschein[ ';
+                }
+                $flashtext .='Einheiten: '.$advancedsearchform['rehabunitscompoperators'].' '.$advancedsearchform['rehabunits'];
             }
-            
-            $this->addFlash('search', 'Such-Parameter:\n');
+            $flashtext.=' ]';
+            $this->addFlash('search', 'Such-Parameter: '.$flashtext);
             return  $this->redirectToRoute('member_home', array_merge(array('type'=>$type, 'letter' => $letter, 'as' => true, 'search' => ''), $advancedsearchform));
         }
         
