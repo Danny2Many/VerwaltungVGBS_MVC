@@ -107,11 +107,45 @@ function myFunction() {
   </div>
 {% endfor %}
 
-{% for flashMessage in app.session.flashbag.get('search') %}
+{% set requestparam = app.request.query.all %}
+
+{% if requestparam['as'] is defined %}
+    {% set tdcompoperatormapping = {'=' : 'am', '<' : 'vor', '>' : 'nach'} %}
+    {% set searchingForRehacert = false %}
+    {% set flashtext = '' %}
+
+    {% if requestparam['terminationdatecompoperators'] is defined %}
+        {% set flashtext = flashtext~'Ablauf-Datum: '~tdcompoperatormapping[requestparam['terminationdatecompoperators']]~' '~requestparam['terminationdate'] %}
+        {% set searchingForRehacert = true %}
+
+    {% endif %}    
+    {% if requestparam['rehabunitscompoperators'] is defined %}
+
+        {% if searchingForRehacert %}
+
+            {% set flashtext = flashtext~', ' %}
+
+        {% else %}
+
+            {% set searchingForRehacert = true %}
+
+        {% endif %}
+
+        {% set flashtext = flashtext~'Einheiten: '~requestparam['rehabunitscompoperators']~' '~requestparam['rehabunits'] %}
+    {% endif %}
+
+    {% if searchingForRehacert %}
+
+        {% set flashtext=  'Rehaschein[ '~flashtext~' ]' %}
+
+    {% endif %}
+
+    {% set flashtext=  'Gesucht werden Personen mit: '~flashtext %}
+
    <div class="alert alert-info">
-    <strong>{{ flashMessage }}</strong>
+       <strong>{{flashtext}}</strong>
   </div>
-{% endfor %} 
+{% endif %} 
                                 
          {% block topmenu %}                       
             <div class="topmenu row">
@@ -129,7 +163,7 @@ function myFunction() {
                                 {% block advancedsearch %}
                                 {% endblock %}
                                 <a href="{{ path }}">
-                                    <button type="button" class="btn btn-primary" {% if  searchform.vars.submitted == false %}{{ 'disabled' }}{% endif %} >
+                                    <button type="button"  {% if  searchform.vars.submitted == false and requestparam['as'] is not defined%} class="btn btn-default" {{ 'disabled' }} {% else %} class="btn btn-primary" {% endif %} >
                                         <span class="glyphicon glyphicon-remove"></span> Suche abbrechen
                                     </button>
                                 </a>
@@ -169,7 +203,7 @@ function myFunction() {
                  {% if tabledata is empty %}
                  
                     <div class="alert alert-info">
-                         Es konnten keine, mit ihrer Suchanfrage übereinstimmenden, Einträge gefunden werden.
+                         Es konnten keine Einträge gefunden werden, die mit ihrer Suchanfrage übereinstimmen.
                     </div>
                      
                  {% else %}

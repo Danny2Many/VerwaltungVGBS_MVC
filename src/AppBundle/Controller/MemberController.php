@@ -89,7 +89,9 @@ class MemberController extends Controller
             
             if(isset($advancedsearchform['terminationdatecompoperators']))
             {
-                $qb     ->andWhere('mr.terminationdate'.$advancedsearchform['terminationdatecompoperators']. '\''.$advancedsearchform['terminationdate']['year'].'-'.$advancedsearchform['terminationdate']['month'].'-'.$advancedsearchform['terminationdate']['day'].'\'');
+                $tdtime = strtotime($advancedsearchform['terminationdate']);
+                $convertedTerminationDate = date('Y-m-d',$tdtime);
+                $qb     ->andWhere('mr.terminationdate'.$advancedsearchform['terminationdatecompoperators']. '\''.$convertedTerminationDate.'\'');
             }
             
             if(isset($advancedsearchform['rehabunitscompoperators']))
@@ -287,32 +289,14 @@ class MemberController extends Controller
             //entfernen von leeren Einträgen (nicht ausgefüllten Feldern)
             $advancedsearchform= array_filter($request->request->get('advanced_search'));
             
-            $tdcompoperatormapping = array('=' => 'am', '<' => 'vor', '>' => 'nach');
-            
-            
-            $terminationdateset = false;
             if(isset($advancedsearchform['terminationdatecompoperators']))
             {
-                $flashtext='Rehaschein[ ';
-                $flashtext=$flashtext.'Ablauf-Datum: '.$tdcompoperatormapping[$advancedsearchform['terminationdatecompoperators']].' '.$advancedsearch->getTerminationdate()->format('d.m.Y');
-                $terminationdateset = true;
+                $advancedsearchform['terminationdate']=$advancedsearch->getTerminationdate()->format('d.m.Y');
                 
             }    
-            if(isset($advancedsearchform['rehabunitscompoperators']))
-            {
-                if($terminationdateset)
-                {
-                    $flashtext.=', ';
-                }
-                else
-                {
-                    $flashtext='Rehaschein[ ';
-                }
-                $flashtext .='Einheiten: '.$advancedsearchform['rehabunitscompoperators'].' '.$advancedsearchform['rehabunits'];
-            }
-            $flashtext.=' ]';
-            $this->addFlash('search', 'Such-Parameter: '.$flashtext);
-            return  $this->redirectToRoute('member_home', array_merge(array('type'=>$type, 'letter' => $letter, 'as' => true, 'search' => ''), $advancedsearchform));
+            
+//            $this->addFlash('search', 'Gesucht werden Personen mit: '.$flashtext);
+            return  $this->redirectToRoute('member_home', array_merge(array('type'=>$type, 'letter' => $letter, 'as' => ''), $advancedsearchform));
         }
         
         return $this->render(
