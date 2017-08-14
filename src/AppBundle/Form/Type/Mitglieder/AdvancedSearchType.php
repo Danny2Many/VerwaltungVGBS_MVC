@@ -5,10 +5,9 @@
 namespace AppBundle\Form\Type\Mitglieder;
 
 
-use AppBundle\Form\Type\PersonalDataType;
+
 use Symfony\Component\Form\FormBuilderInterface;
-
-
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -16,19 +15,19 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Validator\Constraints\Range;
-use Symfony\Component\Validator\Constraints\Callback;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityRepository;
+
 
 
 class AdvancedSearchType extends AbstractType{
     
-    public $rehabunitsvalue;
-    public $terminationdatecompoperatorsvalue;
-  
+
+    public $options;
     public function buildForm(FormBuilderInterface $builder, array $options)      
     {
 
+        $this->options=$options;
         $builder
 
                 ->add('terminationdate',DateType::class, array('label' => 'RS gültig bis:', 
@@ -64,6 +63,28 @@ class AdvancedSearchType extends AbstractType{
                 'label' => 'besitzt:',
                 'required' => false
                 ))
+                
+                ->add('sportsgroup', EntityType::class, array(
+                        'class' => 'AppBundle:Sportsgroup',
+                        'choice_label' => 'token',
+                        'label' => 'Name:',
+                        'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('s')
+                        ->where('s.type=\''.$this->options['typeSymbol'].'\'');
+                        },
+                        'required' => false
+                    ))
+                                
+                ->add('membersportsgroupstate', ChoiceType::class, array(
+                'choices'  => array(
+                'eingeschrieben' => 'eingeschrieben',
+                'ausgetreten' => 'ausgetreten'
+
+                ),
+                'choices_as_values' => true,
+                'label' => 'Status:',
+                'required' => false
+                ))                                
                
                 ->add('search', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'Suchen'))
                 ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'Abbrechen'))
@@ -71,6 +92,12 @@ class AdvancedSearchType extends AbstractType{
 
     }
 
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'typeSymbol'=>null
+        ));
+    }
 
     
 }

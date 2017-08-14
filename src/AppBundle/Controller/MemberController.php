@@ -17,12 +17,13 @@ use AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup;
 use AppBundle\Entity\Mitglieder_NichtMitglieder\MemPhoneNumber;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Services\ToolsManager;
-
+use DateTime;
 
 
 
 class MemberController extends Controller
 {
+    public $typeSymbolMapper = array('mitglieder' => 'm', 'nichtmitglieder' => 'nm');
 
     /**
      * @Route("/vgbsverwaltung/{type}/{letter}", defaults={"letter"="A"}, name="member_home", requirements={"type": "mitglieder|nichtmitglieder", "letter": "[A-Z]"})
@@ -31,23 +32,17 @@ class MemberController extends Controller
     {
 
         if($type=='mitglieder')
-        {
-            //0 stands for members
-            $dbTypeSymbol='\'m\'';
-            
+        {         
             $idColumnName = 'Mitgliedsnr';
         }
         else
-        {
-            //1 stands for nonmembers
-            $dbTypeSymbol='\'nm\'';
-            
+        {           
             $idColumnName = 'NichtMitgliedsnr';
         }
         $doctrine=$this->getDoctrine();
 
         $qb = $doctrine->getRepository('AppBundle:Mitglieder_NichtMitglieder\Member')->createQueryBuilder('m');
-        $qb->where('m.type = '.$dbTypeSymbol);
+        $qb->where('m.type = \''.$this->typeSymbolMapper[$type].'\'');
 
 
         $choices=array(
@@ -80,15 +75,18 @@ class MemberController extends Controller
                 $qb   ->andWhere($qb->expr()->like('m.'.$searchcol, ':searchval'))
                                 ->setParameter('searchval','%'.$searchval.'%');
         }
+        //if the advancedsearchform was submitted
         elseif ($request->query->has('as'))
         {
             $letter=null;
+            $searchingForRehaCert=false;
             $advancedsearchform = $request->query->all();
-            $qb     ->leftJoin('m.rehabilitationcertificate', 'mr')
-                    ->leftJoin('m.sportsgroup', 'ms');
+            $qb     ->leftJoin('m.sportsgroup', 'ms');
             
             if(isset($advancedsearchform['terminationdatecompoperators']))
             {
+                $qb->leftJoin('m.rehabilitationcertificate', 'mr');
+                $searchingForRehaCert=true;
                 $tdtime = strtotime($advancedsearchform['terminationdate']);
                 $convertedTerminationDate = date('Y-m-d',$tdtime);
                 $qb     ->andWhere('mr.terminationdate'.$advancedsearchform['terminationdatecompoperators']. '\''.$convertedTerminationDate.'\'');
@@ -96,6 +94,10 @@ class MemberController extends Controller
             
             if(isset($advancedsearchform['rehabunitscompoperators']))
             {
+                if(!$searchingForRehaCert)
+                {
+                    $qb->leftJoin('m.rehabilitationcertificate', 'mr');
+                }
                 $qb     ->andWhere('mr.rehabunits'.$advancedsearchform['rehabunitscompoperators'].$advancedsearchform['rehabunits']);
             }
             
@@ -154,24 +156,22 @@ class MemberController extends Controller
         $member = new Member();
         $phonenumber = new MemPhoneNumber();
         $m_sg= new Member_Sportsgroup();
-  
+        $typeSymbol=$this->typeSymbolMapper[$type];
               
         $member->addPhonenumber($phonenumber);               
         $member->addSportsgroup($m_sg);
         if($type == 'mitglieder')
         {
             $formType = AddMemberType::class;
-            $typeSymbol = 'm';
             $titel = 'Mitglied anlegen';
         }
         else
         {
             $formType = BaseMemberType::class;
-            $typeSymbol = 'nm';
             $titel = 'Nichtmitglied anlegen';
         }
         
-        $addmemform = $this->createForm($formType, $member, array('typeSymbol'=>$typeSymbol));
+        $addmemform = $this->createForm($formType, $member, array('typeSymbol'=> $typeSymbol));
         $addmemform->handleRequest($request);
      
     
@@ -209,11 +209,9 @@ class MemberController extends Controller
     {
         if($type == 'mitglieder')
         {
-            $typeSymbol='m';
             $titel = 'Mitglied bearbeiten';
         }else
         {
-            $typeSymbol='nm';
             $titel = 'Nichtmitglied bearbeiten';
         }
     
@@ -234,7 +232,7 @@ class MemberController extends Controller
         $originalphonenrs = $tm->copyArrayCollection($member->getPhonenumber());
         $originalsportsgroups = $tm->copyArrayCollection($member->getSportsgroup());
   
-        $editmemform = $this->createForm(EditMemberType::class, $member, array('typeSymbol' =>$typeSymbol));
+        $editmemform = $this->createForm(EditMemberType::class, $member, array('typeSymbol' => $this->typeSymbolMapper[$type]));
         $editmemform->handleRequest($request);
           
         if($editmemform->get('delete')->isClicked())
@@ -279,7 +277,19 @@ class MemberController extends Controller
     {
 
         $advancedsearch = new \AppBundle\Entity\Mitglieder_NichtMitglieder\advancedsearch();
-        $advancedsearchform = $this->createForm(AdvancedSearchType::class, $advancedsearch);
+        
+        if($request->query->has('as'))
+        {
+            $advancedsearch->setTerminationdatecompoperators($request->query->get('terminationdatecompoperators'));           
+            //convert the terminationdate from a string to a DateTime-Object
+            $terminationdate = DateTime::createFromFormat('d.m.Y', $request->query->get('terminationdate'));
+            $advancedsearch->setTerminationdate($terminationdate); 
+            $advancedsearch->setRehabunitscompoperators($request->query->get('rehabunitscompoperators'));
+            $advancedsearch->setRehabunits($request->query->get('rehabunits'));
+        }
+        
+        
+        $advancedsearchform = $this->createForm(AdvancedSearchType::class, $advancedsearch, array('typeSymbol' => $this->typeSymbolMapper[$type]));
         
         $advancedsearchform->handleRequest($request);
 

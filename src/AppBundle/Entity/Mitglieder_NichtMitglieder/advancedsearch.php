@@ -33,6 +33,9 @@ class advancedsearch
     public $terminationdatecompoperators;
     public $rehabunitscompoperators;
     
+    public $sportsgroup;
+    public $membersportsgroupstate;
+    
     
     /**
      * @Assert\Callback
@@ -54,6 +57,10 @@ class advancedsearch
             $this->buildBothFieldsAreNotFilledViolation($this->getTerminationdate(), $this->getTerminationdatecompoperators(), 'Bitte geben Sie einen Zeitraum an.', 'terminationdatecompoperators', $context);
 
             $this->buildBothFieldsAreNotFilledViolation($this->getRehabunitscompoperators(), $this->getRehabunits(), 'Bitte geben Sie die Anzahl der Einheiten an.', 'rehabunits', $context);
+            $this->buildBothFieldsAreNotFilledViolation($this->getRehabunits(), $this->getRehabunitscompoperators(), 'Bitte geben Sie einen Vergleichsoperator an.', 'rehabunitscompoperators', $context);
+            
+            $membersportsgroupstate = $this->getMembersportsgroupstate();
+            $this->buildBothFieldsAreNotFilledViolation($membersportsgroupstate, $this->getSportsgroup(), 'Bitte geben wählen Sie ein Sportgruppe,in welche eine Person '.$membersportsgroupstate.' sein soll.', 'rehabunits', $context);
             $this->buildBothFieldsAreNotFilledViolation($this->getRehabunits(), $this->getRehabunitscompoperators(), 'Bitte geben Sie einen Vergleichsoperator an.', 'rehabunitscompoperators', $context);
 
         }
@@ -109,5 +116,22 @@ class advancedsearch
     }
 
 
-     
+    function getSportsgroup() {
+        return $this->sportsgroup;
+    }
+
+    function setSportsgroup($sportsgroup) {
+        $this->sportsgroup = $sportsgroup;
+    }
+
+
+    function getMembersportsgroupstate() {
+        return $this->membersportsgroupstate;
+    }
+
+    function setMembersportsgroupstate($membersportsgroupstate) {
+        $this->membersportsgroupstate = $membersportsgroupstate;
+    }
+
+
 }

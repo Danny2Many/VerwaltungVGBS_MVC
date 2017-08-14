@@ -28,6 +28,12 @@
        
         <div class="row vert-offset-bottom-2">
             <div class="col-md-12">
+                <div class="alert alert-info">
+                    <span class="glyphicon glyphicon-info-sign"></span><strong> 
+                        Sie befinden sich in der erweiterten Suche. 
+                        Mit Hilfe der erweiterten Suche können Personen gesucht werden, welche den hier angegebenen Such-Parametern entsprechen. 
+                        So können beispielsweise Personen gesucht werden, die einen Rehaschein besitzen, der zu einem bestimmten Datum abläuft und eine gewisse Anzahl an Einheiten besitzt.</strong>
+                </div>
                     {{ form_errors(form) }}
 
            </div>
@@ -77,7 +83,19 @@
                             Sportgruppe
                         </h2>
                 </legend>
-
+                <div class="form-group">
+                    <div class="col-sm-1">
+                        {{form_label(form.membersportsgroupstate)}}
+                    </div>
+                    <div class="col-sm-3">
+                        {{form_widget(form.membersportsgroupstate)}}
+                    </div>
+                    <div class="col-sm-1">
+                        {{form_label(form.sportsgroup)}}
+                    </div>
+                    <div class="col-sm-7">
+                        {{form_widget(form.sportsgroup)}}
+                    </div>
             </div>
         </div>
         

@@ -31,13 +31,11 @@ class BaseMemberType extends AbstractType{
         {
             $beginDate='Eintrittsdatum:';
             $participationConfirmation='Aufnahmebest.:';
-            $typeSymbol='\'m\'';
         }
         else
         {
             $beginDate='Teilnahmebeginn:';
             $participationConfirmation='Teilnahmebeginnbest.';
-            $typeSymbol='\'nm\'';
         }
 
         $builder
@@ -72,7 +70,7 @@ class BaseMemberType extends AbstractType{
 
         ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\Mitglieder_NichtMitglieder\MemRehabilitationCertificate'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
                 
-        ->add('sportsgroup', CollectionType::class, array('entry_type' => SportsgroupType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup','typeSymbol'=>$typeSymbol), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
+        ->add('sportsgroup', CollectionType::class, array('entry_type' => SportsgroupType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup','typeSymbol'=>$options['typeSymbol']), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
                 
         ->add('healthinsurance', SanitizedTextType::class, array('label' => 'Krankenkasse:', 'required' => false))       
 

@@ -18,12 +18,13 @@ class SportsgroupType extends AbstractType{
         $builder->add('joined',DateType::class, array('label' => 'Beitritt:', 'format' => 'yyyy-MM-dd', 'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag')))
                 ->add('resignedfrom',DateType::class, array('label' => 'Austritt:', 'format' => 'yyyy-MM-dd', 'required' => false,'placeholder' => array('year' => 'Jahr', 'month' => 'Monat', 'day' => 'Tag')))
                 ->add('sportsgroup', EntityType::class, array(
+     
                         'class' => 'AppBundle:Sportsgroup',
                         'choice_label' => 'token',
                         'label' => 'Sportgruppe:',
                     'query_builder' => function (EntityRepository $er) {
         return $er->createQueryBuilder('s')
-            ->where('s.type='.$this->options['typeSymbol']);
+            ->where('s.type=\''.$this->options['typeSymbol'].'\'');
     },
                     )) ;
     }
