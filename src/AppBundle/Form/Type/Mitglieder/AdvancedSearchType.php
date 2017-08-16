@@ -77,12 +77,12 @@ class AdvancedSearchType extends AbstractType{
                                 
                 ->add('membersportsgroupstate', ChoiceType::class, array(
                 'choices'  => array(
-                'eingeschrieben' => 'eingeschrieben',
-                'ausgetreten' => 'ausgetreten'
+                'eingeschrieben' => 'is',
+                'ausgetreten' => 'is not'
 
                 ),
                 'choices_as_values' => true,
-                'label' => 'Status:',
+                'label' => 'Teilnahmeverhältnis:',
                 'required' => false
                 ))                                
                

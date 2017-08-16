@@ -44,24 +44,31 @@ class advancedsearch
     {
         if($this->allFieldsAreEmpty())
         {
-            $context->buildViolation('Um eine Suche durchführen zu können, werden Such-Parameter benötigt.')
+            $context->buildViolation('Um eine Suche durchführen zu können, werden Suchkriterien benötigt.')
                     ->atPath('form')
                     ->addViolation();
         }
         else
         {
+        
+            $terminationdatecompoperator=$this->getTerminationdatecompoperators();
             $tdcompoperatormapping = array(''=> null, '=' => 'Zu', '<' => 'Vor', '>' => 'Nach');
-            $termDateViolationText = $tdcompoperatormapping[$this->getTerminationdatecompoperators()].' welchem Datum läuft der Rehaschein ab?';
-            
-            $this->buildBothFieldsAreNotFilledViolation($this->getTerminationdatecompoperators(), $this->getTerminationdate(), $termDateViolationText, 'terminationdate', $context);
-            $this->buildBothFieldsAreNotFilledViolation($this->getTerminationdate(), $this->getTerminationdatecompoperators(), 'Bitte geben Sie einen Zeitraum an.', 'terminationdatecompoperators', $context);
-
-            $this->buildBothFieldsAreNotFilledViolation($this->getRehabunitscompoperators(), $this->getRehabunits(), 'Bitte geben Sie die Anzahl der Einheiten an.', 'rehabunits', $context);
-            $this->buildBothFieldsAreNotFilledViolation($this->getRehabunits(), $this->getRehabunitscompoperators(), 'Bitte geben Sie einen Vergleichsoperator an.', 'rehabunitscompoperators', $context);
-            
+            $terminationdate = $this->getTerminationdate();
+            $rehabunitscompoperator = $this->getRehabunitscompoperators();
+            $rehabunits = $this->getRehabunits();
             $membersportsgroupstate = $this->getMembersportsgroupstate();
-            $this->buildBothFieldsAreNotFilledViolation($membersportsgroupstate, $this->getSportsgroup(), 'Bitte geben wählen Sie ein Sportgruppe,in welche eine Person '.$membersportsgroupstate.' sein soll.', 'rehabunits', $context);
-            $this->buildBothFieldsAreNotFilledViolation($this->getRehabunits(), $this->getRehabunitscompoperators(), 'Bitte geben Sie einen Vergleichsoperator an.', 'rehabunitscompoperators', $context);
+            $sportsgroupstateMapping = array(''=> null, 'is' => array('in', 'eingeschrieben'), 'is not' => array('aus', 'ausgetreten'));
+            $sportsgroup = $this->getSportsgroup();
+            
+            $this->buildBothFieldsAreNotFilledViolation($terminationdatecompoperator, $terminationdate, $tdcompoperatormapping[$terminationdatecompoperator].' welchem Datum läuft der Rehaschein ab?', 'terminationdate', $context);
+            $this->buildBothFieldsAreNotFilledViolation($terminationdate, $terminationdatecompoperator, 'Bitte geben Sie einen Zeitraum an.', 'terminationdatecompoperators', $context);
+
+            $this->buildBothFieldsAreNotFilledViolation($rehabunitscompoperator, $rehabunits, 'Bitte geben Sie die Anzahl der Einheiten an.', 'rehabunits', $context);
+            $this->buildBothFieldsAreNotFilledViolation($rehabunits, $rehabunitscompoperator, 'Bitte geben Sie einen Vergleichsoperator an.', 'rehabunitscompoperators', $context);
+            
+            
+            $this->buildBothFieldsAreNotFilledViolation($membersportsgroupstate, $sportsgroup, 'Bitte wählen Sie eine Sportgruppe, '.$sportsgroupstateMapping[$membersportsgroupstate][0].' welche die gesuchten Personen '.$sportsgroupstateMapping[$membersportsgroupstate][1].' sein sollen.', 'sportsgroup', $context);
+            $this->buildBothFieldsAreNotFilledViolation($sportsgroup, $membersportsgroupstate, 'Bitte geben Sie ein Teilnahmeverhältnis an.', 'membersportsgroupstate', $context);
 
         }
     }

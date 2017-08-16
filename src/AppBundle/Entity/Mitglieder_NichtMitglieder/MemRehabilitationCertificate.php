@@ -20,14 +20,13 @@ class MemRehabilitationCertificate {
     /**
      * @ORM\Column(name="rcid")
      * @ORM\Id
-     *
      * @ORM\GeneratedValue(strategy="AUTO")
      * 
      */
     protected $rcid;
     
     
-        /**
+    /**
      * @ORM\Column(type="integer")
      * 
      * 
@@ -50,17 +49,14 @@ class MemRehabilitationCertificate {
     protected $terminationdate;
 
     /**
-      *  
-      *  @ORM\Column(type="integer")
-      * 
-      * @Assert\NotNull()
-     * @Assert\Type(
-     *     type="integer",
-     *     message="Der angegebene Wert {{ value }} ist keine ganze Zahl."
-     * )
-     * @Assert\Range(
-     *      min = 0,
-     *      minMessage = "Bitte geben sie eine Zahl größer-gleich {{ limit }} ein.",
+     *  
+     * @ORM\Column(type="integer")
+     * @Assert\NotNull()
+     * @Assert\Type(type="integer", message="Der angegebene Wert {{ value }} ist keine ganze Zahl.")
+     * @Assert\Range(min = 0, minMessage = "Bitte geben sie eine Zahl größer-gleich {{ limit }} ein.")
+     * @Assert\Length(
+     *      max = 11,
+     *      maxMessage = "Die Nummer darf nicht länger als {{ limit }} zeichen sein."
      * )
      */
     protected $rehabunits;

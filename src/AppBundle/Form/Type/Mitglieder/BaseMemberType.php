@@ -22,6 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use AppBundle\Form\Type\SportsgroupType;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class BaseMemberType extends AbstractType{
   
@@ -68,9 +69,9 @@ class BaseMemberType extends AbstractType{
         'label' => 'Erhält Newsletter:'
         ))
 
-        ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\Mitglieder_NichtMitglieder\MemRehabilitationCertificate'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
+        ->add('rehabilitationcertificate', CollectionType::class, array('entry_type' => RehabCertType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\Mitglieder_NichtMitglieder\MemRehabilitationCertificate'), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true, 'constraints' => array(new Valid())))
                 
-        ->add('sportsgroup', CollectionType::class, array('entry_type' => SportsgroupType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup','typeSymbol'=>$options['typeSymbol']), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true))
+        ->add('sportsgroup', CollectionType::class, array('entry_type' => SportsgroupType::class, 'entry_options' => array('data_class' => 'AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup','typeSymbol'=>$options['typeSymbol']), 'allow_add' => true, 'by_reference' => false, 'allow_delete' => true, 'constraints' => array(new Valid())))
                 
         ->add('healthinsurance', SanitizedTextType::class, array('label' => 'Krankenkasse:', 'required' => false))       
 
@@ -110,6 +111,7 @@ class BaseMemberType extends AbstractType{
         $resolver->setDefaults(array(
             'data_class' => "AppBundle\Entity\Mitglieder_NichtMitglieder\Member",
             'typeSymbol' => null
+            
         ));
     }
     

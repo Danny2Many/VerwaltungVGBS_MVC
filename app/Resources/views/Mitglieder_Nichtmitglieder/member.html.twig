@@ -4,7 +4,7 @@
 {#{% form_theme rehabsearchform 'bootstrap_3_layout.html.twig' %}#}
 
 {% set capitalizedType = type|capitalize %}
-{% block title %}{{ capitalizedType }} - Stammdaten{% endblock %}
+{% block title %}{{ capitalizedType }}: Stammdaten{% endblock %}
 {% block fixedcolnum %} 8 {% endblock %}
 
 {% set columnDefs = ['"2.4%"', '"4.5%"', '"4.5%"','"2.5%"', '"4.5%"', '"2%"', '"7%"', '"5%"', '"5%"', 
@@ -50,9 +50,10 @@
 
 {% block advSearchFlashText %}
     {% if requestparam['as'] is defined %}
-    
     {% set tdcompoperatormapping = {'=' : 'am', '<' : 'vor', '>' : 'nach'} %}
+    {% set memberstatemapping = {'is' : 'Eingeschrieben', 'is not' : 'Ausgetreten'} %}
     {% set searchingForRehacert = false %}
+    {% set searchingForSportsgroup = false %}
     {% set flashtext = '' %}
 
     {% if requestparam['terminationdatecompoperators'] is defined %}
@@ -80,17 +81,33 @@
         {% set flashtext=  'Rehaschein[ '~flashtext~' ]' %}
 
     {% endif %}
+    
+    {% if requestparam['membersportsgroupstate'] is defined %}
+        {% if searchingForRehacert %}
+
+            {% set flashtext=  flashtext~', ' %}
+
+        {% endif %}
+        
+        {% set flashtext=  flashtext~'Sportgruppe[ Name: '~requestparam['sportsgroup']['name']~', Teilnahmeverhältnis: '~memberstatemapping[requestparam['membersportsgroupstate']]~' ]' %}
+    {% endif %}
+    
+    
     {% set flashtext=  'Gesucht werden Personen mit: '~flashtext %}
     {{ parent() }}
     {% endif %} 
 {% endblock %}
 
-    
+
 
   
 {% block advancedsearch %}
+    {% set asButtonValue = 'Erweiterte Suche' %}
+    {% if requestparam['as'] is defined %}
+            {% set asButtonValue = 'Suchkrit. ändern' %}
+    {% endif %}
     <a href="{{ path('advancedsearchmem', {'type': type, 'letter': cletter }|merge(requestparam)) }}">
-        <input type="button" class="btn btn-default" value="Erweiterte Suche" >
+        <input type="button" class="btn btn-default" value="{{asButtonValue|raw}}" >
     </a>
 {% endblock %}
 

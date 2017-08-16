@@ -81,7 +81,7 @@ class MemberController extends Controller
             $letter=null;
             $searchingForRehaCert=false;
             $advancedsearchform = $request->query->all();
-            $qb     ->leftJoin('m.sportsgroup', 'ms');
+
             
             if(isset($advancedsearchform['terminationdatecompoperators']))
             {
@@ -99,6 +99,15 @@ class MemberController extends Controller
                     $qb->leftJoin('m.rehabilitationcertificate', 'mr');
                 }
                 $qb     ->andWhere('mr.rehabunits'.$advancedsearchform['rehabunitscompoperators'].$advancedsearchform['rehabunits']);
+            }
+            
+            if(isset($advancedsearchform['membersportsgroupstate']))
+            {
+                $qb     ->leftJoin('m.sportsgroup', 'ms');
+                $qb     ->leftJoin('ms.sportsgroup', 'mss');
+                $qb     ->andWhere('mss.sgid='.$advancedsearchform['sportsgroup']['id']);
+                $qb     ->andWhere('ms.resignedfrom '.$advancedsearchform['membersportsgroupstate'].' null');
+
             }
             
         }
@@ -280,12 +289,28 @@ class MemberController extends Controller
         
         if($request->query->has('as'))
         {
-            $advancedsearch->setTerminationdatecompoperators($request->query->get('terminationdatecompoperators'));           
-            //convert the terminationdate from a string to a DateTime-Object
-            $terminationdate = DateTime::createFromFormat('d.m.Y', $request->query->get('terminationdate'));
-            $advancedsearch->setTerminationdate($terminationdate); 
-            $advancedsearch->setRehabunitscompoperators($request->query->get('rehabunitscompoperators'));
-            $advancedsearch->setRehabunits($request->query->get('rehabunits'));
+            if($request->query->has('terminationdatecompoperators'))
+            {
+                $advancedsearch->setTerminationdatecompoperators($request->query->get('terminationdatecompoperators'));           
+                //convert the terminationdate from a string to a DateTime-Object
+                $terminationdate = DateTime::createFromFormat('d.m.Y', $request->query->get('terminationdate'));
+                $advancedsearch->setTerminationdate($terminationdate); 
+            }
+            
+            if($request->query->has('rehabunitscompoperators'))
+            {
+                $advancedsearch->setRehabunitscompoperators($request->query->get('rehabunitscompoperators'));
+                $advancedsearch->setRehabunits($request->query->get('rehabunits'));
+            }
+            
+            if($request->query->has('membersportsgroupstate'))
+            {
+            //Query for the Sportsgroup
+            $doctrine=$this->getDoctrine();
+            $sportsgroup=$doctrine->getRepository('AppBundle:Sportsgroup')->findOneBy(array('sgid'=>$request->query->get('sportsgroup')['id']));
+            $advancedsearch->setSportsgroup($sportsgroup);
+            $advancedsearch->setMembersportsgroupstate($request->query->get('membersportsgroupstate'));
+            }
         }
         
         
@@ -296,14 +321,28 @@ class MemberController extends Controller
  
         if ($advancedsearchform->isSubmitted() && $advancedsearchform->isValid())
         {
+            //removes DateField arrays
+            $filterCallbackFunction = function ($value){
+                if(is_array($value)) $value= array_filter($value);
+                if(empty($value)) return false;
+                return true;
+            };
+            
             //entfernen von leeren Einträgen (nicht ausgefüllten Feldern)
-            $advancedsearchform= array_filter($request->request->get('advanced_search'));
+            $advancedsearchform= array_filter($request->request->get('advanced_search'), $filterCallbackFunction);
+            
             
             if(isset($advancedsearchform['terminationdatecompoperators']))
             {
                 $advancedsearchform['terminationdate']=$advancedsearch->getTerminationdate()->format('d.m.Y');
                 
-            }    
+            }
+            
+            if(isset($advancedsearchform['sportsgroup']))
+            {
+                $advancedsearchform['sportsgroup'] = array('id'=>$advancedsearch->getSportsgroup()->getSgid(),
+                    'name' => $advancedsearch->getSportsgroup()->getToken());
+            }
             
 //            $this->addFlash('search', 'Gesucht werden Personen mit: '.$flashtext);
             return  $this->redirectToRoute('member_home', array_merge(array('type'=>$type, 'letter' => $letter, 'as' => ''), $advancedsearchform));
@@ -319,6 +358,7 @@ class MemberController extends Controller
             ));
 
     }
+
 }
 
 

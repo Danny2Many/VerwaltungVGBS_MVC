@@ -19,7 +19,7 @@
     </script>
 {% endblock %}
 
-{% block title %}Erweiterte Suche{% endblock %}
+{% block title %}{{type|capitalize}}: Erweiterte Suche{% endblock %}
 
 
 
@@ -85,17 +85,20 @@
                 </legend>
                 <div class="form-group">
                     <div class="col-sm-1">
-                        {{form_label(form.membersportsgroupstate)}}
-                    </div>
-                    <div class="col-sm-3">
-                        {{form_widget(form.membersportsgroupstate)}}
-                    </div>
-                    <div class="col-sm-1">
                         {{form_label(form.sportsgroup)}}
                     </div>
                     <div class="col-sm-7">
                         {{form_widget(form.sportsgroup)}}
+                        {{form_errors(form.sportsgroup)}}
                     </div>
+                    <div class="col-sm-2">
+                        {{form_label(form.membersportsgroupstate)}}
+                    </div>
+                    <div class="col-sm-2">
+                        {{form_widget(form.membersportsgroupstate)}}
+                        {{form_errors(form.membersportsgroupstate)}}
+                    </div>
+
             </div>
         </div>
         
@@ -108,7 +111,7 @@
                     <div class="col-sm-10 col-sm-push-2">
                         {{ form_widget(form.search) }}
                         <a href="{{path('advancedsearchmem', {'type': type, 'letter': cletter})}}">{{ form_widget(form.reset, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie dieses Formular zurücksetzen möchten? Ungespeicherte Daten gehen dabei verloren.")'}}) }}</a>
-                        <a href="{{ path('member_home', {'type': type, 'letter': cletter}) }}">{{ form_widget(form.cancel, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie diese Seite verlassen möchten? Ungespeicherte Daten werden dabei verloren gehen.")'}}) }}</a>
+                        <a href="{{ path('member_home', {'type': type, 'letter': cletter}|merge(app.request.query.all)) }}">{{ form_widget(form.cancel, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie diese Seite verlassen möchten? Ungespeicherte Daten werden dabei verloren gehen.")'}}) }}</a>
 
                         {{ form_row(form._token) }}
                     </div>

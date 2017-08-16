@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity\Mitglieder_NichtMitglieder;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -50,6 +52,20 @@ protected $resignedfrom;
         
 
 
+    /**
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context, $payload=null)
+    {
+
+        if(strtotime($this->getJoined()->format('Y-m-d')) >= strtotime($this->getResignedfrom()->format('Y-m-d')))
+        {
+            $context->buildViolation('Das Austrittsdatum muss jünger sein, als das Beitrittsdatum.')
+                    ->atPath('resignedfrom')
+                    ->addViolation();
+        }
+    }
+    
     /**
      * Get memsgid
      *
