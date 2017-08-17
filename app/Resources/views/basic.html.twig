@@ -72,10 +72,11 @@ function myFunction() {
                         <nav class="navbar navbar-default  col-md-12">
                             
                             <ul class="nav navbar-nav">
-                                <li class="{% block HomeAktiv %}#{% endblock %}"><a href="{{ path('homepage') }}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-                                <li class="{% block MitglAktiv %}#{% endblock %}"><a href="{{ path('member_home', {'type': 'mitglieder'}) }}">Mitglieder</a></li>
-                                <li class="{% block NMitglAktiv %}#{% endblock %}"><a href="{{ path('member_home', {'type': 'nichtmitglieder'}) }}">Nichtmitglieder</a></li>
-                                <li class="{% block AustrittAktiv %}#{% endblock %}"><a href="#">Austrittsliste</a></li>
+                                <li class="{% block HomeAktiv %}#{% endblock %}"><a href="{{ path('homepage') }}"><span class="glyphicon glyphicon-home"></span> Home</a></li>                             
+
+                                <li class="{% block MitglAktiv %}{% endblock %}"><a href="{{path('member_home', {'type': 'mitglieder', 'relation': 'eingeschrieben'}) }}">Mitglieder</a></li>
+                                <li class="{% block NMitglAktiv %}{% endblock %}"><a href="{{path('member_home', {'type': 'nichtmitglieder', 'relation': 'eingeschrieben'}) }}">Nichtmitglieder</a></li>                            
+                    
                                 <li class="dropdown {% block SportgrAktiv %}{% endblock %}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Sportgruppen/-kurse<span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <li class="{% block MemSportgrAktiv %}#{% endblock %}"><a href="{{path('memsportsgroup_home') }}">Mitgliedergruppen</a></li>

@@ -110,8 +110,8 @@
                 <div class="form-group">
                     <div class="col-sm-10 col-sm-push-2">
                         {{ form_widget(form.search) }}
-                        <a href="{{path('advancedsearchmem', {'type': type, 'letter': cletter})}}">{{ form_widget(form.reset, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie dieses Formular zurücksetzen möchten? Ungespeicherte Daten gehen dabei verloren.")'}}) }}</a>
-                        <a href="{{ path('member_home', {'type': type, 'letter': cletter}|merge(app.request.query.all)) }}">{{ form_widget(form.cancel, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie diese Seite verlassen möchten? Ungespeicherte Daten werden dabei verloren gehen.")'}}) }}</a>
+                        <a href="{{path('advancedsearchmem', {'type': type, 'relation': relation, 'letter': cletter})}}">{{ form_widget(form.reset, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie dieses Formular zurücksetzen möchten? Ungespeicherte Daten gehen dabei verloren.")'}}) }}</a>
+                        <a href="{{ path('member_home', {'type': type, 'relation': relation,'letter': cletter}|merge(app.request.query.all)) }}">{{ form_widget(form.cancel, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie diese Seite verlassen möchten? Ungespeicherte Daten werden dabei verloren gehen.")'}}) }}</a>
 
                         {{ form_row(form._token) }}
                     </div>

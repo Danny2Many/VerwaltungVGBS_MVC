@@ -26,9 +26,9 @@ class MemberController extends Controller
     public $typeSymbolMapper = array('mitglieder' => 'm', 'nichtmitglieder' => 'nm');
 
     /**
-     * @Route("/vgbsverwaltung/{type}/{letter}", defaults={"letter"="A"}, name="member_home", requirements={"type": "mitglieder|nichtmitglieder", "letter": "[A-Z]"})
+     * @Route("/vgbsverwaltung/{type}/{relation}/{letter}", defaults={"letter"="A"}, name="member_home", requirements={"type": "mitglieder|nichtmitglieder", "relation": "eingeschrieben|ausgetreten", "letter": "[A-Z]"})
      */
-    public function indexAction(Request $request, $type, $letter)
+    public function indexAction(Request $request, $type, $relation, $letter)
     {
 
         if($type=='mitglieder')
@@ -43,6 +43,15 @@ class MemberController extends Controller
 
         $qb = $doctrine->getRepository('AppBundle:Mitglieder_NichtMitglieder\Member')->createQueryBuilder('m');
         $qb->where('m.type = \''.$this->typeSymbolMapper[$type].'\'');
+        
+        if($relation == 'eingeschrieben')
+        {
+            $qb->andWhere('m.quitdate >= '.date('Y-m-d').' OR m.quitdate is null');
+        }
+        else
+        {
+            $qb->andWhere('m.quitdate <= '.date('Y-m-d'));
+        }
 
 
         $choices=array(
@@ -55,7 +64,7 @@ class MemberController extends Controller
             'Krankenkasse' => 'healthinsurance');
      
  
-        $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('member_home', array('type'=>$type))));        
+        $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('member_home', array('type'=>$type, 'relation'=>$relation))));        
         $searchform->handleRequest($request);
         
     
@@ -136,17 +145,16 @@ class MemberController extends Controller
   
         $memberdata=$qb->getQuery()->getResult();
 
- 
-
         return $this->render(
         'Mitglieder_Nichtmitglieder/member.html.twig',
         array(
             'tabledata' => $memberdata,
             'type' => $type,
+            'relation' => $relation,
             'colorclass' => "bluetheader",
             'searchform' => $searchform->createView(),
             'cletter' => $letter,
-            'path' => $this->generateUrl('member_home', array('type'=>$type))     
+            'path' => $this->generateUrl('member_home', array('type'=>$type, 'relation' =>$relation))     
             ));
     }
   
@@ -211,10 +219,10 @@ class MemberController extends Controller
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
     
     /**
-     * @Route("/vgbsverwaltung/{type}/bearbeiten/{letter}/{ID}", defaults={"type": "mitglieder", "letter": "A"}, requirements={"type": "mitglieder|nichtmitglieder", "letter": "[A-Z]"}, name="editmem")
+     * @Route("/vgbsverwaltung/{type}/{relation}/bearbeiten/{letter}/{ID}", defaults={"type": "mitglieder", "letter": "A"}, requirements={"type": "mitglieder|nichtmitglieder", "relation": "eingeschrieben|ausgetreten","letter": "[A-Z]"}, name="editmem")
      * 
      */
-    public function editmemberAction(Request $request, $ID, $type, $letter)
+    public function editmemberAction(Request $request, $ID, $type, $relation, $letter)
     {
         if($type == 'mitglieder')
         {
@@ -275,14 +283,15 @@ class MemberController extends Controller
             'form' => $editmemform->createView(),
             'cletter' => $letter,
             'type' => $type,
+            'relation' => $relation,
             'title' => $titel
             ));
     }
     
     /**
-     * @Route("/vgbsverwaltung/{type}/erweitertesuche/{letter}", defaults={"letter"="A"}, name="advancedsearchmem", requirements={"type": "mitglieder|nichtmitglieder", "letter": "[A-Z]"})
+     * @Route("/vgbsverwaltung/{type}/{relation}/erweitertesuche/{letter}", defaults={"letter"="A"}, name="advancedsearchmem", requirements={"type": "mitglieder|nichtmitglieder","relation": "eingeschrieben|ausgetreten", "letter": "[A-Z]"})
      */
-    public function advancedSearchAction(Request $request, $type, $letter)
+    public function advancedSearchAction(Request $request, $type, $relation, $letter)
     {
 
         $advancedsearch = new \AppBundle\Entity\Mitglieder_NichtMitglieder\advancedsearch();
@@ -354,6 +363,7 @@ class MemberController extends Controller
             'form' => $advancedsearchform->createView(),
             'cletter' => $letter,
             'type' => $type,
+            'relation' => $relation,
             'title' => 'Erweiterte Suche'
             ));
 

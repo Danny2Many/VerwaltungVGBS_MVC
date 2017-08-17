@@ -57,12 +57,15 @@ protected $resignedfrom;
      */
     public function validate(ExecutionContextInterface $context, $payload=null)
     {
-
-        if(strtotime($this->getJoined()->format('Y-m-d')) >= strtotime($this->getResignedfrom()->format('Y-m-d')))
+        $resignedFrom = $this->getResignedfrom();
+        if($resignedFrom != null)
         {
-            $context->buildViolation('Das Austrittsdatum muss jünger sein, als das Beitrittsdatum.')
-                    ->atPath('resignedfrom')
-                    ->addViolation();
+            if(strtotime($this->getJoined()->format('Y-m-d')) >= strtotime($resignedFrom->format('Y-m-d')))
+            {
+                $context->buildViolation('Das Austrittsdatum muss jünger sein, als das Beitrittsdatum.')
+                        ->atPath('resignedfrom')
+                        ->addViolation();
+            }
         }
     }
     
