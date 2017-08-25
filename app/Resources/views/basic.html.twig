@@ -132,7 +132,7 @@ function myFunction() {
                                 </button>
                                 {% block advancedsearch %}
                                 {% endblock %}
-                                <a href="{{ path }}">
+                                <a href="{{ path(pathname, pathparameters) }}">
                                     <button type="button"  {% if  searchform.vars.submitted == false and requestparam['as'] is not defined%} class="btn btn-default" {{ 'disabled' }} {% else %} class="btn btn-primary" {% endif %} >
                                         <span class="glyphicon glyphicon-remove"></span> Suche abbrechen
                                     </button>

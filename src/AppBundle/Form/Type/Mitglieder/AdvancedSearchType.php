@@ -39,6 +39,7 @@ class AdvancedSearchType extends AbstractType{
         {
             $membersportsgroupstate = array_merge($membersportsgroupstate, array('disabled' => true, 'data' => 'is not'));
         }
+        
         $builder
 
                 ->add('terminationdate',DateType::class, array('label' => 'RS gültig bis:', 
@@ -58,7 +59,8 @@ class AdvancedSearchType extends AbstractType{
                 ),
                 'choices_as_values' => true,
                 'label' => 'Läuft ab:',
-                'required' => false
+                'required' => false,
+                'placeholder' => 'Zeitraum'
                 ))
 
                 ->add('rehabunitscompoperators', ChoiceType::class, array(
@@ -72,7 +74,8 @@ class AdvancedSearchType extends AbstractType{
                 ),
                 'choices_as_values' => true,
                 'label' => 'besitzt:',
-                'required' => false
+                'required' => false,
+                'placeholder' => 'Vergleichsoperator'
                 ))
                 
                 ->add('sportsgroup', EntityType::class, array(

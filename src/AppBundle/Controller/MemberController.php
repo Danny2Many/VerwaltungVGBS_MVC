@@ -187,12 +187,10 @@ class MemberController extends Controller
         'Mitglieder_Nichtmitglieder/member.html.twig',
         array(
             'tabledata' => $memberdata, //the query result
-            'type' => $type, //the type of a (non)member (nonmember or member)
-            'relation' => $relation, //if u r searching for registered or quitted (non)members
             'colorclass' => "bluetheader", //Determines the color of the table header
             'searchform' => $searchform->createView(),//the searchform
-            'cletter' => $letter, //The First letter of the surname of the members the user is searching for
-            'path' => $this->generateUrl('member_home', array('type'=>$type, 'relation' =>$relation))//The path     
+            'pathname' => 'member_home', //the name of the path
+            'pathparameters' => array('type'=>$type, 'relation' =>$relation, 'letter' => $letter)//The parameters of the memberpath     
             ));
     }
   
@@ -238,7 +236,7 @@ class MemberController extends Controller
             $manager->flush();
             
             $this->addFlash('notice', 'Diese Person wurde erfolgreich angelegt!'); 
-            return $this->redirectToRoute('member_home', array('type'=>$type, 'letter' => $letter));    
+            return $this->redirectToRoute('member_home', array('type'=>$type, 'relation' => 'eingeschrieben', 'letter' => $letter));    
         }
         
 
@@ -246,9 +244,8 @@ class MemberController extends Controller
         'Mitglieder_NichtMitglieder/memberform.html.twig',
         array(
             'form' => $addmemform->createView(),
-            'cletter' => $letter,
-            'title' => $titel,
-            'type'=>$type
+            'title' => $titel,            
+            'pathparameters' => array('type' => $type, 'relation' => 'eingeschrieben', 'letter' => $letter,)
             
             ));
     }
@@ -296,7 +293,7 @@ class MemberController extends Controller
             $manager->flush();
 
             $this->addFlash('notice', 'Diese Person wurde erfolgreich gelöscht!');
-            return $this->redirectToRoute('member_home', array('type'=>$type, 'letter' => $letter));
+            return $this->redirectToRoute('member_home', array('type'=>$type, 'relation' => $relation, 'letter' => $letter));
         }
  
         //if the form is valid -> persist it to the database
@@ -316,13 +313,11 @@ class MemberController extends Controller
         
         return $this->render(
             'Mitglieder_Nichtmitglieder/memberform.html.twig',
-            array(
-            
+            array(            
             'form' => $editmemform->createView(),
-            'cletter' => $letter,
-            'type' => $type,
-            'relation' => $relation,
-            'title' => $titel
+            'title' => $titel,
+            'pathparameters' => array('type'=>$type, 'relation' =>$relation, 'letter' => $letter)//The parameters of the memberpath     
+
             ));
     }
     

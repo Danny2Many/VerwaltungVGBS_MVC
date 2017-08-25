@@ -3,7 +3,7 @@
 {% form_theme searchform 'bootstrap_3_layout.html.twig' %}
 {#{% form_theme rehabsearchform 'bootstrap_3_layout.html.twig' %}#}
 
-{% set capitalizedType = type|capitalize %}
+{% set capitalizedType = pathparameters['type']|capitalize %}
 {% block title %}{{ capitalizedType }}: Stammdaten{% endblock %}
 {% block fixedcolnum %} 8 {% endblock %}
 
@@ -16,7 +16,7 @@
     {% set MitglAktiv = '' %}  
     {% set NMitglAktiv = '' %}
     
-{% if type == 'mitglieder' %}
+{% if pathparameters['type'] == 'mitglieder' %}
     {% set MitglAktiv = 'active' %}    
     {% block MitglAktiv %}{{MitglAktiv}}{% endblock %}
     {% set entityOfType = 'Mitglied' %}
@@ -27,7 +27,7 @@
     {% set participationConfirmation = 'Aufnahmebest.' %}
     
     {% set lengthOfColumnDefs = columnDefs|length - 1 %}
-{% elseif type == 'nichtmitglieder' %}
+{% elseif pathparameters['type'] == 'nichtmitglieder' %}
     
     {% set NMitglAktiv = 'active' %}   
     {% block NMitglAktiv %}{{NMitglAktiv}}{% endblock %}
@@ -45,7 +45,7 @@
      "columnDefs": [
     
      {% for i in 0..lengthOfColumnDefs %}
-        {% if(i==22 and type != 'mitglieder') %}
+        {% if(i==22 and pathparameters['type'] != 'mitglieder') %}
             { "width": {{columnDefs[i+1]|raw}}, "targets": {{ i }} },
         {% else %}
             { "width": {{columnDefs[i]|raw}}, "targets": {{ i }} },
@@ -114,7 +114,7 @@
     {% if requestparam['as'] is defined %}
             {% set asButtonValue = 'Suchkrit. ändern' %}
     {% endif %}
-    <a href="{{ path('advancedsearchmem', {'type': type, 'relation': relation, 'letter': cletter }|merge(requestparam)) }}">
+    <a href="{{ path('advancedsearchmem', pathparameters|merge(requestparam)) }}">
         <input type="button" class="btn btn-default" value="{{asButtonValue|raw}}" >
     </a>
 {% endblock %}
@@ -123,7 +123,7 @@
 {% block add %}
     
     <div class="inline">
-    <a href="{{ path('addmem', {'type': type, 'letter': cletter }) }}"><button    class="add btn btn-default" {% if relation != 'eingeschrieben' %}disabled{% endif %}>
+        <a href="{{ path('addmem', pathparameters) }}"><button    class="add btn btn-default" {% if pathparameters['relation'] != 'eingeschrieben' %}disabled{% endif %}>
       <span class="glyphicon glyphicon-plus"></span> Neues {{ entityOfType }} anlegen
         </button></a> 
     </div>
@@ -133,11 +133,11 @@
 {% block dropdown %}
         <div class="inline">
    <div class="dropdown">
-       <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Beitrittsstatus: {{relation|capitalize}}
+       <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Beitrittsstatus: {{pathparameters['relation']|capitalize}}
   <span class="caret"></span></button>
   <ul class="dropdown-menu">
-    <li class="{%if relation == 'eingeschrieben'%}active{% endif %}"><a href="{{path('member_home', {'type': type, 'relation': 'eingeschrieben'}) }}">Eingeschrieben</a></li>
-    <li class="{%if relation == 'ausgetreten'%}active{% endif %}"><a href="{{path('member_home', {'type': type, 'relation': 'ausgetreten'}) }}">Ausgetreten</a></li>
+      <li class="{%if pathparameters['relation'] == 'eingeschrieben'%}active{% endif %}"><a href="{{path(pathname, pathparameters|merge({'relation': 'eingeschrieben'})) }}">Eingeschrieben</a></li>
+    <li class="{%if pathparameters['relation'] == 'ausgetreten'%}active{% endif %}"><a href="{{path(pathname, pathparameters|merge({'relation': 'ausgetreten'})) }}">Ausgetreten</a></li>
   </ul>
 </div> 
         </div>
@@ -196,7 +196,7 @@
 
     {% block thead %}
         {% for column in tableColumns %}
-            {% if column!='Ehrung' or (column == 'Ehrung' and type == 'mitglieder') %}
+            {% if column!='Ehrung' or (column == 'Ehrung' and pathparameters['type'] == 'mitglieder') %}
                 <th>{{column|raw}}</th>
             {% endif %}
         {% endfor %}
@@ -222,7 +222,7 @@
 
                     {% set id = data.memid %}
 
-                <td><center><a href="{{ path('editmem', {'type': type, 'relation': relation, 'letter': first|capitalize, 'ID': id }) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
+                <td><center><a href="{{ path('editmem', pathparameters|merge({'letter': first|capitalize, 'ID': id })) }}"><button  class='btn btn-default btn-sm'  name='update'> <span class='glyphicon glyphicon-wrench'></span></button></center></a></td>
 
                 <td>{{ id }}</td>
                 <td>{{ data.lagacymemid is empty ? "-" : data.lagacymemid|striptags}}</td>
@@ -285,7 +285,7 @@
                 <td>{{ data.newsletter == 1 ? "Ja" : "Nein" }}</td>
                 <td>{{ data.healthinsurance is empty ? "-" : data.healthinsurance|striptags}}</td>
                 <td>{{ data.additionalinfo is empty ? "-" : data.additionalinfo|striptags }}</td>
-                {% if type == 'mitglieder' %}
+                {% if pathparameters['type'] == 'mitglieder' %}
                 <td>{{ data.tribute is empty ? "-" : data.Tribute|striptags }}</td>
                 {%endif%}
                 <td>{{ data.workplaceposture is empty ? "-" : data.workplaceposture|striptags }}</td>
@@ -347,18 +347,19 @@
 <div class="row">
 <div class="col-md-12">
     <ul class="pagination">
-    {% for letter in 'a'|upper..'z'|upper %}
-        {% if letter == cletter %}
+    {% for alphaletter in 'a'|upper..'z'|upper %}
+        {% set alphapath = path(pathname, pathparameters|merge({'letter': alphaletter})) %}
+        {% if alphaletter == pathparameters['letter'] %}
             <li class="active">
-                <a href="{{ path~"/"~letter }}">{{ letter }}</a>
+                <a href="{{ alphapath }}">{{ alphaletter }}</a>
             </li>
         {% else %}
             <li>
-                <a href="{{ path~"/"~letter }}">{{ letter }}</a>
+                <a href="{{ alphapath }}">{{ alphaletter }}</a>
             </li>
         {% endif %}
     {% endfor %}
-    <li class="active"><a href="{{ path }}">{{ tabledata|length }} Person/en wurden gefunden</a></li>
+    <li class="active"><a href="{{ path(pathname, pathparameters|merge(requestparam)) }}">{{ tabledata|length }} Person/en wurden gefunden</a></li>
     </ul> 
 </div>
 

@@ -216,19 +216,15 @@
                         {% set isEdit = false %}
                         {% if (attribute(form, 'delete') is defined) %}
                             {% set isEdit = true %}
-                            {% set path = path('editmem', {'type': type, 'relation': relation, 'letter': cletter,'ID': form.memid.vars.value }) %}
+                            {% set path = path('editmem', pathparameters|merge({'ID': form.memid.vars.value })) %}
                             {% else %}
-                            {% set path = path('addmem', {'type': type, 'letter': cletter}) %}    
+                            {% set path = path('addmem', pathparameters) %}    
                         {% endif %}
 
                         <a href="{{ path }}">{{ form_widget(form.reset, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie dieses Formular zurücksetzen möchten? Ungespeicherte Daten gehen dabei verloren.")'}}) }}</a>
                         
-                        {% set parameters = {'type': type, 'letter': cletter} %}
-                        {% if relation is defined %}
-                            {% set parameters = parameters|merge({'relation': relation}) %}
-                        {% endif %}
 
-                        <a href="{{ path('member_home', parameters) }}">{{ form_widget(form.cancel, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie diese Seite verlassen möchten? Ungespeicherte Daten werden dabei verloren gehen.")'}}) }}</a>
+                        <a href="{{ path('member_home', pathparameters) }}">{{ form_widget(form.cancel, {'attr': {'onclick': 'confirmaction(event, "Sind Sie sich sicher, dass Sie diese Seite verlassen möchten? Ungespeicherte Daten werden dabei verloren gehen.")'}}) }}</a>
 
                         {% if (isEdit == true) %}
                             {{ form_widget(form.exit) }}
