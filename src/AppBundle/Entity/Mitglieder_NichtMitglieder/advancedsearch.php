@@ -11,6 +11,17 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class advancedsearch
 {
+    
+    public $isQuitted = false;
+    
+    public function __construct($relation)
+    {
+        if ($relation == 'ausgetreten')
+        {
+            $this->setIsQuitted(true);
+        
+        }
+    }
 
     /**
      * @Assert\Type("int")
@@ -66,10 +77,11 @@ class advancedsearch
             $this->buildBothFieldsAreNotFilledViolation($rehabunitscompoperator, $rehabunits, 'Bitte geben Sie die Anzahl der Einheiten an.', 'rehabunits', $context);
             $this->buildBothFieldsAreNotFilledViolation($rehabunits, $rehabunitscompoperator, 'Bitte geben Sie einen Vergleichsoperator an.', 'rehabunitscompoperators', $context);
             
-            
-            $this->buildBothFieldsAreNotFilledViolation($membersportsgroupstate, $sportsgroup, 'Bitte wählen Sie eine Sportgruppe, '.$sportsgroupstateMapping[$membersportsgroupstate][0].' welche die gesuchten Personen '.$sportsgroupstateMapping[$membersportsgroupstate][1].' sein sollen.', 'sportsgroup', $context);
-            $this->buildBothFieldsAreNotFilledViolation($sportsgroup, $membersportsgroupstate, 'Bitte geben Sie ein Teilnahmeverhältnis an.', 'membersportsgroupstate', $context);
-
+            if(!$this->isQuitted)
+            {
+                $this->buildBothFieldsAreNotFilledViolation($membersportsgroupstate, $sportsgroup, 'Bitte wählen Sie eine Sportgruppe, '.$sportsgroupstateMapping[$membersportsgroupstate][0].' welche die gesuchten Personen '.$sportsgroupstateMapping[$membersportsgroupstate][1].' sein sollen.', 'sportsgroup', $context);
+                $this->buildBothFieldsAreNotFilledViolation($sportsgroup, $membersportsgroupstate, 'Bitte geben Sie ein Teilnahmeverhältnis an.', 'membersportsgroupstate', $context);
+            }
         }
     }
     
@@ -85,8 +97,10 @@ class advancedsearch
     
     function allFieldsAreEmpty()
     {
-        $properties = array_filter(get_object_vars($this));
-        return empty($properties);
+        $properties = get_object_vars($this);
+        $properties['isQuitted']='';
+        $filteredProperties = array_filter($properties);
+        return empty($filteredProperties);
 
     }
     
@@ -137,8 +151,20 @@ class advancedsearch
     }
 
     function setMembersportsgroupstate($membersportsgroupstate) {
+
         $this->membersportsgroupstate = $membersportsgroupstate;
+
     }
+
+    function getIsQuitted() {
+        
+        return $this->isQuitted;
+    }
+
+    function setIsQuitted($isQuitted) {
+        $this->isQuitted = $isQuitted;
+    }
+
 
 
 }

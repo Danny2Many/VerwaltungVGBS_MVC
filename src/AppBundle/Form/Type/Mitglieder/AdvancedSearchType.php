@@ -28,6 +28,17 @@ class AdvancedSearchType extends AbstractType{
     {
 
         $this->options=$options;
+        
+        $membersportsgroupstate = array(
+                'choices'  => array('eingeschrieben' => 'is', 'ausgetreten' => 'is not'),
+                'choices_as_values' => true,
+                'label' => 'Teilnahmeverhältnis:',
+                'required' => false);
+        
+        if($options['relation'] == 'ausgetreten')
+        {
+            $membersportsgroupstate = array_merge($membersportsgroupstate, array('disabled' => true, 'data' => 'is not'));
+        }
         $builder
 
                 ->add('terminationdate',DateType::class, array('label' => 'RS gültig bis:', 
@@ -75,16 +86,9 @@ class AdvancedSearchType extends AbstractType{
                         'required' => false
                     ))
                                 
-                ->add('membersportsgroupstate', ChoiceType::class, array(
-                'choices'  => array(
-                'eingeschrieben' => 'is',
-                'ausgetreten' => 'is not'
 
-                ),
-                'choices_as_values' => true,
-                'label' => 'Teilnahmeverhältnis:',
-                'required' => false
-                ))                                
+                              
+                ->add('membersportsgroupstate', ChoiceType::class, $membersportsgroupstate)                                
                
                 ->add('search', SubmitType::class, array('attr' => array('class' => 'btn btn-primary'), 'label' => 'Suchen'))
                 ->add('cancel', ButtonType::class, array('attr' => array('class' => 'btn btn-default'), 'label' => 'Abbrechen'))
@@ -95,7 +99,8 @@ class AdvancedSearchType extends AbstractType{
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'typeSymbol'=>null
+            'typeSymbol'=>null,
+            'relation' => null
         ));
     }
 

@@ -20,17 +20,23 @@ use AppBundle\Services\ToolsManager;
 use DateTime;
 
 
-
+//The controller which controlls all member and nonmember (member+nonmember=(non)member) related actions
 class MemberController extends Controller
 {
+    //Mapps the type of a (non)member to its corresponding typeSymbol
+    //The typesymbol is the discriminator between member and nonmember in the database
     public $typeSymbolMapper = array('mitglieder' => 'm', 'nichtmitglieder' => 'nm');
 
+    //Route-Parameters:
+    //  type = the type of a (non)member (nonmember or member)
+    //  relation = if registered or quitted (non)members
+    //  letter = the initial letter of surname of the searched (non)members
     /**
      * @Route("/vgbsverwaltung/{type}/{relation}/{letter}", defaults={"letter"="A"}, name="member_home", requirements={"type": "mitglieder|nichtmitglieder", "relation": "eingeschrieben|ausgetreten", "letter": "[A-Z]"})
      */
     public function indexAction(Request $request, $type, $relation, $letter)
     {
-
+        //Set the ID-names for the searchform
         if($type=='mitglieder')
         {         
             $idColumnName = 'Mitgliedsnr';
@@ -39,21 +45,26 @@ class MemberController extends Controller
         {           
             $idColumnName = 'NichtMitgliedsnr';
         }
+        
+        //Query for the (non)member - the typesymbol decides the constraint whether you query for nonmember or member
         $doctrine=$this->getDoctrine();
-
         $qb = $doctrine->getRepository('AppBundle:Mitglieder_NichtMitglieder\Member')->createQueryBuilder('m');
         $qb->where('m.type = \''.$this->typeSymbolMapper[$type].'\'');
         
+        //Add an additional constraint to filter out member who are not registered anymore if $relation == 'eingeschrieben'
+        //(member whose quitdate is younger than the current date or null)
         if($relation == 'eingeschrieben')
         {
             $qb->andWhere('m.quitdate >= '.date('Y-m-d').' OR m.quitdate is null');
         }
+        //Add an additional constraint to the query to filter out member who are still registered if $relation == 'ausgetreten'
+        //(member whose quitdate is older than the current date)
         else
         {
             $qb->andWhere('m.quitdate <= '.date('Y-m-d'));
         }
 
-
+        //Initialize the array for the searchform searchcolumns
         $choices=array(
             'Alte_Nr' => 'lagacymemid',
             $idColumnName   => 'memid',
@@ -63,46 +74,66 @@ class MemberController extends Controller
             'E-Mail' => 'email',
             'Krankenkasse' => 'healthinsurance');
      
- 
+        //Initialize the searchform: 
+        //The form for searching in the memberstable via a user specified column (a property of a member) and a search term
         $searchform = $this->createForm(SearchType::class, null, array('choices' => $choices, 'action' => $this->generateUrl('member_home', array('type'=>$type, 'relation'=>$relation))));        
         $searchform->handleRequest($request);
         
     
-        //the search
+        //If the searchform was submitted and is valid
         if($searchform->isSubmitted() && $searchform->isValid())
         {
      
-            //setting the letter to null for the pagination not to show any letter
+            //Setting the variable letter to null for the pagination not to show any letter
             $letter=null;
      
-            //getting the values of the field and column
+            //getting the values of the searchfield (the searchterm) and column (the property of the member to be searched)
             $searchval=$request->query->get('search')['searchfield'];
             $searchcol=$request->query->get('search')['column'];
 
     
-
-                $qb   ->andWhere($qb->expr()->like('m.'.$searchcol, ':searchval'))
+            //Adding the searchparameters as constraint of the (non)member query
+            $qb   ->andWhere($qb->expr()->like('m.'.$searchcol, ':searchval'))
                                 ->setParameter('searchval','%'.$searchval.'%');
         }
-        //if the advancedsearchform was submitted
+        //If the parameter "as" is defined in the URL: If the advancedsearchform was submitted
         elseif ($request->query->has('as'))
         {
+            //Setting the variable letter to null for the pagination not to show any letter
             $letter=null;
+            //A variable to check if the user is searching for rehabcert related searchparameters
             $searchingForRehaCert=false;
+            //Get all submitted searchparameters of the advancedsearchform
             $advancedsearchform = $request->query->all();
 
-            
+            //If the terminationdatecompoperators field was submitted:
+            //This means that the user is searching for a member with a rehabcert which has a specific terminationdate
+            //(The advancedsearchform ensures that if one field (terminationdatecompoperators or terminationdate) 
+            //was filled by the user the other field must be filled too)
             if(isset($advancedsearchform['terminationdatecompoperators']))
             {
+                //Join the MemRehabilitationCertificate table with the NonAndMember table
                 $qb->leftJoin('m.rehabilitationcertificate', 'mr');
+                //The user is searching for rehabcert related searchparameters
                 $searchingForRehaCert=true;
+                
+                //Convert the user specified terminationdate in two steps from the dateformat dd.mm.YY to Y-m-d 
+                //to use it in a query constraint:
+                //First: Convert it to miliseconds
                 $tdtime = strtotime($advancedsearchform['terminationdate']);
+                //Second: Convert those miliseconds to the dateformat Y-m-d
                 $convertedTerminationDate = date('Y-m-d',$tdtime);
+                
                 $qb     ->andWhere('mr.terminationdate'.$advancedsearchform['terminationdatecompoperators']. '\''.$convertedTerminationDate.'\'');
             }
             
+            //If the rehabunitscompoperators field was submitted:
+            //This means that the user is searching for a member with a rehabcert which has a specific number of units left
+            //(The advancedsearchform ensures that if one field (rehabunitscompoperators or rehabunits) 
+            //was filled by the user the other field must be filled too)
             if(isset($advancedsearchform['rehabunitscompoperators']))
             {
+                //If no terminationdate searchparameters were added
                 if(!$searchingForRehaCert)
                 {
                     $qb->leftJoin('m.rehabilitationcertificate', 'mr');
@@ -110,8 +141,13 @@ class MemberController extends Controller
                 $qb     ->andWhere('mr.rehabunits'.$advancedsearchform['rehabunitscompoperators'].$advancedsearchform['rehabunits']);
             }
             
+            //If the membersportsgroupstate field was submitted:
+            //This means that the user is searching for a member who was/is registered in a specific sportsgroup
+            //(The advancedsearchform ensures that if one field (membersportsgroupstate or sportsgroup) 
+            //was filled by the user the other field must be filled too)
             if(isset($advancedsearchform['membersportsgroupstate']))
             {
+                //Join the Sportsgroup table with the NonAndMember table
                 $qb     ->leftJoin('m.sportsgroup', 'ms');
                 $qb     ->leftJoin('ms.sportsgroup', 'mss');
                 $qb     ->andWhere('mss.sgid='.$advancedsearchform['sportsgroup']['id']);
@@ -120,11 +156,15 @@ class MemberController extends Controller
             }
             
         }
+        //If neither the searchform nor the advancedsearchform was submitted
         else
         {
+            //Filter (non)member by their surname intials
             $qb   ->andWhere($qb->expr()->like('m.lastname',':letter' ))
                             ->setParameter('letter',$letter.'%');
-     
+            
+            //(non)member with umlauts are included in their corresponding nonumlaut letter 
+            //(e.g. a (non)member whose surname begins with "Ä" is displayed amongs all (non)member beginning with "A")
             switch($letter)
             {
                 case 'A': $qb ->andWhere($qb->expr()->like('m.lastname', ':umlautletter'))
@@ -142,19 +182,20 @@ class MemberController extends Controller
         
         
         }
-  
+        //Get the result of the build query
         $memberdata=$qb->getQuery()->getResult();
 
+        //Render the view
         return $this->render(
         'Mitglieder_Nichtmitglieder/member.html.twig',
         array(
-            'tabledata' => $memberdata,
-            'type' => $type,
-            'relation' => $relation,
-            'colorclass' => "bluetheader",
-            'searchform' => $searchform->createView(),
-            'cletter' => $letter,
-            'path' => $this->generateUrl('member_home', array('type'=>$type, 'relation' =>$relation))     
+            'tabledata' => $memberdata, //the query result
+            'type' => $type, //the type of a (non)member (nonmember or member)
+            'relation' => $relation, //if u r searching for registered or quitted (non)members
+            'colorclass' => "bluetheader", //Determines the color of the table header
+            'searchform' => $searchform->createView(),//the searchform
+            'cletter' => $letter, //The First letter of the surname of the members the user is searching for
+            'path' => $this->generateUrl('member_home', array('type'=>$type, 'relation' =>$relation))//The path     
             ));
     }
   
@@ -294,7 +335,7 @@ class MemberController extends Controller
     public function advancedSearchAction(Request $request, $type, $relation, $letter)
     {
 
-        $advancedsearch = new \AppBundle\Entity\Mitglieder_NichtMitglieder\advancedsearch();
+        $advancedsearch = new \AppBundle\Entity\Mitglieder_NichtMitglieder\advancedsearch($relation);
         
         if($request->query->has('as'))
         {
@@ -318,18 +359,24 @@ class MemberController extends Controller
             $doctrine=$this->getDoctrine();
             $sportsgroup=$doctrine->getRepository('AppBundle:Sportsgroup')->findOneBy(array('sgid'=>$request->query->get('sportsgroup')['id']));
             $advancedsearch->setSportsgroup($sportsgroup);
-            $advancedsearch->setMembersportsgroupstate($request->query->get('membersportsgroupstate'));
+            if($relation != 'ausgetreten')
+            {
+                $advancedsearch->setMembersportsgroupstate($request->query->get('membersportsgroupstate'));
+            }
+            
             }
         }
-        
-        
-        $advancedsearchform = $this->createForm(AdvancedSearchType::class, $advancedsearch, array('typeSymbol' => $this->typeSymbolMapper[$type]));
+
+ 
+        $advancedsearchform = $this->createForm(AdvancedSearchType::class, $advancedsearch, array('typeSymbol' => $this->typeSymbolMapper[$type], 'relation' => $relation));
         
         $advancedsearchform->handleRequest($request);
 
  
         if ($advancedsearchform->isSubmitted() && $advancedsearchform->isValid())
         {
+
+            
             //removes DateField arrays
             $filterCallbackFunction = function ($value){
                 if(is_array($value)) $value= array_filter($value);
@@ -343,18 +390,29 @@ class MemberController extends Controller
             
             if(isset($advancedsearchform['terminationdatecompoperators']))
             {
+                //Das Ablaufdatum in ein deutsches Datumsformat konvergieren, 
+                //damit es auf der Seite für den Nutzer verständlich angezeigt werden kann
                 $advancedsearchform['terminationdate']=$advancedsearch->getTerminationdate()->format('d.m.Y');
                 
             }
             
             if(isset($advancedsearchform['sportsgroup']))
             {
-                $advancedsearchform['sportsgroup'] = array('id'=>$advancedsearch->getSportsgroup()->getSgid(),
+                if ($relation == 'ausgetreten')
+                {
+                    //Das membersportsgroupstate-Feld wird nicht submitted, da es disabled ist.
+                    //Aus diesem Grund muss der Wert künstlich gesetzt werden, wenn die erweiterte Suche in der Austrittsliste gestartet wird
+                    $advancedsearchform['membersportsgroupstate'] = 'is not';
+
+                }
+                //Dem Formular-Array, zusätzlich zur ID einer Sportgruppe, dessen Namen übergeben,
+                //damit dieser auf der Seite angezeigt werden kann
+                $advancedsearchform['sportsgroup'] = array(
+                    'id'=>$advancedsearch->getSportsgroup()->getSgid(),
                     'name' => $advancedsearch->getSportsgroup()->getToken());
             }
-            
-//            $this->addFlash('search', 'Gesucht werden Personen mit: '.$flashtext);
-            return  $this->redirectToRoute('member_home', array_merge(array('type'=>$type, 'letter' => $letter, 'as' => ''), $advancedsearchform));
+
+            return  $this->redirectToRoute('member_home', array_merge(array('type'=>$type, 'relation'=>$relation, 'letter' => $letter, 'as' => ''), $advancedsearchform));
         }
         
         return $this->render(

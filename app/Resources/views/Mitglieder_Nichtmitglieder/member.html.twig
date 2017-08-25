@@ -121,13 +121,13 @@
 
 
 {% block add %}
-    {% if relation == 'eingeschrieben' %}
+    
     <div class="inline">
-    <a href="{{ path('addmem', {'type': type, 'letter': cletter }) }}"><button    class="add btn btn-default">
+    <a href="{{ path('addmem', {'type': type, 'letter': cletter }) }}"><button    class="add btn btn-default" {% if relation != 'eingeschrieben' %}disabled{% endif %}>
       <span class="glyphicon glyphicon-plus"></span> Neues {{ entityOfType }} anlegen
         </button></a> 
     </div>
-    {% endif %}
+    
 {% endblock %}
 
 {% block dropdown %}
