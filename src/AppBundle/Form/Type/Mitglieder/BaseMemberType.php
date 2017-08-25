@@ -53,11 +53,11 @@ class BaseMemberType extends AbstractType{
                 
         ->add('state', ChoiceType::class, array(
         'choices'  => array(
-        'aktiv' => 1,
-        'inaktiv' => 0,
+        'Fördernd' => 1,
+        'Nicht fördernd' => 0,
         ),
         'choices_as_values' => true,
-        'label' => 'Status:'
+        'label' => 'Förderstatus:'
         ))
                 
         ->add('newsletter', ChoiceType::class, array(

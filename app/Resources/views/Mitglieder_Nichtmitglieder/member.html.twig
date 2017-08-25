@@ -7,7 +7,7 @@
 {% block title %}{{ capitalizedType }}: Stammdaten{% endblock %}
 {% block fixedcolnum %} 8 {% endblock %}
 
-{% set columnDefs = ['"2.4%"', '"4.5%"', '"4.5%"','"2.5%"', '"4.5%"', '"2%"', '"7%"', '"5%"', '"5%"', 
+{% set columnDefs = ['"2.4%"', '"4.5%"', '"4.5%"','"5.5%"', '"4.5%"', '"2%"', '"7%"', '"5%"', '"5%"', 
 '"8%"', '"10%"', '"3%"', '"5%"', '"7%"', '"13%"', '"18%"', '"6.5%"', '"8.5%"', '"6.5%"', '"10%"', '"10%"', '"5%"', '"10%"', '"10%"', '"8%"', '"12%"',
 '"12%"', '"12%"', '"12%"', '"12%"', '"12%"', '"12%"', '"12%"', '"12%"', '"10%"', '"5%"', '"4.5%"', '"3%"', '"3%"', '"3%"', '"3%"', '"3%"', '"3%"',
 '"3%"', '"3%"'] %}
@@ -150,7 +150,7 @@
         'Bearb.',
         IDName,
         'Alte_Nr',
-        'Status',
+        'Förderstatus',
         'Abteilung',
         'Anr.',
         'Name',
@@ -227,7 +227,7 @@
                 <td>{{ id }}</td>
                 <td>{{ data.lagacymemid is empty ? "-" : data.lagacymemid|striptags}}</td>
                
-                <td>{{ data.state == 1 ? "aktiv" : "inaktiv" }}</td>
+                <td>{{ data.state == 1 ? "Fördernd" : "Nicht fördernd" }}</td>
                 <td>Muss noch gemacht werden</td>
                 <td>{{ data.title == 0 ? "Frau" : "Herr" }}</td>
                 <td>{{ data.lastname|striptags }}</td>

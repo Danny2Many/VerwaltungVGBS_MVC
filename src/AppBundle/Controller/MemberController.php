@@ -37,16 +37,13 @@ class MemberController extends Controller
     public function indexAction(Request $request, $type, $relation, $letter)
     {
         //Set the ID-names for the searchform
-        if($type=='mitglieder')
+        $idColumnName = 'Mitgliedsnr';
+        if($type=='nichtmitglieder')
         {         
-            $idColumnName = 'Mitgliedsnr';
-        }
-        else
-        {           
-            $idColumnName = 'NichtMitgliedsnr';
+            $idColumnName = 'Nicht'.$idColumnName;
         }
         
-        //Query for the (non)member - the typesymbol decides the constraint whether you query for nonmember or member
+        //Query for the (non)members - the typesymbol decides whether you query for nonmember or member
         $doctrine=$this->getDoctrine();
         $qb = $doctrine->getRepository('AppBundle:Mitglieder_NichtMitglieder\Member')->createQueryBuilder('m');
         $qb->where('m.type = \''.$this->typeSymbolMapper[$type].'\'');
@@ -313,7 +310,7 @@ class MemberController extends Controller
             $manager->flush();
                         
             $this->addFlash('notice', 'Die Daten wurden erfolgreich gespeichert!');  
-            return $this->redirectToRoute('member_home', array('type' => $type, 'letter' => $letter));  
+            return $this->redirectToRoute('member_home', array('type' => $type, 'relation' => $relation, 'letter' => $letter));  
         }
         
         
