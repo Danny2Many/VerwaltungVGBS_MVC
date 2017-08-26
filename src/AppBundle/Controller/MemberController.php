@@ -27,6 +27,8 @@ class MemberController extends Controller
     //The typesymbol is the discriminator between member and nonmember in the database
     public $typeSymbolMapper = array('mitglieder' => 'm', 'nichtmitglieder' => 'nm');
 
+    
+    //indexAction handles all logic of the main (non)member page
     //Route-Parameters:
     //  type = the type of a (non)member (nonmember or member)
     //  relation = if registered or quitted (non)members
@@ -197,6 +199,12 @@ class MemberController extends Controller
     
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     
+    
+    
+    //addmemberAction handles all logic of the form where the user is able to add an (non)member to the database
+    //Route-Parameters:
+    //  type = the type of a (non)member (nonmember or member) to add
+    //  letter = the initial letter of surname of the searched (non)members on the main page where the user pushed the add member button
     /**
      * @Route("/vgbsverwaltung/{type}/anlegen/{letter}", defaults={"letter": "A"}, name="addmem", requirements={"type": "mitglieder|nichtmitglieder", "letter": "[A-Z]"})
      * 
@@ -206,13 +214,21 @@ class MemberController extends Controller
         $doctrine=$this->getDoctrine();   
         $manager= $doctrine->getManager();
         
+        //initialize new Member, MemPhoneNumber, Member_Sportsgroup objects to fill these with user specified data of
+        //the addmemberform and persist them at last to the database
         $member = new Member();
         $phonenumber = new MemPhoneNumber();
         $m_sg= new Member_Sportsgroup();
+        
         $typeSymbol=$this->typeSymbolMapper[$type];
-              
+         
+        //add the empty MemPhoneNumber and Member_Sportsgroup objects to the member object 
+        //to display the corresponding formfields in the form
         $member->addPhonenumber($phonenumber);               
         $member->addSportsgroup($m_sg);
+        
+        //if the user intends to add a new member to the db choose AddMemberType as class for the addmemberform 
+        //and 'Mitglied anlegen' as titel of the page else BaseMemberType and 'Nichtmitglied anlegen'
         if($type == 'mitglieder')
         {
             $formType = AddMemberType::class;
@@ -231,6 +247,7 @@ class MemberController extends Controller
         //if the form is valid -> persist it to the database
         if($addmemform->isSubmitted() && $addmemform->isValid())
         {
+            //Set the typeSymbol to decide whether this new (non)member is a member or a nonmember
             $member->setType($typeSymbol);
             $manager->persist($member);      
             $manager->flush();
@@ -243,9 +260,9 @@ class MemberController extends Controller
         return $this->render(
         'Mitglieder_NichtMitglieder/memberform.html.twig',
         array(
-            'form' => $addmemform->createView(),
-            'title' => $titel,            
-            'pathparameters' => array('type' => $type, 'relation' => 'eingeschrieben', 'letter' => $letter,)
+            'form' => $addmemform->createView(), //the addmemberform
+            'title' => $titel, //the titel of the page            
+            'pathparameters' => array('type' => $type, 'relation' => 'eingeschrieben', 'letter' => $letter,) //The parameters of the route
             
             ));
     }
@@ -253,12 +270,22 @@ class MemberController extends Controller
     
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
     
+    
+    
+    //editmemberAction handles all logic of the form where the user is able to edit the data of a (non)member
+    //Route-Parameters:
+    //  type = the type of a (non)member (nonmember or member)
+    //  relation = if registered or quitted (non)member
+    //  letter = the initial letter of surname of the searched (non)members
+    //  ID = ID of the (non)member to edit
     /**
      * @Route("/vgbsverwaltung/{type}/{relation}/bearbeiten/{letter}/{ID}", defaults={"type": "mitglieder", "letter": "A"}, requirements={"type": "mitglieder|nichtmitglieder", "relation": "eingeschrieben|ausgetreten","letter": "[A-Z]"}, name="editmem")
      * 
      */
     public function editmemberAction(Request $request, $ID, $type, $relation, $letter)
     {
+        
+        //if the user edits a member the titel of the page is 'mitglieder' else 'Nichtmitglied bearbeiten'
         if($type == 'mitglieder')
         {
             $titel = 'Mitglied bearbeiten';
@@ -271,22 +298,26 @@ class MemberController extends Controller
         $doctrine=$this->getDoctrine(); 
         $manager= $doctrine->getManager();
         $tm = new ToolsManager($manager);
-
+        
+        //query for the (non)member to edit by id
         $member=$doctrine->getRepository('AppBundle:Mitglieder_NichtMitglieder\Member')->findOneBy(array('memid'=>$ID));
    
-        
+        //if no member with the specified id was found 
         if (!$member)
         {
             throw $this->createNotFoundException('Es konnte kein Mitglied mit der Mitgliedsnr.: '.$ID.' gefunden werden');
         }
-   
+        
+        //duplicate all related Rehabilitationcertificate, Phonenumber, Sportsgroup objects of the (non)member
+        //in dedicated ArrayCollections to further controll if related objects has been added or deleted
         $originalrehabs = $tm->copyArrayCollection($member->getRehabilitationcertificate());
         $originalphonenrs = $tm->copyArrayCollection($member->getPhonenumber());
         $originalsportsgroups = $tm->copyArrayCollection($member->getSportsgroup());
   
         $editmemform = $this->createForm(EditMemberType::class, $member, array('typeSymbol' => $this->typeSymbolMapper[$type]));
         $editmemform->handleRequest($request);
-          
+         
+        //if the user clicks the delete button to delete the (non)member
         if($editmemform->get('delete')->isClicked())
         {
             $manager->remove($member);
@@ -299,6 +330,7 @@ class MemberController extends Controller
         //if the form is valid -> persist it to the database
         if($editmemform->isSubmitted() && $editmemform->isValid())
         {      
+            //sort out removed related objects
             $tm->sortOutRemoved($originalrehabs, $member->getRehabilitationcertificate());
             $tm->sortOutRemoved($originalphonenrs, $member->getPhonenumber());
             $tm->sortOutRemoved($originalsportsgroups, $member->getSportsgroup());
@@ -314,21 +346,31 @@ class MemberController extends Controller
         return $this->render(
             'Mitglieder_Nichtmitglieder/memberform.html.twig',
             array(            
-            'form' => $editmemform->createView(),
-            'title' => $titel,
+            'form' => $editmemform->createView(), //the editmemberform
+            'title' => $titel, //the titel of the page
             'pathparameters' => array('type'=>$type, 'relation' =>$relation, 'letter' => $letter)//The parameters of the memberpath     
 
             ));
     }
     
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
+
+    //advancedSearchAction handles all logic of the form where the user is able to do a advanced search
+    //Route-Parameters:
+    //  type = the type of a (non)member (nonmember or member)
+    //  relation = if registered or quitted (non)member
+    //  letter = the initial letter of surname of the searched (non)members
     /**
      * @Route("/vgbsverwaltung/{type}/{relation}/erweitertesuche/{letter}", defaults={"letter"="A"}, name="advancedsearchmem", requirements={"type": "mitglieder|nichtmitglieder","relation": "eingeschrieben|ausgetreten", "letter": "[A-Z]"})
      */
     public function advancedSearchAction(Request $request, $type, $relation, $letter)
     {
-
+        //initialize advancedsearch object which controlls the evaluation of the advancedsearchform
         $advancedsearch = new \AppBundle\Entity\Mitglieder_NichtMitglieder\advancedsearch($relation);
         
+        
+        //if the user wants to change the searchcriterea: add all specified searchparameter from the url to the
+        //advancedsearch to display them in the form
         if($request->query->has('as'))
         {
             if($request->query->has('terminationdatecompoperators'))
@@ -351,6 +393,8 @@ class MemberController extends Controller
             $doctrine=$this->getDoctrine();
             $sportsgroup=$doctrine->getRepository('AppBundle:Sportsgroup')->findOneBy(array('sgid'=>$request->query->get('sportsgroup')['id']));
             $advancedsearch->setSportsgroup($sportsgroup);
+            
+            //if $relation == 'ausgetreten' the user is only able to search for (non)member who resigned from a sportsgroup
             if($relation != 'ausgetreten')
             {
                 $advancedsearch->setMembersportsgroupstate($request->query->get('membersportsgroupstate'));
@@ -369,21 +413,21 @@ class MemberController extends Controller
         {
 
             
-            //removes DateField arrays
+            //returns true if the value of a field is not empty to transfer this value to the url as parameter
             $filterCallbackFunction = function ($value){
                 if(is_array($value)) $value= array_filter($value);
                 if(empty($value)) return false;
                 return true;
             };
             
-            //entfernen von leeren Einträgen (nicht ausgefüllten Feldern)
+            //removing of empty formfields
             $advancedsearchform= array_filter($request->request->get('advanced_search'), $filterCallbackFunction);
             
             
             if(isset($advancedsearchform['terminationdatecompoperators']))
             {
-                //Das Ablaufdatum in ein deutsches Datumsformat konvergieren, 
-                //damit es auf der Seite für den Nutzer verständlich angezeigt werden kann
+                //convert the terminationdate to a german format to display it on the (non)member page 
+                //in a way the user is able to understand easily 
                 $advancedsearchform['terminationdate']=$advancedsearch->getTerminationdate()->format('d.m.Y');
                 
             }
@@ -392,13 +436,13 @@ class MemberController extends Controller
             {
                 if ($relation == 'ausgetreten')
                 {
-                    //Das membersportsgroupstate-Feld wird nicht submitted, da es disabled ist.
-                    //Aus diesem Grund muss der Wert künstlich gesetzt werden, wenn die erweiterte Suche in der Austrittsliste gestartet wird
+                    //If $relation == 'ausgetreten' the membersportsgroupstate-Field is will not be submitted.
+                    //Because this fact the value has to be set artificially when the advanced search has been start from the resigned list
                     $advancedsearchform['membersportsgroupstate'] = 'is not';
 
                 }
-                //Dem Formular-Array, zusätzlich zur ID einer Sportgruppe, dessen Namen übergeben,
-                //damit dieser auf der Seite angezeigt werden kann
+                
+                //Additionally to the id of a sportsgroup, add its token to the form array, to display it on the main page
                 $advancedsearchform['sportsgroup'] = array(
                     'id'=>$advancedsearch->getSportsgroup()->getSgid(),
                     'name' => $advancedsearch->getSportsgroup()->getToken());
@@ -410,11 +454,9 @@ class MemberController extends Controller
         return $this->render(
             'Mitglieder_Nichtmitglieder/advancedsearchform.html.twig',
             array(           
-            'form' => $advancedsearchform->createView(),
-            'cletter' => $letter,
-            'type' => $type,
-            'relation' => $relation,
-            'title' => 'Erweiterte Suche'
+            'form' => $advancedsearchform->createView(), //the advancedsearchform
+            'pathparameters' => array('type'=>$type, 'relation' =>$relation, 'letter' => $letter),//The parameters of the memberpath     
+            'title' => 'Erweiterte Suche' //the title of the page
             ));
 
     }
