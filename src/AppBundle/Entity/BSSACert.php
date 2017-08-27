@@ -229,4 +229,14 @@ private $sportsgroup;
     }
 
     
+
+    /**
+     * Get sportsgroup
+     *
+     * @return \AppBundle\Entity\Sportsgroup
+     */
+    public function getSportsgroup()
+    {
+        return $this->sportsgroup;
+    }
 }

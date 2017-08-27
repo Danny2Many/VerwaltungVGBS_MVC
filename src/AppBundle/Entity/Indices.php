@@ -87,4 +87,18 @@ class Indices{
 
         return $this;
     }
+
+    /**
+     * Set currentindex
+     *
+     * @param integer $currentindex
+     *
+     * @return Indices
+     */
+    public function setCurrentindex($currentindex)
+    {
+        $this->currentindex = $currentindex;
+
+        return $this;
+    }
 }

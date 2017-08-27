@@ -462,4 +462,32 @@ public function addTrainersub(\AppBundle\Entity\Trainer\Trainer $trainersub)
     {
         return $this->roomid;
     }
+
+    /**
+     * Set trainerid
+     *
+     * @param integer $trainerid
+     *
+     * @return Sportsgroup
+     */
+    public function setTrainerid($trainerid)
+    {
+        $this->trainerid = $trainerid;
+
+        return $this;
+    }
+
+    /**
+     * Set bssacert
+     *
+     * @param \AppBundle\Entity\BSSACert $bssacert
+     *
+     * @return Sportsgroup
+     */
+    public function setBssacert(\AppBundle\Entity\BSSACert $bssacert = null)
+    {
+        $this->bssacert = $bssacert;
+
+        return $this;
+    }
 }

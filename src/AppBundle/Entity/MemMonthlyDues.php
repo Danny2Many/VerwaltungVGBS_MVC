@@ -237,4 +237,14 @@ class MemMonthlyDues {
     {
         return $this->adminyear;
     }
+
+    /**
+     * Get mdid
+     *
+     * @return integer
+     */
+    public function getMdid()
+    {
+        return $this->mdid;
+    }
 }

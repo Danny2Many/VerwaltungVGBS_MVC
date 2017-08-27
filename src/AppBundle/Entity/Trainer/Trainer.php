@@ -266,4 +266,38 @@ public function addSportsgroupsub(\AppBundle\Entity\Sportsgroup $sportsgroupsub)
     {
         return $this->sportsgroupsub;
     }  
+
+    /**
+     * Add sportsgroup
+     *
+     * @param \AppBundle\Entity\Sportsgroup $sportsgroup
+     *
+     * @return Trainer
+     */
+    public function addSportsgroup(\AppBundle\Entity\Sportsgroup $sportsgroup)
+    {
+        $this->sportsgroup[] = $sportsgroup;
+
+        return $this;
+    }
+
+    /**
+     * Remove sportsgroup
+     *
+     * @param \AppBundle\Entity\Sportsgroup $sportsgroup
+     */
+    public function removeSportsgroup(\AppBundle\Entity\Sportsgroup $sportsgroup)
+    {
+        $this->sportsgroup->removeElement($sportsgroup);
+    }
+
+    /**
+     * Get sportsgroup
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSportsgroup()
+    {
+        return $this->sportsgroup;
+    }
 }
