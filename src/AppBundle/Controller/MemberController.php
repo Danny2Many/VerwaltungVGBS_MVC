@@ -44,9 +44,14 @@ class MemberController extends Controller
         {         
             $idColumnName = 'Nicht'.$idColumnName;
         }
-        
+        $advancedSearchFlashtext=null;
+
         //Query for the (non)members - the typesymbol decides whether you query for nonmember or member
         $doctrine=$this->getDoctrine();
+        $entityManager = $doctrine->getManager();
+        $toolsManager = new ToolsManager($entityManager);
+        
+        
         $qb = $doctrine->getRepository('AppBundle:Mitglieder_NichtMitglieder\Member')->createQueryBuilder('m');
         $qb->where('m.type = \''.$this->typeSymbolMapper[$type].'\'');
         
@@ -104,6 +109,8 @@ class MemberController extends Controller
             $searchingForRehaCert=false;
             //Get all submitted searchparameters of the advancedsearchform
             $advancedsearchform = $request->query->all();
+            
+            $flashTextParameters=array();
 
             //If the terminationdatecompoperators field was submitted:
             //This means that the user is searching for a member with a rehabcert which has a specific terminationdate
@@ -111,8 +118,13 @@ class MemberController extends Controller
             //was filled by the user the other field must be filled too)
             if(isset($advancedsearchform['terminationdatecompoperators']))
             {
+                $tdCompOperatorMapping = array('=' => 'am', '<' => 'vor', '>' => 'nach');
+                $rehabCertParameters=array('Rehaschein');
+                $rehabCertParameters['Ablaufdatum'] = $tdCompOperatorMapping[$advancedsearchform['terminationdatecompoperators']].' '.$advancedsearchform['terminationdate'];
+                
                 //Join the MemRehabilitationCertificate table with the NonAndMember table
                 $qb->leftJoin('m.rehabilitationcertificate', 'mr');
+                
                 //The user is searching for rehabcert related searchparameters
                 $searchingForRehaCert=true;
                 
@@ -135,9 +147,18 @@ class MemberController extends Controller
                 //If no terminationdate searchparameters were added
                 if(!$searchingForRehaCert)
                 {
+                    $rehabCertParameters=array('Rehaschein');
                     $qb->leftJoin('m.rehabilitationcertificate', 'mr');
                 }
+                
+                $rehabCertParameters['Einheiten'] = $advancedsearchform['rehabunitscompoperators'].' '.$advancedsearchform['rehabunits'];
+
                 $qb     ->andWhere('mr.rehabunits'.$advancedsearchform['rehabunitscompoperators'].$advancedsearchform['rehabunits']);
+            }
+            
+            if($searchingForRehaCert)
+            {
+                $flashTextParameters[]=$rehabCertParameters;
             }
             
             //If the membersportsgroupstate field was submitted:
@@ -146,6 +167,10 @@ class MemberController extends Controller
             //was filled by the user the other field must be filled too)
             if(isset($advancedsearchform['membersportsgroupstate']))
             {
+                $memberSGRelationMapping = array('is' => 'Eingeschrieben', 'is not' => 'Ausgetreten');
+                $sportsgroupParameters=array('Sportgruppe', 'Name' => $advancedsearchform['sportsgroup']['name'], 'Teilnahmeverhältnis' => $memberSGRelationMapping[$advancedsearchform['membersportsgroupstate']]);
+                $flashTextParameters[]=$sportsgroupParameters;
+                
                 //Join the Sportsgroup table with the NonAndMember table
                 $qb     ->leftJoin('m.sportsgroup', 'ms');
                 $qb     ->leftJoin('ms.sportsgroup', 'mss');
@@ -153,6 +178,8 @@ class MemberController extends Controller
                 $qb     ->andWhere('ms.resignedfrom '.$advancedsearchform['membersportsgroupstate'].' null');
 
             }
+            
+            $advancedSearchFlashtext=$toolsManager->buildFlashtext($flashTextParameters);
             
         }
         //If neither the searchform nor the advancedsearchform was submitted
@@ -192,7 +219,8 @@ class MemberController extends Controller
             'colorclass' => "bluetheader", //Determines the color of the table header
             'searchform' => $searchform->createView(),//the searchform
             'pathname' => 'member_home', //the name of the path
-            'pathparameters' => array('type'=>$type, 'relation' =>$relation, 'letter' => $letter)//The parameters of the memberpath     
+            'pathparameters' => array('type'=>$type, 'relation' =>$relation, 'letter' => $letter),//The parameters of the memberpath
+            'advancedSearchFlashtext' => $advancedSearchFlashtext
             ));
     }
   

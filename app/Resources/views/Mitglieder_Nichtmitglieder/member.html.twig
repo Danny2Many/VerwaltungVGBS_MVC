@@ -73,52 +73,11 @@
 
 {% block advSearchFlashText %}
     {% if requestparam['as'] is defined %}
-    {% set tdcompoperatormapping = {'=' : 'am', '<' : 'vor', '>' : 'nach'} %}
-    {% set memberstatemapping = {'is' : 'Eingeschrieben', 'is not' : 'Ausgetreten'} %}
-    {% set searchingForRehacert = false %}
-    {% set searchingForSportsgroup = false %}
-    {% set flashtext = '' %}
-
-    {% if requestparam['terminationdatecompoperators'] is defined %}
-        {% set flashtext = flashtext~'Ablauf-Datum: '~tdcompoperatormapping[requestparam['terminationdatecompoperators']]~' '~requestparam['terminationdate'] %}
-        {% set searchingForRehacert = true %}
-
-    {% endif %}    
-    {% if requestparam['rehabunitscompoperators'] is defined %}
-
-        {% if searchingForRehacert %}
-
-            {% set flashtext = flashtext~', ' %}
-
-        {% else %}
-
-            {% set searchingForRehacert = true %}
-
-        {% endif %}
-
-        {% set flashtext = flashtext~'Einheiten: '~requestparam['rehabunitscompoperators']~' '~requestparam['rehabunits'] %}
-    {% endif %}
-
-    {% if searchingForRehacert %}
-
-        {% set flashtext=  'Rehaschein[ '~flashtext~' ]' %}
-
-    {% endif %}
-    
-    {% if requestparam['membersportsgroupstate'] is defined %}
-        {% if searchingForRehacert %}
-
-            {% set flashtext=  flashtext~', ' %}
-
-        {% endif %}
-        
-        {% set flashtext=  flashtext~'Sportgruppe[ Name: '~requestparam['sportsgroup']['name']~', Teilnahmeverhältnis: '~memberstatemapping[requestparam['membersportsgroupstate']]~' ]' %}
-    {% endif %}
-    
-    
-    {% set flashtext=  'Gesucht werden Personen mit: '~flashtext %}
+    {% set flashtext = advancedSearchFlashtext %}
     {{ parent() }}
-    {% endif %} 
+    {% endif %}
+    
+    
 {% endblock %}
 
 
