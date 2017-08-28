@@ -179,7 +179,7 @@ class MemberController extends Controller
 
             }
             
-            $advancedSearchFlashtext=$toolsManager->buildFlashtext($flashTextParameters);
+            $advancedSearchFlashtext=$toolsManager->buildFlashtext('Gesucht werden Personen mit: ',$flashTextParameters);
             
         }
         //If neither the searchform nor the advancedsearchform was submitted

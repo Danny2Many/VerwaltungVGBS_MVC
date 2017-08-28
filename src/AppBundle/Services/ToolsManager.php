@@ -4,6 +4,7 @@
 
 namespace AppBundle\Services;
 use Doctrine\Common\Collections\ArrayCollection;
+use Exception;
 
 
 //Manages all written functions
@@ -35,8 +36,13 @@ class ToolsManager {
         return $copiedArrayColl;
     }
     
-    public function buildFlashtext($parameterArray)
+    public function buildFlashtext($introText, array $parameterArray)
     {
+        if(!is_string($introText))
+        {
+            throw new Exception('The first parameter must be of type string.');
+        }
+        
         $flashText='';
         $nestedArrayCount=0;        
         foreach ($parameterArray as $nestedParameterArray)
@@ -65,7 +71,7 @@ class ToolsManager {
             $flashText.=$nameOfNestedArray.'[ '.$parameterText.' ]';
         }
         
-        return 'Gesucht werden Personen mit: '.$flashText;
+        return $introText.$flashText;
     }
         
     

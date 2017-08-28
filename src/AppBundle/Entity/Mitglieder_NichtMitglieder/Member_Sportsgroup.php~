@@ -15,12 +15,12 @@ class Member_Sportsgroup {
 
  
     
-    /**
-    * @ORM\Id
-    * @ORM\Column(type="integer")
-    * @ORM\GeneratedValue(strategy="AUTO")  
-    */
-    protected $memsgid;  
+  /**
+* @ORM\Id
+* @ORM\Column(type="integer")
+* @ORM\GeneratedValue(strategy="AUTO")  
+*/
+protected $memsgid;  
     
     /**
      * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Sportsgroup", inversedBy="memsubscriber", cascade={"persist"})
@@ -42,18 +42,18 @@ class Member_Sportsgroup {
 
 
 
-    /**
-    *
-    * @ORM\Column(type="date")
-    */
-    protected $joined;
+/**
+*
+* @ORM\Column(type="date")
+*/
+protected $joined;
 
 
 
-    /**
-    * @ORM\Column(type="date")
-    */
-    protected $resignedfrom;
+/**
+* @ORM\Column(type="date")
+*/
+protected $resignedfrom;
         
 
 
@@ -178,46 +178,5 @@ class Member_Sportsgroup {
     public function getMember()
     {
         return $this->member;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->periodOfRest = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Add periodOfRest
-     *
-     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\NonAndMemPeriodOfRest $periodOfRest
-     *
-     * @return Member_Sportsgroup
-     */
-    public function addPeriodOfRest(\AppBundle\Entity\Mitglieder_NichtMitglieder\NonAndMemPeriodOfRest $periodOfRest)
-    {
-        $this->periodOfRest[] = $periodOfRest;
-
-        return $this;
-    }
-
-    /**
-     * Remove periodOfRest
-     *
-     * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\NonAndMemPeriodOfRest $periodOfRest
-     */
-    public function removePeriodOfRest(\AppBundle\Entity\Mitglieder_NichtMitglieder\NonAndMemPeriodOfRest $periodOfRest)
-    {
-        $this->periodOfRest->removeElement($periodOfRest);
-    }
-
-    /**
-     * Get periodOfRest
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPeriodOfRest()
-    {
-        return $this->periodOfRest;
     }
 }

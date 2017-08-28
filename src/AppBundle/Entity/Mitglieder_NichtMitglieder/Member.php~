@@ -27,17 +27,31 @@ class Member extends HealthData
     protected $memid;
 
     
-        /**
-     * @ORM\Column(type="integer")
+    /**
+     *@Assert\Length(
+     *      max = 11,
+     *      maxMessage = "Die Nummer darf nicht länger als {{ limit }} zeichen sein."
+     * )
+     * @ORM\Column(type="string")
      * 
      */
     protected $lagacymemid;
     
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      * 
      */
     protected $type;
+    
+        /**
+     * @ORM\Column(type="string")
+     *@Assert\Length(
+     *      max = 100,
+     *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen (einschließlich Leerzeichen) sein."
+     * )
+     * 
+     */
+    protected $tribute;
     
     
     /**
@@ -57,6 +71,11 @@ class Member extends HealthData
      * @ORM\OneToMany(targetEntity="Member_Sportsgroup", mappedBy="member", cascade={"persist"})
      */
     protected $sportsgroup;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="NonAndMemPeriodOfRest", mappedBy="member", cascade={"persist"})
+     */
+    protected $periodOfRest;
     
     
 
@@ -126,16 +145,13 @@ class Member extends HealthData
     
       /**
      * @ORM\Column(type="string")
+     *@Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Die Beschreibung darf nicht länger als {{ limit }} Zeichen (einschließlich Leerzeichen) sein."
+     * )
      */
     public $additionalinfo;
 
-      /**
-     * @ORM\Column(type="string")
-     */
-    protected $tribute;
-    
-     
-    
    
       /**
      * @ORM\Column(type="text")
@@ -404,7 +420,7 @@ class Member extends HealthData
      */
     public function setNewsletter($newsletter)
     {
-        $this->newsletter = implode($newsletter);
+        $this->newsletter = $newsletter;
 
         return $this;
     }
@@ -416,7 +432,7 @@ class Member extends HealthData
      */
     public function getNewsletter()
     {
-        return array($this->newsletter);
+        return $this->newsletter;
     }
 
   
@@ -428,7 +444,7 @@ class Member extends HealthData
      *
      * @return Member
      */
-    public function addRehabilitationcertificate(\AppBundle\Entity\Mitglieder\MemRehabilitationCertificate $rehabilitationcertificate)
+    public function addRehabilitationcertificate(\AppBundle\Entity\Mitglieder_NichtMitglieder\MemRehabilitationCertificate $rehabilitationcertificate)
     {
         $rehabilitationcertificate->setMember($this);
         $this->rehabilitationcertificate[] = $rehabilitationcertificate;
@@ -441,7 +457,7 @@ class Member extends HealthData
      *
      * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\MemRehabilitationCertificate $rehabilitationcertificate
      */
-    public function removeRehabilitationcertificate(\AppBundle\Entity\Mitglieder\MemRehabilitationCertificate $rehabilitationcertificate)
+    public function removeRehabilitationcertificate(\AppBundle\Entity\Mitglieder_NichtMitglieder\MemRehabilitationCertificate $rehabilitationcertificate)
     {
         $this->rehabilitationcertificate->removeElement($rehabilitationcertificate);
     }
@@ -490,7 +506,7 @@ class Member extends HealthData
      *
      * @return Member
      */
-    public function addPhonenumber(\AppBundle\Entity\Mitglieder\MemPhoneNumber $phonenumber)
+    public function addPhonenumber(\AppBundle\Entity\Mitglieder_NichtMitglieder\MemPhoneNumber $phonenumber)
     {
         $phonenumber->setMember($this);
         $this->phonenumber[] = $phonenumber;
@@ -525,7 +541,7 @@ class Member extends HealthData
      *
      * @return Member
      */
-    public function addSportsgroup(\AppBundle\Entity\Mitglieder\Member_Sportsgroup $sportsgroup)
+    public function addSportsgroup(\AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup $sportsgroup)
     {
         $sportsgroup->setMember($this);
         $this->sportsgroup[] = $sportsgroup;
@@ -538,7 +554,7 @@ class Member extends HealthData
      *
      * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup $sportsgroup
      */
-    public function removeSportsgroup(\AppBundle\Entity\Mitglieder\Member_Sportsgroup $sportsgroup)
+    public function removeSportsgroup(\AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup $sportsgroup)
     {
         $this->sportsgroup->removeElement($sportsgroup);
     }
@@ -560,7 +576,7 @@ class Member extends HealthData
      *
      * @return Member
      */
-    public function addDue(\AppBundle\Entity\Mitglieder\Member_Dues $due)
+    public function addDue(\AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Dues $due)
     {
         $due->setMember($this);
         $this->due[] = $due;
@@ -573,7 +589,7 @@ class Member extends HealthData
      *
      * @param \AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Dues $due
      */
-    public function removeDue(\AppBundle\Entity\Mitglieder\Member_Dues $due)
+    public function removeDue(\AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Dues $due)
     {
         $this->due->removeElement($due);
     }
@@ -625,7 +641,7 @@ class Member extends HealthData
     /**
      * Set lagacymemid
      *
-     * @param integer $lagacymemid
+     * @param string $lagacymemid
      *
      * @return Member
      */
@@ -639,10 +655,34 @@ class Member extends HealthData
     /**
      * Get lagacymemid
      *
-     * @return integer
+     * @return string
      */
     public function getLagacymemid()
     {
         return $this->lagacymemid;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return Member
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

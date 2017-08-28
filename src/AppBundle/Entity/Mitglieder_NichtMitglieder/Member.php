@@ -71,6 +71,7 @@ class Member extends HealthData
      * @ORM\OneToMany(targetEntity="Member_Sportsgroup", mappedBy="member", cascade={"persist"})
      */
     protected $sportsgroup;
+
     
     
 
@@ -680,4 +681,6 @@ class Member extends HealthData
     {
         return $this->type;
     }
+
+   
 }

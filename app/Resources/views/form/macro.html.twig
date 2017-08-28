@@ -53,7 +53,7 @@
 
 {% macro sportgroupCollectionItem(formData) %}
     {% set name = formData.vars.full_name %}
-
+    {% import _self as forms %}
 
     
     <div class="panel panel-default" data-content="{{ name }}">
@@ -91,10 +91,47 @@
     </div>
 
         </div>
+                <legend>
+                    <h3>Ruhephasen 
+                <a href="#" class="add btn-add" data-target="por">
+                    <button class="btn btn-default">
+                        <span class="glyphicon glyphicon-plus"></span> Ruhephase hinzufügen
+                    </button>
+                </a>
+                    </h3>
+                </legend>
+   
+            <div id="por" data-prototype="{{ forms.dateIntervalCollectionItem(formData.periodOfRest.vars.prototype, 'restingbegin', 'restingend')|e }}">
+                    {% for por in formData.periodOfRest %}
+                        {{ formData.dateIntervalCollectionItem(por, 'restingbegin', 'restingend') }}<a class="btn-remove pull-right" data-related="{{ name }}"><button class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span> Löschen</button></a>
+                    {% endfor %}
+            </div>
 
           </div>
     </div>
 {% endmacro %}
+
+{% macro dateIntervalCollectionItem(formData, beginColName, endColName) %}
+            <div class="form-group">
+        {{ form_label(attribute(formData, beginColName)) }}
+    <div class="col-sm-4">
+        {{ form_widget(attribute(formData, beginColName)) }}
+        {{ form_errors(attribute(formData, beginColName)) }}
+   
+    </div>
+   <div class="col-md-1">
+   {{ form_label(attribute(formData, endColName)) }}
+   
+    </div>
+    <div class="col-md-5">
+         
+   {{ form_widget(attribute(formData, endColName)) }}
+   {{ form_errors(attribute(formData, endColName)) }}
+   
+    </div>
+
+        </div>
+{% endmacro %}    
 
 {% macro bssaCollectionItem(formData) %}
         

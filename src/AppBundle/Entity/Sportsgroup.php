@@ -29,6 +29,7 @@ class Sportsgroup {
      */
     protected $memsubscriber;
     
+    
 
     /**
      * @ORM\Column(type="string")
@@ -490,4 +491,12 @@ public function addTrainersub(\AppBundle\Entity\Trainer\Trainer $trainersub)
 
         return $this;
     }
+    
+    function getPeriodOfRest() {
+        return $this->periodOfRest;
+    }
+
+
+
+
 }
