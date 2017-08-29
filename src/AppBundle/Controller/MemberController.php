@@ -17,6 +17,7 @@ use AppBundle\Entity\Mitglieder_NichtMitglieder\Member_Sportsgroup;
 use AppBundle\Entity\Mitglieder_NichtMitglieder\MemPhoneNumber;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Services\ToolsManager;
+use Doctrine\Common\Collections\ArrayCollection;
 use DateTime;
 
 
@@ -341,6 +342,7 @@ class MemberController extends Controller
         $originalrehabs = $tm->copyArrayCollection($member->getRehabilitationcertificate());
         $originalphonenrs = $tm->copyArrayCollection($member->getPhonenumber());
         $originalsportsgroups = $tm->copyArrayCollection($member->getSportsgroup());
+        $originalperiodsOfRest = $tm->copyArrayCollection($member->getPeriodsOfRest());
   
         $editmemform = $this->createForm(EditMemberType::class, $member, array('typeSymbol' => $this->typeSymbolMapper[$type]));
         $editmemform->handleRequest($request);
@@ -362,6 +364,7 @@ class MemberController extends Controller
             $tm->sortOutRemoved($originalrehabs, $member->getRehabilitationcertificate());
             $tm->sortOutRemoved($originalphonenrs, $member->getPhonenumber());
             $tm->sortOutRemoved($originalsportsgroups, $member->getSportsgroup());
+            $tm->sortOutRemoved($originalperiodsOfRest, $member->getPeriodsOfRest());
       
             $manager->persist($member);
             $manager->flush();

@@ -51,10 +51,10 @@ class NonAndMemPeriodOfRest {
      */
     public function validate(ExecutionContextInterface $context, $payload=null)
     {
-        $resignedFrom = $this->getResignedfrom();
-        if($resignedFrom != null)
+        $restingEnd = $this->getRestingend();
+        if($restingEnd != null)
         {
-            if(strtotime($this->getJoined()->format('Y-m-d')) >= strtotime($resignedFrom->format('Y-m-d')))
+            if(strtotime($this->getRestingbegin()->format('Y-m-d')) >= strtotime($restingEnd->format('Y-m-d')))
             {
                 $context->buildViolation('Das Ende der Ruhephase muss jünger sein, als der Beginn.')
                         ->atPath('restingend')
@@ -63,7 +63,7 @@ class NonAndMemPeriodOfRest {
         }
     }
     
-    
+
 
     /**
      * Get prid

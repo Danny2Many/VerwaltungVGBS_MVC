@@ -74,6 +74,9 @@ class Member_Sportsgroup {
         }
     }
     
+
+        
+        
     /**
      * Get memsgid
      *
@@ -196,6 +199,7 @@ class Member_Sportsgroup {
      */
     public function addPeriodOfRest(\AppBundle\Entity\Mitglieder_NichtMitglieder\NonAndMemPeriodOfRest $periodOfRest)
     {
+        $periodOfRest->setMemberSportsgroupAssignment($this);
         $this->periodOfRest[] = $periodOfRest;
 
         return $this;

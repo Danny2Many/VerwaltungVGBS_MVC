@@ -682,5 +682,19 @@ class Member extends HealthData
         return $this->type;
     }
 
+    public function getPeriodsOfRest()
+    {
+        $periodsOfRest = new ArrayCollection();
+        foreach ($this->getSportsgroup() as $sgAssignments)
+        {
+            foreach ($sgAssignments->getPeriodOfRest() as $periodOfRest)
+            {
+                $periodsOfRest->add($periodOfRest);
+            }
+            
+        }
+        
+        return $periodsOfRest;
+    }
    
 }

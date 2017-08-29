@@ -142,7 +142,7 @@
         'Postfach',
         'Telefon',
         'E-Mail',
-        'Sportgruppe (Beigetr. - Ausgetr.)',  
+        'Sportgruppe (Beigetr. - Ausgetr.): Ruhephasen',  
         beginDate,
         participationConfirmation,
         endDate,
@@ -230,10 +230,16 @@
                                
 
                  <td>{% for SG in data.sportsgroup %}                     
-                     {{SG.sportsgroup.token }} ({{SG.joined|date("Y-m-d") }}-{{ SG.resignedfrom is empty ? "AKTUELL" : SG.resignedfrom|date("Y-m-d") }})<br>
-                {% else %}
+                     {{SG.sportsgroup.token }} ({{SG.joined|date("d.m.Y") }} - {{ SG.resignedfrom is empty ? "AKTUELL" : SG.resignedfrom|date("d.m.Y") }}):<br>
+                        {% for periodOfRest in SG.periodOfRest %}
+                            {{periodOfRest.restingBegin|date("d.m.Y") }} - {{ periodOfRest.restingEnd is empty ? "AKTUELL" : periodOfRest.restingEnd|date("d.m.Y") }}<br>
+                        {% else %}
+                            {{ "Noch keine Ruhephasen" }}
+                        {% endfor %}
+                         
+                    {% else %}
                     {{ "-" }}
-                {% endfor %}</td> 
+                    {% endfor %}</td> 
                 
 
                 <td>{{ data.admissiondate|date("d.m.Y") }}</td>
