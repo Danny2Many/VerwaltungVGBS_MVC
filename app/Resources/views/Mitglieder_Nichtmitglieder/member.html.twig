@@ -229,14 +229,17 @@
                 <td>{{ data.email is empty ? "-" : data.email|striptags }}</td>
                                
 
-                 <td>{% for SG in data.sportsgroup %}                     
+                 <td>{% for SG in data.sportsgroup %} 
+                    {% if loop.index >= 2 %}
+                        -------------------------------------------------------------- <br>
+                    {% endif %}
                      {{SG.sportsgroup.token }} ({{SG.joined|date("d.m.Y") }} - {{ SG.resignedfrom is empty ? "AKTUELL" : SG.resignedfrom|date("d.m.Y") }}):<br>
                         {% for periodOfRest in SG.periodOfRest %}
                             {{periodOfRest.restingBegin|date("d.m.Y") }} - {{ periodOfRest.restingEnd is empty ? "AKTUELL" : periodOfRest.restingEnd|date("d.m.Y") }}<br>
                         {% else %}
                             {{ "Noch keine Ruhephasen" }}
                         {% endfor %}
-                         
+
                     {% else %}
                     {{ "-" }}
                     {% endfor %}</td> 

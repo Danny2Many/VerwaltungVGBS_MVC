@@ -53,6 +53,8 @@
 
 {% macro sportgroupCollectionItem(formData) %}
     {% set name = formData.vars.full_name %}
+    
+    
     {% import _self as forms %}
 
     
@@ -93,7 +95,7 @@
         </div>
                 <legend>
                     <h3>Ruhephasen 
-                <a href="#" class="add btn-add" data-target="por">
+                <a href="#" class="add btn-add" data-target="{{name}}">
                     <button class="btn btn-default">
                         <span class="glyphicon glyphicon-plus"></span> Ruhephase hinzufügen
                     </button>
@@ -101,7 +103,7 @@
                     </h3>
                 </legend>
    
-            <div id="por" data-prototype="{{ forms.dateIntervalCollectionItem(formData.periodOfRest.vars.prototype, 'restingbegin', 'restingend')|e }}">
+            <div id="{{name}}" data-prototype="{{ forms.dateIntervalCollectionItem(formData.periodOfRest.vars.prototype, 'restingbegin', 'restingend')|e }}">
                     {% for por in formData.periodOfRest %}
                         {{ forms.dateIntervalCollectionItem(por, 'restingbegin', 'restingend') }}
                     {% endfor %}

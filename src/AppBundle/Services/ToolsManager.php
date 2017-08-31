@@ -36,27 +36,41 @@ class ToolsManager {
         return $copiedArrayColl;
     }
     
+    //Builds the Flashtext for the search which is displayed on the main page
+    //Parameters:
+    //  $introText: The Text that is preceding the displayed searchparameters
+    //  $parameterArray: The array containing the searchparameters
     public function buildFlashtext($introText, array $parameterArray)
     {
+        //Till php version 7 you cannot fix the type of the parameter $introText to string
         if(!is_string($introText))
         {
             throw new Exception('The first parameter must be of type string.');
         }
         
+        //The flashtext to build and  which is counted during the loop
         $flashText='';
+        //The number of nested array to decide whether the method needs to set a comma behind a set of parameters
         $nestedArrayCount=0;        
         foreach ($parameterArray as $nestedParameterArray)
         {
             $nestedArrayCount++;
+            
+            //The number of parameter per nested array to decide whether the method needs to set a comma behind a parameter
             $parameterCount=0;
+            //Text of the parameters of one nested array
             $parameterText='';
+            
+            //The first element of each nested array is the name the parameters belong to
             $nameOfNestedArray = $nestedParameterArray[0];
+            //unset the name to not further process it as a parameter
             unset($nestedParameterArray[0]);
             
             foreach ($nestedParameterArray as $parameterName => $parameterValue)
             {
                 $parameterCount++;
-                if($parameterCount==2)
+                //If the number of parameter exceeds 2 set a comma between each parameter
+                if($parameterCount>=2)
                 {
                     $parameterText=$parameterText.', ';
                 }
@@ -64,7 +78,8 @@ class ToolsManager {
                 $parameterText.= $parameterName.': '.$parameterValue;
                 
             }
-            if($nestedArrayCount==2)
+            //If the number of nested arrays exceeds 2 set a comma between each nested arrays
+            if($nestedArrayCount>=2)
             {
                 $flashText=$flashText.', ';
             }
